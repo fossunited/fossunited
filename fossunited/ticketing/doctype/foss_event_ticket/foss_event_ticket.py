@@ -181,14 +181,8 @@ def handle_payment_on_update(doc: "RazorpayPayment", event: str):
             validate_ticket_fulfillment(doc)
             FOSSEventTicket.create_tickets_for_payment(doc)
         except TicketTierMismatchError as e:
-            doc.db_set("status", "Refund Pending", update_modified=False)
-            frappe.enqueue(
-                "fossunited.payments.doctype.razorpay_payment.razorpay_payment.process_refund",
-                payment_name=doc.name,
-                enqueue_after_commit=True,
-            )
             frappe.log_error(
-                title="Ticket Payment Refund Queued",
+                title="Ticket Creation Skipped",
                 message=f"Payment: {doc.name}\nEvent: {doc.document_name}\nReason: {e}",
             )
         except Exception as e:

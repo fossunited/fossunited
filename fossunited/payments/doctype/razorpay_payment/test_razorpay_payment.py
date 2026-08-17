@@ -7,10 +7,7 @@ from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.dashboard import create_razorpay_order
 from fossunited.doctype_ids import EVENT, EVENT_TICKET, RAZORPAY_PAYMENT, TICKET_TIER
-from fossunited.payments.doctype.razorpay_payment.razorpay_payment import (
-    capture_payment,
-    process_refund,
-)
+from fossunited.payments.doctype.razorpay_payment.razorpay_payment import capture_payment
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
     FOSSChapterFactory,
@@ -91,27 +88,21 @@ class TestRazorpayPayment(FrappeTestCase):
             frappe.db.count(EVENT_TICKET, {"razorpay_payment": payment.name}), number_of_attendees
         )
 
-    def test_expired_pending_payment_is_refunded_on_capture(self):
+    def test_expired_pending_payment_skips_ticket_on_capture(self):
         payment = RazorpayPaymentFactory.create(event=self.event.name)
         payment.db_set("order_id", "order_expired", update_modified=False)
         payment.order_id = "order_expired"
         self.event.tiers[0].valid_till = date.today() - timedelta(days=1)
         self.event.save()
 
-        with patch("frappe.enqueue") as enqueue:
-            capture_payment(payment.order_id, "pay_expired")
+        capture_payment(payment.order_id, "pay_expired")
 
         payment.reload()
-        self.assertEqual(payment.status, "Refund Pending")
+        self.assertEqual(payment.status, "Captured")
         self.assertEqual(payment.payment_id, "pay_expired")
         self.assertFalse(frappe.db.exists(EVENT_TICKET, {"razorpay_payment": payment.name}))
-        enqueue.assert_called_once_with(
-            "fossunited.payments.doctype.razorpay_payment.razorpay_payment.process_refund",
-            payment_name=payment.name,
-            enqueue_after_commit=True,
-        )
 
-    def test_sold_out_pending_payment_is_refunded_on_capture(self):
+    def test_sold_out_pending_payment_skips_ticket_on_capture(self):
         payment = RazorpayPaymentFactory.create(event=self.event.name)
         payment.db_set("order_id", "order_sold_out", update_modified=False)
         payment.order_id = "order_sold_out"
@@ -128,32 +119,23 @@ class TestRazorpayPayment(FrappeTestCase):
             }
         ).insert(ignore_permissions=True)
 
-        with patch("frappe.enqueue") as enqueue:
-            capture_payment(payment.order_id, "pay_sold_out")
+        capture_payment(payment.order_id, "pay_sold_out")
 
         payment.reload()
-        self.assertEqual(payment.status, "Refund Pending")
+        self.assertEqual(payment.status, "Captured")
         self.assertEqual(frappe.db.count(EVENT_TICKET, {"event": self.event.name}), 1)
-        enqueue.assert_called_once_with(
-            "fossunited.payments.doctype.razorpay_payment.razorpay_payment.process_refund",
-            payment_name=payment.name,
-            enqueue_after_commit=True,
-        )
 
-    def test_capture_replay_does_not_duplicate_or_refund_ticket(self):
+    def test_capture_replay_does_not_duplicate_ticket(self):
         payment = RazorpayPaymentFactory.create(event=self.event.name)
         payment.db_set("order_id", "order_replay", update_modified=False)
         payment.order_id = "order_replay"
         capture_payment(payment.order_id, "pay_first")
-
-        with patch("frappe.enqueue") as enqueue:
-            capture_payment(payment.order_id, "pay_replayed")
+        capture_payment(payment.order_id, "pay_replayed")
 
         payment.reload()
         self.assertEqual(payment.status, "Captured")
         self.assertEqual(payment.payment_id, "pay_first")
         self.assertEqual(frappe.db.count(EVENT_TICKET, {"razorpay_payment": payment.name}), 1)
-        enqueue.assert_not_called()
 
     def test_late_capture_after_failure_creates_ticket(self):
         payment = RazorpayPaymentFactory.create(event=self.event.name)
@@ -166,35 +148,6 @@ class TestRazorpayPayment(FrappeTestCase):
         self.assertEqual(payment.status, "Captured")
         self.assertEqual(payment.payment_id, "pay_late_capture")
         self.assertEqual(frappe.db.count(EVENT_TICKET, {"razorpay_payment": payment.name}), 1)
-
-    def test_refund_uses_stable_idempotency_key(self):
-        payment = RazorpayPaymentFactory.create(event=self.event.name)
-        payment.status = "Refund Pending"
-        payment.payment_id = "pay_refund"
-        payment.save()
-        client = MagicMock()
-        client.payment.refund.return_value = {
-            "id": "rfnd_test",
-            "status": "processed",
-        }
-
-        with patch(
-            "fossunited.payments.doctype.razorpay_payment.razorpay_payment.get_razorpay_client",
-            return_value=client,
-        ):
-            status = process_refund(payment.name)
-
-        payment.reload()
-        self.assertEqual(status, "Refunded")
-        self.assertEqual(payment.status, "Refunded")
-        client.payment.refund.assert_called_once_with(
-            "pay_refund",
-            {
-                "amount": 10000,
-                "receipt": f"auto-refund-{payment.name}",
-            },
-            headers={"X-Refund-Idempotency": f"fossunited-{payment.name}"},
-        )
 
     def test_payment_creation_on_closed_tickets(self):
         # Given an event with tickets closed
@@ -578,6 +531,32 @@ class TestCreateRazorpayOrderAmount(FrappeTestCase):
                 ref_doctype=EVENT,
                 ref_docname=self.event.name,
             )
+
+    def test_create_order_sets_expire_by(self):
+        attendee = _make_attendee(ticket_type=self.tier_standard.name, wants_tshirt=0)
+        client = self._mock_client("ord_expire")
+        now = 1_700_000_000
+        with (
+            patch("fossunited.api.dashboard.get_razorpay_client", return_value=client),
+            patch("fossunited.api.dashboard.time.time", return_value=now),
+        ):
+            create_razorpay_order(
+                checkout_info={
+                    "amount": 400,
+                    "email": "buyer@example.com",
+                    "tax_details": {},
+                },
+                meta_data={
+                    "event": self.event.name,
+                    "tier_counts": {self.tier_standard.name: 1},
+                    "attendees": [attendee],
+                    "num_seats": 1,
+                },
+                ref_doctype=EVENT,
+                ref_docname=self.event.name,
+            )
+        payload = client.order.create.call_args.kwargs["data"]
+        self.assertEqual(payload["expire_by"], now + 30 * 60)
 
     def test_standard_tier_no_tshirt(self):
         attendee = _make_attendee(ticket_type=self.tier_standard.name, wants_tshirt=0)

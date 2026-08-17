@@ -94,34 +94,6 @@ class RazorpayPayment(Document):
                 frappe.throw(_("Ticket sale are closed for this event!"), frappe.PermissionError)
 
 
-def process_refund(payment_name: str):
-    frappe.db.get_value(RAZORPAY_PAYMENT, payment_name, "name", for_update=True)
-    payment = frappe.get_doc(RAZORPAY_PAYMENT, payment_name)
-    if payment.status != "Refund Pending" or payment.refund_id:
-        return payment.status
-    if not payment.payment_id:
-        frappe.log_error(
-            title="Refund Skipped: Missing Payment ID",
-            message=f"Payment: {payment.name}",
-        )
-        return payment.status
-
-    client = get_razorpay_client()
-    refund = client.payment.refund(
-        payment.payment_id,
-        {
-            "amount": int(get_in_razorpay_money(payment.amount)),
-            "receipt": f"auto-refund-{payment.name}",
-        },
-        headers={"X-Refund-Idempotency": f"fossunited-{payment.name}"},
-    )
-
-    payment.refund_id = refund["id"]
-    payment.status = "Refunded" if refund["status"] == "processed" else "Refund Pending"
-    payment.save(ignore_permissions=True)
-    return payment.status
-
-
 def capture_payment(order_id: str, payment_id: str):
     payment_name = frappe.db.get_value(
         RAZORPAY_PAYMENT,
@@ -141,18 +113,3 @@ def capture_payment(order_id: str, payment_id: str):
     payment.save(ignore_permissions=True)
     payment.reload()
     return payment.status
-
-
-def retry_pending_refunds():
-    payments = frappe.get_all(
-        RAZORPAY_PAYMENT,
-        filters={"status": "Refund Pending", "refund_id": ["is", "not set"]},
-        pluck="name",
-    )
-    for payment_name in payments:
-        frappe.enqueue(
-            "fossunited.payments.doctype.razorpay_payment.razorpay_payment.process_refund",
-            payment_name=payment_name,
-            job_id=f"process_refund::{payment_name}",
-            deduplicate=True,
-        )

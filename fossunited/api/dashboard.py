@@ -1,3 +1,5 @@
+import time
+
 import frappe
 from frappe import _
 
@@ -121,6 +123,7 @@ def create_razorpay_order(
         data={
             "amount": get_in_razorpay_money(amount),
             "currency": "INR",
+            "expire_by": int(time.time()) + 30 * 60,
         }
     )
 
