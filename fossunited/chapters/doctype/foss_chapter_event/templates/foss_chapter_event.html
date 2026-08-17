@@ -349,6 +349,21 @@
               {% else %}
             </div>
             {% endif %}
+
+              {% if doc.catering and doc.catering != 'None' %}
+              <div class="ev-detail-row">
+                <div
+                  class="ev-icon"
+                  tabindex="0"
+                  data-toggle="tooltip"
+                  data-placement="right"
+                  title="{{ doc.catering }} provided for attendees"
+                >
+                  <i class="ti ti-soup" aria-hidden="true"></i>
+                </div>
+                <div class="ev-detail-secondary">{{ doc.catering }}</div>
+              </div>
+              {% endif %}
             </div>
 
             <!-- Do we need to make them repeat same content? -->
