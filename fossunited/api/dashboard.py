@@ -1,5 +1,3 @@
-import time
-
 import frappe
 from frappe import _
 
@@ -11,7 +9,10 @@ from fossunited.doctype_ids import (
     TICKET_TIER,
     USER_PROFILE,
 )
-from fossunited.payments.doctype.razorpay_payment.razorpay_payment import capture_payment
+from fossunited.payments.doctype.razorpay_payment.razorpay_payment import (
+    capture_payment,
+    fail_payment,
+)
 from fossunited.utils.payments import (
     get_in_razorpay_money,
     get_razorpay_client,
@@ -123,7 +124,6 @@ def create_razorpay_order(
         data={
             "amount": get_in_razorpay_money(amount),
             "currency": "INR",
-            "expire_by": int(time.time()) + 30 * 60,
         }
     )
 
@@ -176,11 +176,7 @@ def handle_payment_failed(order_id: str):
     if order.get("status") == "paid":
         return
 
-    payment = frappe.get_doc(RAZORPAY_PAYMENT, {"order_id": order_id})
-    if payment.status == "Captured":
-        return
-    payment.status = "Failed"
-    payment.save(ignore_permissions=True)
+    fail_payment(order_id)
 
 
 @frappe.whitelist()

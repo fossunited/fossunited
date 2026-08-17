@@ -7,7 +7,10 @@ from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.dashboard import create_razorpay_order
 from fossunited.doctype_ids import EVENT, EVENT_TICKET, RAZORPAY_PAYMENT, TICKET_TIER
-from fossunited.payments.doctype.razorpay_payment.razorpay_payment import capture_payment
+from fossunited.payments.doctype.razorpay_payment.razorpay_payment import (
+    capture_payment,
+    fail_payment,
+)
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
     FOSSChapterFactory,
@@ -147,6 +150,18 @@ class TestRazorpayPayment(FrappeTestCase):
         payment.reload()
         self.assertEqual(payment.status, "Captured")
         self.assertEqual(payment.payment_id, "pay_late_capture")
+        self.assertEqual(frappe.db.count(EVENT_TICKET, {"razorpay_payment": payment.name}), 1)
+
+    def test_failure_after_capture_does_not_overwrite_status(self):
+        payment = RazorpayPaymentFactory.create(event=self.event.name)
+        payment.db_set("order_id", "order_captured_then_failed", update_modified=False)
+
+        capture_payment("order_captured_then_failed", "pay_captured")
+        fail_payment("order_captured_then_failed")
+
+        payment.reload()
+        self.assertEqual(payment.status, "Captured")
+        self.assertEqual(payment.payment_id, "pay_captured")
         self.assertEqual(frappe.db.count(EVENT_TICKET, {"razorpay_payment": payment.name}), 1)
 
     def test_payment_creation_on_closed_tickets(self):
@@ -532,13 +547,11 @@ class TestCreateRazorpayOrderAmount(FrappeTestCase):
                 ref_docname=self.event.name,
             )
 
-    def test_create_order_sets_expire_by(self):
+    def test_create_order_uses_supported_order_fields(self):
         attendee = _make_attendee(ticket_type=self.tier_standard.name, wants_tshirt=0)
         client = self._mock_client("ord_expire")
-        now = 1_700_000_000
         with (
             patch("fossunited.api.dashboard.get_razorpay_client", return_value=client),
-            patch("fossunited.api.dashboard.time.time", return_value=now),
         ):
             create_razorpay_order(
                 checkout_info={
@@ -556,7 +569,7 @@ class TestCreateRazorpayOrderAmount(FrappeTestCase):
                 ref_docname=self.event.name,
             )
         payload = client.order.create.call_args.kwargs["data"]
-        self.assertEqual(payload["expire_by"], now + 30 * 60)
+        self.assertEqual(payload, {"amount": 40000, "currency": "INR"})
 
     def test_standard_tier_no_tshirt(self):
         attendee = _make_attendee(ticket_type=self.tier_standard.name, wants_tshirt=0)

@@ -113,3 +113,22 @@ def capture_payment(order_id: str, payment_id: str):
     payment.save(ignore_permissions=True)
     payment.reload()
     return payment.status
+
+
+def fail_payment(order_id: str):
+    payment_name = frappe.db.get_value(
+        RAZORPAY_PAYMENT,
+        {"order_id": order_id},
+        "name",
+        for_update=True,
+    )
+    if not payment_name:
+        return
+
+    payment = frappe.get_doc(RAZORPAY_PAYMENT, payment_name)
+    if payment.status != "Pending":
+        return payment.status
+
+    payment.status = "Failed"
+    payment.save(ignore_permissions=True)
+    return payment.status
