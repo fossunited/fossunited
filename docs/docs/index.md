@@ -20,7 +20,7 @@ Together, we're building a culture of openness, collaboration, and innovation th
 - **Grants and Initiatives**
   Track and apply for community grants, explore ongoing initiatives.
 
-See more on what we do [here](initiative.md).
+See more on [our initiatives](initiative.md).
 
 ## Tech Stack
 
@@ -29,7 +29,7 @@ See more on what we do [here](initiative.md).
 - **Database**: MariaDB
 - **Caching**: Redis
 
-FOSS United relies on a variety of self-hosted services, which you can find listed [here](https://fossunited.org/stack)
+FOSS United relies on a variety of self-hosted services, which you can find listed [in our tech stack](https://fossunited.org/stack)
 
 ## Getting Involved
 

@@ -7,7 +7,7 @@ The people behind FOSS United include a mix of dedicated individuals, volunteers
 
 2. **Volunteers:**
    A vibrant and diverse group of volunteers actively contributes to FOSS United projects, events, and community-building efforts. They bring a wide range of skills and perspectives, enriching the foundation's impact across India.
-  Active Volunteers workforce can be seen [here](https://fossunited.org/volunteers)
+  Active Volunteers workforce can be seen [on our volunteers page](https://fossunited.org/volunteers)
 
 3. **Governing Board:**
    FOSS United is guided by a board of experienced professionals and leaders from the FOSS ecosystem. They provide strategic direction, governance, and support to the foundation's leadership.
