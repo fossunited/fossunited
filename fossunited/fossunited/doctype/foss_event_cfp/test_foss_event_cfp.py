@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_to_date, now_datetime
@@ -66,31 +68,33 @@ class TestFOSSEventCFP(FrappeTestCase):
 
 
 class TestFOSSEventCFPEditWindow(FrappeTestCase):
+    """can_edit_proposal(): allow_cfp_edit is a standalone master switch (True
+    always wins); when off, falls back to status == Live and not past deadline."""
+
     def tearDown(self):
         frappe.set_user("Administrator")
 
-    def test_editable_when_live_and_before_deadline(self):
-        cfp = FOSSEventCFPFactory.create(
-            allow_cfp_edit=1, status="Live", deadline=add_to_date(now_datetime(), days=3)
-        )
-        self.assertTrue(cfp.can_edit_proposal())
+    # (allow_cfp_edit, status, deadline_days_from_now_or_None, expected)
+    CASES: ClassVar = [
+        (0, "Live", 3, True),  # off, live, before deadline -> open window
+        (0, "Closed", 3, False),  # off, closed -> blocked
+        (0, "Live", -1, False),  # off, past deadline -> blocked
+        (0, "Live", None, True),  # off, no deadline set -> open window
+        (1, "Live", -1, True),  # on overrides past deadline
+        (1, "Closed", 3, True),  # on overrides closed status
+    ]
 
-    def test_not_editable_when_allow_cfp_edit_off(self):
-        cfp = FOSSEventCFPFactory.create(allow_cfp_edit=0, status="Live")
-        self.assertFalse(cfp.can_edit_proposal())
-
-    def test_not_editable_when_past_deadline(self):
-        cfp = FOSSEventCFPFactory.create(
-            allow_cfp_edit=1, status="Live", deadline=add_to_date(now_datetime(), days=-1)
-        )
-        self.assertFalse(cfp.can_edit_proposal())
-
-    def test_not_editable_when_status_closed(self):
-        cfp = FOSSEventCFPFactory.create(
-            allow_cfp_edit=1, status="Closed", deadline=add_to_date(now_datetime(), days=3)
-        )
-        self.assertFalse(cfp.can_edit_proposal())
-
-    def test_editable_when_no_deadline(self):
-        cfp = FOSSEventCFPFactory.create(allow_cfp_edit=1, status="Live", deadline=None)
-        self.assertTrue(cfp.can_edit_proposal())
+    def test_can_edit_proposal_matrix(self):
+        for allow_cfp_edit, status, deadline_days, expected in self.CASES:
+            deadline = (
+                add_to_date(now_datetime(), days=deadline_days)
+                if deadline_days is not None
+                else None
+            )
+            with self.subTest(
+                allow_cfp_edit=allow_cfp_edit, status=status, deadline_days=deadline_days
+            ):
+                cfp = FOSSEventCFPFactory.create(
+                    allow_cfp_edit=allow_cfp_edit, status=status, deadline=deadline
+                )
+                self.assertEqual(cfp.can_edit_proposal(), expected)

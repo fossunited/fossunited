@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_to_date, now_datetime
@@ -125,56 +127,47 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         )
         return cfp, sub
 
-    def test_proposer_edit_blocked_when_allow_cfp_edit_off(self):
-        _, sub = self._closed_submission(allow_cfp_edit=0, status="Live")
-        frappe.set_user(Submitter)
-        sub.talk_title = "Edited after lock"
-        with self.assertRaises(frappe.PermissionError):
-            sub.save()
+    # (allow_cfp_edit, status, deadline_days_from_now) -> window closed, save must raise
+    BLOCKED_CASES: ClassVar = [
+        (0, "Closed", 3),  # switch off, status closed
+        (0, "Live", -1),  # switch off, past deadline
+    ]
 
-    def test_proposer_edit_blocked_past_deadline(self):
-        _, sub = self._closed_submission(
-            allow_cfp_edit=1,
-            status="Live",
-            deadline=add_to_date(now_datetime(), days=-1),
-        )
-        frappe.set_user(Submitter)
-        sub.talk_description = "Edited after deadline"
-        with self.assertRaises(frappe.PermissionError):
-            sub.save()
+    def test_proposer_edit_blocked_when_window_closed(self):
+        for allow_cfp_edit, status, deadline_days in self.BLOCKED_CASES:
+            with self.subTest(allow_cfp_edit=allow_cfp_edit, status=status):
+                _, sub = self._closed_submission(
+                    allow_cfp_edit=allow_cfp_edit,
+                    status=status,
+                    deadline=add_to_date(now_datetime(), days=deadline_days),
+                )
+                frappe.set_user(Submitter)
+                sub.talk_title = "Edited after lock"
+                with self.assertRaises(frappe.PermissionError):
+                    sub.save()
 
-    def test_proposer_edit_blocked_when_status_closed(self):
-        _, sub = self._closed_submission(
-            allow_cfp_edit=1,
-            status="Closed",
-            deadline=add_to_date(now_datetime(), days=3),
-        )
-        frappe.set_user(Submitter)
-        sub.talk_title = "Edited while closed"
-        with self.assertRaises(frappe.PermissionError):
-            sub.save()
+    # (allow_cfp_edit, status, deadline_days_from_now) -> window open, save must succeed
+    OPEN_CASES: ClassVar = [
+        (1, "Closed", 3),  # switch on overrides closed status
+        (1, "Live", 3),  # naturally open window
+    ]
 
     def test_proposer_edit_allowed_when_window_open(self):
-        cfp = FOSSEventCFPFactory.create(
-            event=self.event.name,
-            allow_cfp_edit=1,
-            status="Live",
-            deadline=add_to_date(now_datetime(), days=3),
-        )
-        sub = FOSSEventCFPSubmissionFactory.create(
-            linked_cfp=cfp.name,
-            event=self.event.name,
-            submitted_by=Submitter,
-            email=Submitter,
-        )
-        frappe.set_user(Submitter)
-        sub.talk_title = "Edited within window"
-        sub.save()  # must not raise
-        sub.reload()
-        self.assertEqual(sub.talk_title, "Edited within window")
+        for allow_cfp_edit, status, deadline_days in self.OPEN_CASES:
+            with self.subTest(allow_cfp_edit=allow_cfp_edit, status=status):
+                _, sub = self._closed_submission(
+                    allow_cfp_edit=allow_cfp_edit,
+                    status=status,
+                    deadline=add_to_date(now_datetime(), days=deadline_days),
+                )
+                frappe.set_user(Submitter)
+                sub.talk_title = "Edited within window"
+                sub.save()  # must not raise
+                sub.reload()
+                self.assertEqual(sub.talk_title, "Edited within window")
 
     def test_proposer_can_withdraw_after_close(self):
-        _, sub = self._closed_submission(allow_cfp_edit=0, status="Live")
+        _, sub = self._closed_submission(allow_cfp_edit=0, status="Closed")
         frappe.set_user(Submitter)
         sub.is_withdrawn = 1
         sub.save()  # withdraw is not a content change -> allowed
@@ -183,7 +176,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
 
     def test_reviewer_can_review_after_close(self):
         _, sub = self._closed_submission(
-            allow_cfp_edit=1,
+            allow_cfp_edit=0,
             status="Live",
             deadline=add_to_date(now_datetime(), days=-1),
         )
@@ -199,7 +192,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         # CFP. validate() sanitises talk_description before before_save, so the
         # naive before/after compare would otherwise see a phantom content change.
         _, sub = self._closed_submission(
-            allow_cfp_edit=1,
+            allow_cfp_edit=0,
             status="Live",
             deadline=add_to_date(now_datetime(), days=-1),
         )
@@ -218,7 +211,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         self.assertEqual(len(sub.reviews), 1)
 
     def test_system_manager_can_edit_after_close(self):
-        _, sub = self._closed_submission(allow_cfp_edit=0, status="Live")
+        _, sub = self._closed_submission(allow_cfp_edit=0, status="Closed")
         frappe.set_user("Administrator")
         sub.talk_title = "Edited by admin"
         sub.save()  # System Manager bypass
