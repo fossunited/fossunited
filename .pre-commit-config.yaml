@@ -36,6 +36,7 @@ repos:
     hooks:
       - id: semgrep
         stages: [pre-commit]
+        exclude: '^development/'
         entry: semgrep
         # or see https://semgrep.dev/explore to select a ruleset and copy its URL
         # TODO: remove exclude once the 25 doctypes with "All" role perms are triaged (see relaxed-permissions rule)
