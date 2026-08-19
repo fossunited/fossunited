@@ -104,6 +104,9 @@ doc_events = {
         "on_update": "fossunited.fossunited.event_media.clear_speakers_cache",
         "on_trash": "fossunited.fossunited.event_media.clear_speakers_cache",
     },
+    "Newsletter": {
+        "autoname": "fossunited.overrides.newsletter_extend.autoname",
+    },
 }
 
 website_redirects = [
@@ -150,10 +153,6 @@ before_uninstall = "fossunited.uninstall.before_uninstall"
 permission_query_conditions = {
     "FOSS Event CFP Submission": "fossunited.fossunited.permissions.cfp_submission_query",
     "FOSS Event RSVP Submission": "fossunited.fossunited.permissions.rsvp_submission_query",
-}
-
-override_doctype_class = {
-    "Newsletter": "fossunited.overrides.newsletter_extend.NewsletterExtend",
 }
 
 before_tests = "fossunited.setup.before_tests"
