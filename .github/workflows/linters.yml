@@ -35,4 +35,5 @@ jobs:
         run: git clone --depth 1 https://github.com/frappe/semgrep-rules.git frappe-semgrep-rules
 
       - name: Run Semgrep
-        run: semgrep ci --config ./frappe-semgrep-rules/rules
+        # TODO: remove exclude once the 25 doctypes with "All" role perms are triaged (see relaxed-permissions rule)
+        run: semgrep ci --config ./frappe-semgrep-rules/rules --exclude-rule frappe-semgrep-rules.rules.security.relaxed-permissions

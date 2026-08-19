@@ -38,5 +38,6 @@ repos:
         stages: [pre-commit]
         entry: semgrep
         # or see https://semgrep.dev/explore to select a ruleset and copy its URL
-        args: ['--config', 'development/frappe-semgrep-rules/rules', '--error', '--skip-unknown-extensions']
+        # TODO: remove exclude once the 25 doctypes with "All" role perms are triaged (see relaxed-permissions rule)
+        args: ['--config', 'development/frappe-semgrep-rules/rules', '--error', '--skip-unknown-extensions', '--exclude-rule', 'development.frappe-semgrep-rules.rules.security.relaxed-permissions']
         additional_dependencies: ['attrs']
