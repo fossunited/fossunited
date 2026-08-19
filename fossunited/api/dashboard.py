@@ -9,6 +9,10 @@ from fossunited.doctype_ids import (
     TICKET_TIER,
     USER_PROFILE,
 )
+from fossunited.payments.doctype.razorpay_payment.razorpay_payment import (
+    capture_payment,
+    fail_payment,
+)
 from fossunited.utils.payments import (
     get_in_razorpay_money,
     get_razorpay_client,
@@ -157,11 +161,7 @@ def handle_payment_success(order_id: str, payment_id: str, signature: str):
         }
     )
 
-    # update payment
-    payment = frappe.get_doc(RAZORPAY_PAYMENT, {"order_id": order_id})
-    payment.status = "Captured"
-    payment.payment_id = payment_id
-    payment.save(ignore_permissions=True)
+    return {"status": capture_payment(order_id, payment_id)}
 
 
 # nosemgrep: guest-whitelisted-method
@@ -176,11 +176,7 @@ def handle_payment_failed(order_id: str):
     if order.get("status") == "paid":
         return
 
-    payment = frappe.get_doc(RAZORPAY_PAYMENT, {"order_id": order_id})
-    if payment.status == "Captured":
-        return
-    payment.status = "Failed"
-    payment.save(ignore_permissions=True)
+    fail_payment(order_id)
 
 
 @frappe.whitelist()
