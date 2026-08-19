@@ -56,13 +56,10 @@ class FOSSEventCFP(Document):
         return False
 
     def can_edit_proposal(self) -> bool:
-        """Whether a proposer may still edit their proposal content.
-
-        allow_cfp_edit is the master switch. status auto-closes once the deadline
-        passes, but we also check the deadline live in case that lazy flip has not
-        run yet.
-        """
-        return bool(self.allow_cfp_edit) and self.status == "Live" and not self.is_past_deadline()
+        """Whether a proposer may still edit their proposal content."""
+        if self.allow_cfp_edit:
+            return True
+        return self.status == "Live" and not self.is_past_deadline()
 
     def before_insert(self):
         self.assign_reviewers()
