@@ -30,10 +30,20 @@ def get_ticket_details(ticket_id: str):
     """
     Get the event for the ticket
     """
+    SAFE_FIELDS = [
+        "name",
+        "full_name",
+        "event",
+        "tier",
+        "organization",
+        "designation",
+        "wants_tshirt",
+        "tshirt_size",
+    ]
     ticket = frappe.db.get_value(
         EVENT_TICKET,
         ticket_id,
-        ["*"],
+        SAFE_FIELDS,
         as_dict=True,
     )
     return ticket
@@ -60,7 +70,7 @@ def create_transfer_request(ticket: str, receiver_details: dict):
         }
     )
     transfer_request.insert(ignore_permissions=True)
-    return transfer_request
+    return {"name": transfer_request.name, "status": transfer_request.status}
 
 
 # nosemgrep: guest-whitelisted-method
@@ -103,6 +113,7 @@ def change_transfer_status(transfer_id: str, status: str):
 
 
 @frappe.whitelist()
+@rate_limit(limit=10, seconds=60 * 60)
 def get_tickets_insights(event_id: str) -> dict:
     """
     Get the insights of the tickets for the event
@@ -144,7 +155,7 @@ def get_tickets_insights(event_id: str) -> dict:
     tiers = frappe.db.get_all(
         "FOSS Ticket Tier",
         filters={"parent": event_id, "parentfield": "tiers"},
-        fields=["*"],
+        fields=["title", "parent", "maximum_tickets"],
     )
 
     for tier in tiers:
@@ -165,6 +176,7 @@ def get_tickets_insights(event_id: str) -> dict:
 
 
 @frappe.whitelist()
+@rate_limit(limit=10, seconds=60 * 60)
 def get_checkin_insights(event_id: str) -> dict:
     """
     Get check-in counts for each day from event start to end date
@@ -364,6 +376,7 @@ def get_tickets_with_custom_fields(event_id: str) -> list:
 
 
 @frappe.whitelist()
+@rate_limit(limit=10, seconds=60 * 60)
 def get_ticket_tiers(event_id: str) -> list:
     """
     Get the list of ticket tiers for the event,
@@ -628,7 +641,7 @@ def search_tickets(search_term: str, event: str | None = None) -> dict:
     if frappe.db.exists(EVENT_TICKET, search_term):
         return [get_ticket_details(search_term)]
 
-    # Razorpay order ID lookup — order IDs are hard to guess (not enumerable)
+    # Razorpay order ID lookup -- order IDs are hard to guess (not enumerable)
     payment_name = frappe.db.get_value(RAZORPAY_PAYMENT, {"order_id": search_term}, "name")
     if payment_name:
         return frappe.get_all(

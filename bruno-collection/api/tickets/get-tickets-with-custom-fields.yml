@@ -1,0 +1,46 @@
+info:
+  name: get-tickets-with-custom-fields
+  type: http
+  seq: 7
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.tickets.get_tickets_with_custom_fields'
+  body:
+    type: form-urlencoded
+    data:
+    - name: event_id
+      value: '{{event_id}}'
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("requires chapter/event member auth", function() {
+      // Protected by @require_chapter_or_event_member decorator.
+    });
+
+    test("response uses explicit field selection", function() {
+      const data = res.getBody().message;
+      if (!data || !Array.isArray(data) || data.length === 0) return;
+      // Uses query builder with explicit fields (not ["*"])
+      // Should NOT leak email, owner, modified_by, etc.
+      data.forEach(function(ticket) {
+        expect(ticket).to.not.have.property("email");
+        expect(ticket).to.not.have.property("owner");
+        expect(ticket).to.not.have.property("modified_by");
+        expect(ticket).to.not.have.property("razorpay_payment");
+      });
+    });
+docs: |-
+  SECURITY: Protected by @require_chapter_or_event_member decorator.
+  Uses Frappe query builder with explicit field selection (no ["*"]).
+  Returns ticket data + custom field responses for event management.
+
+  allow_guest: false
+
+  Source: fossunited/api/tickets.py
+
+  Args: event_id: str

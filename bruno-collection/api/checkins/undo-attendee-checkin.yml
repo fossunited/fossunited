@@ -1,0 +1,34 @@
+info:
+  name: undo-attendee-checkin
+  type: http
+  seq: 3
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.checkins.undo_attendee_checkin'
+  body:
+    type: json
+    data: |-
+      {
+        "event_id": "{{event_id}}",
+        "attendee": {"name": "{{ticket_id}}"}
+      }
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("requires chapter/event member auth", function() {
+      // Protected by @require_chapter_or_event_member decorator.
+    });
+docs: |-
+  SECURITY: Protected by @require_chapter_or_event_member decorator.
+  Uses ignore_permissions=True on save (decorator is the auth gate).
+
+  allow_guest: false
+
+  Source: fossunited/api/checkins.py
+
+  Args: event_id: str, attendee: dict

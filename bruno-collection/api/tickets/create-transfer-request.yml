@@ -1,0 +1,55 @@
+info:
+  name: create-transfer-request
+  type: http
+  seq: 2
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.tickets.create_transfer_request'
+  body:
+    type: json
+    data: |-
+      {
+        "ticket": "{{ticket}}",
+        "receiver_details": {
+          "receiver_name": "Test User",
+          "receiver_email": "test@example.com",
+          "designation": "Developer",
+          "organization": "Test Org"
+        }
+      }
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("response returns only name and status, not full doc", function() {
+      const data = res.getBody().message;
+      if (!data) return;
+      expect(data).to.have.property("name");
+      expect(data).to.have.property("status");
+      const forbidden = [
+        "owner", "modified_by", "creation", "modified",
+        "receiver_email", "owner_email", "owner_name", "docstatus"
+      ];
+      forbidden.forEach(function(field) {
+        expect(data).to.not.have.property(field);
+      });
+    });
+
+    test("transfer status is Pending Approval", function() {
+      const data = res.getBody().message;
+      if (!data) return;
+      expect(data.status).to.equal("Pending Approval");
+    });
+docs: |-
+  SECURITY: receiver_details uses .get() for safe field extraction.
+  Response now returns only {name, status} instead of full doc.
+
+  allow_guest: true | Rate: 3/12h
+
+  Source: fossunited/api/tickets.py
+
+  Args: ticket: str, receiver_details: dict

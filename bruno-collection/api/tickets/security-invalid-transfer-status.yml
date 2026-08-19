@@ -1,0 +1,33 @@
+info:
+  name: security-invalid-transfer-status
+  type: http
+  seq: 20
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.tickets.change_transfer_status'
+  body:
+    type: form-urlencoded
+    data:
+    - name: transfer_id
+      value: '{{transfer_id}}'
+    - name: status
+      value: Approved
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("rejects status values outside allowlist", function() {
+      // Only "Completed" and "Cancelled" are valid.
+      // "Approved" should be rejected with a validation error.
+      expect(res.getStatus()).to.not.equal(200);
+    });
+docs: |-
+  SECURITY TEST: Verifies that change_transfer_status rejects
+  status values outside the allowlist (Completed, Cancelled).
+  Sending "Approved" should fail.
+
+  Source: fossunited/api/tickets.py

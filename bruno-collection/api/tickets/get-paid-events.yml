@@ -1,0 +1,33 @@
+info:
+  name: get-paid-events
+  type: http
+  seq: 13
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.tickets.get_paid_events'
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("returns only name and event_name", function() {
+      const data = res.getBody().message;
+      if (!data || !Array.isArray(data) || data.length === 0) return;
+      data.forEach(function(event) {
+        expect(event).to.have.property("name");
+        expect(event).to.have.property("event_name");
+        // Should NOT leak internal event fields
+        expect(event).to.not.have.property("owner");
+        expect(event).to.not.have.property("modified_by");
+      });
+    });
+docs: |-
+  SECURITY: Returns only name and event_name (safe fields).
+  Guest-accessible for ticket search page.
+
+  allow_guest: true
+
+  Source: fossunited/api/tickets.py

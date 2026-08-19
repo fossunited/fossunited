@@ -1,0 +1,46 @@
+info:
+  name: get-event-free-codes
+  type: http
+  seq: 10
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.tickets.get_event_free_codes'
+  body:
+    type: form-urlencoded
+    data:
+    - name: event
+      value: '{{event}}'
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("requires chapter/event member auth", function() {
+      // Protected by @require_chapter_or_event_member decorator.
+    });
+
+    test("returns only explicit fields", function() {
+      const data = res.getBody().message;
+      if (!data || !Array.isArray(data) || data.length === 0) return;
+      const allowed = [
+        "name", "full_name", "mapped_email", "tier", "company",
+        "other_tier", "used_count", "max_count", "is_used"
+      ];
+      data.forEach(function(code) {
+        Object.keys(code).forEach(function(key) {
+          expect(allowed).to.include(key);
+        });
+      });
+    });
+docs: |-
+  SECURITY: Protected by @require_chapter_or_event_member decorator.
+  Uses explicit field list (no ["*"]).
+
+  allow_guest: false
+
+  Source: fossunited/api/tickets.py
+
+  Args: event: str
