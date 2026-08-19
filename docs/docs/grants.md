@@ -24,4 +24,4 @@ FOSS United has provided grants to various projects, including Rethink DNS, Fire
 
 By offering these grants, FOSS United aims to foster the growth and development of the FOSS community in India, supporting projects that align with its mission and values.
 
-Apply [here](https://fossunited.org/grants)
+[Apply for a FOSS United grant](https://fossunited.org/grants)
