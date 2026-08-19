@@ -136,6 +136,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
     def test_proposer_edit_blocked_when_window_closed(self):
         for allow_cfp_edit, status, deadline_days in self.BLOCKED_CASES:
             with self.subTest(allow_cfp_edit=allow_cfp_edit, status=status):
+                frappe.set_user("Administrator")
                 _, sub = self._closed_submission(
                     allow_cfp_edit=allow_cfp_edit,
                     status=status,
@@ -155,6 +156,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
     def test_proposer_edit_allowed_when_window_open(self):
         for allow_cfp_edit, status, deadline_days in self.OPEN_CASES:
             with self.subTest(allow_cfp_edit=allow_cfp_edit, status=status):
+                frappe.set_user("Administrator")
                 _, sub = self._closed_submission(
                     allow_cfp_edit=allow_cfp_edit,
                     status=status,
