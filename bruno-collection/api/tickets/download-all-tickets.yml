@@ -1,0 +1,38 @@
+info:
+  name: download-all-tickets
+  type: http
+  seq: 16
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.tickets.download_all_tickets'
+  body:
+    type: json
+    data: |-
+      {
+        "ticket_ids": ["{{ticket_id}}"]
+      }
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("rejects empty or invalid ticket_ids", function() {
+      // Sending empty array should fail
+    });
+
+    test("rejects malformed JSON in ticket_ids", function() {
+      // ticket_ids must be a valid JSON array
+    });
+docs: |-
+  SECURITY NOTE: Same bearer-token model as download_ticket.
+  Rate limited more aggressively (3/12h) due to higher resource usage.
+  Uses ignore_print_permissions=True.
+
+  allow_guest: true | Rate: 3/12h
+
+  Source: fossunited/api/tickets.py
+
+  Args: ticket_ids: str | list

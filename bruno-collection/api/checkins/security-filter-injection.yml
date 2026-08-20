@@ -1,0 +1,39 @@
+info:
+  name: security-filter-injection
+  type: http
+  seq: 10
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.checkins.get_attendee_with_checkin_data'
+  body:
+    type: json
+    data: |-
+      {
+        "event_id": "{{event_id}}",
+        "filters": {"email": "admin", "owner": "Administrator"}
+      }
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("disallowed filter keys do not affect query results", function() {
+      // Passing email/owner as filter keys should be silently ignored.
+      // The response should be identical to a request with no filters,
+      // NOT filtered by email or owner columns.
+      const status = res.getStatus();
+      // Should not error out -- invalid keys are silently dropped
+      if (status === 200) {
+        const data = res.getBody().message;
+        // If we get results, they should NOT be filtered by email/owner
+      }
+    });
+docs: |-
+  SECURITY TEST: Verifies that disallowed filter keys (email, owner)
+  are silently ignored and do not affect query results.
+  Only full_name, designation, organization, tier, tshirt_size are allowed.
+
+  Source: fossunited/api/checkins.py

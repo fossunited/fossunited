@@ -1,0 +1,52 @@
+info:
+  name: search-tickets
+  type: http
+  seq: 14
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.tickets.search_tickets'
+  body:
+    type: form-urlencoded
+    data:
+    - name: search_term
+      value: '{{search_term}}'
+    - name: event
+      value: '{{event}}'
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("search results exclude sensitive fields", function() {
+      const data = res.getBody().message;
+      if (!data || !Array.isArray(data) || data.length === 0) return;
+      const forbidden = [
+        "owner", "modified_by", "creation", "modified",
+        "razorpay_payment", "customer", "docstatus",
+        "subscribe_chapter_mailing", "accept_coc"
+      ];
+      data.forEach(function(ticket) {
+        forbidden.forEach(function(field) {
+          expect(ticket).to.not.have.property(field);
+        });
+      });
+    });
+
+    test("empty search term returns error", function() {
+      const searchTerm = bru.getVar("search_term");
+      if (!searchTerm || searchTerm.trim() === "") {
+        expect(res.getStatus()).to.not.equal(200);
+      }
+    });
+docs: |-
+  SECURITY: Rate limited (5/10h). Direct ticket lookup uses safe field list
+  via get_ticket_details. Razorpay/coupon lookups use explicit fields.
+
+  allow_guest: true | Rate: 5/10h
+
+  Source: fossunited/api/tickets.py
+
+  Args: search_term: str, event: str | None (opt)

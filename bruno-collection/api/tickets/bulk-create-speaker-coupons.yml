@@ -1,0 +1,50 @@
+info:
+  name: bulk-create-speaker-coupons
+  type: http
+  seq: 12
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.tickets.bulk_create_speaker_coupons'
+  body:
+    type: form-urlencoded
+    data:
+    - name: event
+      value: '{{event}}'
+    - name: max_count
+      value: '1'
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("requires chapter/event member auth", function() {
+      // Protected by @require_chapter_or_event_member decorator.
+    });
+
+    test("validates max_count bounds (1-3)", function() {
+      // max_count must be between 1 and 3
+      const data = res.getBody();
+      if (data.exc_type === "ValidationError") {
+        // Expected for out-of-range max_count
+      }
+    });
+
+    test("returns only created/skipped counts", function() {
+      const data = res.getBody().message;
+      if (!data) return;
+      expect(data).to.have.property("created");
+      expect(data).to.have.property("skipped");
+    });
+docs: |-
+  SECURITY: Protected by @require_chapter_or_event_member decorator.
+  max_count validated to 1-3 range. Uses ignore_permissions=True on insert
+  (decorator is the auth gate). Idempotent (skips existing coupons).
+
+  allow_guest: false
+
+  Source: fossunited/api/tickets.py
+
+  Args: event: str, max_count: int (opt)

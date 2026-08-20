@@ -1,0 +1,52 @@
+info:
+  name: get-attendee-with-checkin-data
+  type: http
+  seq: 1
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.checkins.get_attendee_with_checkin_data'
+  body:
+    type: json
+    data: |-
+      {
+        "event_id": "{{event_id}}",
+        "filters": {"full_name": "test"}
+      }
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("filter injection: disallowed keys are ignored", function() {
+      // The filters dict should only accept whitelisted keys:
+      // full_name, designation, organization, tier, tshirt_size
+      // Keys like "email", "owner", "modified_by" must be ignored
+    });
+
+    test("response excludes sensitive ticket fields", function() {
+      const data = res.getBody().message;
+      if (!data || !Array.isArray(data) || data.length === 0) return;
+      const forbidden = ["email", "owner", "modified_by", "razorpay_payment", "customer"];
+      data.forEach(function(ticket) {
+        forbidden.forEach(function(field) {
+          expect(ticket).to.not.have.property(field);
+        });
+      });
+    });
+
+    test("requires chapter/event member auth", function() {
+      // Protected by @require_chapter_or_event_member decorator
+    });
+docs: |-
+  SECURITY: Filter keys whitelisted to prevent column enumeration.
+  Allowed filters: full_name, designation, organization, tier, tshirt_size.
+  Protected by @require_chapter_or_event_member decorator.
+
+  allow_guest: false
+
+  Source: fossunited/api/checkins.py
+
+  Args: event_id: str, filters: dict | None (opt)

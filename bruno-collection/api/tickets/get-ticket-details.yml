@@ -1,0 +1,53 @@
+info:
+  name: get-ticket-details
+  type: http
+  seq: 1
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.tickets.get_ticket_details'
+  body:
+    type: form-urlencoded
+    data:
+    - name: ticket_id
+      value: '{{ticket_id}}'
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("VULN-002: response excludes sensitive fields", function() {
+      const data = res.getBody().message;
+      if (!data) return; // skip if no ticket found
+      const forbidden = [
+        "email", "owner", "modified_by", "creation", "modified",
+        "razorpay_payment", "customer", "docstatus", "idx",
+        "subscribe_chapter_mailing", "accept_coc"
+      ];
+      forbidden.forEach(function(field) {
+        expect(data).to.not.have.property(field);
+      });
+    });
+
+    test("VULN-002: response only contains safe fields", function() {
+      const data = res.getBody().message;
+      if (!data) return;
+      const allowed = [
+        "name", "full_name", "event", "tier",
+        "organization", "designation", "wants_tshirt", "tshirt_size"
+      ];
+      Object.keys(data).forEach(function(key) {
+        expect(allowed).to.include(key);
+      });
+    });
+docs: |-
+  SECURITY: VULN-002 (HIGH) - previously returned ["*"] (28 fields) to guests.
+  Fixed to return only safe fields.
+
+  allow_guest: true | Rate: 2/12h
+
+  Source: fossunited/api/tickets.py
+
+  Args: ticket_id: str
