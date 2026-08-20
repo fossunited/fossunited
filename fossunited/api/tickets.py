@@ -113,7 +113,6 @@ def change_transfer_status(transfer_id: str, status: str):
 
 
 @frappe.whitelist()
-@rate_limit(limit=10, seconds=60 * 60)
 def get_tickets_insights(event_id: str) -> dict:
     """
     Get the insights of the tickets for the event
@@ -176,7 +175,6 @@ def get_tickets_insights(event_id: str) -> dict:
 
 
 @frappe.whitelist()
-@rate_limit(limit=10, seconds=60 * 60)
 def get_checkin_insights(event_id: str) -> dict:
     """
     Get check-in counts for each day from event start to end date
@@ -376,7 +374,6 @@ def get_tickets_with_custom_fields(event_id: str) -> list:
 
 
 @frappe.whitelist()
-@rate_limit(limit=10, seconds=60 * 60)
 def get_ticket_tiers(event_id: str) -> list:
     """
     Get the list of ticket tiers for the event,
