@@ -3965,16 +3965,6 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
 .v3-job-list-header {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 120px 120px;
-/* ── Clubs: List Mode ──────────────────────────────────────────────── */
-.v3-club-list-active { gap: 0 !important; }
-.v3-club-list-active > h3 { margin-bottom: 0.75rem; }
-
-.v3-club-list-header span,
-.v3-club-list-row > div { text-align: left; }
-
-.v3-club-list-header {
-  display: grid;
-  grid-template-columns: 1fr 180px 120px;
   gap: 1rem;
   padding: 0.5rem 1rem;
   font-size: 0.75rem;
@@ -3990,12 +3980,6 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
   gap: 1rem;
   min-height: 56px;
   padding: 0.75rem 1rem;
-
-.v3-club-list-row {
-  display: grid;
-  grid-template-columns: 1fr 180px 120px;
-  gap: 1rem;
-  padding: 0.625rem 1rem;
   text-decoration: none;
   color: var(--v3-text-color);
   border-bottom: 1px solid var(--v3-button-border);
@@ -4054,6 +4038,38 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
 .job-item .v3-card, .job-item-expired .v3-card { cursor: pointer; }
 .job-item .v3-card:hover, .job-item-expired .v3-card:hover { border-color: var(--v3-text-color2); }
 .job-item .v3-card:focus-visible, .job-item-expired .v3-card:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset: -2px; }
+
+/* ── Clubs: List Mode ──────────────────────────────────────────────── */
+.v3-club-list-active { gap: 0 !important; }
+.v3-club-list-active > h3 { margin-bottom: 0.75rem; }
+
+.v3-club-list-header span,
+.v3-club-list-row > div { text-align: left; }
+
+.v3-club-list-header {
+  display: grid;
+  grid-template-columns: 1fr 180px 120px;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--v3-text-color2);
+  border-bottom: 1px solid var(--v3-button-border);
+}
+
+.v3-club-list-row {
+  display: grid;
+  grid-template-columns: 1fr 180px 120px;
+  gap: 1rem;
+  padding: 0.625rem 1rem;
+  text-decoration: none;
+  color: var(--v3-text-color);
+  border-bottom: 1px solid var(--v3-button-border);
+  transition: background 0.1s;
+  align-items: center;
+}
 .v3-club-list-row:hover {
   background: var(--v3-button-border);
   text-decoration: none;
