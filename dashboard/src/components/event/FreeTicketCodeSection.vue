@@ -102,6 +102,12 @@
             :max="3"
             description="How many times each coupon can be used (1–3)"
           />
+          <FormControl
+            v-model="speakerTshirtIncluded"
+            type="checkbox"
+            label="T-shirt included"
+            description="Speakers will be asked for a t-shirt size when claiming"
+          />
           <p v-if="speakerPreviewErr" class="text-sm text-ink-red-3">{{ speakerPreviewErr }}</p>
         </div>
       </template>
@@ -166,6 +172,7 @@ const freeCodes = createResource({
 
 const showSpeakerDialog = ref(false)
 const speakerMaxCount = ref(1)
+const speakerTshirtIncluded = ref(false)
 const speakerPreviewErr = ref('')
 
 const speakerPreview = createResource({
@@ -178,11 +185,13 @@ const bulkCreate = createResource({
   makeParams: () => ({
     event: props.event.data?.name || route.params.id,
     max_count: speakerMaxCount.value,
+    tshirt_included: speakerTshirtIncluded.value ? 1 : 0,
   }),
   onSuccess(r) {
     toast.success(`Created ${r.created} coupon(s), skipped ${r.skipped}`)
     showSpeakerDialog.value = false
     speakerMaxCount.value = 1
+    speakerTshirtIncluded.value = false
     freeCodes.fetch()
   },
   onError(e) {
