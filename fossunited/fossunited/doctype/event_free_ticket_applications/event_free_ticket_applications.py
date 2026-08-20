@@ -23,6 +23,7 @@ class EventFreeTicketApplications(Document):
         event: DF.Link | None
         full_name: DF.Data
         organization: DF.Data | None
+        tshirt_size: DF.Literal["XS", "S", "M", "L", "XL", "2XL", "3XL"]
     # end: auto-generated types
 
     def before_insert(self):
