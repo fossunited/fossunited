@@ -49,6 +49,13 @@
             exportValue: (row) => `${row.used_count ?? 0} / ${row.max_count ?? 0}`,
           },
           { label: 'Tier', key: 'tier', icon: 'award', width: '200px' },
+          {
+            label: 'T-shirt',
+            key: 'tshirt_included',
+            icon: 'gift',
+            width: '90px',
+            exportValue: (row) => (row.tshirt_included ? 'Yes' : 'No'),
+          },
           { label: 'Organization', key: 'company', icon: 'briefcase' },
         ]"
         row-key="name"
@@ -75,6 +82,10 @@
             >
               {{ row.used_count }} / {{ row.max_count }}
             </span>
+          </div>
+          <div v-else-if="column.key === 'tshirt_included'">
+            <IconShirt v-if="row.tshirt_included" class="w-4 h-4 text-ink-green-3" />
+            <span v-else class="text-ink-gray-4">—</span>
           </div>
           <div v-else>
             <span class="text-base truncate text-wrap">{{ item }}</span>
@@ -139,6 +150,7 @@ import { toast } from 'vue-sonner'
 import FreeTicketCodeDialog from '@/components/event/FreeTicketCodeDialog.vue'
 import { useRoute } from 'vue-router'
 import SearchListView from '@/components/ui/SearchListView.vue'
+import { IconShirt } from '@tabler/icons-vue'
 
 const props = defineProps({
   event: {
