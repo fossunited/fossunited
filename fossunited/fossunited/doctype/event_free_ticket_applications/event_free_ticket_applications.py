@@ -7,6 +7,8 @@ from frappe.model.document import Document
 
 from fossunited.doctype_ids import EVENT_TICKET, FREE_TICKET_CODE
 
+TSHIRT_SKIPPED = "Skip T-shirt"
+
 
 class EventFreeTicketApplications(Document):
     # begin: auto-generated types
@@ -23,7 +25,7 @@ class EventFreeTicketApplications(Document):
         event: DF.Link | None
         full_name: DF.Data
         organization: DF.Data | None
-        tshirt_size: DF.Literal["", "XS", "S", "M", "L", "XL", "2XL", "3XL"]
+        tshirt_size: DF.Literal["", "XS", "S", "M", "L", "XL", "2XL", "3XL", "Skip T-shirt"]
     # end: auto-generated types
 
     def before_insert(self):
@@ -66,17 +68,23 @@ class EventFreeTicketApplications(Document):
         return coupon_data
 
     def validate_tshirt_size(self, coupon_data):
-        """Require a t-shirt size only when the coupon includes a t-shirt.
+        """Require a t-shirt choice only when the coupon includes a t-shirt.
 
         The web form hides the field for coupons without a t-shirt, so a size
         sent for such a coupon is discarded here instead of reaching the ticket.
+        Claimants who do not want one pick "Skip T-shirt", which stays on the
+        application as a deliberate choice but leaves the ticket without a size.
         """
         if not coupon_data.tshirt_included:
             self.tshirt_size = None
             return
 
         if not self.tshirt_size:
-            frappe.throw(_("T-shirt size is required for this coupon."))
+            frappe.throw(
+                _("Select a t-shirt size, or choose {0} if you do not want one.").format(
+                    _(TSHIRT_SKIPPED)
+                )
+            )
 
     def get_ticket_tier(self, coupon_data):
         """Derive ticket tier name from coupon info."""
@@ -86,7 +94,9 @@ class EventFreeTicketApplications(Document):
 
     def create_free_ticket(self, ticket_tier, coupon_data):
         """Create a FOSS Event Ticket for the user."""
-        wants_tshirt = int(coupon_data.tshirt_included or 0)
+        wants_tshirt = int(
+            bool(coupon_data.tshirt_included) and self.tshirt_size != TSHIRT_SKIPPED
+        )
         try:
             ticket = frappe.get_doc(
                 {

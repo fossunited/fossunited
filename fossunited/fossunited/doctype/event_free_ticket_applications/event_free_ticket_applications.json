@@ -83,12 +83,12 @@
    "fieldname": "tshirt_size",
    "fieldtype": "Select",
    "label": "T-shirt Size",
-   "options": "\nXS\nS\nM\nL\nXL\n2XL\n3XL"
+   "options": "\nXS\nS\nM\nL\nXL\n2XL\n3XL\nSkip T-shirt"
   }
  ],
  "grid_page_length": 50,
  "links": [],
- "modified": "2026-08-21 10:31:08.944546",
+ "modified": "2026-08-21 12:19:34.429564",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Event Free Ticket Applications",
