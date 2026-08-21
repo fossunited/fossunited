@@ -51,6 +51,44 @@ class TestEventFreeTicketApplications(FrappeTestCase):
         self.assertIsNone(ticket.designation)
         self.assertIsNone(ticket.organization)
         self.assertEqual(ticket.subscribe_chapter_mailing, 1)
+        self.assertEqual(ticket.wants_tshirt, 0)
+        self.assertIsNone(ticket.tshirt_size)
+
+    def test_tshirt_coupon_passes_size_to_ticket(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=1)
+        application = FreeTicketApplicationFactory.create(
+            coupon_id=coupon.name, event=self.event.name, tshirt_size="L"
+        )
+
+        ticket = frappe.get_doc(
+            EVENT_TICKET, {"event": self.event.name, "email": application.email}
+        )
+        self.assertEqual(ticket.wants_tshirt, 1)
+        self.assertEqual(ticket.tshirt_size, "L")
+
+    def test_tshirt_coupon_without_size_throws_error(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=1)
+        with self.assertRaises(frappe.ValidationError):
+            FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
+
+        self.assertFalse(frappe.db.exists(EVENT_TICKET, {"event": self.event.name}))
+        coupon.reload()
+        self.assertEqual(coupon.used_count, 0)
+
+    def test_size_is_dropped_when_coupon_has_no_tshirt(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=0)
+        application = FreeTicketApplicationFactory.create(
+            coupon_id=coupon.name, event=self.event.name, tshirt_size="XL"
+        )
+
+        application.reload()
+        self.assertIsNone(application.tshirt_size)
+
+        ticket = frappe.get_doc(
+            EVENT_TICKET, {"event": self.event.name, "email": application.email}
+        )
+        self.assertEqual(ticket.wants_tshirt, 0)
+        self.assertIsNone(ticket.tshirt_size)
 
     def test_coupon_usage_increments(self):
         coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=5, used_count=0)
