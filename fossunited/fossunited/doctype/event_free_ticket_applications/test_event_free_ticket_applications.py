@@ -66,6 +66,22 @@ class TestEventFreeTicketApplications(FrappeTestCase):
         self.assertEqual(ticket.wants_tshirt, 1)
         self.assertEqual(ticket.tshirt_size, "L")
 
+    def test_skip_tshirt_leaves_ticket_without_size(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=1)
+        application = FreeTicketApplicationFactory.create(
+            coupon_id=coupon.name, event=self.event.name, tshirt_size="Skip T-shirt"
+        )
+
+        # the choice stays on the application, but the ticket gets no t-shirt
+        application.reload()
+        self.assertEqual(application.tshirt_size, "Skip T-shirt")
+
+        ticket = frappe.get_doc(
+            EVENT_TICKET, {"event": self.event.name, "email": application.email}
+        )
+        self.assertEqual(ticket.wants_tshirt, 0)
+        self.assertIsNone(ticket.tshirt_size)
+
     def test_tshirt_coupon_without_size_throws_error(self):
         coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=1)
         with self.assertRaises(frappe.ValidationError):
