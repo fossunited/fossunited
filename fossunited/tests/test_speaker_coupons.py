@@ -3,6 +3,7 @@ from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.tickets import (
     bulk_create_speaker_coupons,
+    free_coupon_has_tshirt,
     get_speaker_coupon_preview,
 )
 from fossunited.doctype_ids import CHAPTER, EVENT, FREE_TICKET_CODE, PROPOSAL
@@ -90,6 +91,43 @@ class TestSpeakerCoupons(FrappeTestCase):
             "max_count",
         )
         self.assertEqual(int(max_count), 4)  # 2 per talk * 2 talks
+
+    def test_tshirt_included_flag_is_stored_on_coupon(self):
+        self._approved([_speaker("frank@test.com")])
+        frappe.set_user(self.team_member.name)
+
+        bulk_create_speaker_coupons(event=self.event.name, max_count=1, tshirt_included=1)
+
+        tshirt_included = frappe.db.get_value(
+            FREE_TICKET_CODE,
+            {"event": self.event.name, "mapped_email": "frank@test.com"},
+            "tshirt_included",
+        )
+        self.assertEqual(int(tshirt_included), 1)
+
+    def test_tshirt_included_defaults_to_off(self):
+        self._approved([_speaker("grace@test.com")])
+        frappe.set_user(self.team_member.name)
+
+        bulk_create_speaker_coupons(event=self.event.name, max_count=1)
+
+        tshirt_included = frappe.db.get_value(
+            FREE_TICKET_CODE,
+            {"event": self.event.name, "mapped_email": "grace@test.com"},
+            "tshirt_included",
+        )
+        self.assertEqual(int(tshirt_included), 0)
+
+    def test_coupon_lookup_reports_tshirt_requirement(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=1)
+        self.assertTrue(free_coupon_has_tshirt(coupon_id=coupon.name))
+
+    def test_coupon_lookup_false_without_tshirt(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=0)
+        self.assertFalse(free_coupon_has_tshirt(coupon_id=coupon.name))
+
+    def test_coupon_lookup_false_for_unknown_coupon(self):
+        self.assertFalse(free_coupon_has_tshirt(coupon_id="NOT-A-COUPON"))
 
     def test_idempotent_skips_existing(self):
         self._approved([_speaker("carol@test.com")])
