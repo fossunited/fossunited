@@ -19,9 +19,12 @@ def get_attendee_with_checkin_data(event_id: str, filters: dict | None = None) -
     Returns:
         dict: The attendees of the event with their checkin details
     """
+    ALLOWED_FILTER_KEYS = {"name", "full_name", "designation", "organization", "tier", "tshirt_size"}
     _filters = {"event": event_id}
-    # Map the items in filters to be like "key": ["like", value]
-    _filters.update({key: ["like", f"%{value}%"] for key, value in filters.items()})
+    if filters:
+        for key, value in filters.items():
+            if key in ALLOWED_FILTER_KEYS:
+                _filters[key] = ["like", f"%{value}%"]
 
     tickets = frappe.db.get_all(
         EVENT_TICKET,

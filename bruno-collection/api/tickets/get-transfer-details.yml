@@ -1,0 +1,42 @@
+info:
+  name: get-transfer-details
+  type: http
+  seq: 3
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.tickets.get_transfer_details'
+  body:
+    type: form-urlencoded
+    data:
+    - name: id
+      value: '{{id}}'
+runtime:
+  auth:
+    type: apikey
+    key: Authorization
+    value: '{{auth_token}}'
+    placement: header
+tests:
+  value: |
+    test("returns only name, status, and ticket fields", function() {
+      const data = res.getBody().message;
+      if (!data) return;
+      // Already uses explicit fields in code: ["name", "status", "ticket"]
+      expect(data).to.have.property("name");
+      expect(data).to.have.property("status");
+      expect(data).to.have.property("ticket");
+      // Should NOT leak receiver/owner details
+      expect(data).to.not.have.property("owner_email");
+      expect(data).to.not.have.property("receiver_email");
+      expect(data).to.not.have.property("owner");
+      expect(data).to.not.have.property("modified_by");
+    });
+docs: |-
+  SECURITY: Already uses explicit fields ["name", "status", "ticket"].
+  Does not leak owner/receiver emails.
+
+  allow_guest: true | Rate: 4/12h
+
+  Source: fossunited/api/tickets.py
+
+  Args: id: str
