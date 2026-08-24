@@ -11,6 +11,7 @@
   "mapped_email",
   "full_name",
   "max_count",
+  "tshirt_included",
   "used_count",
   "tier",
   "company",
@@ -79,11 +80,18 @@
    "fieldtype": "Data",
    "label": "Other Tier",
    "mandatory_depends_on": "eval:doc.tier=='Other'"
+  },
+  {
+   "default": "0",
+   "description": "If free pass has t-shirt included to give. Mostly to collect t-shirt size while claiming.",
+   "fieldname": "tshirt_included",
+   "fieldtype": "Check",
+   "label": "T-shirt Included?"
   }
  ],
  "grid_page_length": 50,
  "links": [],
- "modified": "2025-11-04 23:05:04.412179",
+ "modified": "2026-08-20 20:11:59.723532",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Event Free Ticket Code",

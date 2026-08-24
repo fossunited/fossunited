@@ -45,6 +45,12 @@
           :min="1"
           :max="30"
         />
+        <FormControl
+          v-model="code.tshirt_included"
+          type="checkbox"
+          label="T-shirt included"
+          description="Ask for a t-shirt size when this coupon is claimed"
+        />
       </div>
       <ErrorMessage :message="errorMessages" />
     </template>
@@ -105,6 +111,7 @@ const defaultCode = {
   company: '',
   other_tier: '',
   max_count: 1,
+  tshirt_included: false,
 }
 
 const code = reactive({ ...defaultCode })
@@ -127,6 +134,7 @@ watch(
     code.company = row.company || ''
     code.other_tier = row.other_tier || ''
     code.max_count = row.max_count || 1
+    code.tshirt_included = Boolean(row.tshirt_included)
   },
   { immediate: true },
 )
@@ -155,6 +163,7 @@ const createCode = createResource({
         company: code.company,
         other_tier: code.other_tier,
         max_count: code.max_count,
+        tshirt_included: code.tshirt_included ? 1 : 0,
       },
     }
   },
@@ -183,6 +192,7 @@ const updateCode = createResource({
         company: code.company,
         other_tier: code.other_tier,
         max_count: code.max_count,
+        tshirt_included: code.tshirt_included ? 1 : 0,
       },
     }
   },

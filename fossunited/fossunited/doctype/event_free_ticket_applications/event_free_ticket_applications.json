@@ -14,8 +14,10 @@
   "section_break_amhv",
   "coupon_id",
   "column_break_qzhw",
+  "tshirt_size",
   "section_break_kdwt",
-  "event"
+  "event",
+  "custom_fields"
  ],
  "fields": [
   {
@@ -77,11 +79,23 @@
    "fieldtype": "Link",
    "label": "Event",
    "options": "FOSS Chapter Event"
+  },
+  {
+   "fieldname": "tshirt_size",
+   "fieldtype": "Select",
+   "label": "T-shirt Size",
+   "options": "\nXS\nS\nM\nL\nXL\n2XL\n3XL\nSkip T-shirt"
+  },
+  {
+   "fieldname": "custom_fields",
+   "fieldtype": "Table",
+   "label": "Custom Field for Ticket",
+   "options": "FOSS Ticket Custom Field"
   }
  ],
  "grid_page_length": 50,
  "links": [],
- "modified": "2025-11-04 13:59:27.389137",
+ "modified": "2026-08-24 12:46:13.722991",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Event Free Ticket Applications",

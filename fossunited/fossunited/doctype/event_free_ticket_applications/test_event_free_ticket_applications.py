@@ -51,6 +51,60 @@ class TestEventFreeTicketApplications(FrappeTestCase):
         self.assertIsNone(ticket.designation)
         self.assertIsNone(ticket.organization)
         self.assertEqual(ticket.subscribe_chapter_mailing, 1)
+        self.assertEqual(ticket.wants_tshirt, 0)
+        self.assertIsNone(ticket.tshirt_size)
+
+    def test_tshirt_coupon_passes_size_to_ticket(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=1)
+        application = FreeTicketApplicationFactory.create(
+            coupon_id=coupon.name, event=self.event.name, tshirt_size="L"
+        )
+
+        ticket = frappe.get_doc(
+            EVENT_TICKET, {"event": self.event.name, "email": application.email}
+        )
+        self.assertEqual(ticket.wants_tshirt, 1)
+        self.assertEqual(ticket.tshirt_size, "L")
+
+    def test_skip_tshirt_leaves_ticket_without_size(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=1)
+        application = FreeTicketApplicationFactory.create(
+            coupon_id=coupon.name, event=self.event.name, tshirt_size="Skip T-shirt"
+        )
+
+        # the choice stays on the application, but the ticket gets no t-shirt
+        application.reload()
+        self.assertEqual(application.tshirt_size, "Skip T-shirt")
+
+        ticket = frappe.get_doc(
+            EVENT_TICKET, {"event": self.event.name, "email": application.email}
+        )
+        self.assertEqual(ticket.wants_tshirt, 0)
+        self.assertIsNone(ticket.tshirt_size)
+
+    def test_tshirt_coupon_without_size_throws_error(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=1)
+        with self.assertRaises(frappe.ValidationError):
+            FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
+
+        self.assertFalse(frappe.db.exists(EVENT_TICKET, {"event": self.event.name}))
+        coupon.reload()
+        self.assertEqual(coupon.used_count, 0)
+
+    def test_size_is_dropped_when_coupon_has_no_tshirt(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=0)
+        application = FreeTicketApplicationFactory.create(
+            coupon_id=coupon.name, event=self.event.name, tshirt_size="XL"
+        )
+
+        application.reload()
+        self.assertIsNone(application.tshirt_size)
+
+        ticket = frappe.get_doc(
+            EVENT_TICKET, {"event": self.event.name, "email": application.email}
+        )
+        self.assertEqual(ticket.wants_tshirt, 0)
+        self.assertIsNone(ticket.tshirt_size)
 
     def test_coupon_usage_increments(self):
         coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=5, used_count=0)
@@ -123,6 +177,25 @@ class TestEventFreeTicketApplications(FrappeTestCase):
                 FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
                 ticket = frappe.get_last_doc(EVENT_TICKET)
                 self.assertEqual(ticket.tier, f"{tier} Free Pass")
+
+    def test_custom_field_answer_passed_to_ticket(self):
+        event = FOSSChapterEventFactory.create(
+            "with_paid_tickets",
+            chapter=self.chapter.name,
+            custom_fields=[{"field_name": "github_handle", "label": "GitHub Handle"}],
+        )
+        coupon = FreeTicketCodeFactory.create(event=event.name)
+        application = FreeTicketApplicationFactory.create(
+            coupon_id=coupon.name,
+            event=event.name,
+            custom_fields=[{"field_name": "github_handle", "data": "octocat"}],
+        )
+
+        ticket = frappe.get_doc(EVENT_TICKET, {"event": event.name, "email": application.email})
+        self.assertEqual(len(ticket.custom_fields), 1)
+        self.assertEqual(ticket.custom_fields[0].field_name, "github_handle")
+        self.assertEqual(ticket.custom_fields[0].data, "octocat")
+        frappe.delete_doc(EVENT, event.name, force=True)
 
     def test_second_application_after_max_count(self):
         coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=1, used_count=0)

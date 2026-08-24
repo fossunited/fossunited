@@ -19,7 +19,14 @@ def get_attendee_with_checkin_data(event_id: str, filters: dict | None = None) -
     Returns:
         dict: The attendees of the event with their checkin details
     """
-    ALLOWED_FILTER_KEYS = {"name", "full_name", "designation", "organization", "tier", "tshirt_size"}
+    ALLOWED_FILTER_KEYS = {
+        "name",
+        "full_name",
+        "designation",
+        "organization",
+        "tier",
+        "tshirt_size",
+    }
     _filters = {"event": event_id}
     if filters:
         for key, value in filters.items():

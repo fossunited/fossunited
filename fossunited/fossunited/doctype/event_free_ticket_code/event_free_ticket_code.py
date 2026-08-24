@@ -33,6 +33,7 @@ class EventFreeTicketCode(Document):
             "Booth Manager",
             "Other",
         ]
+        tshirt_included: DF.Check
         used_count: DF.Int
     # end: auto-generated types
 

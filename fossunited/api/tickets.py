@@ -7,7 +7,7 @@ from datetime import timedelta
 import frappe
 from frappe import _
 from frappe.rate_limiter import rate_limit
-from frappe.utils import add_days, now_datetime
+from frappe.utils import add_days, cint, now_datetime
 
 from fossunited.doctype_ids import (
     EVENT,
@@ -484,11 +484,37 @@ def get_event_free_codes(event: str):
             "used_count",
             "max_count",
             "is_used",
+            "tshirt_included",
         ],
         order_by="tier asc, creation desc",
     )
 
     return codes
+
+
+# nosemgrep: guest-whitelisted-method
+@frappe.whitelist(allow_guest=True)
+@rate_limit(limit=10, seconds=60 * 60)
+def get_free_coupon_info(coupon_id: str) -> dict:
+    """
+    Tell the free ticket web form what it needs to know about a coupon:
+    whether it has to collect a t-shirt size, and which event's custom
+    fields to ask for. An unknown coupon returns an empty dict, same shape
+    as a coupon without a t-shirt or event, so the form cannot be looped
+    over to discover valid coupon IDs.
+
+    Rate limit: 10 requests per hour per IP
+    """
+    coupon = frappe.db.get_value(
+        FREE_TICKET_CODE, coupon_id, ["event", "tshirt_included"], as_dict=True
+    )
+    if not coupon:
+        return {}
+
+    return {
+        "event": coupon.event,
+        "tshirt_included": bool(coupon.tshirt_included),
+    }
 
 
 def _get_approved_speaker_emails_for_event(event: str) -> dict[str, tuple[str, int]]:
@@ -560,7 +586,7 @@ def get_speaker_coupon_preview(event: str) -> dict:
 
 @frappe.whitelist()
 @require_chapter_or_event_member(event_id="event")
-def bulk_create_speaker_coupons(event: str, max_count: int = 1) -> dict:
+def bulk_create_speaker_coupons(event: str, max_count: int = 1, tshirt_included: int = 0) -> dict:
     """
     Idempotently create EventFreeTicketCode docs for approved CFP speakers.
 
@@ -568,6 +594,7 @@ def bulk_create_speaker_coupons(event: str, max_count: int = 1) -> dict:
     """
 
     max_count = int(max_count)
+    tshirt_included = cint(tshirt_included)
     if not 1 <= max_count <= 3:
         frappe.throw(_("max_count must be between 1 and 3"))
 
@@ -584,6 +611,7 @@ def bulk_create_speaker_coupons(event: str, max_count: int = 1) -> dict:
                 "full_name": full_name,
                 "tier": "Speaker/Workshop Host",
                 "max_count": max_count * talk_count,
+                "tshirt_included": tshirt_included,
             }
         ).insert(ignore_permissions=True)
 
