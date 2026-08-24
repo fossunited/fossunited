@@ -180,6 +180,7 @@ class TestEventFreeTicketApplications(FrappeTestCase):
 
     def test_custom_field_answer_passed_to_ticket(self):
         event = FOSSChapterEventFactory.create(
+            "with_paid_tickets",
             chapter=self.chapter.name,
             custom_fields=[{"field_name": "github_handle", "label": "GitHub Handle"}],
         )
