@@ -178,6 +178,38 @@ class TestEventFreeTicketApplications(FrappeTestCase):
                 ticket = frappe.get_last_doc(EVENT_TICKET)
                 self.assertEqual(ticket.tier, f"{tier} Free Pass")
 
+    def test_custom_field_answer_passed_to_ticket(self):
+        event = FOSSChapterEventFactory.create(
+            chapter=self.chapter.name,
+            custom_fields=[{"field_name": "github_handle", "label": "GitHub Handle"}],
+        )
+        coupon = FreeTicketCodeFactory.create(event=event.name)
+        application = FreeTicketApplicationFactory.create(
+            coupon_id=coupon.name,
+            event=event.name,
+            custom_fields=[{"field_name": "github_handle", "data": "octocat"}],
+        )
+
+        ticket = frappe.get_doc(EVENT_TICKET, {"event": event.name, "email": application.email})
+        self.assertEqual(len(ticket.custom_fields), 1)
+        self.assertEqual(ticket.custom_fields[0].field_name, "github_handle")
+        self.assertEqual(ticket.custom_fields[0].data, "octocat")
+        frappe.delete_doc(EVENT, event.name, force=True)
+
+    def test_missing_mandatory_custom_field_throws_error(self):
+        event = FOSSChapterEventFactory.create(
+            chapter=self.chapter.name,
+            custom_fields=[
+                {"field_name": "github_handle", "label": "GitHub Handle", "mandatory": 1}
+            ],
+        )
+        coupon = FreeTicketCodeFactory.create(event=event.name)
+        with self.assertRaises(frappe.ValidationError):
+            FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=event.name)
+
+        self.assertFalse(frappe.db.exists(EVENT_TICKET, {"event": event.name}))
+        frappe.delete_doc(EVENT, event.name, force=True)
+
     def test_second_application_after_max_count(self):
         coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=1, used_count=0)
         FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)

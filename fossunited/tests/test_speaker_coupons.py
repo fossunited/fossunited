@@ -3,7 +3,7 @@ from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.tickets import (
     bulk_create_speaker_coupons,
-    free_coupon_has_tshirt,
+    get_free_coupon_info,
     get_speaker_coupon_preview,
 )
 from fossunited.doctype_ids import CHAPTER, EVENT, FREE_TICKET_CODE, PROPOSAL
@@ -120,14 +120,16 @@ class TestSpeakerCoupons(FrappeTestCase):
 
     def test_coupon_lookup_reports_tshirt_requirement(self):
         coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=1)
-        self.assertTrue(free_coupon_has_tshirt(coupon_id=coupon.name))
+        info = get_free_coupon_info(coupon_id=coupon.name)
+        self.assertEqual(info["event"], self.event.name)
+        self.assertTrue(info["tshirt_included"])
 
     def test_coupon_lookup_false_without_tshirt(self):
         coupon = FreeTicketCodeFactory.create(event=self.event.name, tshirt_included=0)
-        self.assertFalse(free_coupon_has_tshirt(coupon_id=coupon.name))
+        self.assertFalse(get_free_coupon_info(coupon_id=coupon.name)["tshirt_included"])
 
-    def test_coupon_lookup_false_for_unknown_coupon(self):
-        self.assertFalse(free_coupon_has_tshirt(coupon_id="NOT-A-COUPON"))
+    def test_coupon_lookup_empty_for_unknown_coupon(self):
+        self.assertEqual(get_free_coupon_info(coupon_id="NOT-A-COUPON"), {})
 
     def test_idempotent_skips_existing(self):
         self._approved([_speaker("carol@test.com")])

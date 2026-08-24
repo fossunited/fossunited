@@ -494,14 +494,27 @@ def get_event_free_codes(event: str):
 
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-@rate_limit(limit=30, seconds=60 * 60)
-def free_coupon_has_tshirt(coupon_id: str) -> bool:
+@rate_limit(limit=10, seconds=60 * 60)
+def get_free_coupon_info(coupon_id: str) -> dict:
     """
-    Tell the free ticket web form whether it has to collect a t-shirt size.
+    Tell the free ticket web form what it needs to know about a coupon:
+    whether it has to collect a t-shirt size, and which event's custom
+    fields to ask for. An unknown coupon returns an empty dict, same shape
+    as a coupon without a t-shirt or event, so the form cannot be looped
+    over to discover valid coupon IDs.
 
-    Rate limit: 20 requests per hour per IP
+    Rate limit: 10 requests per hour per IP
     """
-    return bool(frappe.db.get_value(FREE_TICKET_CODE, coupon_id, "tshirt_included"))
+    coupon = frappe.db.get_value(
+        FREE_TICKET_CODE, coupon_id, ["event", "tshirt_included"], as_dict=True
+    )
+    if not coupon:
+        return {}
+
+    return {
+        "event": coupon.event,
+        "tshirt_included": bool(coupon.tshirt_included),
+    }
 
 
 def _get_approved_speaker_emails_for_event(event: str) -> dict[str, tuple[str, int]]:
