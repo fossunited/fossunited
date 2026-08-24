@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
-from fossunited.doctype_ids import EVENT, EVENT_TICKET, FREE_TICKET_CODE
+from fossunited.doctype_ids import EVENT_TICKET, FREE_TICKET_CODE
 
 TSHIRT_SKIPPED = "Skip T-shirt"
 
@@ -43,7 +43,6 @@ class EventFreeTicketApplications(Document):
 
         self.validate_email_not_used()
         coupon_data = self.validate_coupon()
-        self.validate_custom_fields()
         ticket_tier = self.get_ticket_tier(coupon_data)
         self.create_free_ticket(ticket_tier, coupon_data)
         self.update_coupon_usage(coupon_data)
@@ -91,26 +90,6 @@ class EventFreeTicketApplications(Document):
                     _(TSHIRT_SKIPPED)
                 )
             )
-
-    def validate_custom_fields(self):
-        """Ensure every mandatory custom field defined on the event is answered.
-
-        The web form prefills one row per event custom field into
-        `custom_fields`, mirroring how tickets store answers, so a missing
-        mandatory field means the guest cleared it or bypassed the form.
-        """
-        mandatory_fields = frappe.get_all(
-            "FOSS Event Field",
-            filters={"parent": self.event, "parenttype": EVENT, "mandatory": 1},
-            pluck="field_name",
-        )
-        if not mandatory_fields:
-            return
-
-        answered = {row.field_name for row in self.custom_fields if row.field_name and row.data}
-        missing = [f for f in mandatory_fields if f not in answered]
-        if missing:
-            frappe.throw(_("Please fill the required field(s): {0}").format(", ".join(missing)))
 
     def get_ticket_tier(self, coupon_data):
         """Derive ticket tier name from coupon info."""
