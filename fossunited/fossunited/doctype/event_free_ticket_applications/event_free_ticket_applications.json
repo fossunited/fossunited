@@ -16,7 +16,8 @@
   "column_break_qzhw",
   "tshirt_size",
   "section_break_kdwt",
-  "event"
+  "event",
+  "custom_fields"
  ],
  "fields": [
   {
@@ -84,11 +85,17 @@
    "fieldtype": "Select",
    "label": "T-shirt Size",
    "options": "\nXS\nS\nM\nL\nXL\n2XL\n3XL\nSkip T-shirt"
+  },
+  {
+   "fieldname": "custom_fields",
+   "fieldtype": "Table",
+   "label": "Custom Field for Ticket",
+   "options": "FOSS Ticket Custom Field"
   }
  ],
  "grid_page_length": 50,
  "links": [],
- "modified": "2026-08-21 12:19:34.429564",
+ "modified": "2026-08-24 12:46:13.722991",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Event Free Ticket Applications",
