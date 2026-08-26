@@ -49,7 +49,7 @@ fi
 # Check if Frappe server is reachable
 if ! curl -sf --max-time 3 "$BASE_URL/method/frappe.ping" > /dev/null 2>&1; then
   echo "⚠  Frappe server not reachable at $BASE_URL — skipping Bruno tests"
-  echo "   Start the server and run manually: npx bru run bruno-collection/<folder> --env $ENV"
+  echo "   Start the server and run manually: npx @usebruno/cli run bruno-collection/<folder> --env $ENV"
   exit 0
 fi
 
@@ -60,7 +60,7 @@ for folder in "${FOLDERS_TO_RUN[@]}"; do
     continue
   fi
   echo "▶ Running Bruno tests: $folder"
-  if ! npx bru run "$folder_path" --env "$ENV"; then
+  if ! npx @usebruno/cli run "$folder_path" --env "$ENV"; then
     echo "✗ FAILED: $folder"
     FAILED=1
   fi
