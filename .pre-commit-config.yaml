@@ -31,6 +31,16 @@ repos:
   #       pass_filenames: true
   #       args: [--output=line, --minAlertLevel=error]
 
+  - repo: local
+    hooks:
+      - id: bruno-tests
+        name: Bruno API e2e tests
+        entry: bash development/run_bruno_tests.sh
+        language: system
+        pass_filenames: true
+        files: '(^fossunited/api/.*\.py$|^bruno-collection/.*\.yml$)'
+        stages: [pre-commit]
+
   - repo: https://github.com/semgrep/pre-commit
     rev: 'v1.173.0'
     hooks:
