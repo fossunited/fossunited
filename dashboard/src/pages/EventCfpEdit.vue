@@ -90,6 +90,7 @@
         </div>
         <div class="col-span-2 flex flex-col gap-2">
           <TextEditor
+            large
             label="Form Description"
             placeholder="This description will be shown on the CFP form."
             :model-value="cfp.doc.cfp_form_description"

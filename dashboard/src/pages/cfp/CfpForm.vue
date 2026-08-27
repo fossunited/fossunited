@@ -76,6 +76,7 @@
         </div>
       </template>
       <template v-else>
+        <GuidelineSection />
         <FormClosedSection />
       </template>
     </main>
