@@ -31,7 +31,7 @@ for file in "$@"; do
   fi
 
   # If a Bruno test file changed, queue its parent folder
-  if [[ "$file" == "$BRUNO_DIR/"* && "$file" == *.yml ]]; then
+  if [[ "$file" == "$BRUNO_DIR/"* && ( "$file" == *.bru || "$file" == *.yml ) ]]; then
     folder=$(dirname "$file" | sed "s|^$BRUNO_DIR/||")
     if [[ "$folder" != "environments" && "$folder" != "." ]]; then
       FOLDERS_TO_RUN+=("$folder")

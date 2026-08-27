@@ -38,7 +38,7 @@ repos:
         entry: bash development/run_bruno_tests.sh
         language: system
         pass_filenames: true
-        files: '(^fossunited/api/.*\.py$|^bruno-collection/.*\.yml$)'
+        files: '(^fossunited/api/.*\.py$|^bruno-collection/.*\.(bru|yml)$)'
         stages: [pre-commit]
 
   - repo: https://github.com/semgrep/pre-commit
