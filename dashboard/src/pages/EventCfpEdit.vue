@@ -88,7 +88,7 @@
             close the form manually with Publish/Unpublish.</span
           >
         </div>
-        <div class="col-span-2 flex flex-col gap-2">
+        <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
           <TextEditor
             large
             label="Form Description"
