@@ -231,6 +231,8 @@ def self_check_in(submission_name: str):
         frappe.throw(_("Not permitted"), frappe.PermissionError)
 
     doc = frappe.get_doc(RSVP_RESPONSE, submission_name)
+    if doc.submitted_by != frappe.session.user:
+        frappe.throw(_("Not permitted"), frappe.PermissionError)
     return doc.add_check_in()
 
 
@@ -241,4 +243,6 @@ def remove_checkin_for_today(submission_name: str):
         frappe.throw(_("Not permitted"), frappe.PermissionError)
 
     doc = frappe.get_doc(RSVP_RESPONSE, submission_name)
+    if doc.submitted_by != frappe.session.user:
+        frappe.throw(_("Not permitted"), frappe.PermissionError)
     return doc.remove_today_check_in()
