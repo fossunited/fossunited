@@ -404,7 +404,7 @@
                       {% endif %}
                     {% elif schedule_data %}
                       <a
-                        href="#schedule-heading"
+                        href="/{{ doc.route }}/schedule"
                         class="v3-btn v3-btn-primary"
                         aria-label="View event schedule"
                       >
@@ -414,7 +414,7 @@
                     {% endif %}
                   {% elif status_concluded and schedule_data %}
                     <a
-                      href="#schedule-heading"
+                      href="/{{ doc.route }}/schedule"
                       class="v3-btn v3-btn-primary"
                       aria-label="View event schedule"
                     >
