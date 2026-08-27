@@ -1,4 +1,5 @@
 import io
+import os
 
 import frappe
 from frappe import _
@@ -10,6 +11,14 @@ from fossunited.api.dashboard import get_session_user_profile
 from fossunited.doctype_ids import CHAPTER, RESTRICTED_USERNAME, USER_PROFILE
 
 MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024
+
+
+def _validate_file_path(file_url: str) -> str:
+    public_dir = os.path.realpath(frappe.get_site_path("public"))
+    file_path = os.path.realpath(os.path.join(public_dir, file_url.lstrip("/")))
+    if not file_path.startswith(public_dir + os.sep):
+        frappe.throw(_("Invalid file path."), frappe.PermissionError)
+    return file_path
 
 
 def convert_image_to_webp(image_content: bytes) -> bytes:
@@ -38,8 +47,8 @@ def set_profile_image(file_url: str) -> bool:
     """
     user_doc = get_session_user_profile()
     try:
-        file_path = frappe.get_site_path("public", file_url.lstrip("/"))
-        with open(file_path, "rb") as f:  # nosemgrep: frappe-security-file-traversal
+        file_path = _validate_file_path(file_url)
+        with open(file_path, "rb") as f:
             original_image = f.read()
 
         if len(original_image) > MAX_IMAGE_SIZE_BYTES:
@@ -76,8 +85,8 @@ def set_cover_image(file_url: str) -> bool:
         if len(file_url) == 0:
             frappe.db.set_value(USER_PROFILE, user_doc.name, "cover_image", "")
             return True
-        file_path = frappe.get_site_path("public", file_url.lstrip("/"))
-        with open(file_path, "rb") as f:  # nosemgrep: frappe-security-file-traversal
+        file_path = _validate_file_path(file_url)
+        with open(file_path, "rb") as f:
             original_image = f.read()
 
         if len(original_image) > MAX_IMAGE_SIZE_BYTES:

@@ -132,15 +132,27 @@ class FOSSEventRSVP(WebsiteGenerator):
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def create_rsvp(fields: str):
+    ALLOWED_FIELDS = {
+        "linked_rsvp", "name1", "email", "im_a",
+        "subscribe_chapter_mailing", "accept_coc", "confirm_attendance",
+        "custom_answers",
+    }
+
     fields = json.loads(fields)
 
     linked_rsvp_exists = frappe.db.exists(EVENT_RSVP, fields.get("linked_rsvp"))
     if not linked_rsvp_exists:
         frappe.throw(_("Invalid RSVP ID."), frappe.DoesNotExistError)
 
-    fields.update(
+    rsvp_doc = frappe.get_doc(EVENT_RSVP, fields["linked_rsvp"])
+
+    safe_fields = {k: v for k, v in fields.items() if k in ALLOWED_FIELDS}
+    safe_fields.update(
         {
             "doctype": RSVP_RESPONSE,
+            "event": rsvp_doc.event,
+            "event_name": rsvp_doc.event_name,
+            "chapter": rsvp_doc.chapter,
             "submitted_by": (
                 frappe.session.user
                 if frappe.session.user not in ("Guest", "Administrator")
@@ -149,6 +161,6 @@ def create_rsvp(fields: str):
         }
     )
 
-    doc = frappe.get_doc(fields)
+    doc = frappe.get_doc(safe_fields)
     doc.insert(ignore_permissions=True)
     return doc
