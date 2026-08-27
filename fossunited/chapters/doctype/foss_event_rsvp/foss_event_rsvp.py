@@ -133,8 +133,13 @@ class FOSSEventRSVP(WebsiteGenerator):
 @frappe.whitelist(allow_guest=True)
 def create_rsvp(fields: str):
     ALLOWED_FIELDS = {
-        "linked_rsvp", "name1", "email", "im_a",
-        "subscribe_chapter_mailing", "accept_coc", "confirm_attendance",
+        "linked_rsvp",
+        "name1",
+        "email",
+        "im_a",
+        "subscribe_chapter_mailing",
+        "accept_coc",
+        "confirm_attendance",
         "custom_answers",
     }
 
