@@ -369,12 +369,24 @@ def get_campaign_detail(id: str) -> dict:
     """
 
     CAMPAIGN_FIELDS = [
-        "name", "subject", "sender_name", "sender_email",
-        "content_type", "message", "message_md", "message_html",
-        "email_sent", "schedule_sending", "schedule_send",
-        "total_recipients", "total_views",
-        "reference_document", "document_type", "chapter",
-        "modified", "creation",
+        "name",
+        "subject",
+        "sender_name",
+        "sender_email",
+        "content_type",
+        "message",
+        "message_md",
+        "message_html",
+        "email_sent",
+        "schedule_sending",
+        "schedule_send",
+        "total_recipients",
+        "total_views",
+        "reference_document",
+        "document_type",
+        "chapter",
+        "modified",
+        "creation",
     ]
     campaign = frappe.db.get_value(CAMPAIGN, id, CAMPAIGN_FIELDS, as_dict=1)
 
@@ -465,9 +477,17 @@ def update_campaign(campaign_id: str, data: dict):
     """
 
     ALLOWED_FIELDS = {
-        "subject", "content_type", "message", "message_md", "message_html",
-        "sender_name", "sender_email", "schedule_sending", "schedule_send",
-        "attachments", "email_group",
+        "subject",
+        "content_type",
+        "message",
+        "message_md",
+        "message_html",
+        "sender_name",
+        "sender_email",
+        "schedule_sending",
+        "schedule_send",
+        "attachments",
+        "email_group",
     }
 
     campaign = frappe.get_doc(CAMPAIGN, campaign_id)
