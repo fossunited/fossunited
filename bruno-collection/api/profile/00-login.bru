@@ -1,0 +1,44 @@
+meta {
+  name: login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base}}/method/login
+  body: json
+  auth: none
+}
+
+docs {
+  # Login for profile path traversal tests
+
+  Authenticates as `mock-attendee-1` to test profile image upload
+  path traversal protection.
+
+  **Seed data**: `attendee_email` / `attendee_password` env vars
+  **Created by**: `development/seed.py` → `SEED_USERS`
+}
+
+body:json {
+  {
+    "usr": "{{attendee_email}}",
+    "pwd": "{{attendee_password}}"
+  }
+}
+
+tests {
+  test("should login", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+script:post-response {
+  const cookies = res.getHeaders()['set-cookie'];
+  if (cookies) {
+    const sidCookie = cookies.find(c => c.startsWith('sid='));
+    if (sidCookie) {
+      bru.setVar("session_cookie", sidCookie.split(';')[0]);
+    }
+  }
+}
