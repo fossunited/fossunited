@@ -1,0 +1,37 @@
+meta {
+  name: publish-form-requires-chapter-member
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base}}/method/fossunited.fossunited.forms.publish_form
+  body: json
+  auth: none
+}
+
+docs {
+  # publish_form authorization check
+
+  Tests that `publish_form` rejects non-chapter-members. Only chapter
+  team members should be able to publish/unpublish event forms.
+
+  **Endpoint**: `fossunited.fossunited.forms.publish_form`
+  **Auth**: `@frappe.whitelist()` — needs chapter membership check
+  **Seed data**: `rsvp_submission_own` env var
+  **Source**: `fossunited/fossunited/forms.py`
+}
+
+body:json {
+  {
+    "doctype": "FOSS Event RSVP Submission",
+    "docname": "{{rsvp_submission_own}}"
+  }
+}
+
+tests {
+  test("non-chapter-member should be rejected from publishing", function() {
+    const status = res.getStatus();
+    expect(status).to.be.oneOf([403, 417]);
+  });
+}

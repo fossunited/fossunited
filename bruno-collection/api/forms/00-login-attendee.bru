@@ -1,0 +1,46 @@
+meta {
+  name: login-attendee
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base}}/method/login
+  body: json
+  auth: none
+}
+
+docs {
+  # Login as attendee (non-privileged user)
+
+  Authenticates as `mock-attendee-1` to test that non-chapter-members
+  cannot access privileged form operations.
+
+  **Seed data**: `attendee_email` / `attendee_password` env vars
+  **Created by**: `development/seed.py` → `SEED_USERS`
+}
+
+body:json {
+  {
+    "usr": "{{attendee_email}}",
+    "pwd": "{{attendee_password}}"
+  }
+}
+
+tests {
+  test("should login as attendee", function() {
+    const data = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(data).to.have.property("full_name");
+  });
+}
+
+script:post-response {
+  const cookies = res.getHeaders()['set-cookie'];
+  if (cookies) {
+    const sidCookie = cookies.find(c => c.startsWith('sid='));
+    if (sidCookie) {
+      bru.setVar("session_cookie", sidCookie.split(';')[0]);
+    }
+  }
+}

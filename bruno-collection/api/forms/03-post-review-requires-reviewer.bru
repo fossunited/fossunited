@@ -1,0 +1,38 @@
+meta {
+  name: post-review-requires-reviewer
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base}}/method/fossunited.fossunited.forms.post_review
+  body: json
+  auth: none
+}
+
+docs {
+  # post_review reviewer role check
+
+  Tests that `post_review` rejects non-reviewer users. Only assigned
+  reviewers should be able to approve/reject CFP submissions.
+
+  **Endpoint**: `fossunited.fossunited.forms.post_review`
+  **Auth**: `@frappe.whitelist()` — needs reviewer role check
+  **Seed data**: `cfp_submission_id` env var → CFP submission by mock-speaker-1
+  **Source**: `fossunited/fossunited/forms.py`
+}
+
+body:json {
+  {
+    "submission": "{{cfp_submission_id}}",
+    "to_approve": 1,
+    "remarks": "Looks good"
+  }
+}
+
+tests {
+  test("non-reviewer should be rejected from posting review", function() {
+    const status = res.getStatus();
+    expect(status).to.be.oneOf([403, 417, 500]);
+  });
+}

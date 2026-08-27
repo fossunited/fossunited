@@ -1,0 +1,10 @@
+meta {
+  name: forms
+}
+
+script:pre-request {
+  const sid = bru.getVar("session_cookie");
+  if (sid) {
+    req.setHeader("Cookie", sid);
+  }
+}
