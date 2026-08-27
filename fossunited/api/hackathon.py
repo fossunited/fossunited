@@ -38,11 +38,23 @@ def get_hackathon(name: str) -> dict:
         dict: Hackathon document as a dictionary
     """
     SAFE_FIELDS = [
-        "name", "hackathon_name", "permalink", "hackathon_type",
-        "start_date", "end_date", "hackathon_banner", "hackathon_logo",
-        "chapter", "max_team_members", "is_published", "hackathon_rules",
-        "hackathon_description", "is_registration_live", "route",
-        "has_localhosts", "is_team_mandatory",
+        "name",
+        "hackathon_name",
+        "permalink",
+        "hackathon_type",
+        "start_date",
+        "end_date",
+        "hackathon_banner",
+        "hackathon_logo",
+        "chapter",
+        "max_team_members",
+        "is_published",
+        "hackathon_rules",
+        "hackathon_description",
+        "is_registration_live",
+        "route",
+        "has_localhosts",
+        "is_team_mandatory",
     ]
     doc = frappe.db.get_value(HACKATHON, name, SAFE_FIELDS, as_dict=True)
     if not doc:
@@ -63,11 +75,23 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
         dict: Hackathon document as a dictionary
     """
     SAFE_FIELDS = [
-        "name", "hackathon_name", "permalink", "hackathon_type",
-        "start_date", "end_date", "hackathon_banner", "hackathon_logo",
-        "chapter", "max_team_members", "is_published", "hackathon_rules",
-        "hackathon_description", "is_registration_live", "route",
-        "has_localhosts", "is_team_mandatory",
+        "name",
+        "hackathon_name",
+        "permalink",
+        "hackathon_type",
+        "start_date",
+        "end_date",
+        "hackathon_banner",
+        "hackathon_logo",
+        "chapter",
+        "max_team_members",
+        "is_published",
+        "hackathon_rules",
+        "hackathon_description",
+        "is_registration_live",
+        "route",
+        "has_localhosts",
+        "is_team_mandatory",
     ]
     hackathon_name = frappe.db.get_value(HACKATHON, {"permalink": permalink}, "name")
     if not hackathon_name:
@@ -143,9 +167,18 @@ def get_participant(hackathon: str) -> dict:
         HACKATHON_PARTICIPANT,
         {"hackathon": hackathon, "user": frappe.session.user},
         [
-            "name", "user_profile", "full_name", "email", "is_student",
-            "git_profile", "organization", "hackathon",
-            "wants_to_attend_locally", "localhost", "localhost_request_status",
+            "name",
+            "user",
+            "user_profile",
+            "full_name",
+            "email",
+            "is_student",
+            "git_profile",
+            "organization",
+            "hackathon",
+            "wants_to_attend_locally",
+            "localhost",
+            "localhost_request_status",
         ],
         as_dict=True,
     )
@@ -290,9 +323,18 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
     """
 
     PROJECT_FIELDS = [
-        "name", "title", "short_description", "description", "repo_link",
-        "demo_link", "hackathon", "team", "route",
-        "is_contribution_project", "is_partner_project", "partner_project",
+        "name",
+        "title",
+        "short_description",
+        "description",
+        "repo_link",
+        "demo_link",
+        "hackathon",
+        "team",
+        "route",
+        "is_contribution_project",
+        "is_partner_project",
+        "partner_project",
     ]
     return frappe.db.get_value(
         HACKATHON_PROJECT,
