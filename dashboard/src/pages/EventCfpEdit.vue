@@ -88,13 +88,19 @@
             close the form manually with Publish/Unpublish.</span
           >
         </div>
-        <TextEditor
-          class="col-span-2"
-          label="Form Description"
-          placeholder="This description will be shown on the CFP form."
-          :model-value="cfp.doc.cfp_form_description"
-          @update:model-value="($event) => (cfp.doc.cfp_form_description = $event)"
-        />
+        <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+          <TextEditor
+            large
+            label="Form Description"
+            placeholder="This description will be shown on the CFP form."
+            :model-value="cfp.doc.cfp_form_description"
+            @update:model-value="($event) => (cfp.doc.cfp_form_description = $event)"
+          />
+          <span class="text-sm text-ink-gray-5"
+            >Shown as the guideline step for applicants. Leave empty to show the foundation's
+            default guidelines instead.</span
+          >
+        </div>
       </div>
     </div>
     <div>

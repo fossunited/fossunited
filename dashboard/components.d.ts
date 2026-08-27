@@ -46,7 +46,6 @@ declare module 'vue' {
     FormActionBar: typeof import('./src/components/FormActionBar.vue')['default']
     FormCard: typeof import('./src/components/cfp-public/FormCard.vue')['default']
     FormClosedSection: typeof import('./src/components/cfp-public/FormClosedSection.vue')['default']
-    FormHeader: typeof import('./src/components/cfp-public/FormHeader.vue')['default']
     FossClubBadge: typeof import('./src/components/FossClubBadge.vue')['default']
     FossClubBranding: typeof import('./src/components/FossClubBranding.vue')['default']
     FossClubIcon: typeof import('./src/components/icons/FossClubIcon.vue')['default']
