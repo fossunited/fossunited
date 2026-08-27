@@ -33,7 +33,14 @@ def update_submission(doctype: str, submission: str, fields: str, custom: str):
 
     doc = frappe.get_doc(doctype, submission)
 
-    BLOCKED_FIELDS = {"status", "is_published", "docstatus", "owner", "submitted_by", "workflow_state"}
+    BLOCKED_FIELDS = {
+        "status",
+        "is_published",
+        "docstatus",
+        "owner",
+        "submitted_by",
+        "workflow_state",
+    }
     meta = frappe.get_meta(doctype)
     for k, v in fields.items():
         if k in BLOCKED_FIELDS:
@@ -96,14 +103,17 @@ def post_review(submission: str, to_approve: str | int, remarks: str):
     cfp = submission_doc.linked_cfp or submission_doc.cfp
     if cfp:
         assigned_reviewers = [
-            r.reviewer for r in frappe.get_all(
+            r.reviewer
+            for r in frappe.get_all(
                 "FOSS CFP Reviewer",
                 filters={"parent": cfp},
                 fields=["reviewer"],
             )
         ]
         if reviewer.name not in assigned_reviewers:
-            frappe.throw(_("You are not an assigned reviewer for this CFP"), frappe.PermissionError)
+            frappe.throw(
+                _("You are not an assigned reviewer for this CFP"), frappe.PermissionError
+            )
 
     submission_doc.append(
         "reviews",
