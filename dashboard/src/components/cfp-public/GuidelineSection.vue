@@ -6,7 +6,7 @@
 </template>
 <script setup>
 import { createResource } from 'frappe-ui'
-import { cleanedHTML } from '@/helpers/utils'
+import { cleanedHTML, hasHtmlContent } from '@/helpers/utils'
 import { computed, inject } from 'vue'
 
 const cfpData = inject('$cfpData')
@@ -18,7 +18,7 @@ const globalGuidelines = createResource({
 
 const _guidelines = computed(() => {
   const override = cfpData.data.cfp_form_description
-  if (override) return cleanedHTML(override)
+  if (hasHtmlContent(override)) return cleanedHTML(override)
   return cleanedHTML(globalGuidelines.data?.guidelines)
 })
 </script>

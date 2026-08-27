@@ -40,6 +40,12 @@ export const cleanedHTML = (htmlData) => {
   return tempDiv.innerHTML
 }
 
+// True when a TipTap/rich-text HTML string has real content, false for
+// blank docs like '<p></p>', '<p>&nbsp;</p>', or whitespace-only strings.
+export const hasHtmlContent = (htmlData) => {
+  return cleanedHTML(htmlData).trim() !== ''
+}
+
 export const ensureHttpsPrefix = (url) => {
   if (!url || url.startsWith('http://') || url.startsWith('https://')) return url
   return 'https://' + url
