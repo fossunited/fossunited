@@ -38,10 +38,11 @@ def get_hackathon(name: str) -> dict:
         dict: Hackathon document as a dictionary
     """
     SAFE_FIELDS = [
-        "name", "hackathon_name", "permalink", "status", "description",
-        "start_date", "end_date", "banner_image", "organization", "chapter",
-        "max_team_members", "is_published", "hackathon_rules",
-        "registration_start_date", "registration_end_date",
+        "name", "hackathon_name", "permalink", "hackathon_type",
+        "start_date", "end_date", "hackathon_banner", "hackathon_logo",
+        "chapter", "max_team_members", "is_published", "hackathon_rules",
+        "hackathon_description", "is_registration_live", "route",
+        "has_localhosts", "is_team_mandatory",
     ]
     doc = frappe.db.get_value(HACKATHON, name, SAFE_FIELDS, as_dict=True)
     if not doc:
@@ -62,10 +63,11 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
         dict: Hackathon document as a dictionary
     """
     SAFE_FIELDS = [
-        "name", "hackathon_name", "permalink", "status", "description",
-        "start_date", "end_date", "banner_image", "organization", "chapter",
-        "max_team_members", "is_published", "hackathon_rules",
-        "registration_start_date", "registration_end_date",
+        "name", "hackathon_name", "permalink", "hackathon_type",
+        "start_date", "end_date", "hackathon_banner", "hackathon_logo",
+        "chapter", "max_team_members", "is_published", "hackathon_rules",
+        "hackathon_description", "is_registration_live", "route",
+        "has_localhosts", "is_team_mandatory",
     ]
     hackathon_name = frappe.db.get_value(HACKATHON, {"permalink": permalink}, "name")
     if not hackathon_name:

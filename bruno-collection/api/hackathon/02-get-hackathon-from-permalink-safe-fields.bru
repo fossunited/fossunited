@@ -1,0 +1,37 @@
+meta {
+  name: get-hackathon-from-permalink-safe-fields
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base}}/method/fossunited.api.hackathon.get_hackathon_from_permalink?permalink={{hackathon_permalink}}
+  body: none
+  auth: none
+}
+
+docs {
+  # get_hackathon_from_permalink field exposure prevention
+
+  Same SAFE_FIELDS whitelist as `get_hackathon`, but looked up by permalink
+  instead of docname.
+
+  **Endpoint**: `fossunited.api.hackathon.get_hackathon_from_permalink`
+  **Auth**: `allow_guest=True` (public)
+  **Seed data**: `hackathon_permalink` env var → "mock-fossit-hackathon"
+  **Source**: `fossunited/api/hackathon.py`
+}
+
+tests {
+  test("should return only safe fields via permalink", function() {
+    const data = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    const hack = data.message;
+    expect(hack).to.have.property("hackathon_name");
+    expect(hack).to.have.property("permalink", bru.getEnvVar("hackathon_permalink"));
+    expect(hack).to.not.have.property("owner");
+    expect(hack).to.not.have.property("modified_by");
+    expect(hack).to.not.have.property("_user_tags");
+    expect(hack).to.not.have.property("docstatus");
+  });
+}

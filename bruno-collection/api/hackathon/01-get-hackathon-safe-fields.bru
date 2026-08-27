@@ -1,0 +1,42 @@
+meta {
+  name: get-hackathon-safe-fields
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base}}/method/fossunited.api.hackathon.get_hackathon?name={{hackathon_id}}
+  body: none
+  auth: none
+}
+
+docs {
+  # get_hackathon field exposure prevention
+
+  Verifies that `get_hackathon` only returns SAFE_FIELDS and not internal
+  Frappe metadata (`_user_tags`, `_comments`, `owner`, `modified_by`, etc.).
+
+  **Endpoint**: `fossunited.api.hackathon.get_hackathon`
+  **Auth**: `allow_guest=True` (public)
+  **Seed data**: `hackathon_id` env var → MOCK-FOSSIT Hackathon (from `development/seed.py`)
+  **Source**: `fossunited/api/hackathon.py`
+}
+
+tests {
+  test("should return only safe fields", function() {
+    const data = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    const hack = data.message;
+    expect(hack).to.have.property("name");
+    expect(hack).to.have.property("hackathon_name");
+    expect(hack).to.have.property("permalink");
+    expect(hack).to.have.property("hackathon_type");
+    expect(hack).to.not.have.property("_user_tags");
+    expect(hack).to.not.have.property("_comments");
+    expect(hack).to.not.have.property("_assign");
+    expect(hack).to.not.have.property("_liked_by");
+    expect(hack).to.not.have.property("owner");
+    expect(hack).to.not.have.property("modified_by");
+    expect(hack).to.not.have.property("docstatus");
+  });
+}
