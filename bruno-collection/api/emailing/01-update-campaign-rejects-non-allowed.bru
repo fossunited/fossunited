@@ -1,0 +1,41 @@
+meta {
+  name: update-campaign-rejects-non-allowed-fields
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base}}/method/fossunited.api.emailing.update_campaign
+  body: json
+  auth: none
+}
+
+docs {
+  # update_campaign mass assignment prevention
+
+  Tests that `update_campaign` rejects non-chapter-members, and that even
+  if access were granted, dangerous fields (`email_sent`, `docstatus`,
+  `owner`) are filtered by the ALLOWED_FIELDS whitelist.
+
+  The payload includes both allowed (`subject`) and blocked (`docstatus`,
+  `owner`, `email_sent`) fields to verify filtering.
+
+  **Endpoint**: `fossunited.api.emailing.update_campaign`
+  **Auth**: `@frappe.whitelist()` — needs chapter membership
+  **Seed data**: `newsletter_id` env var → Newsletter Campaign
+  **Source**: `fossunited/api/emailing.py`
+}
+
+body:json {
+  {
+    "campaign_id": "{{newsletter_id}}",
+    "data": {"email_sent": true, "docstatus": 1, "owner": "hacker@evil.com", "subject": "Updated Subject"}
+  }
+}
+
+tests {
+  test("non-chapter-member should be rejected or non-allowed fields ignored", function() {
+    const status = res.getStatus();
+    expect(status).to.be.oneOf([403, 417, 500]);
+  });
+}

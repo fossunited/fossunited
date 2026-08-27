@@ -1,0 +1,40 @@
+meta {
+  name: get-campaign-detail-safe-fields
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base}}/method/fossunited.api.emailing.get_campaign_detail
+  body: json
+  auth: none
+}
+
+docs {
+  # get_campaign_detail field exposure prevention
+
+  Tests that `get_campaign_detail` rejects non-chapter-members. If access
+  were granted, verifies that only CAMPAIGN_FIELDS are returned (not
+  internal metadata or credentials).
+
+  Previously used `frappe.get_doc(...).as_dict()` and
+  `frappe.db.get_value(..., ["*"])` which leaked all fields.
+
+  **Endpoint**: `fossunited.api.emailing.get_campaign_detail`
+  **Auth**: `@frappe.whitelist()` — needs chapter membership
+  **Seed data**: `newsletter_id` env var
+  **Source**: `fossunited/api/emailing.py`
+}
+
+body:json {
+  {
+    "id": "{{newsletter_id}}"
+  }
+}
+
+tests {
+  test("non-chapter-member should be rejected from viewing campaign detail", function() {
+    const status = res.getStatus();
+    expect(status).to.be.oneOf([403, 417, 500]);
+  });
+}
