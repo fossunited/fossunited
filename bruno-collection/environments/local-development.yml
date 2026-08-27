@@ -1,0 +1,15 @@
+name: local-development
+variables:
+- name: base
+  value: 'http://foss.localhost/api'
+- name: auth_token
+  value: '{{process.env.auth_token}}'
+- name: chapter_lead_email
+  value: 'mock-bangalore-lead@example.com'
+- name: chapter_lead_password
+  value: 'password'
+- name: attendee_email
+  value: 'mock-attendee-1@example.com'
+- name: attendee_password
+  value: 'password'
+color: '#22c55e'
