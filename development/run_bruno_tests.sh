@@ -60,7 +60,7 @@ for folder in "${FOLDERS_TO_RUN[@]}"; do
     continue
   fi
   echo "▶ Running Bruno tests: $folder"
-  if ! npx @usebruno/cli run "$folder_path" --env "$ENV"; then
+  if ! (cd "$BRUNO_DIR" && npx @usebruno/cli run "$folder" --env "$ENV"); then
     echo "✗ FAILED: $folder"
     FAILED=1
   fi
