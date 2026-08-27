@@ -7,15 +7,18 @@
 <script setup>
 import { createResource } from 'frappe-ui'
 import { cleanedHTML } from '@/helpers/utils'
-import { ref } from 'vue'
+import { computed, inject } from 'vue'
 
-const _guidelines = ref()
+const cfpData = inject('$cfpData')
 
-const guidelines = createResource({
+const globalGuidelines = createResource({
   url: 'fossunited.api.cfp.get_global_cfp_guidelines',
   auto: true,
-  onSuccess(data) {
-    _guidelines.value = cleanedHTML(data.guidelines)
-  },
+})
+
+const _guidelines = computed(() => {
+  const override = cfpData.data.cfp_form_description
+  if (override) return cleanedHTML(override)
+  return cleanedHTML(globalGuidelines.data?.guidelines)
 })
 </script>
