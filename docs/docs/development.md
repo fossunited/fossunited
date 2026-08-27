@@ -284,6 +284,7 @@ To automatically run linters before commits:
 
 - We use [ruff](https://docs.astral.sh/ruff/) for linting python files. It is recommended to use [prettier](https://prettier.io/) for formatting HTML, CSS & Vue files.
 - [Vale](https://vale.sh) is used for spell check and grammar check for docs content.
+- [Bruno CLI](https://docs.usebruno.com/testing/cli) runs API e2e tests when Python API files or `.bru` test files change.
 
 
 ```sh
@@ -292,6 +293,52 @@ pre-commit install
 ```
 
 Or use [uv](https://github.com/astral-sh/uv) as an alternative Python package manager.
+
+---
+
+## Bruno API Tests
+
+The `bruno-collection/` directory contains end-to-end API tests written in
+[Bruno](https://www.usebruno.com/) `.bru` format. These tests verify security
+hardening (field exposure, auth checks, mass assignment prevention, path
+traversal) against a running Frappe instance with seed data.
+
+### Setup
+
+1. Seed your dev site (see [Seed Script](#seed-script) above).
+2. Install Bruno CLI:
+   ```sh
+   npm install -g @usebruno/cli
+   ```
+
+### Running Tests
+
+From the `bruno-collection/` directory:
+
+```sh
+# Run a single test folder
+npx @usebruno/cli run api/hackathon --env local-development
+
+# Run all test folders
+for folder in api/*/; do
+  npx @usebruno/cli run "$folder" --env local-development
+done
+```
+
+Tests also run automatically via the pre-commit hook when you change Python
+API files or `.bru` test files.
+
+### Environment Variables
+
+Edit `bruno-collection/environments/local-development.bru` to match your
+local seed data IDs. After running the seed script, look up docnames:
+
+```sh
+bench execute frappe.client.get_list \
+  --args '{"doctype":"FOSS Hackathon","filters":{"hackathon_name":["like","MOCK-%"]},"fields":["name","hackathon_name","permalink"]}'
+```
+
+See `bruno-collection/README.md` for the full variable reference.
 
 ---
 
