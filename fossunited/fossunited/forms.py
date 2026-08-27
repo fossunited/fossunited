@@ -3,6 +3,7 @@ import json
 import frappe
 from frappe import _
 
+from fossunited.api.chapter import check_if_chapter_or_event_core_member
 from fossunited.doctype_ids import PROPOSAL, RSVP_RESPONSE, USER_PROFILE
 
 """
@@ -32,13 +33,13 @@ def update_submission(doctype: str, submission: str, fields: str, custom: str):
 
     doc = frappe.get_doc(doctype, submission)
 
-    # Update only fields that exist on the doctype (avoid creating unknown fields)
+    BLOCKED_FIELDS = {"status", "is_published", "docstatus", "owner", "submitted_by", "workflow_state"}
     meta = frappe.get_meta(doctype)
     for k, v in fields.items():
+        if k in BLOCKED_FIELDS:
+            continue
         if meta.get_field(k):
             doc.set(k, v)
-        else:
-            frappe.logger("rsvp_update").debug(f"Ignored unknown field: {k}")
 
     # Build map of existing custom answers (question -> row)
     existing = {row.question: row for row in (doc.custom_answers or [])}
@@ -91,6 +92,19 @@ def post_review(submission: str, to_approve: str | int, remarks: str):
     reviewer = frappe.get_doc(USER_PROFILE, {"email": frappe.session.user})
 
     submission_doc = frappe.get_doc(PROPOSAL, submission)
+
+    cfp = submission_doc.linked_cfp or submission_doc.cfp
+    if cfp:
+        assigned_reviewers = [
+            r.reviewer for r in frappe.get_all(
+                "FOSS CFP Reviewer",
+                filters={"parent": cfp},
+                fields=["reviewer"],
+            )
+        ]
+        if reviewer.name not in assigned_reviewers:
+            frappe.throw(_("You are not an assigned reviewer for this CFP"), frappe.PermissionError)
+
     submission_doc.append(
         "reviews",
         {
@@ -117,6 +131,11 @@ def publish_form(doctype: str, docname: str):
         )
 
     doc = frappe.get_doc(doctype, docname)
+
+    event = doc.get("event") or doc.get("chapter_event")
+    if not event or not check_if_chapter_or_event_core_member(event):
+        frappe.throw(_("You are not authorized to publish this form"), frappe.PermissionError)
+
     doc.is_published = 1
     doc.save(ignore_permissions=True)
     return doc
@@ -136,6 +155,11 @@ def unpublish_form(doctype: str, docname: str):
         )
 
     doc = frappe.get_doc(doctype, docname)
+
+    event = doc.get("event") or doc.get("chapter_event")
+    if not event or not check_if_chapter_or_event_core_member(event):
+        frappe.throw(_("You are not authorized to unpublish this form"), frappe.PermissionError)
+
     doc.is_published = 0
     doc.save(ignore_permissions=True)
     return doc
