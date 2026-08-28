@@ -364,11 +364,14 @@ const standard_fields = [
 ]
 
 const toggleSessionType = (type, checked) => {
-  cfp.doc.allowed_session_types = getUpdatedAllowedSessionTypes(
-    cfp.doc.allowed_session_types,
-    type,
-    checked,
-  )
+  const updated = getUpdatedAllowedSessionTypes(cfp.doc.allowed_session_types, type, checked)
+  if (updated === null) {
+    toast.error('Invalid Selection.', {
+      description: 'At least one session type must remain allowed.',
+    })
+    return
+  }
+  cfp.doc.allowed_session_types = updated
 }
 
 let cfp = reactive({})

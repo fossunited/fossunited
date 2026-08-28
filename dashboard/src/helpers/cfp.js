@@ -131,6 +131,7 @@ const parseAllowedSessionTypes = (allowedSessionTypes) => {
 export const getUpdatedAllowedSessionTypes = (currentValue, type, checked) => {
   let selected = parseAllowedSessionTypes(currentValue) || [...SESSION_TYPES]
   selected = checked ? [...new Set([...selected, type])] : selected.filter((t) => t !== type)
+  if (!selected.length) return null
   return selected.length === SESSION_TYPES.length ? '' : selected.join('\n')
 }
 

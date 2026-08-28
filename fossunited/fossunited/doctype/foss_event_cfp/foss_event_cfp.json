@@ -154,10 +154,10 @@
     },
     {
       "default": "0",
-      "description": "If optional field need to be shown in UI for speakers",
+      "description": "If optional contact field need to be shown in UI for speakers",
       "fieldname": "hide_contact_info",
       "fieldtype": "Check",
-      "label": "Ask Contact Info"
+      "label": "Hide speaker contact field"
     },
     {
       "default": "1",
@@ -174,7 +174,7 @@
       "link_fieldname": "linked_cfp"
     }
   ],
-  "modified": "2026-08-28 13:42:04.167204",
+  "modified": "2026-08-28 17:29:30.216781",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP",
