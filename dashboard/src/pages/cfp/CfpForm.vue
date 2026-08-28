@@ -142,8 +142,6 @@ const proposalConfirmationFields = ref([])
 const subscribeNewsletter = ref(false)
 
 proposalReferences.value.push(getReferenceItemSchema())
-proposalSpeakers.value.push(getSpeakerFields())
-proposalConfirmationFields.value = getSubmissionConfirmationFields()
 
 const errorMessages = ref('')
 
@@ -159,6 +157,8 @@ const cfpData = createResource({
   onSuccess(data) {
     if (data) {
       proposalFormFields.value = getProposalFormFields(data).value
+      proposalSpeakers.value = [getSpeakerFields(data)]
+      proposalConfirmationFields.value = getSubmissionConfirmationFields(data)
     }
   },
 })
@@ -277,7 +277,11 @@ const insertProposal = createResource({
           ? 1
           : 0,
         ...getTransformedSubmissionFields(
-          proposalFormFields.value,
+          [
+            ...proposalFormFields.value,
+            // Custom "Check"-type confirmation checkboxes; accept_coc is handled above.
+            ...proposalConfirmationFields.value.filter((f) => f.fieldname !== 'accept_coc'),
+          ],
           proposalReferences.value,
           proposalSpeakers.value,
         ),
