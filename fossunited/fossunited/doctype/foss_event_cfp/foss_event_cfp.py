@@ -25,6 +25,7 @@ class FOSSEventCFP(Document):
         )
 
         allow_cfp_edit: DF.Check
+        allowed_session_types: DF.SmallText | None
         anonymise_proposals: DF.Check
         cfp_custom_questions: DF.Table[FOSSCustomQuestion]
         cfp_form_description: DF.TextEditor | None
@@ -34,9 +35,10 @@ class FOSSEventCFP(Document):
         event: DF.Link
         event_name: DF.Data | None
         has_public_custom_responses: DF.Check
+        hide_contact_info: DF.Check
         hide_review: DF.Check
-        only_talk_proposals: DF.Check
-        only_workshops: DF.Check
+        override_session_categories: DF.SmallText | None
+        require_speaker_photo: DF.Check
         status: DF.Literal["Closed", "Live"]
     # end: auto-generated types
 

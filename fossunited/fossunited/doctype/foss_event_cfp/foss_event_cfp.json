@@ -10,12 +10,14 @@
   "field_order": [
     "meta_section",
     "status",
-    "only_workshops",
-    "only_talk_proposals",
+    "allowed_session_types",
+    "override_session_categories",
     "column_break_puww",
     "allow_cfp_edit",
     "anonymise_proposals",
     "hide_review",
+    "hide_contact_info",
+    "require_speaker_photo",
     "event_information_section",
     "event",
     "event_name",
@@ -110,20 +112,6 @@
       "label": "Anonymise Proposals?"
     },
     {
-      "default": "0",
-      "description": "Only accept workshop proposals.",
-      "fieldname": "only_workshops",
-      "fieldtype": "Check",
-      "label": "Only Workshop Proposals"
-    },
-    {
-      "default": "0",
-      "description": "Only accept Talk proposals.",
-      "fieldname": "only_talk_proposals",
-      "fieldtype": "Check",
-      "label": "Only Talk Proposals"
-    },
-    {
       "fieldname": "deadline",
       "fieldtype": "Datetime",
       "label": "Deadline"
@@ -151,6 +139,32 @@
       "fieldname": "hide_review",
       "fieldtype": "Check",
       "label": "Hide Reviews from Public Page"
+    },
+    {
+      "description": "Limit session they can choose for submission.",
+      "fieldname": "allowed_session_types",
+      "fieldtype": "Small Text",
+      "label": "Allowed Session Type"
+    },
+    {
+      "description": "Show personalized categories to pick or choose for submitters",
+      "fieldname": "override_session_categories",
+      "fieldtype": "Small Text",
+      "label": "Override Session category"
+    },
+    {
+      "default": "0",
+      "description": "If optional field need to be shown in UI for speakers",
+      "fieldname": "hide_contact_info",
+      "fieldtype": "Check",
+      "label": "Ask Contact Info"
+    },
+    {
+      "default": "1",
+      "description": "If mandate speaker to add photo",
+      "fieldname": "require_speaker_photo",
+      "fieldtype": "Check",
+      "label": "Ask speaker photo"
     }
   ],
   "links": [
@@ -160,7 +174,7 @@
       "link_fieldname": "linked_cfp"
     }
   ],
-  "modified": "2026-07-02 19:38:36.773556",
+  "modified": "2026-08-28 13:42:04.167204",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP",
