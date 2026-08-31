@@ -9,7 +9,7 @@
       <div v-if="upcomingTickets.length" class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <LivePing />
-          <h4 class="text-sm font-medium text-ink-gray-8">Upcoming</h4>
+          <h3 class="text-sm font-medium text-ink-gray-8">Upcoming</h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <TicketCard
@@ -23,8 +23,8 @@
 
       <div v-if="concludedTickets.length" class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-surface-gray-4" />
-          <h4 class="text-sm font-medium text-ink-gray-8">Concluded</h4>
+          <span class="w-2 h-2 rounded-full bg-surface-gray-4" aria-hidden="true" />
+          <h3 class="text-sm font-medium text-ink-gray-8">Concluded</h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <TicketCard
@@ -60,7 +60,7 @@
           <p class="text-xs text-ink-gray-5 font-mono">{{ selectedTicket.name }}</p>
           <div class="flex items-center gap-1.5">
             <LivePing v-if="!selectedTicket.is_concluded" />
-            <span v-else class="w-2 h-2 rounded-full bg-surface-gray-4" />
+            <span v-else class="w-2 h-2 rounded-full bg-surface-gray-4" aria-hidden="true" />
             <span class="text-xs text-ink-gray-5">
               {{ selectedTicket.is_concluded ? 'Concluded' : 'Upcoming' }}
             </span>
@@ -104,6 +104,7 @@
               class="text-ink-gray-9 inline-flex items-center gap-1 hover:underline disabled:cursor-not-allowed disabled:opacity-60"
               title="Click to add to calendar"
               :disabled="addingToCalendar"
+              :aria-busy="addingToCalendar"
               @click="onAddToCalendarClick"
             >
               <LoadingIndicator
@@ -115,12 +116,14 @@
                 class="w-3.5 h-3.5 text-ink-gray-5 flex-shrink-0"
                 aria-hidden="true"
               />
+              <span class="sr-only">Add </span>
               {{
                 getFormattedEventDate(
                   selectedTicket.event_start_date,
                   selectedTicket.event_end_date,
                 )
               }}
+              <span class="sr-only"> to your calendar</span>
             </button>
           </div>
           <div v-if="selectedTicket.event_location">
@@ -165,11 +168,16 @@
             <p class="text-xs text-ink-gray-5">T-shirt</p>
             <span
               class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border w-fit"
-              :class="getTshirtState(selectedTicket).class"
-              :title="getTshirtState(selectedTicket).tooltip"
+              :class="selectedTshirtState.class"
+              :title="selectedTshirtState.tooltip"
             >
-              <IconShirt class="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
+              <component
+                :is="selectedTshirtState.icon"
+                class="w-3.5 h-3.5 flex-shrink-0"
+                aria-hidden="true"
+              />
               {{ selectedTicket.tshirt_size }}
+              <span class="sr-only">, {{ selectedTshirtState.tooltip }}</span>
             </span>
           </div>
         </div>
@@ -179,6 +187,7 @@
           variant="solid"
           class="w-full"
           :loading="downloadingTicket"
+          :aria-busy="downloadingTicket"
           @click="onDownloadClick"
         />
       </div>
@@ -190,7 +199,6 @@
 import { createResource, Dialog, Button, LoadingIndicator } from 'frappe-ui'
 import { ref, computed } from 'vue'
 import {
-  IconShirt,
   IconExternalLink,
   IconCalendar,
   IconClock,
@@ -220,6 +228,9 @@ const tickets = createResource({
 
 const upcomingTickets = computed(() => tickets.data?.filter((t) => !t.is_concluded) ?? [])
 const concludedTickets = computed(() => tickets.data?.filter((t) => t.is_concluded) ?? [])
+const selectedTshirtState = computed(
+  () => selectedTicket.value && getTshirtState(selectedTicket.value),
+)
 
 const { loading: downloadingTicket, run: downloadTicket } = useDownloadAction(
   'Could not download ticket',

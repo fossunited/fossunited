@@ -1,3 +1,5 @@
+import { IconShirt, IconAlertTriangle } from '@tabler/icons-vue'
+
 export const getTicketQrUrl = (ticketId) =>
   `/api/method/fossunited.api.tickets.get_ticket_qr?ticket_id=${encodeURIComponent(ticketId)}`
 
@@ -25,23 +27,29 @@ export const getTicketEventUrl = (ticket) =>
 /**
  * T-shirt chip state for a ticket: collected (green, filled), ordered and
  * event still upcoming (green, border only), or ordered but never collected
- * and the event has already concluded (red, border only).
+ * and the event has already concluded (red, border only, flagged).
+ *
+ * The two "not collected" states are distinguished by icon, not just color
+ * (green vs red border alone is a red-green colorblind confusion pair).
  */
 export const getTshirtState = (ticket) => {
   if (ticket.tshirt_delivered) {
     return {
       tooltip: 'Collected',
+      icon: IconShirt,
       class: 'bg-surface-green-2 text-ink-green-4 border-transparent',
     }
   }
   if (ticket.is_concluded) {
     return {
-      tooltip: 'Not collected',
+      tooltip: 'Not collected, event has ended',
+      icon: IconAlertTriangle,
       class: 'bg-transparent text-ink-red-4 border-outline-red-3',
     }
   }
   return {
     tooltip: 'Not collected yet',
+    icon: IconShirt,
     class: 'bg-transparent text-ink-green-4 border-outline-green-3',
   }
 }

@@ -23,7 +23,7 @@ def get_sidebar_items(user: str = frappe.session.user):
                 {
                     "label": "My Tickets",
                     "route": "/my-tickets",
-                    "icon": "ticket",
+                    "icon": "credit-card",
                 },
             ],
         },
