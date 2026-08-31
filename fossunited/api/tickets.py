@@ -2,6 +2,7 @@
 APIs for Tickets and Transfer Tickets
 """
 
+import io
 from datetime import timedelta
 
 import frappe
@@ -47,6 +48,79 @@ def get_ticket_details(ticket_id: str):
         as_dict=True,
     )
     return ticket
+
+
+@frappe.whitelist()
+def get_session_user_tickets() -> list:
+    """
+    Get all tickets belonging to the logged-in user, for the "My Tickets" page.
+
+    A ticket belongs to the user if its email matches the session user, or if
+    the session user created the ticket (e.g. on someone else's behalf).
+    """
+    tickets = frappe.get_all(
+        EVENT_TICKET,
+        or_filters={"email": frappe.session.user, "owner": frappe.session.user},
+        fields=[
+            "name",
+            "event",
+            "tier",
+            "full_name",
+            "wants_tshirt",
+            "tshirt_size",
+            "tshirt_delivered",
+            "is_transfer_ticket",
+            "creation",
+            "event.event_name as event_name",
+            "event.event_start_date as event_start_date",
+            "event.event_end_date as event_end_date",
+            "event.event_location as event_location",
+            "event.map_link as map_link",
+            "event.banner_image as banner_image",
+            "event.route as route",
+            "event.has_external_webpage as has_external_webpage",
+            "event.external_event_url as external_event_url",
+        ],
+        order_by="creation desc",
+    )
+
+    today = frappe.utils.getdate(frappe.utils.today())
+    for ticket in tickets:
+        event_date = ticket.event_end_date or ticket.event_start_date
+        ticket["is_concluded"] = bool(event_date and frappe.utils.getdate(event_date) < today)
+
+    return tickets
+
+
+@frappe.whitelist()
+def get_ticket_qr(ticket_id: str):
+    """
+    Render a QR code (SVG) for a ticket, encoding the plain ticket ID.
+
+    Ownership-gated: only the ticket's email owner or its creator may fetch it.
+    A ticket's QR content never changes once issued, so the response is
+    cacheable by the requesting browser.
+
+    Uses pyqrcode's .svg() (same as frappe.twofactor.get_qr_svg_code) since
+    .png() needs the separate `pypng` package, which isn't installed here.
+    """
+    import pyqrcode
+    from werkzeug.wrappers import Response
+
+    ticket = frappe.db.get_value(EVENT_TICKET, ticket_id, ["email", "owner"], as_dict=True)
+    # Same error for "doesn't exist" and "not yours"; avoids leaking which
+    # ticket IDs are valid to a caller who doesn't own them.
+    if not ticket or frappe.session.user not in (ticket.email, ticket.owner):
+        frappe.throw(_("Not permitted to access this ticket"), frappe.PermissionError)
+
+    buf = io.BytesIO()
+    pyqrcode.create(ticket_id).svg(buf, scale=6, background="#fff")
+
+    return Response(
+        buf.getvalue(),
+        mimetype="image/svg+xml",
+        headers={"Cache-Control": "private, max-age=86400"},
+    )
 
 
 # nosemgrep: guest-whitelisted-method

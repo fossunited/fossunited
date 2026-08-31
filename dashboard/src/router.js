@@ -27,6 +27,11 @@ const routes = [
         component: () => import('@/pages/profile/MyProposals.vue'),
       },
       {
+        path: '/my-tickets',
+        name: 'MyTickets',
+        component: () => import('@/pages/MyTickets.vue'),
+      },
+      {
         path: '/my-hackathons',
         name: 'MyHackathons',
         component: () => import('@/pages/hackathon/MyHackathons.vue'),
