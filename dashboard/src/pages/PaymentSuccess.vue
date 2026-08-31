@@ -79,6 +79,14 @@
           />
         </div>
 
+        <router-link
+          v-if="session.isLoggedIn"
+          to="/my-tickets"
+          class="text-sm text-ink-gray-6 underline hover:text-ink-gray-8"
+        >
+          View this anytime in My Tickets
+        </router-link>
+
         <p class="text-xs text-ink-gray-4">
           For any assistance, email
           <a :href="`mailto:${contactEmail}`" class="underline">{{ contactEmail }}</a>
@@ -98,6 +106,7 @@ import { IconCircleCheck, IconDownload, IconEye } from '@tabler/icons-vue'
 import { fetchBlobUrl, fetchAndDownload, showError } from '@/helpers/utils'
 import { getTicketsDownloadUrl } from '@/helpers/tickets'
 import { useDownloadAction } from '@/composables/useDownloadAction'
+import { session } from '@/data/session'
 
 const route = useRoute()
 const orderId = route.query.order_id
