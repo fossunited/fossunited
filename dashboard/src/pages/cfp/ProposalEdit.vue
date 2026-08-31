@@ -164,6 +164,7 @@ const submission = createDocumentResource({
 })
 
 provide('submission', submission)
+provide('$cfpData', cfpForm)
 
 // createDocumentResource is globally cached; on remount it may return a cached
 // instance whose onSuccess closure is bound to a destroyed component. Drive the
@@ -200,7 +201,7 @@ const mapTalkFields = () => {
 const mapToSpeakerFields = () => {
   speakerFields.value = []
   submission.doc.speakers.forEach((speaker) => {
-    let fields = getSpeakerFields()
+    let fields = getSpeakerFields(cfpForm.data)
     fields.forEach((field) => {
       if (Object.prototype.hasOwnProperty.call(speaker, field.fieldname)) {
         field.value = speaker[field.fieldname]

@@ -2,10 +2,14 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_datetime, now_datetime
 
 from fossunited.doctype_ids import GLOBAL_CFP_SETTINGS
+from fossunited.fossunited.doctype.foss_event_cfp_submission.foss_event_cfp_submission import (
+    ALLOWED_SESSION_TYPES,
+)
 
 
 class FOSSEventCFP(Document):
@@ -25,6 +29,7 @@ class FOSSEventCFP(Document):
         )
 
         allow_cfp_edit: DF.Check
+        allowed_session_types: DF.SmallText | None
         anonymise_proposals: DF.Check
         cfp_custom_questions: DF.Table[FOSSCustomQuestion]
         cfp_form_description: DF.TextEditor | None
@@ -34,9 +39,10 @@ class FOSSEventCFP(Document):
         event: DF.Link
         event_name: DF.Data | None
         has_public_custom_responses: DF.Check
+        hide_contact_info: DF.Check
         hide_review: DF.Check
-        only_talk_proposals: DF.Check
-        only_workshops: DF.Check
+        override_session_categories: DF.SmallText | None
+        require_speaker_photo: DF.Check
         status: DF.Literal["Closed", "Live"]
     # end: auto-generated types
 
@@ -60,6 +66,26 @@ class FOSSEventCFP(Document):
         if self.allow_cfp_edit:
             return True
         return self.status == "Live" and not self.is_past_deadline()
+
+    def validate(self):
+        self.validate_allowed_session_types()
+
+    def validate_allowed_session_types(self) -> None:
+        """Catch a bad Desk edit to allowed_session_types at save time."""
+        if not self.allowed_session_types:
+            return
+        invalid = [
+            t
+            for t in (line.strip() for line in self.allowed_session_types.splitlines())
+            if t and t not in ALLOWED_SESSION_TYPES
+        ]
+        if invalid:
+            frappe.throw(
+                _("Invalid session type(s) in Allowed Session Types: {0}").format(
+                    ", ".join(invalid)
+                ),
+                frappe.ValidationError,
+            )
 
     def before_insert(self):
         self.assign_reviewers()

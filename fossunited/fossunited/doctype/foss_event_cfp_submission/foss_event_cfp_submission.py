@@ -22,6 +22,15 @@ from fossunited.doctype_ids import (
 )
 from fossunited.fossunited.utils import get_youtube_id, sanitize_text_content
 
+# session_type Select options, minus 'Invited Talk'.
+ALLOWED_SESSION_TYPES = {
+    "Talk",
+    "Lightning Talk",
+    "Panel Discussion",
+    "Birds of Feather(BoF)",
+    "Workshop",
+}
+
 # Proposer-editable content fields. A change to any of these after the CFP
 # edit window closes is blocked for non-System-Manager users. Reviewer/status
 # edits and withdrawal touch none of these, so they pass through.

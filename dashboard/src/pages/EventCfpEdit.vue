@@ -1,5 +1,5 @@
 <template>
-  <div v-if="cfp_form.data && cfp.doc" class="px-4 py-8 md:p-8 flex flex-col gap-4">
+  <div v-if="cfp_form.data && cfp.doc" class="px-4 py-8 md:p-8 flex flex-col gap-8">
     <div class="flex flex-row justify-end gap-2">
       <Button
         class="w-fit"
@@ -21,7 +21,7 @@
     </div>
     <div class="flex flex-col my-4 gap-6">
       <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Edit Details</div>
-      <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
         <div class="flex flex-col gap-2">
           <FormControl
             v-model="cfp.doc.allow_cfp_edit"
@@ -58,23 +58,25 @@
         </div>
         <div class="flex flex-col gap-2">
           <FormControl
-            v-model="cfp.doc.only_workshops"
+            v-model="cfp.doc.hide_contact_info"
             type="checkbox"
-            label="Only Workshops"
+            label="Hide Contact Info Field"
             size="md"
-            @change="validateOnlyOneType"
           />
-          <span class="text-sm text-ink-gray-5">Only accept workshop proposals.</span>
+          <span class="text-sm text-ink-gray-5"
+            >Removes the optional "Contact Info" field from the speaker form.</span
+          >
         </div>
         <div class="flex flex-col gap-2">
           <FormControl
-            v-model="cfp.doc.only_talk_proposals"
+            v-model="cfp.doc.require_speaker_photo"
             type="checkbox"
-            label="Only Talk Proposals"
+            label="Require Speaker Photo"
             size="md"
-            @change="validateOnlyOneType"
           />
-          <span class="text-sm text-ink-gray-5">Only accept talk proposals.</span>
+          <span class="text-sm text-ink-gray-5"
+            >If unchecked, speakers can submit without uploading a photo.</span
+          >
         </div>
         <div class="flex flex-col gap-2">
           <FormControl
@@ -98,9 +100,36 @@
           />
           <span class="text-sm text-ink-gray-5"
             >Shown as the guideline step for applicants. Leave empty to show the foundation's
-            default guidelines instead.</span
+            default guidelines instead. If filled, this replaces the default entirely — include
+            everything applicants need, not just an addition to it.</span
           >
         </div>
+        <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+          <span class="text-base text-ink-gray-5">Allowed Session Types</span>
+          <div class="grid grid-cols-2 gap-2">
+            <FormControl
+              v-for="type in SESSION_TYPES"
+              :key="type"
+              type="checkbox"
+              :label="type"
+              :model-value="isSessionTypeAllowed(cfp.doc.allowed_session_types, type)"
+              size="md"
+              @update:model-value="(val) => toggleSessionType(type, val)"
+            />
+          </div>
+          <span class="text-sm text-ink-gray-5"
+            >Restrict which session types applicants can choose from. Leave all checked to allow
+            every type.</span
+          >
+        </div>
+        <FormControl
+          v-model="cfp.doc.override_session_categories"
+          class="col-span-1 md:col-span-2"
+          type="textarea"
+          label="Override Session Categories"
+          description='One category per line. Leave empty to use default category list. Include "Other" as one of the lines to let proposers type in their own custom category.'
+          size="md"
+        />
       </div>
     </div>
     <div>
@@ -119,7 +148,7 @@
     </div>
     <div>
       <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Custom Fields</div>
-      <div class="flex flex-col gap-2 mt-4">
+      <div class="flex flex-col gap-3 mt-4">
         <FormControl
           v-model="cfp.doc.has_public_custom_responses"
           type="checkbox"
@@ -130,6 +159,10 @@
           >Show answers to these custom questions publicly on the proposal page. Be careful: do not
           make responses public if any question collects sensitive data such as phone numbers or
           email addresses.</span
+        >
+        <span class="text-sm text-ink-gray-5"
+          >Fields of type "Check" appear as confirmation checkboxes on the final review step,
+          instead of on the submission form.</span
         >
       </div>
       <Button
@@ -252,6 +285,7 @@ import { toast } from 'vue-sonner'
 import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import FormActionBar from '@/components/FormActionBar.vue'
+import { SESSION_TYPES, isSessionTypeAllowed, getUpdatedAllowedSessionTypes } from '@/helpers/cfp'
 
 const route = useRoute()
 
@@ -329,14 +363,15 @@ const standard_fields = [
   },
 ]
 
-const validateOnlyOneType = () => {
-  if (cfp.doc.only_workshops && cfp.doc.only_talk_proposals) {
+const toggleSessionType = (type, checked) => {
+  const updated = getUpdatedAllowedSessionTypes(cfp.doc.allowed_session_types, type, checked)
+  if (updated === null) {
     toast.error('Invalid Selection.', {
-      description: 'If you wish to accept all type of proposals, uncheck both options.',
+      description: 'At least one session type must remain allowed.',
     })
-    cfp.doc.only_workshops = 0
-    cfp.doc.only_talk_proposals = 0
+    return
   }
+  cfp.doc.allowed_session_types = updated
 }
 
 let cfp = reactive({})
@@ -363,13 +398,7 @@ watch(cfp_form, (newForm) => {
 
 const emit = defineEmits(['reloadDoc'])
 const togglePublishForm = () => {
-  let to_set_status = ''
-
-  if (cfp.doc.status == 'Live') {
-    to_set_status = 'Closed'
-  } else {
-    to_set_status = 'Live'
-  }
+  const to_set_status = cfp.doc.status == 'Live' ? 'Closed' : 'Live'
 
   cfp.setValue.submit({
     status: to_set_status,
