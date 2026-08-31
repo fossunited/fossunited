@@ -13,6 +13,117 @@ Please find the TLDR reports for each month in blog posts and forum thread:
 
 > Project stats: [git commands before reading code](https://piechowski.io/post/git-commands-before-reading-code/)
 
+## August 2026
+
+August's biggest project was an accessibility audit focused on IndiaFOSS and neighbouring pages ([#786](https://github.com/fossunited/fossunited/issues/786)), landing a run of a11y fixes across the archive, IndiaFOSS 2026, dashboard, and proposal pages. New: a "My Tickets" page so attendees can see every ticket bought under their account, list/grid view toggles on jobs, clubs, and the events timeline, security hardening on ticket and check-in endpoints, and per-event CFP form overrides for session types and speaker fields. On the infrastructure side, `fossunited.org` finally got proper SPF/DKIM/DMARC records after a two-week email-delivery mystery, and the we've internally self-hosted Miniflux and Umami instances.
+
+### PR & Feature Highlights
+
+#### Accessibility Audit ([#786](https://github.com/fossunited/fossunited/issues/786))
+
+An internal accessibility push, scoped to IndiaFOSS and neighbouring pages for this round. Reference material used: [A11y Collective blog](https://www.a11y-collective.com/blog/), [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/), [WCAG 2.2](https://www.w3.org/TR/WCAG22/), and the [Digital Accessibility Concepts by ADA](https://www.youtube.com/watch?v=lmQGS3Igl88&list=PLRWIkE998w-z8Wb85qXT8da_QJUvkqfAV) playlist.
+
+Pages audited and fixed this round:
+- Stats page ([indiafoss/2026/stats](https://fossunited.org/indiafoss/2026/stats))
+- IF Archive: list, speakers, and talk pages ([indiafoss/archive](https://fossunited.org/indiafoss/archive))
+- Booths page ([indiafoss/2026/booths](https://fossunited.org/indiafoss/2026/booths))
+- Pre-events page ([indiafoss/2026/pre-events](https://fossunited.org/indiafoss/2026/pre-events))
+- Devrooms list + track pages ([indiafoss/2026/devrooms](https://fossunited.org/indiafoss/2026/devrooms))
+
+Pending for a future round: schedule page, CFP form, proposal details page, ticketing.
+
+- [commit 803feadb](https://github.com/fossunited/fossunited/commit/803feadb) Fixed accessibility tabbing order on the IndiaFOSS 2026 page; sponsor tier is now announced to screen readers.
+- [commit ffe47623](https://github.com/fossunited/fossunited/commit/ffe47623) Misc accessibility fixes on the IF archive.
+- [commit 1bda5cd5](https://github.com/fossunited/fossunited/commit/1bda5cd5), [commit 02959726](https://github.com/fossunited/fossunited/commit/02959726) General accessibility pass on IndiaFOSS pages and WCAG practices applied to user-facing dashboard pages.
+- [#1683](https://github.com/fossunited/fossunited/pull/1683) Improved `aria-label` on the proposal page.
+
+**Volunteer findings this month:**
+- Gauri reported low-contrast UI on the Schedule page, not meeting WCAG AA ([#1707](https://github.com/fossunited/fossunited/issues/1707)).
+- Amith Biju flagged a progress-report component from frappe-ui that needs a frappe-ui version bump to fix many accessibility issues ([#1696](https://github.com/fossunited/fossunited/issues/1696)).
+
+#### My Tickets Page
+
+- A new **[My Tickets](https://fossunited.org/dashboard/my-tickets)** page shows every ticket bought by the logged-in session user, grouped into "upcoming" and "concluded", each as a simple card with a cached QR code and enough meta info to know what's included. Add-to-calendar and direct download buttons included.
+
+  - Backend: `get_session_user_tickets` (tickets bought or owned matching the session user's email) and `get_ticket_qr` (renders the ticket QR as SVG), both scoped to the session user only ([#1729](https://github.com/fossunited/fossunited/pull/1729)).
+
+  - Frontend: page added at `/my-tickets` with sidebar navigation; shared ticket/download helpers; ticket card component.
+
+  - Test added for fetching all tickets from `session.user` only.
+
+#### List/Grid Views ([#1650](https://github.com/fossunited/fossunited/pull/1650), [#1663](https://github.com/fossunited/fossunited/pull/1663), [#1664](https://github.com/fossunited/fossunited/pull/1664))
+
+Jobs, clubs, and the events timeline all got a list view toggle alongside the existing grid view, to keep the listing simple and minimal. Credits: Siddharth Bansal (@sidd190).
+
+#### Security Hardening
+
+- [#1704](https://github.com/fossunited/fossunited/pull/1704) Hardened ticket and check-in endpoints; removed bulk Bruno tests and rate limits on insights endpoints. Credits: SIDDHARTH.
+
+- [#1698](https://github.com/fossunited/fossunited/pull/1698) Orders are now revalidated before fulfillment. Refunds are locked before the Razorpay call and the webhook user is restored afterward; capture status is returned so an invalid payment can't look successful. Automatic refunds were removed per the no-refund policy (failed fulfillment now stays "Captured" with no ticket issued); Razorpay orders now expire after 30 minutes. Credits: Anas Khan (first contribution).
+
+#### CFP Form Customization
+
+- [#1727](https://github.com/fossunited/fossunited/pull/1727) Organisers can now override, per event: allowed session types (multi-select), session categories (with an open "other" option), whether to hide the speaker contact-info field, and whether a speaker photo is required.
+
+- [#1726](https://github.com/fossunited/fossunited/pull/1726) The CFP form's global guideline text is now overridden by the event's own CFP description when one is set; falls back to the foundation-wide guideline only if the organiser hasn't set one. The redundant CFP form header (shown on every page) was removed in favour of showing this description once, on the first page.
+
+- [#1705](https://github.com/fossunited/fossunited/pull/1705) `allow_cfp_edit` is now the master switch for proposal edits: when disabled, edits are additionally blocked once the CFP is live and past its deadline.
+
+#### Ticketing & T-shirts
+
+- [#1712](https://github.com/fossunited/fossunited/pull/1712) Free ticket coupons can now include a t-shirt; the application form conditionally asks for size only when the coupon includes one, and validates before passing the size through.
+- [#1716](https://github.com/fossunited/fossunited/pull/1716) Event volunteer form can also ask for t-shirt size when the event wants it (defaults to "Skip"). T-shirt size is now collected in three places: ticket purchase, free-ticket application, and volunteer form.
+- [#1695](https://github.com/fossunited/fossunited/pull/1695) Events can now set a "catering" field (none / lunch only / coffee) so attendees know what's provided; shown on the event details page and during ticket purchase.
+
+#### Bug Fixes & Internal
+
+- [commit 78f2952c](https://github.com/fossunited/fossunited/commit/78f2952c) Event page now links to the schedule via a button instead of a heading.
+- [commit ac4c5708](https://github.com/fossunited/fossunited/commit/ac4c5708) Href links inside paragraphs are now underlined.
+- [commit ecf601d3](https://github.com/fossunited/fossunited/commit/ecf601d3) Fixed a currency option so grant number cards can sum correctly (upstream Frappe issue).
+- [commit 769586e1](https://github.com/fossunited/fossunited/commit/769586e1) Free ticket dashboard checks `event.data` for objects safely.
+- [#1697](https://github.com/fossunited/fossunited/pull/1697) Fixed ambiguous link text ("here" / "apply" / "Read More") across docs and web pages. First contribution from saksham mishra.
+- [commit d624b536](https://github.com/fossunited/fossunited/commit/d624b536) Enabled the semgrep pre-commit linter; fixed an override warning.
+- [#1721](https://github.com/fossunited/fossunited/pull/1721) Added the Bruno API test runner to pre-commit hooks. Credits: SIDDHARTH.
+- [commit f6b68396](https://github.com/fossunited/fossunited/commit/f6b68396) Added Frappe dependencies so FOSS Clubs can be installed as a custom app from GitHub.
+
+#### Documentation
+
+- [#1666](https://github.com/fossunited/fossunited/pull/1666) Event planning checklist added, with navigation updates and clarity/conciseness passes; outdated FOSS United sponsorship note removed from event docs. Credits: Vrinda.
+
+---
+
+### Infrastructure & Story
+
+#### Email Delivery: SPF, DKIM, DMARC
+
+`fossunited.org` had no SPF or DMARC records, and an incomplete DKIM setup, despite sending real mail through AWS SES for some time. This surfaced when a devroom manager reported never receiving an email that our platform had marked "Sent". Investigation took about one to two weeks. Separately, the affected address had also landed in AWS SES's bounce/suppression list, which blocklists an address from receiving further mail until manually reviewed.
+
+Fixed by publishing an SPF record (authorizing AWS SES and Google Workspace), publishing the DKIM records AWS SES had already generated, adding a DMARC policy (starting in monitor-only mode), and cleaning up an AWS custom MAIL-FROM-domain warning. AWS's link-rewriting engagement tracking was also turned off, since our own frappe and listmonk already tracks them.
+
+#### Self-Hosted: Miniflux + Umami
+
+We internally have self-hosted [Miniflux](https://miniflux.app) instance for internal RSS reading. Alongside it, a self-hosted [Umami](https://umami.is) instance now tracks analytics for [Forklore](https://forklore.in), [Licence to Learn](https://licencetolearn.in), and other pages across the FOSS United network.
+
+#### IndiaFOSS Pages Live (Desk-managed)
+
+The following IndiaFOSS 2026 pages went live this month via Frappe's Web Page / CMS tooling (data-level, not code changes):
+- Workshops page, with tickets and schedule
+- Booths page
+- [FOSS Awards](https://fossunited.org/indiafoss/awards) page
+- Pre-events page
+
+Devroom pages were also tweaked (Desk-managed): a themed pattern now shows in both the devroom listing and each individual devroom page, and the layout is more compact.
+
+---
+
+### Contributor Spotlight
+
+- **Anas Khan**: order revalidation and refund-flow fixes on tickets ([#1698](https://github.com/fossunited/fossunited/pull/1698))
+- **Saksham Mishra**: fixed ambiguous link text across docs and web pages ([#1697](https://github.com/fossunited/fossunited/pull/1697))
+- **Gauri** and **Amith Biju**: volunteer accessibility findings on the Schedule page contrast and a frappe-ui component ([#1707](https://github.com/fossunited/fossunited/issues/1707), [#1696](https://github.com/fossunited/fossunited/issues/1696))
+
+---
+
 ## July 2026
 
 July marks one year of these monthly tech reports (they started in August 2025). Beyond the platform, two sibling sites shipped this month: [forklore.in](https://forklore.in) was migrated off [Nuxt.js](https://nuxtseo.com) to [Eleventy (11ty)](https://11ty.dev) to keep it a simple static site, and we launched [licencetolearn.in](https://licencetolearn.in) (built with the Zola SSG), a campaign to publish RTI responses from India's premier institutes. On the platform itself, the CFP review process got a big internal overhaul for the IndiaFOSS 2026 co-chairs, an IndiaFOSS talks archive went live, and the `/stack` page was rebuilt to double as a credits page.
