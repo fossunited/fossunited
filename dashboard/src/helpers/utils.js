@@ -22,6 +22,36 @@ export const copyToClipboard = (text) => {
   navigator.clipboard.writeText(text)
 }
 
+export const triggerDownload = (url, filename) => {
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+}
+
+/**
+ * Fetch a URL and return an object URL for its blob
+ */
+export async function fetchBlobUrl(url) {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`Request failed (${res.status})`)
+  const blob = await res.blob()
+  return URL.createObjectURL(blob)
+}
+
+/**
+ * Fetch a file and trigger its download, resolving once the download has
+ * started; unlike a plain <a download> click, this gives callers a promise
+ * to await, so a "loading" state can be shown until the file is ready.
+ */
+export async function fetchAndDownload(url, filename) {
+  const blobUrl = await fetchBlobUrl(url)
+  triggerDownload(blobUrl, filename)
+  URL.revokeObjectURL(blobUrl)
+}
+
 // Remove any empty <p> tag, and add custom margins
 export const cleanedHTML = (htmlData) => {
   const html = htmlData || ''
