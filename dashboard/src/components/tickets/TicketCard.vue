@@ -1,10 +1,10 @@
 <template>
   <div
-    class="bg-surface-white border border-outline-gray-2 rounded-lg flex items-start hover:border-outline-gray-4 transition-colors"
+    class="bg-surface-white border border-outline-gray-2 rounded-lg flex items-start hover:border-outline-gray-4 hover:bg-surface-gray-1 transition-colors"
   >
     <button
       type="button"
-      class="flex-1 min-w-0 flex gap-4 items-start p-5 text-left rounded-l-lg hover:bg-surface-gray-1 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-gray-4"
+      class="flex-1 min-w-0 flex gap-4 items-start p-5 text-left rounded-l-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-gray-4"
       @click="$emit('select', ticket)"
     >
       <img
@@ -66,7 +66,7 @@
 
     <button
       type="button"
-      class="w-9 h-9 flex items-center justify-center rounded-md hover:bg-surface-gray-1 transition-colors flex-shrink-0 mt-5 mr-5 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-gray-4"
+      class="w-9 h-9 flex items-center justify-center rounded-md hover:bg-surface-gray-2 transition-colors flex-shrink-0 mt-5 mr-5 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-gray-4"
       title="Download ticket"
       aria-label="Download ticket"
       :disabled="downloading"
