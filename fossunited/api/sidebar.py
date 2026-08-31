@@ -20,6 +20,11 @@ def get_sidebar_items(user: str = frappe.session.user):
                     "route": "/my-proposals",
                     "icon": "file-text",
                 },
+                {
+                    "label": "My Tickets",
+                    "route": "/my-tickets",
+                    "icon": "ticket",
+                },
             ],
         },
         {
