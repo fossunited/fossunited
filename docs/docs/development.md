@@ -306,10 +306,11 @@ traversal) against a running Frappe instance with seed data.
 ### Setup
 
 1. Seed your dev site (see [Seed Script](#seed-script) above).
-2. Install Bruno CLI:
-   ```sh
-   npm install -g @usebruno/cli
-   ```
+2. Install dependencies:
+
+```sh
+yarn install # or: npm install @bru
+```
 
 ### Running Tests
 
@@ -317,11 +318,13 @@ From the `bruno-collection/` directory:
 
 ```sh
 # Run a single test folder
-npx @usebruno/cli run api/hackathon --env local-development
+yarn bru run api/hackathon --env local-development
+# npm users: npx bru run api/hackathon --env local-development
 
 # Run all test folders
 for folder in api/*/; do
-  npx @usebruno/cli run "$folder" --env local-development
+  yarn bru run "$folder" --env local-development
+  # npm users: npx bru run "$folder" --env local-development
 done
 ```
 
