@@ -1,0 +1,33 @@
+info:
+  name: login
+  type: http
+  seq: 1
+http:
+  method: POST
+  url: '{{base}}/method/login'
+  body:
+    type: json
+    data: |-
+      {
+        "usr": "{{attendee_email}}",
+        "pwd": "{{attendee_password}}"
+      }
+runtime:
+  auth:
+    type: none
+tests:
+  value: |
+    test("should login", function() {
+      expect(res.getStatus()).to.equal(200);
+    });
+script:
+  post-response: |
+    const cookies = res.getHeaders()['set-cookie'];
+    if (cookies) {
+      const sidCookie = cookies.find(c => c.startsWith('sid='));
+      if (sidCookie) {
+        bru.setVar("session_cookie", sidCookie.split(';')[0]);
+      }
+    }
+docs: |-
+  Login as mock-attendee-1 to test profile image upload path traversal protection.
