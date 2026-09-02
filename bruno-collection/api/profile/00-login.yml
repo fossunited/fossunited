@@ -13,21 +13,19 @@ http:
         "pwd": "{{attendee_password}}"
       }
 runtime:
-  auth:
-    type: none
-tests:
-  value: |
-    test("should login", function() {
-      expect(res.getStatus()).to.equal(200);
-    });
-script:
-  post-response: |
-    const cookies = res.getHeaders()['set-cookie'];
-    if (cookies) {
-      const sidCookie = cookies.find(c => c.startsWith('sid='));
-      if (sidCookie) {
-        bru.setVar("session_cookie", sidCookie.split(';')[0]);
-      }
-    }
+  scripts:
+    - type: tests
+      code: |
+        test("should login", function() {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("should capture session cookie", function() {
+          const cookies = res.getHeaders()['set-cookie'];
+          expect(cookies).to.be.an("array").that.is.not.empty;
+          const sidCookie = cookies.find(c => c.startsWith('sid='));
+          expect(sidCookie).to.be.a("string");
+          bru.setVar("session_cookie", sidCookie.split(';')[0]);
+        });
 docs: |-
   Login as mock-attendee-1 to test profile image upload path traversal protection.
