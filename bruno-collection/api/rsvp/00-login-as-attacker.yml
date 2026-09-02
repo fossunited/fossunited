@@ -13,23 +13,21 @@ http:
         "pwd": "{{attendee_password}}"
       }
 runtime:
-  auth:
-    type: none
-tests:
-  value: |
-    test("should login as non-owner user", function() {
-      expect(res.getStatus()).to.equal(200);
-      expect(res.getBody()).to.have.property("full_name");
-    });
-script:
-  post-response: |
-    const cookies = res.getHeaders()['set-cookie'];
-    if (cookies) {
-      const sidCookie = cookies.find(c => c.startsWith('sid='));
-      if (sidCookie) {
-        bru.setVar("session_cookie_attacker", sidCookie.split(';')[0]);
-      }
-    }
+  scripts:
+    - type: tests
+      code: |
+        test("should login as non-owner user", function() {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody()).to.have.property("full_name");
+        });
+
+        test("should capture attacker session cookie", function() {
+          const cookies = res.getHeaders()['set-cookie'];
+          expect(cookies).to.be.an("array").that.is.not.empty;
+          const sidCookie = cookies.find(c => c.startsWith('sid='));
+          expect(sidCookie).to.be.a("string");
+          bru.setVar("session_cookie_attacker", sidCookie.split(';')[0]);
+        });
 docs: |-
   Login as mock-attendee-1 who does NOT own RSVP submissions by mock-attendee-2.
   Simulates an attacker trying to check in or modify another user's RSVP.

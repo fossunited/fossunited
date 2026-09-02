@@ -9,21 +9,31 @@ http:
     type: json
     data: |-
       {
-        "fields": "{\"linked_rsvp\": \"{{rsvp_form_id}}\", \"name1\": \"Security Test\", \"email\": \"sectest-rsvp-inject@example.com\", \"im_a\": \"Student\", \"status\": \"Accepted\", \"docstatus\": 1, \"owner\": \"hacker@evil.com\"}"
+        "fields": "{\"linked_rsvp\": \"{{rsvp_form_id}}\", \"name1\": \"Security Test\", \"email\": \"{{inject_test_email}}\", \"im_a\": \"Student\", \"status\": \"Accepted\", \"docstatus\": 1, \"owner\": \"hacker@evil.com\"}"
       }
 runtime:
-  auth:
-    type: none
-tests:
-  value: |
-    test("should create RSVP but injected fields must be ignored", function() {
-      const data = res.getBody();
-      if (res.getStatus() === 200) {
-        const doc = data.message;
-        expect(doc.owner).to.not.equal("hacker@evil.com");
-        expect(doc.docstatus).to.not.equal(1);
-      }
-    });
+  scripts:
+    - type: before-request
+      code: |
+        const ts = Date.now();
+        bru.setVar("inject_test_email", "sectest-inject-" + ts + "@example.com");
+    - type: tests
+      code: |
+        test("should return 200 and create RSVP", function() {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("owner injection must be blocked", function() {
+          const doc = res.getBody().message;
+          expect(doc.owner).to.not.equal("hacker@evil.com");
+        });
+
+        test("docstatus injection must be blocked", function() {
+          const doc = res.getBody().message;
+          expect(doc.docstatus).to.not.equal(1);
+        });
 docs: |-
-  create_rsvp mass assignment test: payload includes blocked fields (status, docstatus, owner).
+  create_rsvp mass assignment test: payload includes blocked fields (docstatus, owner).
   RSVP_ALLOWED_FIELDS allowlist must filter these out.
+  Uses a unique email per run to avoid duplicate-submission rejection.
+  Note: status is not tested because auto-accept forms set status="Accepted" regardless.
