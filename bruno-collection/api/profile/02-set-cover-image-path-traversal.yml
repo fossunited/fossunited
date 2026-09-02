@@ -1,0 +1,25 @@
+info:
+  name: set-cover-image-path-traversal
+  type: http
+  seq: 3
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.profile.set_cover_image'
+  body:
+    type: json
+    data: |-
+      {
+        "file_url": "../../../etc/passwd"
+      }
+runtime:
+  auth:
+    type: none
+tests:
+  value: |
+    test("path traversal should be rejected", function() {
+      const status = res.getStatus();
+      expect(status).to.be.oneOf([403, 417, 500]);
+    });
+docs: |-
+  set_cover_image path traversal: deeper traversal attempt via ../../../etc/passwd.
+  Same os.path.realpath() protection as set_profile_image.
