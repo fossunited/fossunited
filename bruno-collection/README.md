@@ -15,10 +15,9 @@ End-to-end security tests for the fossunited API layer, written in
    docker exec -w /workspace/development/fossu-bench/sites \
      devcontainer-frappe-1 ../env/bin/python /workspace/development/run_seed.py
    ```
-3. **Bruno CLI** (`@usebruno/cli`) installed:
+3. **Bruno CLI** (`@usebruno/cli`) or via Linux package managers:
    ```bash
-   npm install -g @usebruno/cli
-   # or use npx (auto-installs)
+   yarn install # or: npm install @usebruno/cli
    ```
 
 ## Running tests
@@ -27,11 +26,13 @@ From the `bruno-collection/` directory:
 
 ```bash
 # Run a single folder
-npx @usebruno/cli run api/hackathon --env local-development
+yarn bru run api/hackathon --env local-development
+# npm users: npx bru run api/hackathon --env local-development
 
 # Run all test folders
 for folder in api/*/; do
-  npx @usebruno/cli run "$folder" --env local-development
+  yarn bru run "$folder" --env local-development
+  # npm users: npx bru run "$folder" --env local-development
 done
 ```
 
