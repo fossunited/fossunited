@@ -19,6 +19,22 @@ repos:
       - id: ruff-format
         args: ["--config=pyproject.toml"]
 
+  - repo: local
+    hooks:
+      - id: eslint
+        name: eslint (incl. vue a11y rules)
+        entry: yarn eslint --fix
+        language: system
+        files: \.(js|mjs|cjs|vue)$
+        exclude: ^(node_modules|dashboard/node_modules|fossunited/public/dist|fossunited/public/dashboard)/
+
+  - repo: https://github.com/djlint/djLint
+    rev: v1.36.4
+    hooks:
+      - id: djlint-jinja
+        files: \.html$
+        args: ["--profile", "jinja"]
+
   # grammar checker for /docs content
   # - repo: https://github.com/errata-ai/vale
   #   rev: v3.13.0
