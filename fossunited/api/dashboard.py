@@ -188,7 +188,17 @@ def get_session_user_profile():
     user = frappe.db.get_value(
         USER_PROFILE,
         {"user": frappe.session.user},
-        ["*"],
+        [
+            "name",
+            "full_name",
+            "username",
+            "profile_photo",
+            "cover_image",
+            "bio",
+            "route",
+            "user",
+            "email",
+        ],
         as_dict=1,
     )
 

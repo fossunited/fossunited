@@ -1,0 +1,31 @@
+info:
+  name: get-session-user-profile-safe-fields
+  type: http
+  seq: 2
+http:
+  method: GET
+  url: '{{base}}/method/fossunited.api.dashboard.get_session_user_profile'
+runtime:
+  auth:
+    type: none
+tests:
+  value: |
+    test("should return only safe profile fields", function() {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(200);
+      const profile = data.message;
+      expect(profile).to.have.property("full_name");
+      expect(profile).to.have.property("username");
+      expect(profile).to.have.property("email");
+      expect(profile).to.have.property("route");
+      expect(profile).to.not.have.property("password");
+      expect(profile).to.not.have.property("_user_tags");
+      expect(profile).to.not.have.property("_comments");
+      expect(profile).to.not.have.property("_assign");
+      expect(profile).to.not.have.property("_liked_by");
+      expect(profile).to.not.have.property("docstatus");
+      expect(profile).to.not.have.property("modified_by");
+    });
+docs: |-
+  get_session_user_profile field exposure: verifies only whitelisted fields returned,
+  no password/_user_tags/_comments/docstatus/modified_by leakage.

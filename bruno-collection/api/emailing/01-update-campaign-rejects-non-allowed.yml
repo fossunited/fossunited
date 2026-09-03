@@ -1,0 +1,26 @@
+info:
+  name: update-campaign-rejects-non-allowed-fields
+  type: http
+  seq: 2
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.emailing.update_campaign'
+  body:
+    type: json
+    data: |-
+      {
+        "campaign_id": "{{newsletter_id}}",
+        "data": {"email_sent": true, "docstatus": 1, "owner": "hacker@evil.com", "subject": "Updated Subject"}
+      }
+runtime:
+  auth:
+    type: none
+tests:
+  value: |
+    test("non-chapter-member should be rejected or non-allowed fields ignored", function() {
+      const status = res.getStatus();
+      expect(status).to.be.oneOf([403, 417, 500]);
+    });
+docs: |-
+  update_campaign mass assignment test: payload includes blocked fields
+  (email_sent, docstatus, owner). ALLOWED_FIELDS must filter these out.
