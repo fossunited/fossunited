@@ -72,7 +72,7 @@
                     v-for="n in 4"
                     :key="n"
                     class="h-full w-full"
-                    :class="n <= currentStep ? 'bg-surface-gray-10' : 'bg-surface-gray-2'"
+                    :class="n <= currentStep ? 'bg-surface-gray-7' : 'bg-surface-gray-3'"
                   />
                 </div>
               </div>
