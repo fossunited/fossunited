@@ -62,6 +62,7 @@ const isValidStatus = () => {
 
 const transferDoc = createResource({
   url: 'fossunited.api.tickets.get_transfer_details',
+  method: 'GET',
   makeParams() {
     return {
       id: transferID,
