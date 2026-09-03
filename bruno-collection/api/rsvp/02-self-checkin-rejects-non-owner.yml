@@ -1,0 +1,30 @@
+info:
+  name: self-checkin-rejects-non-owner
+  type: http
+  seq: 2
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.self_check_in'
+  body:
+    type: json
+    data: |-
+      {
+        "submission_name": "{{rsvp_submission_other}}"
+      }
+runtime:
+  scripts:
+    - type: before-request
+      code: |
+        const sid = bru.getVar("session_cookie_attacker");
+        if (sid) {
+          req.setHeader("Cookie", sid);
+        }
+    - type: tests
+      code: |
+        test("non-owner should be rejected from self check-in", function() {
+          const status = res.getStatus();
+          expect(status).to.be.oneOf([403, 417, 401]);
+        });
+docs: |-
+  self_check_in ownership check: attacker (mock-attendee-1) tries to check in
+  a submission belonging to mock-attendee-2. Must be rejected.
