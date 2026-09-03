@@ -50,20 +50,32 @@
           <div class="flex-1 min-w-0 flex flex-col gap-4">
             <!-- Step Progress -->
             <nav aria-label="Registration steps">
-              <Progress
-                :value="currentStep * 25"
-                :intervals="true"
-                :interval-count="4"
-                size="lg"
-                :label="stepTitle"
-                :hint="true"
-              >
-                <template #hint>
+              <div class="w-full space-y-[10px]">
+                <div class="flex items-baseline justify-between">
+                  <span id="ticket-reg-progress-label" class="text-base font-medium text-ink-gray-8">{{
+                    stepTitle
+                  }}</span>
                   <span class="text-sm font-medium text-ink-gray-4" aria-live="polite"
                     >{{ currentStep }} / 4</span
                   >
-                </template>
-              </Progress>
+                </div>
+                <div
+                  role="progressbar"
+                  aria-labelledby="ticket-reg-progress-label"
+                  :aria-valuenow="currentStep"
+                  aria-valuemin="1"
+                  aria-valuemax="4"
+                  :aria-valuetext="`Registration progress: ${stepTitle}, step ${currentStep} of 4`"
+                  class="flex h-2 space-x-1 overflow-hidden rounded-lg"
+                >
+                  <div
+                    v-for="n in 4"
+                    :key="n"
+                    class="h-full w-full"
+                    :class="n <= currentStep ? 'bg-surface-gray-10' : 'bg-surface-gray-2'"
+                  />
+                </div>
+              </div>
             </nav>
 
             <!-- Step Content -->
@@ -511,7 +523,6 @@ import {
   ErrorMessage,
   Badge,
   Dialog,
-  Progress,
 } from 'frappe-ui'
 import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
 import { toast } from 'vue-sonner'
