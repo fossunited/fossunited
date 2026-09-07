@@ -17,6 +17,15 @@ from fossunited.doctype_ids import (
     LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
+from fossunited.foss_hackathon.doctype.foss_hackathon.foss_hackathon import (
+    HACKATHON_SAFE_FIELDS,
+)
+from fossunited.foss_hackathon.doctype.foss_hackathon_participant.foss_hackathon_participant import (
+    PARTICIPANT_SAFE_FIELDS,
+)
+from fossunited.foss_hackathon.doctype.foss_hackathon_project.foss_hackathon_project import (
+    PROJECT_SAFE_FIELDS,
+)
 from fossunited.integrations.github import GithubHelper
 from fossunited.utils.decorators import (
     require_hackathon_participant,
@@ -37,26 +46,7 @@ def get_hackathon(name: str) -> dict:
     Returns:
         dict: Hackathon document as a dictionary
     """
-    SAFE_FIELDS = [
-        "name",
-        "hackathon_name",
-        "permalink",
-        "hackathon_type",
-        "start_date",
-        "end_date",
-        "hackathon_banner",
-        "hackathon_logo",
-        "chapter",
-        "max_team_members",
-        "is_published",
-        "hackathon_rules",
-        "hackathon_description",
-        "is_registration_live",
-        "route",
-        "has_localhosts",
-        "is_team_mandatory",
-    ]
-    doc = frappe.db.get_value(HACKATHON, name, SAFE_FIELDS, as_dict=True)
+    doc = frappe.db.get_value(HACKATHON, name, HACKATHON_SAFE_FIELDS, as_dict=True)
     if not doc:
         frappe.throw(_("Hackathon not found"), frappe.DoesNotExistError)
     return doc
@@ -74,29 +64,10 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
     Returns:
         dict: Hackathon document as a dictionary
     """
-    SAFE_FIELDS = [
-        "name",
-        "hackathon_name",
-        "permalink",
-        "hackathon_type",
-        "start_date",
-        "end_date",
-        "hackathon_banner",
-        "hackathon_logo",
-        "chapter",
-        "max_team_members",
-        "is_published",
-        "hackathon_rules",
-        "hackathon_description",
-        "is_registration_live",
-        "route",
-        "has_localhosts",
-        "is_team_mandatory",
-    ]
     hackathon_name = frappe.db.get_value(HACKATHON, {"permalink": permalink}, "name")
     if not hackathon_name:
         frappe.throw(_("Hackathon not found"), frappe.DoesNotExistError)
-    return frappe.db.get_value(HACKATHON, hackathon_name, SAFE_FIELDS, as_dict=True)
+    return frappe.db.get_value(HACKATHON, hackathon_name, HACKATHON_SAFE_FIELDS, as_dict=True)
 
 
 @frappe.whitelist()
@@ -166,20 +137,7 @@ def get_participant(hackathon: str) -> dict:
     return frappe.db.get_value(
         HACKATHON_PARTICIPANT,
         {"hackathon": hackathon, "user": frappe.session.user},
-        [
-            "name",
-            "user",
-            "user_profile",
-            "full_name",
-            "email",
-            "is_student",
-            "git_profile",
-            "organization",
-            "hackathon",
-            "wants_to_attend_locally",
-            "localhost",
-            "localhost_request_status",
-        ],
+        PARTICIPANT_SAFE_FIELDS,
         as_dict=True,
     )
 
@@ -322,24 +280,10 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
         dict: Project document as a dictionary or None if the team has no project created.
     """
 
-    PROJECT_FIELDS = [
-        "name",
-        "title",
-        "short_description",
-        "description",
-        "repo_link",
-        "demo_link",
-        "hackathon",
-        "team",
-        "route",
-        "is_contribution_project",
-        "is_partner_project",
-        "partner_project",
-    ]
     return frappe.db.get_value(
         HACKATHON_PROJECT,
         {"hackathon": hackathon, "team": team},
-        PROJECT_FIELDS,
+        PROJECT_SAFE_FIELDS,
         as_dict=True,
     )
 

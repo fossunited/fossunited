@@ -24,6 +24,26 @@ from fossunited.fossunited.utils import get_event_sponsors
 
 BASE_DATE = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
+HACKATHON_SAFE_FIELDS = [
+    "name",
+    "hackathon_name",
+    "permalink",
+    "hackathon_type",
+    "start_date",
+    "end_date",
+    "hackathon_banner",
+    "hackathon_logo",
+    "chapter",
+    "max_team_members",
+    "is_published",
+    "hackathon_rules",
+    "hackathon_description",
+    "is_registration_live",
+    "route",
+    "has_localhosts",
+    "is_team_mandatory",
+]
+
 
 class FOSSHackathon(WebsiteGenerator):
     # begin: auto-generated types

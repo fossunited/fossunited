@@ -18,6 +18,21 @@ from fossunited.doctype_ids import (
     HACKATHON_TEAM_MEMBER,
 )
 
+PARTICIPANT_SAFE_FIELDS = [
+    "name",
+    "user",
+    "user_profile",
+    "full_name",
+    "email",
+    "is_student",
+    "git_profile",
+    "organization",
+    "hackathon",
+    "wants_to_attend_locally",
+    "localhost",
+    "localhost_request_status",
+]
+
 
 class FOSSHackathonParticipant(Document):
     # begin: auto-generated types
