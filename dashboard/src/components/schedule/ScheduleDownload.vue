@@ -1,129 +1,105 @@
 <template>
   <div>
     <button
-      class="h-8 sm:h-10 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 text-xs sm:text-sm font-semibold uppercase hover:bg-surface-gray-3 dark:hover:bg-surface-gray-4 transition-colors shrink-0"
+      type="button"
+      class="h-8 sm:h-10 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-xs sm:text-sm font-semibold uppercase hover:bg-surface-white dark:hover:bg-surface-gray-1 transition-colors shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
       aria-label="Download schedule"
+      aria-haspopup="dialog"
+      :aria-expanded="showModal"
       @click="showModal = true"
     >
-      <IconDownload class="w-4 h-4" />
+      <IconDownload class="w-4 h-4" aria-hidden="true" />
       <span class="hidden sm:inline">Download</span>
     </button>
 
-    <!-- Modal backdrop -->
-    <Teleport to="body">
-      <Transition name="fade">
-        <div
-          v-if="showModal"
-          class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
-          @click.self="showModal = false"
-        >
-          <div class="absolute inset-0 bg-black/50" @click="showModal = false" />
-          <div
-            class="relative bg-surface-white dark:bg-surface-gray-1 rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
-            @click.stop
-          >
-            <div class="p-6">
-              <div class="flex items-center justify-between mb-5">
-                <h2 class="text-lg font-semibold text-ink-gray-9">Download Schedule</h2>
-                <button
-                  class="text-ink-gray-5 hover:text-ink-gray-9 transition-colors"
-                  @click="showModal = false"
-                >
-                  <IconX class="w-5 h-5" />
-                </button>
-              </div>
+    <Dialog v-model="showModal" :options="{ title: 'Download schedule', size: 'md' }">
+      <template #body-content>
+        <div class="flex flex-col gap-5">
+          <!-- Format names say what the file is for, not just its extension. -->
+          <FormControl
+            v-model="selectedFormat"
+            type="select"
+            label="Format"
+            size="sm"
+            variant="subtle"
+            :options="formatOptions"
+          />
 
-              <!-- Format selector -->
-              <div class="mb-5">
-                <label class="block text-sm font-medium text-ink-gray-7 mb-2">Format</label>
-                <div class="flex gap-2 flex-wrap">
-                  <label
-                    v-for="fmt in formats"
-                    :key="fmt"
-                    class="cursor-pointer px-3 py-1.5 rounded-lg border text-sm font-semibold uppercase select-none transition-colors"
-                    :class="
-                      selectedFormat === fmt
-                        ? 'bg-surface-gray-7 text-ink-white border-surface-gray-7'
-                        : 'bg-surface-white dark:bg-surface-gray-2 text-ink-gray-6 border-outline-gray-2 hover:bg-surface-gray-2'
-                    "
-                    @click="selectedFormat = fmt"
-                  >
-                    {{ fmt }}
-                  </label>
-                </div>
-              </div>
-
-              <!-- Days selector -->
-              <div class="mb-5">
-                <label class="block text-sm font-medium text-ink-gray-7 mb-2">Days</label>
-                <div class="flex gap-2 flex-wrap">
-                  <label
-                    v-for="day in allDates"
-                    :key="day.value"
-                    class="cursor-pointer px-3 py-1.5 rounded-lg border text-sm select-none transition-colors"
-                    :class="
-                      selectedDays.includes(day.value)
-                        ? 'bg-surface-gray-7 text-ink-white border-surface-gray-7'
-                        : 'bg-surface-white dark:bg-surface-gray-2 text-ink-gray-6 border-outline-gray-2 hover:bg-surface-gray-2'
-                    "
-                  >
-                    <input
-                      v-model="selectedDays"
-                      type="checkbox"
-                      :value="day.value"
-                      class="sr-only"
-                    />
-                    {{ day.display }}
-                  </label>
-                </div>
-              </div>
-
-              <!-- Halls selector -->
-              <div class="mb-6">
-                <label class="block text-sm font-medium text-ink-gray-7 mb-2">Halls</label>
-                <div class="flex gap-2 flex-wrap">
-                  <label
-                    v-for="hall in allHalls"
-                    :key="hall"
-                    class="cursor-pointer px-3 py-1.5 rounded-lg border text-sm select-none transition-colors"
-                    :class="
-                      selectedHalls.includes(hall)
-                        ? 'bg-surface-gray-7 text-ink-white border-surface-gray-7'
-                        : 'bg-surface-white dark:bg-surface-gray-2 text-ink-gray-6 border-outline-gray-2 hover:bg-surface-gray-2'
-                    "
-                  >
-                    <input v-model="selectedHalls" type="checkbox" :value="hall" class="sr-only" />
-                    {{ hall }}
-                  </label>
-                </div>
-              </div>
-
-              <!-- Actions -->
-              <div class="flex justify-end gap-3">
-                <button
-                  class="text-sm text-ink-gray-5 hover:text-ink-gray-9 transition-colors px-4 py-2"
-                  @click="showModal = false"
-                >
-                  Cancel
-                </button>
-                <button
-                  class="px-5 py-2 rounded-lg bg-surface-gray-7 text-ink-white text-sm font-semibold hover:bg-surface-gray-6 transition-colors"
-                  @click="downloadSchedule"
-                >
-                  Download
-                </button>
-              </div>
+          <!-- A single day or a single hall is not a choice, so it is not offered. -->
+          <fieldset v-if="allDates.length > 1">
+            <legend class="text-sm font-medium text-ink-gray-7 dark:text-ink-gray-8 mb-2">
+              Days
+            </legend>
+            <div class="flex gap-2 flex-wrap">
+              <label
+                v-for="day in allDates"
+                :key="day.value"
+                :class="[pillBase, selectedDays.includes(day.value) ? pillOn : pillOff]"
+              >
+                <input v-model="selectedDays" type="checkbox" :value="day.value" class="sr-only" />
+                {{ day.display }}
+              </label>
             </div>
-          </div>
+          </fieldset>
+
+          <fieldset v-if="allHalls.length > 1">
+            <legend class="text-sm font-medium text-ink-gray-7 dark:text-ink-gray-8 mb-2">
+              Halls
+            </legend>
+            <div class="flex gap-2 flex-wrap">
+              <label
+                v-for="hall in allHalls"
+                :key="hall"
+                :class="[pillBase, selectedHalls.includes(hall) ? pillOn : pillOff]"
+              >
+                <input v-model="selectedHalls" type="checkbox" :value="hall" class="sr-only" />
+                {{ hall }}
+              </label>
+            </div>
+          </fieldset>
+
+          <p
+            v-if="validationMessage"
+            id="schedule-download-error"
+            class="text-sm text-ink-red-4"
+            role="alert"
+          >
+            {{ validationMessage }}
+          </p>
         </div>
-      </Transition>
-    </Teleport>
+      </template>
+
+      <template #actions="{ close }">
+        <div class="flex justify-end gap-3">
+          <button
+            type="button"
+            class="text-sm text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-gray-9 transition-colors px-4 py-2 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
+            @click="close"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="px-5 py-2 rounded-lg bg-surface-gray-7 text-ink-white text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
+            :class="
+              validationMessage ? 'opacity-50 cursor-not-allowed' : 'hover:bg-surface-gray-6'
+            "
+            :aria-disabled="Boolean(validationMessage)"
+            :aria-describedby="validationMessage ? 'schedule-download-error' : undefined"
+            @click="downloadSchedule(close)"
+          >
+            Download
+          </button>
+        </div>
+      </template>
+    </Dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { IconDownload, IconX } from '@tabler/icons-vue'
+import { ref, computed, watch } from 'vue'
+import { Dialog, FormControl } from 'frappe-ui'
+import { IconDownload } from '@tabler/icons-vue'
 import dayjs from 'dayjs'
 
 const props = defineProps({
@@ -135,9 +111,28 @@ const props = defineProps({
     type: Object,
     required: true, // { "YYYY-MM-DD": { hall: [sessions] } }
   },
+  // Hall names in the organiser's order, parsed from `hall_options` by the page.
+  hallOrder: {
+    type: Array,
+    default: () => [],
+  },
 })
 
-const formats = ['ics', 'csv', 'txt', 'md', 'org', 'json']
+const formatOptions = [
+  { label: 'Calendar (.ics)', value: 'ics' },
+  { label: 'Spreadsheet (.csv)', value: 'csv' },
+  { label: 'Plain text (.txt)', value: 'txt' },
+  { label: 'Markdown (.md)', value: 'md' },
+  { label: 'Org mode (.org)', value: 'org' },
+  { label: 'JSON (.json)', value: 'json' },
+]
+
+const pillBase =
+  'cursor-pointer px-3 py-1.5 rounded-lg border text-sm select-none transition-colors focus-within:ring-2 focus-within:ring-outline-gray-5'
+const pillOn = 'bg-surface-gray-7 text-ink-white border-transparent'
+const pillOff =
+  'bg-surface-white dark:bg-surface-gray-2 text-ink-gray-7 dark:text-ink-gray-8 border-outline-gray-3 hover:bg-surface-gray-2 dark:hover:bg-surface-gray-3'
+
 const showModal = ref(false)
 const selectedFormat = ref('ics')
 const selectedDays = ref([])
@@ -150,35 +145,52 @@ const allDates = computed(() =>
   })),
 )
 
+// Union across every day, in the organiser's order. Unlisted halls come last in
+// schedule order. Never sorted -- this has to match the hall row on the page.
 const allHalls = computed(() => {
-  const halls = new Set()
+  const present = new Set()
   for (const day of Object.values(props.schedule || {})) {
-    for (const hall of Object.keys(day)) halls.add(hall)
+    for (const hall of Object.keys(day)) present.add(hall)
   }
-  return Array.from(halls).sort()
+  if (!props.hallOrder.length) return [...present]
+
+  const configuredSet = new Set(props.hallOrder)
+  return [
+    ...props.hallOrder.filter((hall) => present.has(hall)),
+    ...[...present].filter((hall) => !configuredSet.has(hall)),
+  ]
 })
 
-function downloadSchedule() {
-  showModal.value = false
+// Everything starts selected. An empty set used to mean "all" to the endpoint,
+// which read on screen as "nothing will be downloaded".
+watch(allDates, (dates) => (selectedDays.value = dates.map((d) => d.value)), { immediate: true })
+watch(allHalls, (halls) => (selectedHalls.value = [...halls]), { immediate: true })
+
+const validationMessage = computed(() => {
+  if (!selectedDays.value.length) return 'Select at least one day.'
+  if (!selectedHalls.value.length) return 'Select at least one hall.'
+  return ''
+})
+
+function downloadSchedule(close) {
+  if (validationMessage.value) return
+
   const query = new URLSearchParams()
   query.set('event', props.event.name)
   query.set('format', selectedFormat.value)
-  selectedDays.value.forEach((d) => query.append('days', d))
-  selectedHalls.value.forEach((h) => query.append('halls', h))
+
+  // Send a filter only when it actually narrows the result
+  if (selectedDays.value.length < allDates.value.length) {
+    selectedDays.value.forEach((d) => query.append('days', d))
+  }
+  if (selectedHalls.value.length < allHalls.value.length) {
+    selectedHalls.value.forEach((h) => query.append('halls', h))
+  }
+
   window.open(
     `/api/method/fossunited.api.schedule.download_schedule?${query.toString()}`,
     '_blank',
   )
+  close()
 }
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

@@ -1,33 +1,34 @@
 <template>
   <!-- Mobile card: two-panel stacked ──────────────────────────────────── -->
   <div class="sm:hidden flex flex-col w-full py-2">
-    <!-- Top panel: time+cal overlap | speaker thumbs -->
+    <!-- Top panel: calendar+time | speaker thumbs -->
     <div
-      class="relative z-10 flex items-center justify-between bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-2 rounded-2xl p-2 mb-[-14px]"
+      class="relative z-10 flex items-center justify-between bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-2xl p-2 mb-[-14px]"
     >
-      <!-- Overlapping time chip + calendar button -->
-      <div class="isolate flex">
+      <button
+        class="flex items-center h-11 shrink-0 rounded-lg overflow-hidden transition-opacity hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
+        :aria-label="calendarLabel"
+        @click.stop="downloadIcs"
+      >
+        <div
+          class="h-11 w-11 shrink-0 bg-surface-gray-7 flex items-center justify-center text-ink-white"
+        >
+          <IconCalendarPlus class="w-5 h-5" aria-hidden="true" />
+        </div>
         <div
           v-if="!preview"
-          class="relative z-[2] h-11 w-[94px] rounded-lg bg-surface-gray-7 text-ink-white text-sm font-semibold uppercase flex items-center justify-center whitespace-nowrap px-2.5 shrink-0"
+          class="h-11 px-3 bg-surface-gray-7 text-ink-white text-sm font-semibold uppercase flex items-center whitespace-nowrap"
         >
           {{ formatTime(session.start_time) }}
         </div>
-        <button
-          class="relative z-[1] -ml-2 h-11 w-[52px] rounded-r-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center pl-4 pr-2.5 text-ink-gray-6 transition-colors hover:bg-surface-gray-3"
-          title="Add to calendar"
-          @click.stop="downloadIcs"
-        >
-          <IconCalendarPlus class="w-5 h-5" />
-        </button>
-      </div>
+      </button>
       <!-- YouTube (mobile) -->
       <a
         v-if="session.talk_video"
         :href="session.talk_video"
         target="_blank"
         rel="noopener noreferrer"
-        class="shrink-0 w-9 h-9 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center text-ink-gray-5 hover:text-red-500 transition-colors"
+        class="shrink-0 w-9 h-9 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-red-4 transition-colors"
         title="Watch recording"
         @click.stop
       >
@@ -38,7 +39,7 @@
         <div
           v-for="(speaker, i) in visibleSpeakers.slice(0, 2)"
           :key="i"
-          class="w-11 h-11 rounded-lg overflow-hidden border border-outline-gray-2 shrink-0"
+          class="w-11 h-11 rounded-lg overflow-hidden border border-outline-gray-3 shrink-0"
         >
           <img
             :src="speaker.photo || ''"
@@ -55,7 +56,7 @@
     <component
       :is="cfpHref ? 'a' : 'div'"
       v-bind="cfpHref ? { href: cfpHref, target: '_blank', rel: 'noopener noreferrer' } : {}"
-      class="relative z-0 bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-2 rounded-b-2xl px-3 pt-[22px] pb-3 flex flex-col gap-1.5"
+      class="relative z-0 bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-b-2xl px-3 pt-[22px] pb-3 flex flex-col gap-1.5"
     >
       <h3 class="text-sm font-normal leading-snug text-ink-gray-9 line-clamp-2">
         {{ session.title }}
@@ -64,7 +65,7 @@
         <span
           v-for="(speaker, i) in speakers"
           :key="i"
-          class="text-xs text-ink-gray-5 pr-2.5 py-0.5 whitespace-nowrap"
+          class="text-xs text-ink-gray-7 dark:text-ink-gray-8 pr-2.5 py-0.5 whitespace-nowrap"
         >
           {{ speaker.full_name }}
         </span>
@@ -72,64 +73,7 @@
       <div class="flex items-center gap-1.5 flex-wrap">
         <span
           v-if="sessionDuration"
-          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-5 text-xs font-semibold uppercase flex items-center whitespace-nowrap"
-        >
-          {{ sessionDuration }}
-        </span>
-        <span
-          v-if="showCategory"
-          class="rounded font-bold uppercase flex items-center justify-center whitespace-nowrap leading-[1]"
-          :class="[
-            categoryStyle,
-            preview ? 'h-3 px-1 text-[9px] leading-[1] tracking-tight' : 'h-6 px-2 text-xs',
-          ]"
-        >
-          {{ sessionCategory }}
-        </span>
-      </div>
-    </component>
-  </div>
-
-  <!-- ── Desktop card: timeline layout ────────────────────────────────────── -->
-  <div class="hidden sm:flex flex-col w-full py-1">
-    <div class="flex items-center flex-wrap gap-y-2">
-      <button
-        class="flex items-center h-10 shrink-0 transition-opacity hover:opacity-80"
-        title="Add to calendar"
-        @click.stop="downloadIcs"
-      >
-        <div
-          class="h-10 w-10 shrink-0 bg-surface-gray-7 rounded-l-lg flex items-center justify-center text-ink-white transition-opacity hover:opacity-80"
-        >
-          <IconCalendarPlus class="w-5 h-5" />
-        </div>
-        <div
-          v-if="!preview"
-          class="h-10 px-3 bg-surface-gray-7 rounded-r-lg text-ink-white text-base font-semibold uppercase flex items-center whitespace-nowrap"
-          @click.stop="downloadIcs"
-        >
-          {{ formatTime(session.start_time) }}
-        </div>
-      </button>
-      <!-- YouTube -->
-      <a
-        v-if="session.talk_video"
-        :href="session.talk_video"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="ml-2 shrink-0 w-8 h-8 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center text-ink-gray-5 hover:text-red-500 transition-colors"
-        title="Watch recording"
-        @click.stop
-      >
-        <IconBrandYoutube class="w-4 h-4" />
-      </a>
-      <!-- Divider line -->
-      <div class="hidden md:block flex-1 border-t border-outline-gray-5 mx-3 min-w-[20px]" />
-      <!-- Badges -->
-      <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
-        <span
-          v-if="sessionDuration"
-          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-5 text-xs font-semibold uppercase flex items-center whitespace-nowrap"
+          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-xs font-semibold uppercase flex items-center whitespace-nowrap"
         >
           {{ sessionDuration }}
         </span>
@@ -145,13 +89,81 @@
         </span>
         <span
           v-if="session._date"
-          class="h-6 px-2 rounded-lg bg-surface-blue-2 text-ink-blue-3 text-xs font-semibold flex items-center whitespace-nowrap"
+          class="h-6 px-2 rounded-lg bg-surface-blue-2 text-ink-gray-8 text-xs font-semibold flex items-center whitespace-nowrap"
         >
           {{ formatIsoDate(session._date) }}
         </span>
         <span
           v-if="session._hall"
-          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-6 text-xs font-semibold flex items-center whitespace-nowrap"
+          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-xs font-semibold flex items-center whitespace-nowrap"
+        >
+          {{ session._hall }}
+        </span>
+      </div>
+    </component>
+  </div>
+
+  <!-- ── Desktop card: timeline layout ────────────────────────────────────── -->
+  <div class="hidden sm:flex flex-col w-full py-1">
+    <div class="flex items-center flex-wrap gap-y-2">
+      <button
+        class="flex items-center h-10 shrink-0 rounded-lg overflow-hidden transition-opacity hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
+        :aria-label="calendarLabel"
+        @click.stop="downloadIcs"
+      >
+        <div
+          class="h-10 w-10 shrink-0 bg-surface-gray-7 flex items-center justify-center text-ink-white"
+        >
+          <IconCalendarPlus class="w-5 h-5" aria-hidden="true" />
+        </div>
+        <div
+          v-if="!preview"
+          class="h-10 px-3 bg-surface-gray-7 text-ink-white text-base font-semibold uppercase flex items-center whitespace-nowrap"
+        >
+          {{ formatTime(session.start_time) }}
+        </div>
+      </button>
+      <!-- YouTube -->
+      <a
+        v-if="session.talk_video"
+        :href="session.talk_video"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="ml-2 shrink-0 w-8 h-8 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-red-4 transition-colors"
+        title="Watch recording"
+        @click.stop
+      >
+        <IconBrandYoutube class="w-4 h-4" />
+      </a>
+      <!-- Divider line -->
+      <div class="hidden md:block flex-1 border-t border-outline-gray-5 mx-3 min-w-[20px]" />
+      <!-- Badges -->
+      <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
+        <span
+          v-if="sessionDuration"
+          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-xs font-semibold uppercase flex items-center whitespace-nowrap"
+        >
+          {{ sessionDuration }}
+        </span>
+        <span
+          v-if="showCategory"
+          class="rounded font-bold uppercase flex items-center justify-center whitespace-nowrap leading-[1]"
+          :class="[
+            categoryStyle,
+            preview ? 'h-3 px-1 text-[9px] leading-[1] tracking-tight' : 'h-6 px-2 text-xs',
+          ]"
+        >
+          {{ sessionCategory }}
+        </span>
+        <span
+          v-if="session._date"
+          class="h-6 px-2 rounded-lg bg-surface-blue-2 text-ink-gray-8 text-xs font-semibold flex items-center whitespace-nowrap"
+        >
+          {{ formatIsoDate(session._date) }}
+        </span>
+        <span
+          v-if="session._hall"
+          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-xs font-semibold flex items-center whitespace-nowrap"
         >
           {{ session._hall }}
         </span>
@@ -173,7 +185,7 @@
         <!-- Speaker photos 80×80 -->
         <div
           v-if="speakers.length"
-          class="shrink-0 size-20 overflow-hidden rounded-lg border border-outline-gray-2 grid gap-0.5"
+          class="shrink-0 size-20 overflow-hidden rounded-lg border border-outline-gray-3 grid gap-0.5"
           :class="speakerGridClass"
         >
           <img
@@ -198,14 +210,14 @@
             <span
               v-for="(speaker, i) in speakers"
               :key="i"
-              class="px-2 py-0.5 rounded bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 text-sm font-medium whitespace-nowrap"
+              class="px-2 py-0.5 rounded bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-sm font-medium whitespace-nowrap"
             >
               {{ speaker.full_name }}
             </span>
           </div>
           <p
             v-if="speakerMeta"
-            class="text-xs text-ink-gray-5 line-clamp-2 leading-relaxed"
+            class="text-xs text-ink-gray-7 dark:text-ink-gray-8 line-clamp-2 leading-relaxed"
             v-html="speakerMeta"
           />
         </div>
@@ -238,6 +250,13 @@ const {
   cfpHref,
   downloadIcs,
 } = useSession(toRef(props, 'session'))
+
+// Names the action AND contains the visible text, so it satisfies both
+// 4.1.2 and 2.5.3. Without it the button announces only "10:30 AM".
+const calendarLabel = computed(() => {
+  const time = formatTime(props.session.start_time)
+  return time ? `Add ${time} session to calendar` : 'Add session to calendar'
+})
 
 function formatIsoDate(isoDate) {
   return dayjs(isoDate).format('D MMM')

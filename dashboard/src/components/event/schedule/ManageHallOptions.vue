@@ -68,6 +68,6 @@ const addHallOption = () => {
         class="border-0 text-sm focus:!outline-none focus:ring-0 focus-visible:outline-none resize-none"
       ></textarea>
     </div>
-    <small class="text-ink-gray-5">Separate each option with a new line</small>
+    <small class="text-ink-gray-7 dark:text-ink-gray-8">Separate each option with a new line</small>
   </div>
 </template>

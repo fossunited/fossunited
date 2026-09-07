@@ -7,7 +7,7 @@
   >
     <!-- Compact 60px card: hover expands, click navigates to CFP -->
     <div
-      class="h-[60px] bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-2 rounded-[16px] flex items-center gap-2 px-2 cursor-pointer select-none overflow-hidden"
+      class="h-[60px] bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-[16px] flex items-center gap-2 px-2 cursor-pointer select-none overflow-hidden"
       :title="session.title"
       @click="handleClick($event)"
       @mouseenter="openExpanded"
@@ -26,7 +26,7 @@
     <Transition name="fade-up">
       <div
         v-if="isExpanded"
-        class="absolute left-0 top-full z-50 w-[300px] shadow-xl bg-surface-white dark:bg-surface-gray-2 rounded-[16px] px-2 md:px-4"
+        class="absolute left-0 top-full z-30 w-[300px] shadow-xl bg-surface-white dark:bg-surface-gray-2 rounded-[16px] px-2 md:px-4"
         @click.stop
       >
         <SessionCard :session="session" preview />

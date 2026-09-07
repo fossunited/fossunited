@@ -73,10 +73,10 @@ const eventDetailItems = computed(() => [
               class="md:hidden h-7 w-7 object-contain rounded shrink-0"
             />
             <h2 class="font-semibold flex-grow">{{ event.event_name }}</h2>
-            <IconArrowUpRight class="w-4 h-4 text-ink-gray-4 shrink-0" />
+            <IconArrowUpRight class="w-4 h-4 text-ink-gray-7 dark:text-ink-gray-8 shrink-0" />
           </a>
           <button
-            class="shrink-0 px-2 rounded border bg-surface-gray-2 hover:bg-surface-gray-3 transition-colors text-ink-gray-5"
+            class="shrink-0 px-2 rounded border bg-surface-gray-2 hover:bg-surface-gray-3 transition-colors text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-gray-9"
             :aria-label="collapsed ? 'Expand event details' : 'Collapse event details'"
             @click="collapsed = !collapsed"
           >
@@ -89,7 +89,7 @@ const eventDetailItems = computed(() => [
           <div
             v-for="(item, index) in eventDetailItems"
             :key="index"
-            class="flex items-center gap-2 text-base text-ink-gray-5"
+            class="flex items-center gap-2 text-base text-ink-gray-7 dark:text-ink-gray-8"
           >
             <component :is="item.icon" class="w-5 h-5" />
             <a
@@ -98,7 +98,7 @@ const eventDetailItems = computed(() => [
               :target="item.target || '_self'"
               :rel="item.target === '_blank' ? 'noopener noreferrer' : undefined"
               :title="item.tooltip"
-              class="no-underline hover:underline text-ink-gray-5 hover:text-ink-gray-7"
+              class="no-underline hover:underline text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-gray-9"
               >{{ item.label }}</a
             >
             <span v-else>{{ item.label }}</span>
