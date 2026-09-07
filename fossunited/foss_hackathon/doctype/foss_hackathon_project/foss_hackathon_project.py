@@ -15,6 +15,21 @@ from fossunited.doctype_ids import (
 )
 from fossunited.fossunited.utils import get_doc_likes, sanitize_text_content
 
+PROJECT_SAFE_FIELDS = [
+    "name",
+    "title",
+    "short_description",
+    "description",
+    "repo_link",
+    "demo_link",
+    "hackathon",
+    "team",
+    "route",
+    "is_contribution_project",
+    "is_partner_project",
+    "partner_project",
+]
+
 
 class FOSSHackathonProject(WebsiteGenerator):
     # begin: auto-generated types

@@ -1,0 +1,31 @@
+info:
+  name: get-hackathon-safe-fields
+  type: http
+  seq: 1
+http:
+  method: GET
+  url: '{{base}}/method/fossunited.api.hackathon.get_hackathon?name={{hackathon_id}}'
+runtime:
+  auth:
+    type: none
+tests:
+  value: |
+    test("should return only safe fields", function() {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(200);
+      const hack = data.message;
+      expect(hack).to.have.property("name");
+      expect(hack).to.have.property("hackathon_name");
+      expect(hack).to.have.property("permalink");
+      expect(hack).to.have.property("hackathon_type");
+      expect(hack).to.not.have.property("_user_tags");
+      expect(hack).to.not.have.property("_comments");
+      expect(hack).to.not.have.property("_assign");
+      expect(hack).to.not.have.property("_liked_by");
+      expect(hack).to.not.have.property("owner");
+      expect(hack).to.not.have.property("modified_by");
+      expect(hack).to.not.have.property("docstatus");
+    });
+docs: |-
+  get_hackathon field exposure: verifies SAFE_FIELDS whitelist,
+  no _user_tags/owner/modified_by/docstatus leakage.
