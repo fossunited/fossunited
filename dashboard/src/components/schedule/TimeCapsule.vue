@@ -7,7 +7,7 @@
   >
     <!-- Compact 60px card: hover expands, click navigates to CFP -->
     <div
-      class="h-[60px] bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-2 rounded-[16px] flex items-center gap-2 px-2 cursor-pointer select-none overflow-hidden"
+      class="h-[60px] bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-[16px] flex items-center gap-2 px-2 cursor-pointer select-none overflow-hidden"
       :title="session.title"
       @click="handleClick($event)"
       @mouseenter="openExpanded"

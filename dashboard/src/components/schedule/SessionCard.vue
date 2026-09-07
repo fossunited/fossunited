@@ -3,7 +3,7 @@
   <div class="sm:hidden flex flex-col w-full py-2">
     <!-- Top panel: time+cal overlap | speaker thumbs -->
     <div
-      class="relative z-10 flex items-center justify-between bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-2 rounded-2xl p-2 mb-[-14px]"
+      class="relative z-10 flex items-center justify-between bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-2xl p-2 mb-[-14px]"
     >
       <!-- Overlapping time chip + calendar button -->
       <div class="isolate flex">
@@ -14,7 +14,7 @@
           {{ formatTime(session.start_time) }}
         </div>
         <button
-          class="relative z-[1] -ml-2 h-11 w-[52px] rounded-r-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center pl-4 pr-2.5 text-ink-gray-6 transition-colors hover:bg-surface-gray-3"
+          class="relative z-[1] -ml-2 h-11 w-[52px] rounded-r-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center pl-4 pr-2.5 text-ink-gray-7 dark:text-ink-gray-8 transition-colors hover:bg-surface-gray-3 hover:text-ink-gray-9"
           title="Add to calendar"
           @click.stop="downloadIcs"
         >
@@ -27,7 +27,7 @@
         :href="session.talk_video"
         target="_blank"
         rel="noopener noreferrer"
-        class="shrink-0 w-9 h-9 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center text-ink-gray-5 hover:text-red-500 transition-colors"
+        class="shrink-0 w-9 h-9 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-red-4 transition-colors"
         title="Watch recording"
         @click.stop
       >
@@ -38,7 +38,7 @@
         <div
           v-for="(speaker, i) in visibleSpeakers.slice(0, 2)"
           :key="i"
-          class="w-11 h-11 rounded-lg overflow-hidden border border-outline-gray-2 shrink-0"
+          class="w-11 h-11 rounded-lg overflow-hidden border border-outline-gray-3 shrink-0"
         >
           <img
             :src="speaker.photo || ''"
@@ -55,7 +55,7 @@
     <component
       :is="cfpHref ? 'a' : 'div'"
       v-bind="cfpHref ? { href: cfpHref, target: '_blank', rel: 'noopener noreferrer' } : {}"
-      class="relative z-0 bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-2 rounded-b-2xl px-3 pt-[22px] pb-3 flex flex-col gap-1.5"
+      class="relative z-0 bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-b-2xl px-3 pt-[22px] pb-3 flex flex-col gap-1.5"
     >
       <h3 class="text-sm font-normal leading-snug text-ink-gray-9 line-clamp-2">
         {{ session.title }}
@@ -64,7 +64,7 @@
         <span
           v-for="(speaker, i) in speakers"
           :key="i"
-          class="text-xs text-ink-gray-5 pr-2.5 py-0.5 whitespace-nowrap"
+          class="text-xs text-ink-gray-7 dark:text-ink-gray-8 pr-2.5 py-0.5 whitespace-nowrap"
         >
           {{ speaker.full_name }}
         </span>
@@ -72,7 +72,7 @@
       <div class="flex items-center gap-1.5 flex-wrap">
         <span
           v-if="sessionDuration"
-          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-5 text-xs font-semibold uppercase flex items-center whitespace-nowrap"
+          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-xs font-semibold uppercase flex items-center whitespace-nowrap"
         >
           {{ sessionDuration }}
         </span>
@@ -85,6 +85,18 @@
           ]"
         >
           {{ sessionCategory }}
+        </span>
+        <span
+          v-if="session._date"
+          class="h-6 px-2 rounded-lg bg-surface-blue-2 text-ink-gray-8 text-xs font-semibold flex items-center whitespace-nowrap"
+        >
+          {{ formatIsoDate(session._date) }}
+        </span>
+        <span
+          v-if="session._hall"
+          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-xs font-semibold flex items-center whitespace-nowrap"
+        >
+          {{ session._hall }}
         </span>
       </div>
     </component>
@@ -117,7 +129,7 @@
         :href="session.talk_video"
         target="_blank"
         rel="noopener noreferrer"
-        class="ml-2 shrink-0 w-8 h-8 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center text-ink-gray-5 hover:text-red-500 transition-colors"
+        class="ml-2 shrink-0 w-8 h-8 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-red-4 transition-colors"
         title="Watch recording"
         @click.stop
       >
@@ -129,7 +141,7 @@
       <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
         <span
           v-if="sessionDuration"
-          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-5 text-xs font-semibold uppercase flex items-center whitespace-nowrap"
+          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-xs font-semibold uppercase flex items-center whitespace-nowrap"
         >
           {{ sessionDuration }}
         </span>
@@ -145,13 +157,13 @@
         </span>
         <span
           v-if="session._date"
-          class="h-6 px-2 rounded-lg bg-surface-blue-2 text-ink-blue-3 text-xs font-semibold flex items-center whitespace-nowrap"
+          class="h-6 px-2 rounded-lg bg-surface-blue-2 text-ink-gray-8 text-xs font-semibold flex items-center whitespace-nowrap"
         >
           {{ formatIsoDate(session._date) }}
         </span>
         <span
           v-if="session._hall"
-          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-6 text-xs font-semibold flex items-center whitespace-nowrap"
+          class="h-6 px-2 rounded-lg bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-xs font-semibold flex items-center whitespace-nowrap"
         >
           {{ session._hall }}
         </span>
@@ -173,7 +185,7 @@
         <!-- Speaker photos 80×80 -->
         <div
           v-if="speakers.length"
-          class="shrink-0 size-20 overflow-hidden rounded-lg border border-outline-gray-2 grid gap-0.5"
+          class="shrink-0 size-20 overflow-hidden rounded-lg border border-outline-gray-3 grid gap-0.5"
           :class="speakerGridClass"
         >
           <img
@@ -198,14 +210,14 @@
             <span
               v-for="(speaker, i) in speakers"
               :key="i"
-              class="px-2 py-0.5 rounded bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 text-sm font-medium whitespace-nowrap"
+              class="px-2 py-0.5 rounded bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-sm font-medium whitespace-nowrap"
             >
               {{ speaker.full_name }}
             </span>
           </div>
           <p
             v-if="speakerMeta"
-            class="text-xs text-ink-gray-5 line-clamp-2 leading-relaxed"
+            class="text-xs text-ink-gray-7 dark:text-ink-gray-8 line-clamp-2 leading-relaxed"
             v-html="speakerMeta"
           />
         </div>
