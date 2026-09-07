@@ -6,18 +6,10 @@ import frappe
 from frappe import _
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission import (
+    RSVP_ALLOWED_FIELDS,
+)
 from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
-
-RSVP_ALLOWED_FIELDS = {
-    "linked_rsvp",
-    "name1",
-    "email",
-    "im_a",
-    "subscribe_chapter_mailing",
-    "accept_coc",
-    "confirm_attendance",
-    "custom_answers",
-}
 
 
 class FOSSEventRSVP(WebsiteGenerator):

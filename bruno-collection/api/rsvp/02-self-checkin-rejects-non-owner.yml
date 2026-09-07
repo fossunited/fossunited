@@ -16,14 +16,15 @@ runtime:
     - type: before-request
       code: |
         const sid = bru.getVar("session_cookie_attacker");
-        if (sid) {
-          req.setHeader("Cookie", sid);
+        if (!sid) {
+          throw new Error("Missing attacker session cookie — login step must run first");
         }
+        req.setHeader("Cookie", sid);
     - type: tests
       code: |
         test("non-owner should be rejected from self check-in", function() {
           const status = res.getStatus();
-          expect(status).to.be.oneOf([403, 417, 401]);
+          expect(status).to.be.oneOf([403, 417]);
         });
 docs: |-
   self_check_in ownership check: attacker (mock-attendee-1) tries to check in

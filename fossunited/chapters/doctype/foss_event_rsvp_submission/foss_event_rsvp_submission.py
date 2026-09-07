@@ -14,6 +14,17 @@ from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP, RSVP_RESPONSE
 
 logger = frappe.logger("rsvp_submission", allow_site=True, file_count=50)
 
+RSVP_ALLOWED_FIELDS = {
+    "linked_rsvp",
+    "name1",
+    "email",
+    "im_a",
+    "subscribe_chapter_mailing",
+    "accept_coc",
+    "confirm_attendance",
+    "custom_answers",
+}
+
 
 class FOSSEventRSVPSubmission(Document):
     # begin: auto-generated types
