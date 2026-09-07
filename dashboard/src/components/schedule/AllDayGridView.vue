@@ -1,98 +1,106 @@
 <template>
   <div class="w-full mt-4" role="region" aria-label="Timeline schedule for selected day">
-    <div v-if="!sortedHalls.length" class="py-16 text-center text-ink-gray-4" role="status">
+    <div
+      v-if="!orderedHalls.length"
+      class="py-16 text-center text-ink-gray-7 dark:text-ink-gray-8"
+      role="status"
+    >
       No sessions for this day.
     </div>
 
-    <!--
-      Narrow (≤ 840px): container matches the 840px page column so content starts
-      from the same left edge as the nav. overflow-y:clip prevents the implicit
-      overflow-y:auto browsers apply when overflow-x is set.
-
-      Wide (> 840px): container is full-width and mx-auto on the w-max inner block
-      centers the content (time axis + halls together) symmetrically on the viewport.
-    -->
-    <div
-      v-else
-      :class="shouldCenter ? 'w-full' : 'max-w-[840px] mx-auto'"
-      style="overflow-x: auto; overflow-y: clip; padding-bottom: 360px"
-    >
+    <div v-else :class="shouldCenter ? 'w-full' : 'max-w-[840px] mx-auto'">
+      <!-- The hall header row lives outside the horizontal scroller to stay sticky-->
       <div
-        class="flex w-max"
-        :class="{ 'mx-auto': shouldCenter }"
+        ref="headerEl"
+        class="sticky top-0 z-20 bg-surface-gray-2 dark:bg-surface-gray-1"
+        style="overflow-x: hidden"
       >
-        <!-- Time axis: sticky so it stays visible during horizontal scroll -->
-        <div
-          class="sticky left-0 z-30 shrink-0 w-14 relative border-r border-outline-gray-2 bg-surface-gray-2 dark:bg-surface-gray-1"
-          :style="{ height: totalHeight + 74 + 'px' }"
-          aria-label="Time of day"
-        >
-          <div
-            v-for="label in timeLabels"
-            :key="label.minutes"
-            class="sticky absolute right-1.5 flex items-center gap-1"
-            :style="{ top: offsetFor(label.minutes) + 74 + 'px', transform: 'translateY(-50%)' }"
-          >
-            <span class="text-[10px] font-semibold text-ink-gray-5 whitespace-nowrap">
-              {{ label.label }}
-            </span>
-            <div class="w-2 h-px bg-outline-gray-3" />
-          </div>
-          <div
-            v-for="label in halfLabels"
-            :key="'h' + label.minutes"
-            class="absolute right-1"
-            :style="{ top: offsetFor(label.minutes) + 74 + 'px', transform: 'translateY(-50%)' }"
-          >
-            <div class="w-1.5 h-px bg-outline-gray-2" />
-          </div>
-        </div>
-
-        <!-- Hall columns -->
-        <div class="flex">
-          <div
-            v-for="hall in sortedHalls"
-            :key="hall"
-            class="flex flex-col"
-            style="min-width: 200px; width: 200px"
-          >
-            <!-- Hall header: sticky top so it stays visible on page scroll-down -->
-            <div class="h-[74px] flex items-end pb-3 px-3 shrink-0 sticky top-0 z-20 bg-surface-gray-2 dark:bg-surface-gray-1">
+        <div class="flex w-max" :class="{ 'mx-auto': shouldCenter }">
+          <!-- Spacer matching the time axis width -->
+          <div class="shrink-0 w-[34px] md:w-14 border-r border-outline-gray-3" />
+          <div class="flex">
+            <div
+              v-for="hall in orderedHalls"
+              :key="hall"
+              class="h-[74px] flex items-end pb-3 px-3 shrink-0"
+              style="min-width: 200px; width: 200px"
+            >
               <div
-                class="bg-surface-gray-3 dark:bg-surface-gray-4 text-ink-gray-7 text-xs font-semibold uppercase px-3 py-2 rounded-lg border border-outline-gray-2 whitespace-nowrap w-full text-center"
+                class="bg-surface-gray-3 dark:bg-surface-gray-4 text-ink-gray-9 text-xs font-semibold uppercase leading-tight px-3 py-2 rounded-lg border border-outline-gray-3 w-full text-center"
               >
                 {{ hall }}
               </div>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <!-- Sessions area -->
-            <div class="relative" :style="{ height: totalHeight + 'px' }">
-              <div class="absolute inset-y-0 left-4 border-l border-outline-gray-5" />
-              <div
-                v-for="label in timeLabels"
-                :key="'grid-' + label.minutes"
-                class="absolute left-0 right-0 border-t border-outline-gray-2"
-                :style="{ top: offsetFor(label.minutes) + 'px' }"
-              />
-              <div
-                v-for="session in hallSessions(hall)"
-                :key="session.name || session.title"
-                class="absolute left-0 right-0 px-2"
-                :style="{ top: offsetFor(toMinutes(session.start_time)) + 'px' }"
+      <!-- Scrollable content - drives the scroll sync. -->
+      <div
+        ref="contentEl"
+        style="overflow-x: auto; overflow-y: clip; padding-bottom: 360px"
+        @scroll.passive="syncHeader"
+      >
+        <div class="flex w-max" :class="{ 'mx-auto': shouldCenter }">
+          <!-- Time axis, sticky left during horizontal scroll  -->
+          <div
+            class="sticky left-0 z-20 shrink-0 w-[34px] md:w-14 border-r border-outline-gray-3 bg-surface-gray-2 dark:bg-surface-gray-1"
+            :style="{ height: totalHeight + 'px' }"
+            aria-label="Time of day"
+          >
+            <div
+              v-for="label in timeLabels"
+              :key="label.minutes"
+              class="absolute right-0 md:right-1.5 flex items-center gap-1"
+              :style="{ top: offsetFor(label.minutes) + 'px', transform: 'translateY(-50%)' }"
+            >
+              <span
+                class="text-[10px] font-semibold text-ink-gray-7 dark:text-ink-gray-8 whitespace-nowrap"
               >
-                <TimeCapsule :session="session" />
+                {{ label.label }}
+              </span>
+              <div class="hidden md:block w-2 h-px bg-surface-gray-5" />
+            </div>
+            <div
+              v-for="label in halfLabels"
+              :key="'h' + label.minutes"
+              class="hidden md:block absolute right-1"
+              :style="{ top: offsetFor(label.minutes) + 'px', transform: 'translateY(-50%)' }"
+            >
+              <div class="w-1.5 h-px bg-surface-gray-4" />
+            </div>
+          </div>
+
+          <!-- Hall columns -- sessions only, headers live in the pinned row above -->
+          <div class="flex">
+            <div v-for="hall in orderedHalls" :key="hall" style="min-width: 200px; width: 200px">
+              <div class="relative" :style="{ height: totalHeight + 'px' }">
+                <div class="absolute inset-y-0 left-4 border-l border-outline-gray-5" />
+                <div
+                  v-for="label in timeLabels"
+                  :key="'grid-' + label.minutes"
+                  class="absolute left-0 right-0 border-t border-outline-gray-3"
+                  :style="{ top: offsetFor(label.minutes) + 'px' }"
+                />
+                <div
+                  v-for="session in hallSessions(hall)"
+                  :key="session.name || session.title"
+                  class="absolute left-0 right-0 px-2"
+                  :style="{ top: offsetFor(toMinutes(session.start_time)) + 'px' }"
+                >
+                  <TimeCapsule :session="session" />
+                </div>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import TimeCapsule from '@/components/schedule/TimeCapsule.vue'
 
 const props = defineProps({
@@ -100,24 +108,45 @@ const props = defineProps({
     type: Object,
     required: true, // { hall: [sessions] }
   },
+  // Hall names in the organiser's order, from the event's `hall_options`.
+  // Falls back to the schedule's own key order when not supplied.
+  halls: {
+    type: Array,
+    default: null,
+  },
 })
 
-const PIXELS_PER_MINUTE = 6  // 60px = 10 min
-const HALL_WIDTH = 200        // px per hall column
-const TIME_AXIS_WIDTH = 56    // px (w-14)
-const CENTER_THRESHOLD = 840  // px — center only when content exceeds this
+const PIXELS_PER_MINUTE = 6 // 60px = 10 min
+const HALL_WIDTH = 200 // px per hall column
+const TIME_AXIS_WIDTH = 56 // px (w-14 on desktop)
 
-const sortedHalls = computed(() => Object.keys(props.schedule || {}).sort())
+const headerEl = ref(null)
+const contentEl = ref(null)
+
+function syncHeader() {
+  if (headerEl.value && contentEl.value) {
+    headerEl.value.scrollLeft = contentEl.value.scrollLeft
+  }
+}
+const CENTER_THRESHOLD = 840 // px — center only when content exceeds this
+
+const orderedHalls = computed(() => {
+  const present = Object.keys(props.schedule || {})
+  if (!props.halls?.length) return present
+  // Trust the page's order, but never render a column with no data behind it.
+  const presentSet = new Set(present)
+  return props.halls.filter((hall) => presentSet.has(hall))
+})
 
 // Apply mx-auto centering only when total content width exceeds the threshold
 const shouldCenter = computed(
-  () => sortedHalls.value.length * HALL_WIDTH + TIME_AXIS_WIDTH > CENTER_THRESHOLD,
+  () => orderedHalls.value.length * HALL_WIDTH + TIME_AXIS_WIDTH > CENTER_THRESHOLD,
 )
 
 function hallSessions(hall) {
-  return (props.schedule[hall] || []).slice().sort(
-    (a, b) => toMinutes(a.start_time) - toMinutes(b.start_time),
-  )
+  return (props.schedule[hall] || [])
+    .slice()
+    .sort((a, b) => toMinutes(a.start_time) - toMinutes(b.start_time))
 }
 
 function toMinutes(timeStr) {
@@ -131,20 +160,24 @@ function offsetFor(minutes) {
   return (minutes - timeRange.value.min) * PIXELS_PER_MINUTE
 }
 
+const DEFAULT_RANGE = { min: 9 * 60, max: 18 * 60 }
+
 const timeRange = computed(() => {
   const all = Object.values(props.schedule || {}).flat()
-  if (!all.length) return { min: 9 * 60, max: 18 * 60 }
-  const starts = all.map((s) => toMinutes(s.start_time)).filter(Boolean)
-  const ends = all.map((s) => toMinutes(s.end_time || s.start_time)).filter(Boolean)
+  const starts = all.filter((s) => s?.start_time).map((s) => toMinutes(s.start_time))
+  const ends = all
+    .filter((s) => s?.end_time || s?.start_time)
+    .map((s) => toMinutes(s.end_time || s.start_time))
+
+  if (!starts.length || !ends.length) return DEFAULT_RANGE
+
   return {
     min: Math.floor(Math.min(...starts) / 30) * 30,
     max: Math.ceil((Math.max(...ends) + 30) / 30) * 30,
   }
 })
 
-const totalHeight = computed(
-  () => (timeRange.value.max - timeRange.value.min) * PIXELS_PER_MINUTE,
-)
+const totalHeight = computed(() => (timeRange.value.max - timeRange.value.min) * PIXELS_PER_MINUTE)
 
 const timeLabels = computed(() => {
   const labels = []
