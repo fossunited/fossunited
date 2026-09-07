@@ -318,6 +318,7 @@ From the `bruno-collection/` directory:
 
 ```sh
 # Run a single test folder
+cd bruno-collection && yarn install
 yarn bru run api/hackathon --env local-development
 # npm users: npx bru run api/hackathon --env local-development
 
