@@ -1,0 +1,10 @@
+info:
+  name: profile
+request:
+  scripts:
+    - type: before-request
+      code: |
+        const sid = bru.getVar("session_cookie");
+        if (sid) {
+          req.setHeader("Cookie", sid);
+        }

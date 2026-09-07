@@ -12,4 +12,8 @@ variables:
   value: 'mock-attendee-1@example.com'
 - name: attendee_password
   value: 'password'
+- name: rsvp_form_id
+  value: 'ncgt5qgglr'
+- name: rsvp_submission_other
+  value: 'ncnnl4vjvc'
 color: '#22c55e'
