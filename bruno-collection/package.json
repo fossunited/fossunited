@@ -1,0 +1,12 @@
+{
+  "name": "fossunited-bruno-collection",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Local-only Bruno CLI for running the API collection. Not installed by bench (kept out of the app's root package.json) since it pulls in Azure/AWS/GCP secrets SDKs that need Node >=22, and also bloated.",
+  "scripts": {
+    "bru": "bru"
+  },
+  "devDependencies": {
+    "@usebruno/cli": "^4.1.0"
+  }
+}
