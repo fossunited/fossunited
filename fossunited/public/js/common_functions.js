@@ -72,25 +72,6 @@ function setNavbarControl() {
   })
 }
 
-function publish_form(e) {
-  let doctype = $(e).data('doctype')
-  let docname = $(e).data('docname')
-  let parent = $(e).data('parent')
-  frappe.call({
-    method: 'fossunited.fossunited.forms.publish_form',
-    args: {
-      doctype: doctype,
-      docname: docname,
-    },
-    callback: (r) => {
-      $(`#${parent}`).load(window.location.href + ` #${parent}`)
-    },
-    error: (e) => {
-      frappe.msgprint(e.message)
-    },
-  })
-}
-
 function tab_navigation() {
   let url = new URL(window.location.href)
   let tab = url.searchParams.get('tab')
@@ -129,25 +110,6 @@ function initTablistKeyboardNav() {
         activate(next)
       }
     })
-  })
-}
-
-function unpublish_form(e) {
-  let doctype = $(e).data('doctype')
-  let docname = $(e).data('docname')
-  let parent = $(e).data('parent')
-  frappe.call({
-    method: 'fossunited.fossunited.forms.unpublish_form',
-    args: {
-      doctype: doctype,
-      docname: docname,
-    },
-    callback: (r) => {
-      $(`#${parent}`).load(window.location.href + ` #${parent}`)
-    },
-    error: (e) => {
-      frappe.msgprint(e.message)
-    },
   })
 }
 
@@ -422,10 +384,8 @@ function setParams(obj) {
 Object.assign(window, {
   makeQuill,
   setNavbarControl,
-  publish_form,
   tab_navigation,
   initTablistKeyboardNav,
-  unpublish_form,
   validate_mandatory_fields,
   check_if_logged_in,
   check_if_profile_complete,
