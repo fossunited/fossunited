@@ -420,7 +420,7 @@
   },
   {
    "fieldname": "schedule_page_description",
-   "fieldtype": "Long Text",
+   "fieldtype": "Markdown Editor",
    "label": "Schedule Page Description"
   },
   {
@@ -526,7 +526,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2026-08-14 12:53:55.260169",
+ "modified": "2026-09-07 19:03:43.903035",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",

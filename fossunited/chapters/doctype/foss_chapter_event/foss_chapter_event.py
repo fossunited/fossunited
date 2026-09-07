@@ -97,7 +97,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         project_showcase: DF.Table[EventProjectShowcase]
         proposal_page_description: DF.Text | None
         route: DF.Data | None
-        schedule_page_description: DF.LongText | None
+        schedule_page_description: DF.MarkdownEditor | None
         show_photos: DF.Check
         show_schedule: DF.Check
         show_speakers: DF.Check
