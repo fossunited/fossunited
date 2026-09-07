@@ -26,7 +26,7 @@
     <Transition name="fade-up">
       <div
         v-if="isExpanded"
-        class="absolute left-0 top-full z-50 w-[300px] shadow-xl bg-surface-white dark:bg-surface-gray-2 rounded-[16px] px-2 md:px-4"
+        class="absolute left-0 top-full z-30 w-[300px] shadow-xl bg-surface-white dark:bg-surface-gray-2 rounded-[16px] px-2 md:px-4"
         @click.stop
       >
         <SessionCard :session="session" preview />

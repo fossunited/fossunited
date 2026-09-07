@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import dayjs from 'dayjs'
 
 // Plugins
@@ -84,3 +85,16 @@ export const isCheckedInToday = (attendee) =>
 
 // default export for raw dayjs
 export default dayjs
+
+export const now = ref(dayjs())
+setInterval(() => (now.value = dayjs()), 30_000)
+
+/** Is this schedule row running right now, by wall clock? */
+export const isSessionLive = (session) => {
+  if (!session?.scheduled_date || !session.start_time || !session.end_time) return false
+  const day = dayjs(session.scheduled_date).format('YYYY-MM-DD')
+  return (
+    now.value.isAfter(dayjs(`${day} ${session.start_time}`)) &&
+    now.value.isBefore(dayjs(`${day} ${session.end_time}`))
+  )
+}

@@ -1,26 +1,27 @@
 <template>
   <!-- Mobile card: two-panel stacked ──────────────────────────────────── -->
   <div class="sm:hidden flex flex-col w-full py-2">
-    <!-- Top panel: time+cal overlap | speaker thumbs -->
+    <!-- Top panel: calendar+time | speaker thumbs -->
     <div
       class="relative z-10 flex items-center justify-between bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-2xl p-2 mb-[-14px]"
     >
-      <!-- Overlapping time chip + calendar button -->
-      <div class="isolate flex">
+      <button
+        class="flex items-center h-11 shrink-0 rounded-lg overflow-hidden transition-opacity hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
+        :aria-label="calendarLabel"
+        @click.stop="downloadIcs"
+      >
+        <div
+          class="h-11 w-11 shrink-0 bg-surface-gray-7 flex items-center justify-center text-ink-white"
+        >
+          <IconCalendarPlus class="w-5 h-5" aria-hidden="true" />
+        </div>
         <div
           v-if="!preview"
-          class="relative z-[2] h-11 w-[94px] rounded-lg bg-surface-gray-7 text-ink-white text-sm font-semibold uppercase flex items-center justify-center whitespace-nowrap px-2.5 shrink-0"
+          class="h-11 px-3 bg-surface-gray-7 text-ink-white text-sm font-semibold uppercase flex items-center whitespace-nowrap"
         >
           {{ formatTime(session.start_time) }}
         </div>
-        <button
-          class="relative z-[1] -ml-2 h-11 w-[52px] rounded-r-lg bg-surface-gray-2 dark:bg-surface-gray-3 flex items-center justify-center pl-4 pr-2.5 text-ink-gray-7 dark:text-ink-gray-8 transition-colors hover:bg-surface-gray-3 hover:text-ink-gray-9"
-          title="Add to calendar"
-          @click.stop="downloadIcs"
-        >
-          <IconCalendarPlus class="w-5 h-5" />
-        </button>
-      </div>
+      </button>
       <!-- YouTube (mobile) -->
       <a
         v-if="session.talk_video"
@@ -106,19 +107,18 @@
   <div class="hidden sm:flex flex-col w-full py-1">
     <div class="flex items-center flex-wrap gap-y-2">
       <button
-        class="flex items-center h-10 shrink-0 transition-opacity hover:opacity-80"
-        title="Add to calendar"
+        class="flex items-center h-10 shrink-0 rounded-lg overflow-hidden transition-opacity hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
+        :aria-label="calendarLabel"
         @click.stop="downloadIcs"
       >
         <div
-          class="h-10 w-10 shrink-0 bg-surface-gray-7 rounded-l-lg flex items-center justify-center text-ink-white transition-opacity hover:opacity-80"
+          class="h-10 w-10 shrink-0 bg-surface-gray-7 flex items-center justify-center text-ink-white"
         >
-          <IconCalendarPlus class="w-5 h-5" />
+          <IconCalendarPlus class="w-5 h-5" aria-hidden="true" />
         </div>
         <div
           v-if="!preview"
-          class="h-10 px-3 bg-surface-gray-7 rounded-r-lg text-ink-white text-base font-semibold uppercase flex items-center whitespace-nowrap"
-          @click.stop="downloadIcs"
+          class="h-10 px-3 bg-surface-gray-7 text-ink-white text-base font-semibold uppercase flex items-center whitespace-nowrap"
         >
           {{ formatTime(session.start_time) }}
         </div>
@@ -250,6 +250,13 @@ const {
   cfpHref,
   downloadIcs,
 } = useSession(toRef(props, 'session'))
+
+// Names the action AND contains the visible text, so it satisfies both
+// 4.1.2 and 2.5.3. Without it the button announces only "10:30 AM".
+const calendarLabel = computed(() => {
+  const time = formatTime(props.session.start_time)
+  return time ? `Add ${time} session to calendar` : 'Add session to calendar'
+})
 
 function formatIsoDate(isoDate) {
   return dayjs(isoDate).format('D MMM')

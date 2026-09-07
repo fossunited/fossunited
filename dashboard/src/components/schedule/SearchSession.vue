@@ -2,7 +2,7 @@
   <div class="mt-4">
     <div class="flex items-center gap-2 mb-4">
       <span class="text-sm font-semibold text-ink-gray-7 dark:text-ink-gray-8 uppercase tracking-wide">
-        Search results
+        {{ label }}
       </span>
       <span
         class="px-2 py-0.5 rounded-full bg-surface-gray-2 text-ink-gray-7 dark:text-ink-gray-8 text-xs font-semibold"
@@ -11,9 +11,15 @@
       </span>
     </div>
 
-    <div v-if="filteredSessions.length === 0" class="py-16 text-center text-ink-gray-7 dark:text-ink-gray-8">
-      No sessions found matching <strong class="text-ink-gray-7 dark:text-ink-gray-8">{{ query }}</strong
-      >.
+    <div
+      v-if="filteredSessions.length === 0"
+      class="py-16 text-center text-ink-gray-7 dark:text-ink-gray-8"
+    >
+      <template v-if="filter">{{ emptyText }}</template>
+      <template v-else>
+        No sessions found matching
+        <strong class="text-ink-gray-7 dark:text-ink-gray-8">{{ query }}</strong>.
+      </template>
     </div>
 
     <div v-else class="flex flex-col gap-1">
@@ -37,7 +43,20 @@ const props = defineProps({
   },
   query: {
     type: String,
-    required: true,
+    default: '',
+  },
+  // When given, replaces the query search entirely.
+  filter: {
+    type: Function,
+    default: null,
+  },
+  label: {
+    type: String,
+    default: 'Search results',
+  },
+  emptyText: {
+    type: String,
+    default: '',
   },
 })
 
@@ -57,6 +76,8 @@ function flattenSchedule(schedule) {
 const allSessions = computed(() => flattenSchedule(props.schedule))
 
 const filteredSessions = computed(() => {
+  if (props.filter) return allSessions.value.filter(props.filter)
+
   const q = props.query.trim().toLowerCase()
   if (!q) return []
 
