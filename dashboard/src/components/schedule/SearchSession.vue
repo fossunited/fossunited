@@ -35,6 +35,8 @@
 <script setup>
 import { computed } from 'vue'
 import SessionCard from '@/components/schedule/SessionCard.vue'
+import { matchesQuery, tokenizeQuery } from '@/helpers/search'
+import { resolveSpeakers } from '@/composables/useSession'
 
 const props = defineProps({
   schedule: {
@@ -78,22 +80,22 @@ const allSessions = computed(() => flattenSchedule(props.schedule))
 const filteredSessions = computed(() => {
   if (props.filter) return allSessions.value.filter(props.filter)
 
-  const q = props.query.trim().toLowerCase()
-  if (!q) return []
+  const tokens = tokenizeQuery(props.query)
+  if (!tokens.length) return []
 
   return allSessions.value.filter((session) => {
-    const speakers = session.cfp_speakers ?? []
-    const parts = [
-      session.name,
-      session.title,
-      session.category,
-      session.other_category,
-      session.hall,
-      ...speakers.flatMap((s) => [s.full_name, s.designation, s.organization]),
-    ]
-      .filter(Boolean)
-      .map((s) => String(s).toLowerCase())
-    return parts.join(' ').includes(q)
+    const speakers = resolveSpeakers(session)
+    return matchesQuery(
+      [
+        session.name,
+        session.title,
+        session.category,
+        session.other_category,
+        session.hall,
+        ...speakers.flatMap((s) => [s?.full_name, s?.designation, s?.organization]),
+      ],
+      tokens,
+    )
   })
 })
 </script>
