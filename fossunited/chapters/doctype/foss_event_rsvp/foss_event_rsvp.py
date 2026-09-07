@@ -135,6 +135,7 @@ class FOSSEventRSVP(WebsiteGenerator):
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def create_rsvp(fields: str):
+    """Create an RSVP submission, filtering input to RSVP_ALLOWED_FIELDS only."""
     fields = json.loads(fields)
 
     linked_rsvp = fields.get("linked_rsvp")

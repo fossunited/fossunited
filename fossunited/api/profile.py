@@ -14,6 +14,7 @@ MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024
 
 
 def _validate_file_path(file_url: str) -> str:
+    """Resolve file_url to an absolute path and reject traversal outside the public directory."""
     public_dir = os.path.realpath(frappe.get_site_path("public"))
     file_path = os.path.realpath(os.path.join(public_dir, file_url.lstrip("/")))
     if not file_path.startswith(public_dir + os.sep):
@@ -48,7 +49,7 @@ def set_profile_image(file_url: str) -> bool:
     user_doc = get_session_user_profile()
     try:
         file_path = _validate_file_path(file_url)
-        with open(file_path, "rb") as f:
+        with open(file_path, "rb") as f:  # nosemgrep: frappe-security-file-traversal
             original_image = f.read()
 
         if len(original_image) > MAX_IMAGE_SIZE_BYTES:
@@ -86,7 +87,7 @@ def set_cover_image(file_url: str) -> bool:
             frappe.db.set_value(USER_PROFILE, user_doc.name, "cover_image", "")
             return True
         file_path = _validate_file_path(file_url)
-        with open(file_path, "rb") as f:
+        with open(file_path, "rb") as f:  # nosemgrep: frappe-security-file-traversal
             original_image = f.read()
 
         if len(original_image) > MAX_IMAGE_SIZE_BYTES:
