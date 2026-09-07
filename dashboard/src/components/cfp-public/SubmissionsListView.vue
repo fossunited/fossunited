@@ -4,6 +4,7 @@ import Filter from '@/components/ui/Filter.vue'
 import { IconSearch, IconDownload, IconX } from '@tabler/icons-vue'
 import { createResource, FormControl, LoadingText, Select } from 'frappe-ui'
 import { filterSubmissions } from '@/helpers/cfp'
+import { matchesQuery, tokenizeQuery } from '@/helpers/search'
 import { watch, ref, computed, onUnmounted } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { useRoute } from 'vue-router'
@@ -13,7 +14,7 @@ const route = useRoute()
 const filters = useStorage(`submission-filters:${route.params.route}`, {})
 const sortBy = useStorage(`submission-sort:${route.params.route}`, 'creation_desc')
 const searchTitle = ref('')
-const debouncedSearch = ref('')
+const debouncedSearch = ref([])
 
 const SORT_OPTIONS = [
   { label: 'Newest', value: 'creation_desc' },
@@ -151,23 +152,21 @@ const filteredSubmissions = computed(() => {
   }
 
   // Apply search filter
-  if (search) {
+  if (search.length) {
     result = result.filter((item) => {
       const { talk_title, speaker_name, speakers, _speaker, session_type, session_categories } =
         item
+      const speakerList = speakers ?? _speaker ?? []
 
-      const titleMatch = talk_title?.toLowerCase().includes(search)
-      const categoryMatch = session_categories?.toLowerCase().includes(search)
-      const sessionTypeMatch = session_type?.toLowerCase().includes(search)
-
-      const allNames = [
-        ...(speaker_name ? [speaker_name.toLowerCase()] : []),
-        ...((speakers ?? _speaker)?.map((s) => s?.full_name?.toLowerCase() ?? '') ?? []),
-        ...((speakers ?? _speaker)?.map((s) => s?.organization?.toLowerCase() ?? '') ?? []),
-      ]
-
-      return (
-        titleMatch || categoryMatch || sessionTypeMatch || allNames.some((n) => n.includes(search))
+      return matchesQuery(
+        [
+          talk_title,
+          session_categories,
+          session_type,
+          speaker_name,
+          speakerList.map((s) => [s?.full_name, s?.organization]),
+        ],
+        search,
       )
     })
   }
@@ -243,7 +242,7 @@ let searchTimer = null
 watch(searchTitle, (val) => {
   clearTimeout(searchTimer)
   searchTimer = setTimeout(() => {
-    debouncedSearch.value = val.trim().toLowerCase()
+    debouncedSearch.value = tokenizeQuery(val)
   }, 200)
 })
 onUnmounted(() => clearTimeout(searchTimer))

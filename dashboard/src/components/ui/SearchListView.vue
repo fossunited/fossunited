@@ -106,6 +106,7 @@
 import { ListView, FormControl, Button, Dialog } from 'frappe-ui'
 import { ref, computed, reactive, watch, onUnmounted } from 'vue'
 import { debounce } from 'lodash-es'
+import { matchesQuery, tokenizeQuery } from '@/helpers/search'
 import { toast } from 'vue-sonner'
 
 const props = defineProps({
@@ -252,27 +253,19 @@ watch(debouncedSearch, (term, prev) => {
 })
 
 // Row matching
-const getSearchText = (row) => {
-  if (props.searchFields) {
-    return props.searchFields
-      .map((f) => row[f])
-      .filter(Boolean)
-      .join(' ')
-      .toLowerCase()
-  }
-  return props.columns
-    .map((col) => {
-      const v = row[col.key]
-      return typeof v === 'boolean' ? (v ? 'yes' : 'no') : v
-    })
-    .filter(Boolean)
-    .join(' ')
-    .toLowerCase()
+// Tokenized once per search change rather than once per row.
+const searchTokens = computed(() => tokenizeQuery(debouncedSearch.value))
+
+const getSearchParts = (row) => {
+  if (props.searchFields) return props.searchFields.map((f) => row[f])
+  return props.columns.map((col) => {
+    const v = row[col.key]
+    return typeof v === 'boolean' ? (v ? 'yes' : 'no') : v
+  })
 }
 
 const matchesRow = (row) => {
-  const term = debouncedSearch.value.toLowerCase().trim()
-  if (term && !getSearchText(row).includes(term)) return false
+  if (!matchesQuery(getSearchParts(row), searchTokens.value)) return false
   if (activeFilterApplied.value && row[props.filterField] !== selectedFilter.value) return false
   return true
 }
