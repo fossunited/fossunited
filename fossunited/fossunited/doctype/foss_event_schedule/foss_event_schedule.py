@@ -19,6 +19,8 @@ class FOSSEventSchedule(Document):
             "Workshop",
             "Panel Discussion",
             "Opening Note",
+            "Invited Talk",
+            "Birds of Feather(BoF)",
             "Break",
             "Other",
         ]
