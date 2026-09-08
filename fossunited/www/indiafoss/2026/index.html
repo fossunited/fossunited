@@ -607,10 +607,10 @@
           </h2>
 
           {% set vol_tabs = [
-            ('co-chairs',  'Co-Chairs',       co_chairs),
-            ('volunteers', 'Volunteers',       volunteers),
-            ('devrooms',   'Devroom Managers', devroom_managers),
-            ('reviewers',  'Reviewers',        reviewers),
+            ('cochairs',          'Co-Chairs',        co_chairs),
+            ('volunteers',        'Volunteers',       volunteers),
+            ('devroom-managers',  'Devroom Managers', devroom_managers),
+            ('reviewers',         'Reviewers',        reviewers),
           ] %}
 
           <ul class="nav v3-nav-pills" role="tablist" aria-label="Conference team categories">
@@ -618,10 +618,10 @@
               <li class="nav-item">
                 <a class="nav-link {% if loop.first %}active{% endif %}"
                    data-toggle="tab"
-                   href="#panel-{{ tab_id }}"
+                   href="#{{ tab_id }}"
                    role="tab"
                    id="tab-btn-{{ tab_id }}"
-                   aria-controls="panel-{{ tab_id }}"
+                   aria-controls="{{ tab_id }}"
                    aria-selected="{{ 'true' if loop.first else 'false' }}"
                    tabindex="{{ '0' if loop.first else '-1' }}">
                   {{ tab_label }}
@@ -633,7 +633,7 @@
           <div class="tab-content">
             {% for tab_id, tab_label, people in vol_tabs %}
               <div class="tab-pane {% if loop.first %}active{% endif %}"
-                   id="panel-{{ tab_id }}"
+                   id="{{ tab_id }}"
                    role="tabpanel"
                    aria-labelledby="tab-btn-{{ tab_id }}">
                 {% if people %}
@@ -661,8 +661,8 @@
 
       {# 7. SUPPORT & ACCESSIBILITY (shown early for A11Y tabbing) #}
       {% set support = [
-        {'title': 'Child Care',    'desc': 'On-site childcare during both the conference days.',                    'form_url': 'https://fossunited.org/indiafoss/childcare/new', 'has_form': true, 'icon': 'ti-baby-carriage'},
-        {'title': 'Accessibility', 'desc': 'We give support to make the conference accessible for all.',            'form_url': 'https://fossunited.org/indiafoss/accessibility/new', 'has_form': true, 'icon': 'ti-accessible'},
+        {'title': 'Child Care',    'desc': 'On-site childcare during both the conference days.',                    'form_url': 'https://fossunited.org/indiafoss/childcare/new',     'has_form': true, 'note': 'No requests came in this year, so this will not be available. Read more.', 'icon': 'ti-baby-carriage'},
+        {'title': 'Accessibility', 'desc': 'Support to make the conference accessible for all.',                   'form_url': 'https://fossunited.org/indiafoss/accessibility/new', 'has_form': true, 'note': 'No requests came in this year, so this will not be available. Read more.', 'icon': 'ti-accessible'},
         {'title': 'Low Waste',    'desc': 'Bring your own bottles. Help our conference produce low waste output.', 'form_url': '', 'has_form': false, 'icon': 'ti-leaf'},
       ] %}
       <section aria-labelledby="support-heading">
@@ -678,7 +678,13 @@
                   <i class="ti {{ card.icon }} support-icon text-4xl" aria-hidden="true"></i>
                   <p class="semi-bold mb-0">{{ card.title }}</p>
                   <p class="text-sm  mb-0">{{ card.desc }}</p>
-                  {% if card.form_url %}
+                  {% if card.note %}
+                    {% if card.form_url %}
+                      <a href="{{ card.form_url }}" class="text-sm v3-text-tertiary" style="text-decoration: underline;">{{ card.note }}</a>
+                    {% else %}
+                      <p class="text-sm v3-text-tertiary mb-0">{{ card.note }}</p>
+                    {% endif %}
+                  {% elif card.form_url %}
                     <a href="{{ card.form_url }}" class="text-sm" style="text-decoration: underline;">Fill the {{ card.title }} form</a>
                   {% elif card.has_form %}
                     <p class="text-sm v3-text-tertiary mb-0">Form opening soon.</p>
@@ -829,5 +835,25 @@ frappe.ready(function() { $('[data-toggle="tooltip"]').tooltip(); });
     });
   });
 })();
+
+// Deep-link the team tabs: #<id> in the URL opens that tab and scrolls to it;
+// clicking a tab reflects its id back into the URL so it stays shareable.
+// Runs in frappe.ready so jQuery + the Bootstrap tab plugin are loaded first.
+frappe.ready(function() {
+  var $ = window.jQuery;
+  if (!$ || !$.fn.tab) return;
+  function open(hash) {
+    var link = hash && document.querySelector('.v3-nav-pills a[href="' + hash + '"]');
+    if (!link) return;
+    $(link).tab('show');
+    var team = document.getElementById('team');
+    if (team) team.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  open(location.hash);
+  window.addEventListener('hashchange', function() { open(location.hash); });
+  $('.v3-nav-pills a[data-toggle="tab"]').on('shown.bs.tab', function() {
+    history.replaceState(null, '', this.getAttribute('href'));
+  });
+});
 </script>
 {% endblock %}
