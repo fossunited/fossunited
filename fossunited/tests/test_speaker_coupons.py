@@ -77,20 +77,21 @@ class TestSpeakerCoupons(FrappeTestCase):
             )
         )
 
-    def test_multi_talk_speaker_gets_multiplied_max_count(self):
-        # Same speaker, two approved proposals
+    def test_multi_talk_speaker_gets_exactly_one_coupon(self):
+        # Same speaker, two approved proposals - strictly one coupon either way
         self._approved([_speaker("bob@test.com")])
         self._approved([_speaker("bob@test.com")])
         frappe.set_user(self.team_member.name)
 
-        bulk_create_speaker_coupons(event=self.event.name, max_count=2)
+        result = bulk_create_speaker_coupons(event=self.event.name, max_count=2)
 
+        self.assertEqual(result["created"], 1)
         max_count = frappe.db.get_value(
             FREE_TICKET_CODE,
             {"event": self.event.name, "mapped_email": "bob@test.com"},
             "max_count",
         )
-        self.assertEqual(int(max_count), 4)  # 2 per talk * 2 talks
+        self.assertEqual(int(max_count), 2)
 
     def test_tshirt_included_flag_is_stored_on_coupon(self):
         self._approved([_speaker("frank@test.com")])
@@ -140,6 +141,25 @@ class TestSpeakerCoupons(FrappeTestCase):
 
         self.assertEqual(result["created"], 0)
         self.assertEqual(result["skipped"], 1)
+
+    def test_bulk_create_continues_past_a_duplicate_in_the_batch(self):
+        # heidi already has a coupon (not from a prior bulk run); ivan is new
+        self._approved([_speaker("heidi@test.com")])
+        self._approved([_speaker("ivan@test.com")])
+        FreeTicketCodeFactory.create(
+            event=self.event.name, mapped_email="heidi@test.com", tier="Volunteer"
+        )
+        frappe.set_user(self.team_member.name)
+
+        result = bulk_create_speaker_coupons(event=self.event.name, max_count=1)
+
+        self.assertEqual(result["created"], 1)
+        self.assertEqual(result["skipped"], 1)
+        self.assertTrue(
+            frappe.db.exists(
+                FREE_TICKET_CODE, {"event": self.event.name, "mapped_email": "ivan@test.com"}
+            )
+        )
 
     def test_non_approved_proposals_excluded(self):
         # Status defaults to "Review Pending" — no approved proposals
