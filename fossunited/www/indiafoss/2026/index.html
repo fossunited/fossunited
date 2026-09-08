@@ -835,5 +835,25 @@ frappe.ready(function() { $('[data-toggle="tooltip"]').tooltip(); });
     });
   });
 })();
+
+// Deep-link the team tabs: #panel-<id> in the URL opens that tab and scrolls to it;
+// clicking a tab reflects its id back into the URL so it stays shareable.
+// Runs in frappe.ready so jQuery + the Bootstrap tab plugin are loaded first.
+frappe.ready(function() {
+  var $ = window.jQuery;
+  if (!$ || !$.fn.tab) return;
+  function open(hash) {
+    var link = hash && document.querySelector('.v3-nav-pills a[href="' + hash + '"]');
+    if (!link) return;
+    $(link).tab('show');
+    var team = document.getElementById('team');
+    if (team) team.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  open(location.hash);
+  window.addEventListener('hashchange', function() { open(location.hash); });
+  $('.v3-nav-pills a[data-toggle="tab"]').on('shown.bs.tab', function() {
+    history.replaceState(null, '', this.getAttribute('href'));
+  });
+});
 </script>
 {% endblock %}

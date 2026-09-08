@@ -9,7 +9,7 @@ from fossunited.fossunited.user_utils import fetch_user_profiles
 from fossunited.fossunited.utils import get_event_sponsors
 
 INDIAFOSS_2026_EVENT = "IndiaFOSS 2026"
-TIER1 = {"Maintainer", "Patrons", "Platinum", "Gold"}
+TIER1 = {"Maintainer", "Patrons", "Platinum", "Gold", "Maintainer Tier"}
 
 
 # TODO: replace all short form url to /2026/ form
