@@ -3,7 +3,7 @@ import json
 
 import frappe
 
-from fossunited.doctype_ids import COMMUNITY_PARTNER, EVENT, EVENT_CFP
+from fossunited.doctype_ids import EVENT, EVENT_CFP
 from fossunited.fossunited.event_media import get_indiafoss_years
 from fossunited.fossunited.user_utils import fetch_user_profiles
 from fossunited.fossunited.utils import get_event_sponsors
@@ -43,12 +43,7 @@ def get_context(context):
     context.sponsors = [
         {"tier": t, "sponsor_list": sl, "is_tier1": t in TIER1} for t, sl in sponsors_dict.items()
     ]
-    context.partners = frappe.db.get_all(
-        COMMUNITY_PARTNER,
-        {"parent": event_docname, "parenttype": EVENT},
-        ["org_name", "link", "logo"],
-        page_length=99,
-    )
+    context.partners = event.community_partners
 
     devrooms = frappe.get_all(
         "Devroom Custom",
@@ -109,7 +104,11 @@ def get_context(context):
         context.timeline, today
     )
     context.progress_pct = round(
-        max(0.0, min(100.0, (today - BAR_START).days * 100.0 / (BAR_END - BAR_START).days)), 1
+        max(
+            0.0,
+            min(100.0, (today - BAR_START).days * 100.0 / (BAR_END - BAR_START).days),
+        ),
+        1,
     )
     context.action_cards = _enrich_action_cards(
         event_data.get("action_cards", []), context.timeline, today
