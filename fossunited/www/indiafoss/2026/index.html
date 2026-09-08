@@ -618,10 +618,10 @@
               <li class="nav-item">
                 <a class="nav-link {% if loop.first %}active{% endif %}"
                    data-toggle="tab"
-                   href="#panel-{{ tab_id }}"
+                   href="#{{ tab_id }}"
                    role="tab"
                    id="tab-btn-{{ tab_id }}"
-                   aria-controls="panel-{{ tab_id }}"
+                   aria-controls="{{ tab_id }}"
                    aria-selected="{{ 'true' if loop.first else 'false' }}"
                    tabindex="{{ '0' if loop.first else '-1' }}">
                   {{ tab_label }}
@@ -633,7 +633,7 @@
           <div class="tab-content">
             {% for tab_id, tab_label, people in vol_tabs %}
               <div class="tab-pane {% if loop.first %}active{% endif %}"
-                   id="panel-{{ tab_id }}"
+                   id="{{ tab_id }}"
                    role="tabpanel"
                    aria-labelledby="tab-btn-{{ tab_id }}">
                 {% if people %}
@@ -836,7 +836,7 @@ frappe.ready(function() { $('[data-toggle="tooltip"]').tooltip(); });
   });
 })();
 
-// Deep-link the team tabs: #panel-<id> in the URL opens that tab and scrolls to it;
+// Deep-link the team tabs: #<id> in the URL opens that tab and scrolls to it;
 // clicking a tab reflects its id back into the URL so it stays shareable.
 // Runs in frappe.ready so jQuery + the Bootstrap tab plugin are loaded first.
 frappe.ready(function() {
