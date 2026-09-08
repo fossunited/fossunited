@@ -49,3 +49,17 @@ class TestEventFreeTicketCodeController(FrappeTestCase):
     def test_invalid_mapped_email_throws_error(self):
         with self.assertRaises(frappe.ValidationError):
             FreeTicketCodeFactory.create(event=self.event.name, mapped_email="not-an-email")
+
+    def test_duplicate_email_for_same_event_throws_error(self):
+        FreeTicketCodeFactory.create(event=self.event.name, mapped_email="dupe@test.com")
+        with self.assertRaises(frappe.ValidationError):
+            FreeTicketCodeFactory.create(event=self.event.name, mapped_email="dupe@test.com")
+
+    def test_same_email_allowed_across_different_events(self):
+        other_event = FOSSChapterEventFactory.create(
+            chapter=self.chapter.name, event_name="Other Test Event"
+        )
+        FreeTicketCodeFactory.create(event=self.event.name, mapped_email="shared@test.com")
+        # Should not raise - duplicate check is scoped per event
+        FreeTicketCodeFactory.create(event=other_event.name, mapped_email="shared@test.com")
+        frappe.delete_doc(EVENT, other_event.name, force=True)

@@ -591,11 +591,12 @@ def get_free_coupon_info(coupon_id: str) -> dict:
     }
 
 
-def _get_approved_speaker_emails_for_event(event: str) -> dict[str, tuple[str, int]]:
-    """Return {email: (full_name, talk_count)} for unique speakers across approved proposals.
+def _get_approved_speaker_emails_for_event(event: str) -> dict[str, str]:
+    """Return {email: full_name} for unique speakers across approved proposals.
 
-    talk_count is the number of approved proposals this speaker appears in.
-    Speaker child rows take priority; proposal-level email is a fallback when no child rows exist.
+    One coupon per speaker regardless of how many approved proposals they
+    appear in. Speaker child rows take priority; proposal-level email is a
+    fallback when no child rows exist.
     """
     proposals = frappe.get_all(
         PROPOSAL,
@@ -616,7 +617,7 @@ def _get_approved_speaker_emails_for_event(event: str) -> dict[str, tuple[str, i
     for r in speaker_rows:
         rows_by_proposal.setdefault(r.parent, []).append(r)
 
-    email_data = {}  # email → [full_name, talk_count]
+    email_data = {}  # email → full_name
 
     for p in proposals:
         p_emails = set()
@@ -625,18 +626,15 @@ def _get_approved_speaker_emails_for_event(event: str) -> dict[str, tuple[str, i
             if r.email:
                 key = r.email.strip().lower()
                 p_emails.add(key)
-                email_data.setdefault(key, [r.full_name or "", 0])
+                email_data.setdefault(key, r.full_name or "")
 
         # Fallback: proposal-level email if no speaker child rows on this proposal
         if not p_emails and p.email:
             key = p.email.strip().lower()
             p_emails.add(key)
-            email_data.setdefault(key, [p.full_name or "", 0])
+            email_data.setdefault(key, p.full_name or "")
 
-        for key in p_emails:
-            email_data[key][1] += 1
-
-    return {email: (name, count) for email, (name, count) in email_data.items()}
+    return email_data
 
 
 def _get_existing_coupon_emails_for_event(event: str) -> set[str]:
@@ -664,7 +662,9 @@ def bulk_create_speaker_coupons(event: str, max_count: int = 1, tshirt_included:
     """
     Idempotently create EventFreeTicketCode docs for approved CFP speakers.
 
-    Skips speakers who already have a coupon for this event.
+    One coupon per unique speaker email, regardless of how many approved
+    proposals they appear in. Skips speakers who already have a coupon for
+    this event.
     """
 
     max_count = int(max_count)
@@ -676,7 +676,7 @@ def bulk_create_speaker_coupons(event: str, max_count: int = 1, tshirt_included:
     existing = _get_existing_coupon_emails_for_event(event)
     to_create = {e: v for e, v in info.items() if e not in existing}
 
-    for email, (full_name, talk_count) in to_create.items():
+    for email, full_name in to_create.items():
         frappe.get_doc(
             {
                 "doctype": FREE_TICKET_CODE,
@@ -684,7 +684,7 @@ def bulk_create_speaker_coupons(event: str, max_count: int = 1, tshirt_included:
                 "mapped_email": email,
                 "full_name": full_name,
                 "tier": "Speaker/Workshop Host",
-                "max_count": max_count * talk_count,
+                "max_count": max_count,
                 "tshirt_included": tshirt_included,
             }
         ).insert(ignore_permissions=True)

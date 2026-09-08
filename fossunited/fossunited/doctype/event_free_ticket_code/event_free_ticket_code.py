@@ -6,6 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 
 from fossunited.api.chapter import check_if_chapter_or_event_core_member
+from fossunited.doctype_ids import FREE_TICKET_CODE
 
 
 class EventFreeTicketCode(Document):
@@ -42,6 +43,27 @@ class EventFreeTicketCode(Document):
 
     def before_save(self):
         self.permit_only_team()
+        self.validate_duplicate_email()
+
+    def validate_duplicate_email(self):
+        """Warn if this email already has a coupon for the same event."""
+        if not self.mapped_email or not self.event:
+            return
+
+        if frappe.db.exists(
+            FREE_TICKET_CODE,
+            {
+                "event": self.event,
+                "mapped_email": self.mapped_email,
+                "name": ["!=", self.name or ""],
+            },
+        ):
+            frappe.throw(
+                _(
+                    "{0} already has a coupon for this event. If this is deliberate, "
+                    "use an email alias like name+ticket@domain.com."
+                ).format(self.mapped_email)
+            )
 
     def permit_only_team(self):
         """Allow only event/chapter team members to modify."""

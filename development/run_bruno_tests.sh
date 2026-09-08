@@ -26,10 +26,10 @@ resolve_bru() {
 
   if command -v yarn >/dev/null 2>&1; then
     echo "Bruno CLI not found — installing dependencies with yarn..." >&2
-    (cd "$ROOT_DIR" && yarn install --silent)
+    (cd "$BRUNO_DIR" && yarn install --silent)
   elif command -v npm >/dev/null 2>&1; then
     echo "Bruno CLI not found — installing dependencies with npm..." >&2
-    (cd "$ROOT_DIR" && npm install --silent)
+    (cd "$BRUNO_DIR" && npm install --silent)
   else
     return
   fi
