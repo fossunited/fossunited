@@ -250,7 +250,7 @@
           type="textarea"
           size="md"
           label="Ticket Form Description"
-          description="Supports markdown (bold, italic, bullet points, headings). Shown at the top of the ticket purchase page."
+          description="Input markdown (bold, italic, bullet points, headings). Shown at the top of the ticket purchase page."
           class="col-span-2 [&_textarea]:min-h-[200px]"
         />
       </div>

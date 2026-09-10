@@ -204,7 +204,7 @@ const saveScheduleDescription = () => {
           type="textarea"
           size="md"
           label="Schedule Page Description"
-          description="Supports markdown (bold, italic, bullet points, headings). Shown at the top of this event's schedule page."
+          description="Input markdown and can embed Html. Shown at the top of this event's schedule page."
           class="[&_textarea]:min-h-[200px]"
         />
         <Button
