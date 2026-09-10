@@ -1,6 +1,6 @@
 <script setup>
 import { IconArrowUpRight } from '@tabler/icons-vue'
-import { Breadcrumbs, createResource, Switch } from 'frappe-ui'
+import { Breadcrumbs, createResource, FormControl, Switch } from 'frappe-ui'
 import { inject, onMounted, ref, computed, provide } from 'vue'
 import { toast } from 'vue-sonner'
 import { redirectRoute, isSmallScreen } from '@/helpers/utils'
@@ -154,6 +154,15 @@ const toggleShowSchedule = () => {
 }
 
 const showModifyScheduleItemDrawer = ref(false)
+
+const saveScheduleDescription = () => {
+  event.setValue
+    .submit({ schedule_page_description: event.doc.schedule_page_description })
+    .then(() => toast.success('Schedule page description updated successfully'))
+    .catch((error) =>
+      toast.error('Failed to update schedule page description', { description: error.message }),
+    )
+}
 </script>
 <template>
   <div class="flex h-screen overflow-hidden">
@@ -189,6 +198,23 @@ const showModifyScheduleItemDrawer = ref(false)
           @click="redirectRoute(`${event.doc?.route}/schedule`)"
         />
       </div>
+      <div class="flex flex-col gap-2 my-4">
+        <FormControl
+          v-model="event.doc.schedule_page_description"
+          type="textarea"
+          size="md"
+          label="Schedule Page Description"
+          description="Supports markdown (bold, italic, bullet points, headings). Shown at the top of this event's schedule page."
+          class="[&_textarea]:min-h-[200px]"
+        />
+        <Button
+          class="w-fit"
+          size="sm"
+          label="Save Description"
+          @click="saveScheduleDescription"
+        />
+      </div>
+      <hr class="my-4" />
       <ManageHallOptions v-if="event.doc" v-model="event.doc.hall_options" />
       <hr class="my-4" />
       <ManageDates
