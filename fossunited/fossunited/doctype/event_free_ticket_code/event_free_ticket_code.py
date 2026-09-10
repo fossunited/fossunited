@@ -37,11 +37,40 @@ class EventFreeTicketCode(Document):
         used_count: DF.Int
     # end: auto-generated types
 
+    def before_insert(self):
+        self.warn_duplicate_email()
+
     def on_trash(self):
         self.permit_only_team()
 
     def before_save(self):
         self.permit_only_team()
+
+    def warn_duplicate_email(self):
+        """Non-blocking heads-up in Desk: this email already has a coupon
+        for this event. Doesn't stop the save - duplicates are allowed
+        (e.g. a deliberate resend via an email alias).
+        """
+        if not self.mapped_email or not self.event:
+            return
+
+        existing = frappe.db.get_value(
+            self.doctype,
+            {
+                "event": self.event,
+                "mapped_email": self.mapped_email,
+                "name": ["!=", self.name or ""],
+            },
+            "name",
+        )
+        if existing:
+            frappe.msgprint(
+                _("{0} already has a coupon ({1}) for this event.").format(
+                    self.mapped_email, existing
+                ),
+                indicator="orange",
+                alert=True,
+            )
 
     def permit_only_team(self):
         """Allow only event/chapter team members to modify."""
