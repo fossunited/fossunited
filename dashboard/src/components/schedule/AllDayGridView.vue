@@ -61,14 +61,6 @@
               </span>
               <div class="hidden md:block w-2 h-px bg-surface-gray-5" />
             </div>
-            <div
-              v-for="label in halfLabels"
-              :key="'h' + label.minutes"
-              class="hidden md:block absolute right-1"
-              :style="{ top: offsetFor(label.minutes) + 'px', transform: 'translateY(-50%)' }"
-            >
-              <div class="w-1.5 h-px bg-surface-gray-4" />
-            </div>
           </div>
 
           <!-- Hall columns -- sessions only, headers live in the pinned row above -->
@@ -83,12 +75,12 @@
                   :style="{ top: offsetFor(label.minutes) + 'px' }"
                 />
                 <div
-                  v-for="session in hallSessions(hall)"
-                  :key="session.name || session.title"
+                  v-for="placed in hallSessions(hall)"
+                  :key="placed.session.name || placed.session.title"
                   class="absolute left-0 right-0 px-2"
-                  :style="{ top: offsetFor(toMinutes(session.start_time)) + 'px' }"
+                  :style="{ top: placed.top + 'px' }"
                 >
-                  <TimeCapsule :session="session" />
+                  <TimeCapsule :session="placed.session" />
                 </div>
               </div>
             </div>
@@ -119,6 +111,9 @@ const props = defineProps({
 const PIXELS_PER_MINUTE = 6 // 60px = 10 min
 const HALL_WIDTH = 200 // px per hall column
 const TIME_AXIS_WIDTH = 56 // px (w-14 on desktop)
+const CAPSULE_HEIGHT = 60 // px, matches TimeCapsule's own fixed h-[60px]
+// space for kickstart
+const TOP_PADDING = 14 // px
 
 const headerEl = ref(null)
 const contentEl = ref(null)
@@ -143,10 +138,18 @@ const shouldCenter = computed(
   () => orderedHalls.value.length * HALL_WIDTH + TIME_AXIS_WIDTH > CENTER_THRESHOLD,
 )
 
+// show overlapping short session above & below and not behind
 function hallSessions(hall) {
-  return (props.schedule[hall] || [])
+  const sorted = (props.schedule[hall] || [])
     .slice()
     .sort((a, b) => toMinutes(a.start_time) - toMinutes(b.start_time))
+
+  let cursor = -Infinity
+  return sorted.map((session) => {
+    const top = Math.max(offsetFor(toMinutes(session.start_time)), cursor)
+    cursor = top + CAPSULE_HEIGHT
+    return { session, top }
+  })
 }
 
 function toMinutes(timeStr) {
@@ -157,7 +160,7 @@ function toMinutes(timeStr) {
 }
 
 function offsetFor(minutes) {
-  return (minutes - timeRange.value.min) * PIXELS_PER_MINUTE
+  return (minutes - timeRange.value.min) * PIXELS_PER_MINUTE + TOP_PADDING
 }
 
 const DEFAULT_RANGE = { min: 9 * 60, max: 18 * 60 }
@@ -177,20 +180,15 @@ const timeRange = computed(() => {
   }
 })
 
-const totalHeight = computed(() => (timeRange.value.max - timeRange.value.min) * PIXELS_PER_MINUTE)
+const totalHeight = computed(
+  () => (timeRange.value.max - timeRange.value.min) * PIXELS_PER_MINUTE + TOP_PADDING,
+)
 
+// 30-minute steps: most sessions run 25 minutes or less
 const timeLabels = computed(() => {
   const labels = []
-  for (let m = timeRange.value.min; m <= timeRange.value.max; m += 60) {
+  for (let m = timeRange.value.min; m <= timeRange.value.max; m += 30) {
     labels.push({ minutes: m, label: minutesToAmPm(m) })
-  }
-  return labels
-})
-
-const halfLabels = computed(() => {
-  const labels = []
-  for (let m = timeRange.value.min + 30; m < timeRange.value.max; m += 60) {
-    labels.push({ minutes: m })
   }
   return labels
 })
