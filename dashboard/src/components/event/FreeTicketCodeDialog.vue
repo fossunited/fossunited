@@ -95,6 +95,10 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  existingCodes: {
+    type: Array,
+    default: () => [],
+  },
 })
 
 const emit = defineEmits(['refresh'])
@@ -150,6 +154,19 @@ const validateFields = () => {
   return errors
 }
 
+// Soft, non-blocking heads-up on dup email and info on prev coupon
+const findDuplicateWarning = () => {
+  const email = code.mapped_email.trim().toLowerCase()
+  const duplicate = props.existingCodes.find(
+    (c) => c.name !== code.name && (c.mapped_email || '').trim().toLowerCase() === email,
+  )
+  return duplicate
+    ? `${code.mapped_email} already has a coupon (${duplicate.name}) for this event.`
+    : null
+}
+
+let pendingDuplicateWarning = null
+
 const createCode = createResource({
   url: 'frappe.client.insert',
   makeParams() {
@@ -169,6 +186,7 @@ const createCode = createResource({
   },
   onSuccess() {
     toast.success('Free code created successfully')
+    if (pendingDuplicateWarning) toast.info(pendingDuplicateWarning)
     emit('refresh')
     showDialog.value = false
     resetCode()
@@ -198,6 +216,7 @@ const updateCode = createResource({
   },
   onSuccess() {
     toast.success('Free code updated successfully')
+    if (pendingDuplicateWarning) toast.info(pendingDuplicateWarning)
     emit('refresh')
     showDialog.value = false
     errorMessages.value = ''
@@ -234,6 +253,7 @@ const handleCreate = () => {
     return
   }
   errorMessages.value = ''
+  pendingDuplicateWarning = findDuplicateWarning()
   createCode.fetch()
 }
 
@@ -244,6 +264,7 @@ const handleSave = () => {
     return
   }
   errorMessages.value = ''
+  pendingDuplicateWarning = findDuplicateWarning()
   updateCode.fetch()
 }
 
