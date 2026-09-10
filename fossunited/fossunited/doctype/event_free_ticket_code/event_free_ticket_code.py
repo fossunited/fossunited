@@ -61,12 +61,18 @@ class EventFreeTicketCode(Document):
                 "mapped_email": self.mapped_email,
                 "name": ["!=", self.name or ""],
             },
-            "name",
+            ["name", "tier", "other_tier"],
+            as_dict=True,
         )
         if existing:
+            tier_label = (
+                existing.other_tier
+                if existing.tier == "Other" and existing.other_tier
+                else existing.tier
+            )
             frappe.msgprint(
-                _("{0} already has a coupon ({1}) for this event.").format(
-                    self.mapped_email, existing
+                _('note: {0} already has a coupon ({1}) under "{2}" for this event.').format(
+                    self.mapped_email, existing.name, tier_label
                 ),
                 indicator="orange",
                 alert=True,
