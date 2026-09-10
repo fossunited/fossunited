@@ -6,7 +6,6 @@ from frappe import _
 from frappe.model.document import Document
 
 from fossunited.api.chapter import check_if_chapter_or_event_core_member
-from fossunited.doctype_ids import FREE_TICKET_CODE
 
 
 class EventFreeTicketCode(Document):
@@ -38,31 +37,45 @@ class EventFreeTicketCode(Document):
         used_count: DF.Int
     # end: auto-generated types
 
+    def before_insert(self):
+        self.warn_duplicate_email()
+
     def on_trash(self):
         self.permit_only_team()
 
     def before_save(self):
         self.permit_only_team()
-        self.validate_duplicate_email()
 
-    def validate_duplicate_email(self):
-        """Warn if this email already has a coupon for the same event."""
+    def warn_duplicate_email(self):
+        """Non-blocking heads-up in Desk: this email already has a coupon
+        for this event. Doesn't stop the save - duplicates are allowed
+        (e.g. a deliberate resend via an email alias).
+        """
         if not self.mapped_email or not self.event:
             return
 
-        if frappe.db.exists(
-            FREE_TICKET_CODE,
+        existing = frappe.db.get_value(
+            self.doctype,
             {
                 "event": self.event,
                 "mapped_email": self.mapped_email,
                 "name": ["!=", self.name or ""],
             },
-        ):
-            frappe.throw(
-                _(
-                    "{0} already has a coupon for this event. If this is deliberate, "
-                    "use an email alias like name+ticket@domain.com."
-                ).format(self.mapped_email)
+            ["name", "tier", "other_tier"],
+            as_dict=True,
+        )
+        if existing:
+            tier_label = (
+                existing.other_tier
+                if existing.tier == "Other" and existing.other_tier
+                else existing.tier
+            )
+            frappe.msgprint(
+                _('note: {0} already has a coupon ({1}) under "{2}" for this event.').format(
+                    self.mapped_email, existing.name, tier_label
+                ),
+                indicator="orange",
+                alert=True,
             )
 
     def permit_only_team(self):

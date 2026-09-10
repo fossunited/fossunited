@@ -5,6 +5,7 @@
       :event="event"
       :in-create-mode="inCreateMode"
       :row="selectedRow"
+      :existing-codes="freeCodes.data || []"
       @refresh="freeCodes.fetch()"
     />
     <div>
