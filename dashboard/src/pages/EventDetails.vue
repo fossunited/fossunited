@@ -151,6 +151,13 @@
           label="Show Speakers Tab"
           description="Show speakers (added in event schedule) profile linked to their proposals."
         />
+        <FormControl
+          v-model="event.doc.deck_link"
+          type="url"
+          size="md"
+          label="Deck Link"
+          description="Link to the event's slide/sponsorship deck. Shared with partners and sponsors."
+        />
         <TextEditor
           label="Event Description"
           class="col-span-2"
