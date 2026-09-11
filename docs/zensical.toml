@@ -111,12 +111,17 @@ font.text = "Inter"
 font.code = "JetBrains Mono"
 logo = "./assets/fossunited-white.svg"
 favicon = "./assets/fossunited-white.svg"
+custom_dir = "overrides"
 features = [
   "search.highlight",
   "content.action.edit",
   "content.action.view",
   "navigation.footer"
 ]
+
+[project.extra.analytics]
+provider = "custom"
+property = "e2023d8d-f808-4486-bc8e-97839d36b631"
 
 [[project.theme.palette]]
 scheme = "default"

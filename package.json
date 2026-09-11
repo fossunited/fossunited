@@ -11,13 +11,15 @@
     "postinstall": "cd dashboard && yarn install",
     "dev": "cd dashboard && yarn dev --host",
     "bru": "cd bruno-collection && yarn bru",
+    "bruno": "yarn bru",
     "build": "yarn build-tailwind && yarn build-dashboard",
     "build-tailwind": "npx tailwindcss -i ./fossunited/templates/base.css -o ./fossunited/public/css/styles.css",
     "build-dashboard": "cd dashboard && yarn build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "purge-css": "purgecss --config purgecss.config.cjs"
+    "purge-css": "purgecss --config purgecss.config.cjs",
+    "docs": "command -v zensical >/dev/null 2>&1 && zensical serve -f docs/zensical.toml -o || uv run --with zensical zensical serve -f docs/zensical.toml -o"
   },
   "keywords": [],
   "author": "",
