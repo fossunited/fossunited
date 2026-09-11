@@ -10,6 +10,9 @@ from fossunited.fossunited.utils import get_event_sponsors
 
 INDIAFOSS_2026_EVENT = "IndiaFOSS 2026"
 TIER1 = {"Maintainer", "Patrons", "Platinum", "Gold", "Maintainer Tier"}
+# Tiers that belong in the main Sponsors section. Anything else (e.g. "Diversity
+# Scholar") drops into its own section below, at the Contributor (tier-2) grid size.
+MAIN_TIERS = TIER1 | {"Contributor", "Contributor Tier"}
 
 
 # TODO: replace all short form url to /2026/ form
@@ -41,7 +44,12 @@ def get_context(context):
     # Sponsors — use shared util, split into tier1/tier2
     sponsors_dict = get_event_sponsors(event.sponsor_list)
     context.sponsors = [
-        {"tier": t, "sponsor_list": sl, "is_tier1": t in TIER1} for t, sl in sponsors_dict.items()
+        {"tier": t, "sponsor_list": sl, "is_tier1": t in TIER1}
+        for t, sl in sponsors_dict.items()
+        if t in MAIN_TIERS
+    ]
+    context.other_sponsors = [
+        {"tier": t, "sponsor_list": sl} for t, sl in sponsors_dict.items() if t not in MAIN_TIERS
     ]
     context.partners = event.community_partners
 
@@ -159,6 +167,7 @@ def _empty_context(context):
             k: []
             for k in (
                 "sponsors",
+                "other_sponsors",
                 "partners",
                 "co_chairs",
                 "reviewers",
