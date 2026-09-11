@@ -117,6 +117,15 @@ lint:
 logs:
     {{COMPOSE_CMD}} logs -f
 
+# Serve the Zensical docs site locally (see package.json for the actual command)
+docs:
+    yarn docs
+
+# Run the Bruno API test collection
+alias bruno := bru
+bru:
+    yarn bru
+
 # Complete demo setup: up → setup → seed → build-dashboard → ready to start
 # This is the one-click local demo deploy. Run 'just start' (or 'just launch') afterwards.
 demo: up
