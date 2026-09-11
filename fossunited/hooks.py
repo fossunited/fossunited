@@ -52,6 +52,7 @@ jinja = {
     "methods": [
         "fossunited.fossunited.utils.make_badge",
         "fossunited.fossunited.utils.get_doc_likes",
+        "fossunited.fossunited.utils.get_request_path",
         "fossunited.fossunited.utils.get_user_socials",
         "fossunited.fossunited.utils.get_user_editable_doctype_fields",
         "fossunited.fossunited.utils.get_signup_optin_checks",
