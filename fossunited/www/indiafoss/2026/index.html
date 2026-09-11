@@ -511,6 +511,34 @@
       </section>
       {% endif %}
 
+      {# ── 5a. OTHER-TIER SPONSORS (Diversity Scholar, etc.) — Contributor grid size #}
+      {% if other_sponsors %}
+      <section id="other-sponsors" aria-label="Additional tier sponsors">
+        {% for grp in other_sponsors %}
+        <div class="{% if not loop.first %}mt-5{% endif %}">
+          <h3 class="text-xl semi-bold v3-text-primary mb-4">{{ grp.tier }} Sponsors</h3>
+          <div class="if-sponsor-grid-t2" role="list" aria-label="{{ grp.tier }} sponsors">
+            {% for s in grp.sponsor_list %}
+              <div role="listitem" style="display:contents">
+                <a href="{{ s.link }}" target="_blank" rel="noopener noreferrer"
+                   class="if-sponsor-logo"
+                   data-toggle="tooltip" data-container="body"
+                   title="{{ s.sponsor_name }}"
+                   aria-label="{{ s.sponsor_name }}, {{ grp.tier }} sponsor">
+                  {% if s.image %}
+                    <img src="{{ s.image }}" alt="{{ s.sponsor_name }} logo">
+                  {% else %}
+                    <span class="text-sm" style="color:#888;padding:8px;">{{ s.sponsor_name }}</span>
+                  {% endif %}
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+
       {# ── 5b. COMMUNITY PARTNERS ───────────────────── #}
       {% if partners %}
       <section id="community-partners" aria-labelledby="partners-heading">
