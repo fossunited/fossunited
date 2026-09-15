@@ -266,7 +266,7 @@ class FOSSHackathonParticipant(Document):
         prev_doc = self.get_doc_before_save()
         return prev_doc.localhost_request_status if prev_doc else None
 
-    def has_permission(self, ptype="read", user=None):
+    def has_permission(self, ptype="read", *, debug=False, user=None):
         """Participants can only edit their own record"""
         user = user or frappe.session.user
 

@@ -132,11 +132,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         unsure_reviews: DF.Data | None
     # end: auto-generated types
 
-    def has_permission(self, permtype="read", user=None):
+    def has_permission(self, permtype="read", *, debug=False, user=None):
         """Grant access to the submitter and all speakers on the proposal."""
         _user = user or frappe.session.user
         if _user == "Guest":
-            return super().has_permission(permtype)
+            return super().has_permission(permtype, debug=debug, user=user)
 
         speaker_emails = [s.email for s in self.speakers if s.email]
         if _user == self.submitted_by or _user in speaker_emails:
@@ -144,14 +144,14 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         roles = set(frappe.get_roles(_user))
         if "System Manager" in roles or "CFP Reviewer" in roles:
-            return super().has_permission(permtype)
+            return super().has_permission(permtype, debug=debug, user=user)
 
         if "Chapter Team Member" in roles:
             from fossunited.fossunited.permissions import _ctm_chapters
 
             return bool(self.chapter and self.chapter in _ctm_chapters(_user))
 
-        return super().has_permission(permtype)
+        return super().has_permission(permtype, debug=debug, user=user)
 
     def validate(self):
         self.bio = sanitize_text_content(self.bio)

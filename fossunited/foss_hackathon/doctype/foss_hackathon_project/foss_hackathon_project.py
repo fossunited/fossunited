@@ -107,7 +107,7 @@ class FOSSHackathonProject(WebsiteGenerator):
         if team_hackathon != self.hackathon:
             frappe.throw(_("Team does not belong to this hackathon"))
 
-    def has_permission(self, ptype="read", user=None):
+    def has_permission(self, ptype="read", *, debug=False, user=None):
         """Only team members can edit/delete project"""
         user = user or frappe.session.user
         # everyone can read
