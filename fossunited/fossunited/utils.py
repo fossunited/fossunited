@@ -440,7 +440,7 @@ def sanitize_text_content(value: str | None, fallback=""):
 
     soup = BeautifulSoup(cleaned, "html.parser")
 
-    for tag in soup.find_all(["img", "svg", "math", "style", "script", "iframe", "object"]):
+    for tag in soup.find_all(["svg", "math", "style", "script", "iframe", "object"]):
         tag.decompose()
 
     for tag in soup.find_all(True):
