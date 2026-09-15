@@ -110,7 +110,7 @@ class FOSSHackathonTeam(Document):
         for member_id in members_to_check:
             self.check_member_not_in_other_team(member_id)
 
-    def has_permission(self, ptype="read", user=None):
+    def has_permission(self, ptype="read", *, debug=False, user=None):
         """Only team members can edit"""
 
         user = user or frappe.session.user
