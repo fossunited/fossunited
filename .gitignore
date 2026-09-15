@@ -12,6 +12,7 @@ fossunited/public/dist
 /fossunited/public/frontend
 /fossunited/www/dashboard.html
 /development/fossu-bench/
+/development/a11y/reports/
 
 docs/styles/*
 !docs/styles/config/

@@ -1,6 +1,7 @@
 import globals from 'globals'
 import pluginJs from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
+import pluginVueA11y from 'eslint-plugin-vuejs-accessibility'
 import prettierConfig from 'eslint-config-prettier'
 import prettierPlugin from 'eslint-plugin-prettier'
 
@@ -121,6 +122,7 @@ export default [
   },
   pluginJs.configs.recommended,
   ...pluginVue.configs['flat/recommended'],
+  ...pluginVueA11y.configs['flat/recommended'],
   prettierConfig, // Disables ESLint rules that conflict with Prettier
   {
     rules: {
