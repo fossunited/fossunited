@@ -19,6 +19,7 @@ nav = [
   ]},
 
   {"Events & Participation" = [
+    {"Beginner's Guide to IndiaFOSS" = "event-first-timers-guide.md"},
 
     {"Guidelines" = [
       {"Event Checklist" = "event-checklist.md"},
