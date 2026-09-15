@@ -100,4 +100,4 @@ This guide is inspired by and uses work from the following:
 1. [First timer’s guide to FOSS conferences](https://opensource.com/life/16/2/first-timers-guide-foss-conferences)
 2. [Free Software Foundation](https://www.fsf.org/)
 
-and other's who have been linked and mentioned above.
+and others who have been linked and mentioned above.
