@@ -256,9 +256,10 @@
     </div>
     <img
       class="border border-section rounded flex-shrink-0 speaker-photo"
-      src="{{ speaker.photo }}"
+      src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
       alt="{{ speaker.full_name }}"
       loading="lazy"
+      onerror="this.onerror=null;this.src='/assets/fossunited/images/defaults/user_profile_image.png';"
     />
   {% if sp_url %}</a>{% else %}</div>{% endif %}
   {% if speaker.social_link %}

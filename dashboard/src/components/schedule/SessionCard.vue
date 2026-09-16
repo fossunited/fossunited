@@ -42,11 +42,11 @@
           class="w-11 h-11 rounded-lg overflow-hidden border border-outline-gray-3 shrink-0"
         >
           <img
-            :src="speaker.photo || ''"
+            :src="speaker.photo || DEFAULT_AVATAR"
             :alt="speaker.full_name || ''"
             class="w-full h-full object-cover object-top"
             loading="lazy"
-            @error="(e) => (e.target.style.display = 'none')"
+            @error="onPhotoError"
           />
         </div>
       </div>
@@ -191,11 +191,11 @@
           <img
             v-for="(speaker, i) in visibleSpeakers"
             :key="i"
-            :src="speaker.photo || ''"
+            :src="speaker.photo || DEFAULT_AVATAR"
             :alt="speaker.full_name || 'Speaker'"
             class="w-full h-full object-cover object-top"
             loading="lazy"
-            @error="(e) => (e.target.style.display = 'none')"
+            @error="onPhotoError"
           />
         </div>
         <!-- Talk details -->
@@ -215,11 +215,6 @@
               {{ speaker.full_name }}
             </span>
           </div>
-          <p
-            v-if="speakerMeta"
-            class="text-xs text-ink-gray-7 dark:text-ink-gray-8 line-clamp-2 leading-relaxed"
-            v-html="speakerMeta"
-          />
         </div>
       </component>
     </div>
@@ -231,12 +226,18 @@ import { computed, toRef } from 'vue'
 import { IconCalendarPlus, IconBrandYoutube } from '@tabler/icons-vue'
 import dayjs from 'dayjs'
 import { useSession } from '@/composables/useSession'
-import { cleanedHTML } from '@/helpers/utils'
+
+const DEFAULT_AVATAR = '/assets/fossunited/images/defaults/user_profile_image.png'
 
 const props = defineProps({
   session: { type: Object, required: true },
   preview: { type: Boolean, default: false },
 })
+
+function onPhotoError(e) {
+  if (e.target.src.endsWith(DEFAULT_AVATAR)) return
+  e.target.src = DEFAULT_AVATAR
+}
 
 const {
   formatTime,
@@ -261,11 +262,4 @@ const calendarLabel = computed(() => {
 function formatIsoDate(isoDate) {
   return dayjs(isoDate).format('D MMM')
 }
-
-const speakerMeta = computed(() => {
-  const s = speakers.value[0]
-  if (!s) return ''
-  if (s.bio) return cleanedHTML(s.bio)
-  return [s.designation, s.organization].filter(Boolean).join(' · ')
-})
 </script>
