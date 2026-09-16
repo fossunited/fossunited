@@ -18,6 +18,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "screenshot-dashboard": "node development/capture_dashboard.mjs",
     "purge-css": "purgecss --config purgecss.config.cjs",
     "docs": "command -v zensical >/dev/null 2>&1 && zensical serve -f docs/zensical.toml -o || uv run --with zensical zensical serve -f docs/zensical.toml -o"
   },
@@ -35,6 +36,7 @@
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-vue": "^10.9.2",
     "globals": "^17.7.0",
+    "playwright-core": "1.55.0",
     "prettier": "^3.9.3",
     "prettier-plugin-jinja-template": "^2.2.0",
     "purgecss": "^8.0.0",

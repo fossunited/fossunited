@@ -141,6 +141,35 @@ yarn dev
 The dashboard will be available at:
 ==> `http://<your-site-name>:8080`
 
+#### Capture Dashboard Screenshots
+
+The repository includes a Playwright helper for repeatable screenshots of local
+dashboard pages. It can log in through the Frappe API, wait for content, capture
+a specific component, and take a second screenshot after opening a dialog.
+
+Install Chromium once if it is not already available on your system:
+
+```sh
+yarn playwright-core install chromium
+```
+
+Then capture a page using a seeded demo account:
+
+```sh
+SCREENSHOT_EMAIL=mock-kochi-lead@example.com \
+SCREENSHOT_PASSWORD=password \
+yarn screenshot-dashboard \
+  --url /dashboard/event/<event-id>/tickets/insights \
+  --wait-for-text "Tickets Purchased Over Time" \
+  --output screenshots/ticket-insights.png \
+  --click-button Expand \
+  --expanded-output screenshots/ticket-insights-expanded.png
+```
+
+Use `--target '<css-selector>'` to capture one component, `--full-page` for a
+full-page image, or `--mock-file` to return stable JSON for selected API routes.
+Run `yarn screenshot-dashboard --help` for every option and the mock-file format.
+
 ---
 
 ## Seed Script
