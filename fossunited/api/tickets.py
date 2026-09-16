@@ -184,10 +184,10 @@ def get_tickets_sold_over_time(event_id: str) -> dict:
         for index, ticket_type in enumerate(ticket_types)
     ]
     series_key_by_type = {item["label"]: item["key"] for item in series}
-    counts_by_date_and_type = {
-        (frappe.utils.getdate(row.date), row.tier or "Uncategorized"): row.tickets_sold
-        for row in daily_counts
-    }
+    counts_by_date_and_type = {}
+    for row in daily_counts:
+        key = (frappe.utils.getdate(row.date), row.tier or "Uncategorized")
+        counts_by_date_and_type[key] = counts_by_date_and_type.get(key, 0) + row.tickets_sold
     dates = {date for date, _ticket_type in counts_by_date_and_type}
     current_date = min(dates)
     final_date = max(dates)

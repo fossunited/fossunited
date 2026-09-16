@@ -202,7 +202,11 @@ const downloadFile = (contents, filename, type) => {
 
 const downloadChartCsv = () => {
   const rows = ticket_insights.data?.tickets_sold_over_time ?? []
-  const escapeCsv = (value) => `"${String(value).replaceAll('"', '""')}"`
+  const escapeCsv = (value) => {
+    const stringValue = String(value)
+    const sanitized = /^[=+\-@\t\r]/.test(stringValue) ? `'${stringValue}` : stringValue
+    return `"${sanitized.replaceAll('"', '""')}"`
+  }
   const csv = [
     ['Date', 'Total Tickets Purchased', ...ticketSalesSeries.value.map(({ label }) => label)]
       .map(escapeCsv)

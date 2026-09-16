@@ -15,6 +15,7 @@ class TestTicketInsightsAPI(FrappeTestCase):
     """Test cases for ticket purchase trends and insights API."""
 
     def setUp(self):
+        self.fixture_time = now_datetime()
         self.chapter = FOSSChapterFactory.create()
         self.event = FOSSChapterEventFactory.create(
             "with_paid_tickets",
@@ -38,15 +39,16 @@ class TestTicketInsightsAPI(FrappeTestCase):
         """Helper to create a ticket and optionally set its creation timestamp."""
         event_id = event_name or self.event.name
         ticket = FOSSEventTicketFactory.create(event=event_id, tier=tier)
-        if days_ago != 0:
-            creation_time = add_days(now_datetime(), -days_ago)
-            frappe.db.set_value(
-                EVENT_TICKET,
-                ticket.name,
-                "creation",
-                creation_time,
-                update_modified=False,
-            )
+        creation_time = (
+            add_days(self.fixture_time, -days_ago) if days_ago != 0 else self.fixture_time
+        )
+        frappe.db.set_value(
+            EVENT_TICKET,
+            ticket.name,
+            "creation",
+            creation_time,
+            update_modified=False,
+        )
         return ticket
 
     def test_empty_event_returns_empty_series_and_data(self):
@@ -162,6 +164,19 @@ class TestTicketInsightsAPI(FrappeTestCase):
         self.assertEqual(result["series"][0]["label"], "Uncategorized")
         self.assertEqual(result["data"][0][result["series"][0]["key"]], 1)
         self.assertEqual(result["data"][0]["tickets_sold"], 1)
+
+    def test_blank_and_uncategorized_tiers_on_same_date_are_aggregated(self):
+        """Blank tier and explicit 'Uncategorized' tier on the same date should aggregate counts."""
+        self._create_ticket(tier="", days_ago=1)
+        self._create_ticket(tier="Uncategorized", days_ago=1)
+
+        result = get_tickets_sold_over_time(self.event.name)
+
+        self.assertEqual(len(result["series"]), 1)
+        self.assertEqual(result["series"][0]["label"], "Uncategorized")
+        self.assertEqual(len(result["data"]), 1)
+        self.assertEqual(result["data"][0][result["series"][0]["key"]], 2)
+        self.assertEqual(result["data"][0]["tickets_sold"], 2)
 
     def test_event_data_isolation(self):
         """Tickets from other events should not bleed into this event's statistics."""
