@@ -109,6 +109,7 @@ def get_tickets_insights(event_id: str) -> dict:
         dict: Insights of the tickets
     """
     total_sold = frappe.db.count(EVENT_TICKET, filters={"event": event_id})
+    tickets_sold_over_time = get_tickets_sold_over_time(event_id)
 
     # Get the insights of the t-shirts
     tshirt_insights = get_tshirt_insights(event_id)
@@ -157,9 +158,42 @@ def get_tickets_insights(event_id: str) -> dict:
         "total_sold": total_sold,
         "tshirt_insights": tshirt_insights,
         "tickets_sold_today": tickets_sold_today,
+        "tickets_sold_over_time": tickets_sold_over_time,
         "total_percentage_change": percentage_change,
         "tier_data": combined_tier_data,
     }
+
+
+def get_tickets_sold_over_time(event_id: str) -> list[dict]:
+    """Return a daily cumulative count of tickets sold for an event."""
+    daily_counts = frappe.db.get_all(
+        EVENT_TICKET,
+        filters={"event": event_id},
+        fields=["date(creation) as date", "count(name) as tickets_sold"],
+        group_by="date(creation)",
+        order_by="date(creation)",
+    )
+
+    if not daily_counts:
+        return []
+
+    counts_by_date = {frappe.utils.getdate(row.date): row.tickets_sold for row in daily_counts}
+    current_date = min(counts_by_date)
+    final_date = max(counts_by_date)
+    cumulative_total = 0
+    sales_over_time = []
+
+    while current_date <= final_date:
+        cumulative_total += counts_by_date.get(current_date, 0)
+        sales_over_time.append(
+            {
+                "date": current_date.isoformat(),
+                "tickets_sold": cumulative_total,
+            }
+        )
+        current_date += timedelta(days=1)
+
+    return sales_over_time
 
 
 @frappe.whitelist()

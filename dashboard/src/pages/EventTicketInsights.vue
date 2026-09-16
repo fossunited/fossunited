@@ -27,6 +27,12 @@
         <TicketTierInsightCard :tier="today_stats" />
         <TicketTshirtInsightCard :insight="ticket_insights.data.tshirt_insights" />
       </div>
+      <div
+        v-if="ticket_insights.data.tickets_sold_over_time?.length"
+        class="h-[360px] rounded border border-outline-gray-2 bg-surface-white p-2"
+      >
+        <AxisChart :config="ticketsSoldChartConfig" />
+      </div>
       <div class="prose mt-4">
         <h4>Tier Insights</h4>
       </div>
@@ -64,8 +70,8 @@
   </div>
 </template>
 <script setup>
-import { defineProps, reactive } from 'vue'
-import { createResource, LoadingIndicator, ListView, Button } from 'frappe-ui'
+import { computed, defineProps, reactive } from 'vue'
+import { AxisChart, createResource, LoadingIndicator, Button } from 'frappe-ui'
 import { IconRefresh } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import TicketTierInsightCard from '@/components/event/TicketTierInsightCard.vue'
@@ -103,6 +109,32 @@ const ticket_insights = createResource({
     toast.error(error.message)
   },
 })
+
+const ticketsSoldChartConfig = computed(() => ({
+  data: ticket_insights.data?.tickets_sold_over_time ?? [],
+  title: 'Total Tickets Purchased Over Time',
+  xAxis: {
+    key: 'date',
+    type: 'time',
+    timeGrain: 'day',
+  },
+  yAxis: {
+    title: 'Tickets',
+    yMin: 0,
+    echartOptions: {
+      minInterval: 1,
+    },
+  },
+  series: [
+    {
+      name: 'tickets_sold',
+      type: 'area',
+      color: '#5E64FF',
+      showDataPoints: true,
+      fillOpacity: 0.12,
+    },
+  ],
+}))
 
 const ticket_checkin_insights = createResource({
   url: 'fossunited.api.tickets.get_checkin_insights',
