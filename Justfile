@@ -63,9 +63,9 @@ setup:
 # Seed demo data into the site.
 # Uses a standalone Python script to bypass `bench execute`'s eval() namespace bug
 # on Python 3.14 where dotted module paths like fossunited.dev.seed.seed fail to resolve.
-seed:
+seed profile="full":
     {{DOCKER}} exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
-        ../env/bin/python /workspace/development/run_seed.py
+        ../env/bin/python /workspace/development/run_seed.py --profile {{ profile }}
 
 # Build the dashboard frontend and flush Frappe's asset cache.
 # IMPORTANT: builds from /workspace/dashboard (host repo with our edits).
@@ -128,9 +128,9 @@ bru:
 
 # Complete demo setup: up → setup → seed → build-dashboard → ready to start
 # This is the one-click local demo deploy. Run 'just start' (or 'just launch') afterwards.
-demo: up
+demo profile="full": up
     just setup
-    just seed
+    just seed {{ profile }}
     just build-dashboard
     @echo ""
     @echo "✅ Demo setup complete! Run 'just start' to launch the bench."
