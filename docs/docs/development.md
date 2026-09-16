@@ -165,21 +165,28 @@ bench execute fossunited.dev.seed.seed
 For Devcontainer (Docker/Podman) environments:
 ```sh
 <docker|podman> exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
-    ../env/bin/python /workspace/development/run_seed.py
+    ../env/bin/python /workspace/development/run_seed.py --profile full
 ```
 
 The script is **idempotent** — running it multiple times on the same database
 is safe. Existing records are detected and skipped.
+
+The `full` profile mirrors the variety and scale needed to explore the public
+site and organizer dashboard. It creates 120 ticket purchases spread across 60
+days. Use `--profile quick` for 18 purchases across 14 days when you only need
+a fast smoke-test dataset. With the repository Justfile, run `just demo full`
+or `just demo quick`.
 
 ### Data Hierarchy
 
 The script creates a tree of related records:
 
 ```text
-Users (8)
-├── Attendees (2)          attendee-{1,2}@example.com
-├── Speakers (2)           speaker-{1,2}@example.com
-└── Chapter Leads (4)      {bangalore,mumbai,kochi,campus}-lead@example.com
+Users (9)
+├── Attendees (2)          mock-attendee-{1,2}@example.com
+├── Speakers (2)           mock-speaker-{1,2}@example.com
+├── Chapter Leads (4)      mock-{bangalore,mumbai,kochi,campus}-lead@example.com
+└── Reviewer (1)           mock-reviewer@example.com
 
 Chapters (4)
 ├── FOSS Bangalore          City Community
@@ -188,15 +195,15 @@ Chapters (4)
 └── Campus Chapter          Student Club
 
 Events (13)  — one of each template per City Community chapter, plus one test conference
-├── FOSS Meetup 2026        status: Live     (3 chapters × 1)
-├── FOSS Conference 2025    status: Concluded
-├── FOSS Workshop 2026      status: Draft    (unpublished)
+├── September FOSS Meetup   status: Live     (3 chapters × 1)
+├── CityFOSS conference     status: Concluded
+├── Linux Install Party     status: Draft    (unpublished)
 ├── Mini FOSS Hackathon     status: Live
-└── Paid Test Conference    status: Live     (1 dedicated event for mock tickets)
+└── KochiFOSS conference    status: Live     (1 paid event with four ticket tiers)
 
 RSVPs (6 forms)  — one per Live event, each with 2 submissions
 CFPs  (6 forms)  — one per Live event, each with 2 talk submissions
-Tickets (1)      — one prototype ticket attached to the Paid Test Conference
+Tickets (120)    — full profile; cumulative purchases across 60 days and four tiers
 
 Hackathon — FOSSIT Hackathon (Campus Chapter)
 ├── Teams (4)              Phoenix / Aurora / Nebula / Comet
@@ -252,7 +259,7 @@ The demo uses your local repository changes, allowing for rapid iteration and te
 | User Profiles | 9 |
 | Chapters | 4 |
 | Events | 13 |
-| Event Tickets | 1 |
+| Event Tickets | 120 with `full`; 18 with `quick` |
 | RSVP forms | 6 |
 | RSVP submissions | 12 |
 | CFP forms | 6 |
@@ -267,14 +274,14 @@ All seed users share the same password.
 
 | Role | Email | Password |
 |---|---|---|
-| Attendee | attendee-1@example.com | `password` |
-| Attendee | attendee-2@example.com | `password` |
-| Speaker | speaker-1@example.com | `password` |
-| Speaker | speaker-2@example.com | `password` |
-| Chapter Lead (Bangalore) | bangalore-lead@example.com | `password` |
-| Chapter Lead (Mumbai) | mumbai-lead@example.com | `password` |
-| Chapter Lead (Kochi) | kochi-lead@example.com | `password` |
-| Chapter Lead (Campus) | campus-lead@example.com | `password` |
+| Attendee | mock-attendee-1@example.com | `password` |
+| Attendee | mock-attendee-2@example.com | `password` |
+| Speaker | mock-speaker-1@example.com | `password` |
+| Speaker | mock-speaker-2@example.com | `password` |
+| Chapter Lead (Bangalore) | mock-bangalore-lead@example.com | `password` |
+| Chapter Lead (Mumbai) | mock-mumbai-lead@example.com | `password` |
+| Chapter Lead (Kochi) | mock-kochi-lead@example.com | `password` |
+| Chapter Lead (Campus) | mock-campus-lead@example.com | `password` |
 
 ---
 
