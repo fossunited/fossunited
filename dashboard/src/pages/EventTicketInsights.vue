@@ -1,4 +1,25 @@
 <template>
+  <Dialog
+    v-model="showChartDialog"
+    :options="{
+      title: 'Total Tickets Purchased Over Time',
+      size: '6xl',
+    }"
+  >
+    <template #body-content>
+      <div class="flex justify-end gap-2 mb-2">
+        <Button label="Download CSV" variant="subtle" @click="downloadChartCsv">
+          <template #prefix><IconDownload class="w-4 h-4" /></template>
+        </Button>
+        <Button label="Download PNG" variant="subtle" @click="downloadChartPng(expandedChart)">
+          <template #prefix><IconDownload class="w-4 h-4" /></template>
+        </Button>
+      </div>
+      <div ref="expandedChart" class="h-[65vh] min-h-[420px]">
+        <AxisChart :config="ticketsSoldChartConfig" />
+      </div>
+    </template>
+  </Dialog>
   <div v-if="ticket_insights.data" class="flex flex-col gap-6">
     <div class="flex flex-col gap-4">
       <div class="flex items-start justify-between gap-4">
@@ -29,9 +50,25 @@
       </div>
       <div
         v-if="ticket_insights.data.tickets_sold_over_time?.length"
-        class="h-[360px] rounded border border-outline-gray-2 bg-surface-white p-2"
+        class="w-full max-w-3xl rounded border border-outline-gray-2 bg-surface-white"
       >
-        <AxisChart :config="ticketsSoldChartConfig" />
+        <div class="flex flex-wrap items-center justify-between gap-2 px-4 pt-3">
+          <h3 class="text-sm font-medium text-ink-gray-9">Total Tickets Purchased Over Time</h3>
+          <div class="flex items-center gap-1">
+            <Button label="CSV" variant="ghost" size="sm" @click="downloadChartCsv">
+              <template #prefix><IconDownload class="w-4 h-4" /></template>
+            </Button>
+            <Button label="PNG" variant="ghost" size="sm" @click="downloadChartPng(compactChart)">
+              <template #prefix><IconDownload class="w-4 h-4" /></template>
+            </Button>
+            <Button label="Expand" variant="ghost" size="sm" @click="showChartDialog = true">
+              <template #prefix><IconArrowsMaximize class="w-4 h-4" /></template>
+            </Button>
+          </div>
+        </div>
+        <div ref="compactChart" class="h-[280px]">
+          <AxisChart :config="ticketsSoldChartConfig" />
+        </div>
       </div>
       <div class="prose mt-4">
         <h4>Tier Insights</h4>
@@ -70,9 +107,9 @@
   </div>
 </template>
 <script setup>
-import { computed, defineProps, reactive } from 'vue'
-import { AxisChart, createResource, LoadingIndicator, Button } from 'frappe-ui'
-import { IconRefresh } from '@tabler/icons-vue'
+import { computed, defineProps, reactive, ref } from 'vue'
+import { AxisChart, createResource, LoadingIndicator, Button, Dialog } from 'frappe-ui'
+import { IconArrowsMaximize, IconDownload, IconRefresh } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import TicketTierInsightCard from '@/components/event/TicketTierInsightCard.vue'
 import TicketTshirtInsightCard from '@/components/event/TicketTshirtInsightCard.vue'
@@ -91,6 +128,10 @@ const today_stats = reactive({
   tickets_sold_today: 0,
   tier_capacity: false,
 })
+
+const showChartDialog = ref(false)
+const compactChart = ref(null)
+const expandedChart = ref(null)
 
 const ticket_insights = createResource({
   url: 'fossunited.api.tickets.get_tickets_insights',
@@ -112,7 +153,7 @@ const ticket_insights = createResource({
 
 const ticketsSoldChartConfig = computed(() => ({
   data: ticket_insights.data?.tickets_sold_over_time ?? [],
-  title: 'Total Tickets Purchased Over Time',
+  title: '',
   xAxis: {
     key: 'date',
     type: 'time',
@@ -135,6 +176,59 @@ const ticketsSoldChartConfig = computed(() => ({
     },
   ],
 }))
+
+const downloadFile = (contents, filename, type) => {
+  const url = URL.createObjectURL(new Blob([contents], { type }))
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
+const downloadChartCsv = () => {
+  const rows = ticket_insights.data?.tickets_sold_over_time ?? []
+  const csv = [
+    'Date,Total Tickets Purchased',
+    ...rows.map((row) => `${row.date},${row.tickets_sold}`),
+  ].join('\n')
+  downloadFile(csv, 'ticket-purchases-over-time.csv', 'text/csv;charset=utf-8')
+}
+
+const downloadChartPng = async (chartContainer) => {
+  const svg = chartContainer?.querySelector('svg')
+  if (!svg) {
+    toast.error('The chart is not ready to download')
+    return
+  }
+
+  const { width, height } = svg.getBoundingClientRect()
+  const scale = 2
+  const canvas = document.createElement('canvas')
+  canvas.width = width * scale
+  canvas.height = height * scale
+  const context = canvas.getContext('2d')
+  context.scale(scale, scale)
+  context.fillStyle = '#ffffff'
+  context.fillRect(0, 0, width, height)
+
+  const svgUrl = URL.createObjectURL(
+    new Blob([new XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml' }),
+  )
+  const image = new Image()
+  await new Promise((resolve, reject) => {
+    image.onload = resolve
+    image.onerror = reject
+    image.src = svgUrl
+  })
+  context.drawImage(image, 0, 0, width, height)
+  URL.revokeObjectURL(svgUrl)
+
+  const pngBlob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
+  if (pngBlob) {
+    downloadFile(pngBlob, 'ticket-purchases-over-time.png', 'image/png')
+  }
+}
 
 const ticket_checkin_insights = createResource({
   url: 'fossunited.api.tickets.get_checkin_insights',
