@@ -2,7 +2,7 @@
   <Dialog
     v-model="showChartDialog"
     :options="{
-      title: 'Total Tickets Purchased Over Time',
+      title: 'Tickets Purchased Over Time',
       size: '6xl',
     }"
   >
@@ -53,7 +53,10 @@
         class="w-full max-w-3xl rounded border border-outline-gray-2 bg-surface-white"
       >
         <div class="flex flex-wrap items-center justify-between gap-2 px-4 pt-3">
-          <h3 class="text-sm font-medium text-ink-gray-9">Total Tickets Purchased Over Time</h3>
+          <div>
+            <h3 class="text-sm font-medium text-ink-gray-9">Tickets Purchased Over Time</h3>
+            <p class="text-xs text-ink-gray-5">Cumulative purchases by ticket type</p>
+          </div>
           <div class="flex items-center gap-1">
             <Button label="CSV" variant="ghost" size="sm" @click="downloadChartCsv">
               <template #prefix><IconDownload class="w-4 h-4" /></template>
@@ -132,6 +135,7 @@ const today_stats = reactive({
 const showChartDialog = ref(false)
 const compactChart = ref(null)
 const expandedChart = ref(null)
+const chartColors = ['#5E64FF', '#2F9E44', '#F08C00', '#E64980', '#15AABF', '#7950F2']
 
 const ticket_insights = createResource({
   url: 'fossunited.api.tickets.get_tickets_insights',
@@ -151,31 +155,41 @@ const ticket_insights = createResource({
   },
 })
 
-const ticketsSoldChartConfig = computed(() => ({
-  data: ticket_insights.data?.tickets_sold_over_time ?? [],
-  title: '',
-  xAxis: {
-    key: 'date',
-    type: 'time',
-    timeGrain: 'day',
-  },
-  yAxis: {
-    title: 'Tickets',
-    yMin: 0,
-    echartOptions: {
-      minInterval: 1,
+const ticketSalesSeries = computed(() => {
+  const series = ticket_insights.data?.ticket_sales_series
+  return series?.length ? series : [{ key: 'tickets_sold', label: 'All tickets' }]
+})
+
+const ticketsSoldChartConfig = computed(() => {
+  const showDataPoints = ticketSalesSeries.value.length === 1
+  return {
+    data: ticket_insights.data?.tickets_sold_over_time ?? [],
+    title: '',
+    xAxis: {
+      key: 'date',
+      type: 'time',
+      timeGrain: 'day',
     },
-  },
-  series: [
-    {
-      name: 'tickets_sold',
+    yAxis: {
+      title: 'Tickets',
+      yMin: 0,
+      echartOptions: {
+        minInterval: 1,
+      },
+    },
+    series: ticketSalesSeries.value.map((series, index) => ({
+      name: series.key,
       type: 'area',
-      color: '#5E64FF',
-      showDataPoints: true,
-      fillOpacity: 0.12,
-    },
-  ],
-}))
+      color: chartColors[index % chartColors.length],
+      showDataPoints,
+      fillOpacity: ticketSalesSeries.value.length > 1 ? 0.65 : 0.12,
+      echartOptions: {
+        name: series.label,
+        stack: 'tickets',
+      },
+    })),
+  }
+})
 
 const downloadFile = (contents, filename, type) => {
   const url = URL.createObjectURL(new Blob([contents], { type }))
@@ -188,9 +202,16 @@ const downloadFile = (contents, filename, type) => {
 
 const downloadChartCsv = () => {
   const rows = ticket_insights.data?.tickets_sold_over_time ?? []
+  const escapeCsv = (value) => `"${String(value).replaceAll('"', '""')}"`
   const csv = [
-    'Date,Total Tickets Purchased',
-    ...rows.map((row) => `${row.date},${row.tickets_sold}`),
+    ['Date', 'Total Tickets Purchased', ...ticketSalesSeries.value.map(({ label }) => label)]
+      .map(escapeCsv)
+      .join(','),
+    ...rows.map((row) =>
+      [row.date, row.tickets_sold, ...ticketSalesSeries.value.map(({ key }) => row[key] ?? 0)]
+        .map(escapeCsv)
+        .join(','),
+    ),
   ].join('\n')
   downloadFile(csv, 'ticket-purchases-over-time.csv', 'text/csv;charset=utf-8')
 }
