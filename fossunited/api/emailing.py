@@ -304,7 +304,9 @@ def create_newsletter_campaign(
 
 @frappe.whitelist()
 def get_newsletter_campaigns(
-    reference_document: str | None = None, document_type: str = EVENT, chapter: str | None = None
+    reference_document: str | None = None,
+    document_type: str = EVENT,
+    chapter: str | None = None,
 ):
     """
     Get all newsletter / email campaigns specific to an event or a chapter
@@ -587,13 +589,22 @@ def send_campaign(campaign_id: str):
     args:
         campaign: id of campaign / newsletter doctype
     """
-    frappe.enqueue_doc(
-        CAMPAIGN,
-        campaign_id,
-        "send_emails",
+    frappe.enqueue(
+        "fossunited.api.emailing.process_campaign_send",
+        campaign_id=campaign_id,
         queue="long",
         enqueue_after_commit=True,
     )
+
+
+def process_campaign_send(campaign_id: str):
+    """
+    Send campaign without frappe checking core newsletter doctype permission
+    so status change from 'not sent' to 'sent'
+    """
+    campaign = frappe.get_doc(CAMPAIGN, campaign_id)
+    campaign.flags.ignore_permissions = True
+    campaign.send_emails()
 
 
 @frappe.whitelist()
