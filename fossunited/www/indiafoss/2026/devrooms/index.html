@@ -1,0 +1,362 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/indiafoss.html" import if_header, if_footer %}
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+
+{% block meta_block %}{{ meta_tags(pagetitle, description, image) }}{% endblock %}
+{% block title %}{{ pagetitle }} | FOSS United{% endblock %}
+
+{% block page_content %}
+<style>
+  /* Banner */
+  .dr-banner {
+    position: relative; overflow: hidden; text-align: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 40px 24px;
+    background: var(--v3-card-bg);
+    border: 1px solid var(--v3-button-border);
+    border-radius: 16px;
+  }
+  .dr-banner-pattern {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .dr-banner-pattern img,
+  .dr-banner-pattern svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .dr-banner-pattern--default {
+    position: absolute; inset: 0; opacity: 0.07;
+    pointer-events: none;
+    background-repeat: repeat;
+    background-size: 120px;
+  }
+  .dr-logo {
+    width: 64px; height: 64px; object-fit: contain;
+    position: relative; z-index: 1;
+  }
+  .dr-title {
+    font-size: 1.5rem; font-weight: 700;
+    position: relative; z-index: 1;
+  }
+  .dr-tagline {
+    font-size: 0.875rem; line-height: 1.5;
+    max-width: 600px; position: relative; z-index: 1;
+  }
+
+  /* Talk cards */
+  .dr-talk-card {
+    display: flex; align-items: flex-start;
+    padding: 16px 16px 16px 0;
+    border: 1px solid var(--v3-button-border);
+    border-left: 3px solid var(--v3-primary-button, #38a169);
+    border-radius: 8px;
+    background: var(--v3-card-bg);
+    text-decoration: none; color: inherit;
+    transition: box-shadow .15s ease;
+  }
+  .dr-talk-card:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    text-decoration: none; color: inherit;
+  }
+  .dr-talk-body {
+    flex: 1; min-width: 0;
+    padding-left: 16px;
+  }
+  .dr-talk-badge-type {
+    display: inline-block;
+    font-size: 0.6875rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    color: var(--v3-primary-button, #38a169);
+    background: color-mix(in srgb, var(--v3-primary-button, #38a169) 10%, transparent);
+    padding: 2px 8px; border-radius: 4px;
+    margin-bottom: 6px;
+  }
+  .dr-talk-title {
+    font-size: 0.9375rem; font-weight: 600; line-height: 1.4;
+    color: var(--v3-text-color);
+  }
+  .dr-talk-speakers {
+    display: flex; align-items: center; gap: 1rem;
+    font-size: 0.8125rem; color: var(--v3-text-color2);
+    margin-top: 4px;
+  }
+  .dr-talk-status {
+    flex-shrink: 0; align-self: center;
+    font-size: 0.75rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    color: var(--v3-primary-button, #38a169);
+    padding-right: 4px;
+  }
+
+  /* CFP card */
+  .dr-cfp-card {
+    padding: 24px;
+    border: 1px solid var(--v3-button-border);
+    border-radius: 12px;
+    background: var(--v3-card-bg);
+  }
+  .dr-cfp-heading {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .dr-cfp-heading h2 {
+    font-size: 1rem; font-weight: 700;
+    margin: 0;
+  }
+  .dr-cfp-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 0.875rem; font-weight: 600;
+    color: #fff;
+    background: var(--v3-text-color, #1a1a1a);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: opacity .15s;
+    margin-bottom: 12px;
+  }
+  .dr-cfp-btn:hover { opacity: 0.85; text-decoration: none; color: #fff; }
+  .dr-cfp-info {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 0.8125rem;
+    color: var(--v3-text-color2);
+  }
+  .dr-cfp-info svg {
+    flex-shrink: 0; margin-top: 2px;
+    width: 16px; height: 16px;
+    color: var(--v3-text-color2);
+  }
+  .dr-cfp-info .dr-highlight {
+    color: var(--v3-primary-button, #38a169);
+    font-weight: 600;
+  }
+
+  /* Description (long text with topics, time slots) */
+  .dr-desc-section {
+    font-size: 0.9375rem; line-height: 1.75;
+    color: var(--v3-text-color);
+  }
+
+  /* Schedule */
+  .dr-schedule-date { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .dr-schedule-item {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--v3-button-border);
+  }
+  .dr-schedule-item:last-child { border-bottom: none; }
+  .dr-schedule-time {
+    flex-shrink: 0; width: 90px;
+    font-size: 0.8125rem; font-weight: 600;
+    color: var(--v3-text-color2);
+  }
+
+  /* Managers */
+  .dr-managers-wrap {
+    background: var(--v3-card-bg);
+    border: 1px solid var(--v3-button-border);
+    border-radius: 16px;
+    padding: 28px 24px;
+  }
+  .dr-managers-label {
+    font-size: 0.75rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--v3-text-color);
+    margin-bottom: 20px;
+  }
+  .dr-managers-row {
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .dr-manager-card {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px;
+    border: 1px solid var(--v3-button-border);
+    border-radius: 10px;
+    background: var(--v3-card-bg);
+    text-decoration: none; color: inherit;
+    min-width: 180px;
+  }
+  .dr-manager-card:hover { text-decoration: none; color: inherit; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+  .dr-manager-img {
+    width: 40px; height: 40px; border-radius: 50%;
+    object-fit: cover; flex-shrink: 0;
+  }
+  .dr-manager-info { min-width: 0; }
+  .dr-manager-name {
+    font-size: 0.8125rem; font-weight: 600;
+    color: var(--v3-primary-button, #38a169);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .dr-manager-desg {
+    font-size: 0.6875rem; color: var(--v3-text-color2);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  /* Breadcrumb */
+  .dr-breadcrumb {
+    font-size: 0.875rem; color: var(--v3-text-color2);
+  }
+  .dr-breadcrumb a { color: var(--v3-text-color2); text-decoration: none; }
+  .dr-breadcrumb a:hover { text-decoration: underline; }
+</style>
+
+<div class="v3-page">
+  <div class="v3-page-wide">
+    {{ if_header(years, current_year, show_statistics=False) }}
+
+    <main id="main-content" role="main" class="d-flex flex-column mt-4 pb-section" style="max-width:840px; margin-left:auto; margin-right:auto; gap: 28px;">
+
+      {# Breadcrumb #}
+      <nav class="dr-breadcrumb" aria-label="Breadcrumb">
+        <a href="/indiafoss/2026#devrooms">IndiaFOSS Devrooms</a>
+        <span class="mx-1">&gt;</span>
+        <span style="color: var(--v3-text-color);">{{ devroom.title | e }}</span>
+      </nav>
+
+      {# Banner #}
+      <section class="dr-banner" aria-labelledby="dr-title">
+        {% if pattern %}
+          <div class="dr-banner-pattern" aria-hidden="true">
+            <img src="{{ pattern }}" alt="" style="opacity:0.06;" />
+          </div>
+        {% else %}
+          <div class="dr-banner-pattern--default" aria-hidden="true" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='28' font-family='monospace' font-size='14' font-weight='700' fill='%2338a169'%3E%26lt;/%26gt;%3C/text%3E%3Ctext x='62' y='28' font-family='monospace' font-size='14' font-weight='700' fill='%2338a169'%3E%7B %7D%3C/text%3E%3Ctext x='10' y='58' font-family='monospace' font-size='14' font-weight='700' fill='%2338a169'%3E%26lt;%26gt;%3C/text%3E%3Ctext x='55' y='58' font-family='monospace' font-size='14' font-weight='700' fill='%2338a169'%3E%26lt;/%26gt;%3C/text%3E%3Ctext x='10' y='88' font-family='monospace' font-size='14' font-weight='700' fill='%2338a169'%3E%7B %7D%3C/text%3E%3Ctext x='62' y='88' font-family='monospace' font-size='14' font-weight='700' fill='%2338a169'%3E%26lt;%26gt;%3C/text%3E%3Ctext x='95' y='45' font-family='monospace' font-size='11' font-weight='700' fill='%2338a169'%3E/%3C/text%3E%3Ctext x='42' y='105' font-family='monospace' font-size='11' font-weight='700' fill='%2338a169'%3E;%3C/text%3E%3C/svg%3E&quot;);"></div>
+        {% endif %}
+        {% if devroom.logo %}
+          <img class="dr-logo" src="{{ devroom.logo }}" alt="" aria-hidden="true" />
+        {% endif %}
+        <h1 id="dr-title" class="dr-title v3-text-primary mb-0">{{ devroom.title | e }}</h1>
+        {% if devroom.tagline %}
+          <p class="dr-tagline v3-text-secondary mb-0">{{ devroom.tagline | e }}</p>
+        {% endif %}
+      </section>
+
+      {# Schedule (shown if available, replaces talk list as primary) #}
+      {% if has_schedule %}
+      <section aria-labelledby="dr-schedule-heading">
+        <h2 id="dr-schedule-heading" class="text-xl semi-bold v3-text-primary mb-3">Schedule</h2>
+        {% for date_str, items in schedule_by_date.items() %}
+          <div class="mb-4">
+            <div class="dr-schedule-date v3-text-secondary">{{ date_str }}</div>
+            <div class="v3-card p-3">
+              {% for item in items %}
+                <div class="dr-schedule-item">
+                  <div class="dr-schedule-time">{{ item.start_time_display }}</div>
+                  <div class="flex-grow-1">
+                    {% if item.cfp_route %}
+                      <a href="{{ item.cfp_route }}" class="dr-talk-title d-block" style="text-decoration:none;">{{ item.title | e }}</a>
+                    {% else %}
+                      <div class="dr-talk-title">{{ item.title | e }}</div>
+                    {% endif %}
+                    {% if item.speakers %}
+                      <div class="dr-talk-speakers mt-1">
+                        {% for s in item.speakers %}
+                          <span>{{ s.full_name | e }}{% if not loop.last %},{% endif %}</span>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                    {% if item.hall %}
+                      <span class="v3-tag v3-tag--category mt-1" style="font-size:0.6875rem;">{{ item.hall | e }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      {# Talk cards #}
+      {% if submissions %}
+      <section>
+        <div class="d-flex flex-column gap-3">
+          {% for talk in submissions %}
+            <a href="{{ talk.route }}" class="dr-talk-card">
+              <div class="dr-talk-body">
+                <div class="dr-talk-badge-type">{{ talk.session_type | e }}</div>
+                <div class="dr-talk-title">{{ talk.talk_title | e }}</div>
+                {% if talk.speakers %}
+                  <div class="dr-talk-speakers">
+                    {% for s in talk.speakers %}
+                      <span>{{ s.full_name | e }}</span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="dr-talk-status">{{ talk.status | upper }}</div>
+            </a>
+          {% endfor %}
+        </div>
+      </section>
+      {% elif not has_schedule %}
+        <div class="v3-card p-4 text-center">
+          <p class="v3-text-tertiary mb-0">No talks announced yet for this devroom.</p>
+        </div>
+      {% endif %}
+
+      {# CFP section — only shown if live #}
+      {% if cfp_is_live %}
+      <section class="dr-cfp-card">
+        <div class="dr-cfp-heading">
+          <h2>Call for Proposals</h2>
+          <span class="v3-status v3-status--success">
+            <span class="v3-status-dot" aria-hidden="true"></span>
+            Live
+          </span>
+        </div>
+        <a href="{{ cfp_route }}" class="dr-cfp-btn">SUBMIT A PROPOSAL</a>
+        <div class="dr-cfp-info">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span>Specify the devroom while proposing your session in the <span class="dr-highlight">"track"</span> field.</span>
+        </div>
+      </section>
+      {% endif %}
+
+      {# Description (long text — topics, time slots etc.) #}
+      {% if devroom.description %}
+      <section class="dr-desc-section">
+        {{ devroom.description }}
+      </section>
+      {% endif %}
+
+      {# Devroom Managers #}
+      {% if managers %}
+      <section class="dr-managers-wrap">
+        <div class="dr-managers-label">Devroom Managers</div>
+        <div class="dr-managers-row">
+          {% set default_photo = "/assets/fossunited/images/defaults/user_profile_image.png" %}
+          {% for m in managers %}
+            {% if m.route and m.route != '#' %}
+              <a href="{{ m.route }}" class="dr-manager-card">
+            {% else %}
+              <div class="dr-manager-card">
+            {% endif %}
+                <img class="dr-manager-img" src="{{ m.profile_photo or default_photo }}" alt="" />
+                <div class="dr-manager-info">
+                  <div class="dr-manager-name">{{ m.full_name | e }}</div>
+                  {% if m.bio %}
+                    <div class="dr-manager-desg">{{ m.bio | truncate(30) }}</div>
+                  {% endif %}
+                </div>
+            {% if m.route and m.route != '#' %}
+              </a>
+            {% else %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+      {% elif manager_section %}
+      <section class="dr-managers-wrap">
+        <div class="dr-managers-label">Devroom Managers</div>
+        {{ manager_section }}
+      </section>
+      {% endif %}
+
+    </main>
+  </div>
+  {{ if_footer() }}
+</div>
+{% endblock %}

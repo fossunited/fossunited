@@ -45,6 +45,10 @@ website_route_rules = [
         "from_route": "/indiafoss/speakers/<slug>",
         "to_route": "indiafoss/speaker_talks",
     },
+    {
+        "from_route": "/indiafoss/2026/devrooms/<slug>",
+        "to_route": "indiafoss/2026/devrooms",
+    },
 ]
 
 # add methods and filters to jinja environment
