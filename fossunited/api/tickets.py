@@ -195,6 +195,7 @@ def get_tickets_insights(event_id: str) -> dict:
         dict: Insights of the tickets
     """
     total_sold = frappe.db.count(EVENT_TICKET, filters={"event": event_id})
+    ticket_sales = get_tickets_sold_over_time(event_id)
 
     # Get the insights of the t-shirts
     tshirt_insights = get_tshirt_insights(event_id)
@@ -243,9 +244,54 @@ def get_tickets_insights(event_id: str) -> dict:
         "total_sold": total_sold,
         "tshirt_insights": tshirt_insights,
         "tickets_sold_today": tickets_sold_today,
+        "tickets_sold_over_time": ticket_sales["data"],
+        "ticket_sales_series": ticket_sales["series"],
         "total_percentage_change": percentage_change,
         "tier_data": combined_tier_data,
     }
+
+
+def get_tickets_sold_over_time(event_id: str) -> dict:
+    """Return daily cumulative ticket sales split by ticket type."""
+    daily_counts = frappe.db.get_all(
+        EVENT_TICKET,
+        filters={"event": event_id},
+        fields=["date(creation) as date", "tier", "count(name) as tickets_sold"],
+        group_by="date(creation), tier",
+        order_by="date(creation), tier",
+    )
+
+    if not daily_counts:
+        return {"data": [], "series": []}
+
+    ticket_types = sorted({row.tier or "Uncategorized" for row in daily_counts}, key=str.casefold)
+    series = [
+        {"key": f"ticket_type_{index}", "label": ticket_type}
+        for index, ticket_type in enumerate(ticket_types)
+    ]
+    series_key_by_type = {item["label"]: item["key"] for item in series}
+    counts_by_date_and_type = {}
+    for row in daily_counts:
+        key = (frappe.utils.getdate(row.date), row.tier or "Uncategorized")
+        counts_by_date_and_type[key] = counts_by_date_and_type.get(key, 0) + row.tickets_sold
+    dates = {date for date, _ticket_type in counts_by_date_and_type}
+    current_date = min(dates)
+    final_date = max(dates)
+    cumulative_by_type = dict.fromkeys(ticket_types, 0)
+    sales_over_time = []
+
+    while current_date <= final_date:
+        row = {"date": current_date.isoformat()}
+        for ticket_type in ticket_types:
+            cumulative_by_type[ticket_type] += counts_by_date_and_type.get(
+                (current_date, ticket_type), 0
+            )
+            row[series_key_by_type[ticket_type]] = cumulative_by_type[ticket_type]
+        row["tickets_sold"] = sum(cumulative_by_type.values())
+        sales_over_time.append(row)
+        current_date += timedelta(days=1)
+
+    return {"data": sales_over_time, "series": series}
 
 
 @frappe.whitelist()
