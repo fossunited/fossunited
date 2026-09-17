@@ -3,7 +3,7 @@
   <div class="sm:hidden flex flex-col w-full py-2">
     <!-- Top panel: calendar+time | speaker thumbs -->
     <div
-      class="relative z-10 flex items-center justify-between bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-2xl p-2 mb-[-14px]"
+      class="relative z-10 flex items-center gap-1.5 bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-2xl p-2 mb-[-14px]"
     >
       <button
         class="flex items-center h-11 shrink-0 rounded-lg overflow-hidden transition-opacity hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
@@ -34,10 +34,10 @@
       >
         <IconBrandYoutube class="w-4 h-4" />
       </a>
-      <!-- Speaker thumbnails (up to 2) -->
-      <div class="flex gap-1.5 shrink-0">
+      <!-- Speaker thumbnails: fill whatever space is left after the calendar -->
+      <div v-if="speakers.length" class="flex gap-1.5 flex-1 min-w-0 overflow-x-auto">
         <div
-          v-for="(speaker, i) in visibleSpeakers.slice(0, 2)"
+          v-for="(speaker, i) in speakers"
           :key="i"
           class="w-11 h-11 rounded-lg overflow-hidden border border-outline-gray-3 shrink-0"
         >
