@@ -584,23 +584,14 @@ def get_formatted_attachment_list(attachments: list) -> list:
 @require_mailing_access(campaign_param="campaign_id")
 def send_campaign(campaign_id: str):
     """
-    Send the campaigns
+    Send the campaign now.
+
+    ignore_permissions is set because Newsletter's own DocPerm only grants
+    write access to "Newsletter Manager", a chapter member is authorized
+    here via require_mailing_access.
 
     args:
         campaign: id of campaign / newsletter doctype
-    """
-    frappe.enqueue(
-        "fossunited.api.emailing.process_campaign_send",
-        campaign_id=campaign_id,
-        queue="long",
-        enqueue_after_commit=True,
-    )
-
-
-def process_campaign_send(campaign_id: str):
-    """
-    Send campaign without frappe checking core newsletter doctype permission
-    so status change from 'not sent' to 'sent'
     """
     campaign = frappe.get_doc(CAMPAIGN, campaign_id)
     campaign.flags.ignore_permissions = True
