@@ -43,14 +43,24 @@ setup: up
     BENCH_DIR="/workspace/development/fossu-bench"
 
     echo "⏳ Waiting for MariaDB to be ready..."
-    until $COMPOSE exec -T mariadb \
-            mariadb -u root -p123 -e "SELECT 1" &>/dev/null; do
+    ready=false
+    for _ in {1..60}; do
+        if $COMPOSE exec -T mariadb \
+                mariadb -u root -p123 -e "SELECT 1" &>/dev/null; then
+            ready=true
+            break
+        fi
         sleep 2
     done
+    if [[ "$ready" != true ]]; then
+        echo "❌ MariaDB did not become ready within 120 seconds." >&2
+        exit 1
+    fi
     echo "✅ MariaDB is ready."
 
     if ! $COMPOSE exec -T frappe \
-            test -d "$BENCH_DIR/apps/frappe/frappe" -a -f "$BENCH_DIR/sites/common_site_config.json"; then
+            test -d "$BENCH_DIR/apps/frappe/frappe" -a -f "$BENCH_DIR/sites/common_site_config.json" \
+                -a -x "$BENCH_DIR/env/bin/pip"; then
         echo "🛠️  Creating Frappe bench..."
         $COMPOSE exec -T -u root frappe bash -c '
             if [ -e /workspace/development/fossu-bench ]; then
@@ -86,7 +96,12 @@ setup: up
         mkdir -p apps/fossunited/fossunited
         env/bin/pip install --quiet --editable /workspace
         touch sites/apps.txt
-        grep -qx fossunited sites/apps.txt || echo fossunited >> sites/apps.txt
+        if ! grep -qx fossunited sites/apps.txt; then
+            # Guard against a missing trailing newline (e.g. left by a prior get-app run),
+            # which would otherwise concatenate onto the last existing entry.
+            [ -s sites/apps.txt ] && [ -n "$(tail -c1 sites/apps.txt)" ] && printf '\n' >> sites/apps.txt
+            echo fossunited >> sites/apps.txt
+        fi
         if [ ! -d apps/frappe_factory_bot ]; then
             bench get-app --skip-assets --branch main https://github.com/harshtandiya/frappe_factory_bot
         fi
@@ -140,11 +155,13 @@ build-dashboard:
     '
     # Mirror public sources into a physical app path so Frappe's esbuild can resolve sibling apps.
     $COMPOSE exec -T -u root -w /workspace/development/fossu-bench frappe bash -lc '
+        rm -rf apps/fossunited/fossunited/public
         mkdir -p apps/fossunited/fossunited/public
         cp -a /workspace/fossunited/public/. apps/fossunited/fossunited/public/
         if [ -L apps/fossunited/node_modules ]; then
             unlink apps/fossunited/node_modules
         fi
+        rm -rf apps/fossunited/node_modules/@knadh
         mkdir -p apps/fossunited/node_modules/@knadh
         cp -a /workspace/node_modules/@knadh/. apps/fossunited/node_modules/@knadh/
         if [ -L /workspace/fossunited/public/node_modules ]; then
