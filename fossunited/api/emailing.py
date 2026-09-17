@@ -490,9 +490,6 @@ def update_campaign(campaign_id: str, data: dict):
         "schedule_send",
         "attachments",
         "email_group",
-        "email_sent",
-        "email_sent_at",
-        "total_recipients",
     }
 
     campaign = frappe.get_doc(CAMPAIGN, campaign_id)
