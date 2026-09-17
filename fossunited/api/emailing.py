@@ -304,7 +304,9 @@ def create_newsletter_campaign(
 
 @frappe.whitelist()
 def get_newsletter_campaigns(
-    reference_document: str | None = None, document_type: str = EVENT, chapter: str | None = None
+    reference_document: str | None = None,
+    document_type: str = EVENT,
+    chapter: str | None = None,
 ):
     """
     Get all newsletter / email campaigns specific to an event or a chapter
@@ -579,18 +581,18 @@ def get_formatted_attachment_list(attachments: list) -> list:
 @require_mailing_access(campaign_param="campaign_id")
 def send_campaign(campaign_id: str):
     """
-    Send the campaigns
+    Send the campaign now.
+
+    ignore_permissions is set because Newsletter's own DocPerm only grants
+    write access to "Newsletter Manager", a chapter member is authorized
+    here via require_mailing_access.
 
     args:
         campaign: id of campaign / newsletter doctype
     """
-    frappe.enqueue_doc(
-        CAMPAIGN,
-        campaign_id,
-        "send_emails",
-        queue="long",
-        enqueue_after_commit=True,
-    )
+    campaign = frappe.get_doc(CAMPAIGN, campaign_id)
+    campaign.flags.ignore_permissions = True
+    campaign.send_emails()
 
 
 @frappe.whitelist()

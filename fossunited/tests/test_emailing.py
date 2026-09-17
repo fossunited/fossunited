@@ -11,7 +11,9 @@ from fossunited.api.emailing import (
     send_test_email,
 )
 from fossunited.doctype_ids import EMAIL_GROUP
-from fossunited.tests.factories.foss_chapter_event_factory import FOSSChapterEventFactory
+from fossunited.tests.factories.foss_chapter_event_factory import (
+    FOSSChapterEventFactory,
+)
 from fossunited.tests.factories.foss_chapter_factory import FOSSChapterFactory
 from fossunited.tests.factories.user_factory import UserFactory
 
@@ -67,9 +69,12 @@ class TestEmailing(FrappeTestCase):
         with self.set_user(self.core_team_user.name):
             send_test_email(campaign_id=self.newsletter.name, email=fake.email())
 
-    def test_send_campaign(self):
+    def test_send_campaign_persists_email_sent_for_chapter_member(self):
         with self.set_user(self.core_team_user.name):
             send_campaign(campaign_id=self.newsletter.name)
+
+        self.newsletter.reload()
+        self.assertTrue(self.newsletter.email_sent)
 
     def test_create_email_group_creates_group(self):
         group = create_email_group(
