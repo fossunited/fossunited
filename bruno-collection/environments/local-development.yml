@@ -16,4 +16,6 @@ variables:
   value: 'ncgt5qgglr'
 - name: rsvp_submission_other
   value: 'ncnnl4vjvc'
+- name: newsletter_id
+  value: 'cvseysbr5r'
 color: '#22c55e'

@@ -1,0 +1,34 @@
+info:
+  name: login-chapter-lead
+  type: http
+  seq: 4
+http:
+  method: POST
+  url: '{{base}}/method/login'
+  body:
+    type: json
+    data: |-
+      {
+        "usr": "{{chapter_lead_email}}",
+        "pwd": "{{chapter_lead_password}}"
+      }
+runtime:
+  auth:
+    type: none
+tests:
+  value: |
+    test("should login as chapter lead", function() {
+      expect(res.getStatus()).to.equal(200);
+    });
+script:
+  post-response: |
+    const cookies = res.getHeaders()['set-cookie'];
+    if (cookies) {
+      const sidCookie = cookies.find(c => c.startsWith('sid='));
+      if (sidCookie) {
+        bru.setVar("session_cookie", sidCookie.split(';')[0]);
+      }
+    }
+docs: |-
+  Login as mock-bangalore-lead (a legitimate chapter member) to verify
+  update_campaign accepts the send-status fields for an authorized user.

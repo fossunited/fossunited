@@ -10,7 +10,7 @@ http:
     data: |-
       {
         "campaign_id": "{{newsletter_id}}",
-        "data": {"email_sent": true, "docstatus": 1, "owner": "hacker@evil.com", "subject": "Updated Subject"}
+        "data": {"docstatus": 1, "owner": "hacker@evil.com", "subject": "Updated Subject"}
       }
 runtime:
   auth:
