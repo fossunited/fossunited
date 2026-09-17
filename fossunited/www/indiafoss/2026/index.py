@@ -94,14 +94,7 @@ def get_context(context):
     cfp_tl = _get_cfp_timeline_items(cfp, today)
     manual_labels = {item.get("label") for item in manual_tl}
     cfp_tl = [item for item in cfp_tl if item.get("label") not in manual_labels]
-    # Order by closing date (the actionable deadline); milestones with no end fall
-    # back to their single start date.
-    merged_tl = sorted(
-        manual_tl + cfp_tl,
-        key=lambda x: (
-            _parse_date(x.get("end")) or _parse_date(x.get("start")) or datetime.date.max
-        ),
-    )
+    merged_tl = manual_tl + cfp_tl
     context.timeline = _enrich_timeline(merged_tl, today)
     # Ticket availability is authoritative from the Event doctype (tickets_status),
     tickets_status = "live" if event.get("tickets_status") == "Live" else "closed"

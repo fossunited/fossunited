@@ -3384,8 +3384,6 @@ button.m-video-aspect {
 }
 
 /* ── Action cards ─────────────────────────────────────────── */
-.v3-action-outer { position: relative; }
-
 .v3-action-wrap { background: var(--v3-card-bg); box-shadow: inset 0 0 0 1px var(--v3-button-border); border-radius: 16px; }
 .v3-action-grid { display: flex; }
 .v3-action-card { padding: 16px; display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: inherit; transition: background .15s, box-shadow .15s, border-radius .15s; }
@@ -3400,6 +3398,10 @@ button.m-video-aspect {
 .v3-action-card-title { font-size: 1rem; font-weight: 600; letter-spacing: -.02em; color: var(--v3-text-color); line-height: 1.2; }
 .v3-action-card-arrow { font-size: 1rem; color: var(--v3-text-color2); flex-shrink: 0; }
 .v3-action-card-sub { font-size: .875rem; color: var(--v3-text-color2); display: block; }
+@media (min-width: 601px) {
+  .v3-action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+  .v3-action-card { min-height: 120px; justify-content: center; align-items: flex-start; }
+}
 
 /* ── Timeline card + progress bar ──────────────────────────── */
 .tl-card {
@@ -3607,8 +3609,6 @@ button.m-video-aspect {
 /* ── Campaign/event pages ≥1200px ───────────────────────────── */
 @media (min-width: 1200px) {
   .v3-inverse-card { min-height: 400px; box-shadow: 0 4px 16px rgba(0,0,0,.08); }
-  .v3-action-grid { flex-wrap: wrap; }
-  .v3-action-card { flex: 1 0 0; min-width: 180px; max-width: 180px; justify-content: center; align-items: flex-start; }
 }
 
 /* ── Campaign/event pages ≤1200px ───────────────────────────── */
@@ -3629,18 +3629,6 @@ button.m-video-aspect {
   .v3-inverse-card > :first-child { flex: 1 1 0; min-width: 0; }
   .v3-image-well { flex: 0 0 42%; min-height: 0; }
   .v3-image-well::before { height: auto; bottom: 0; right: auto; width: 60%; background: linear-gradient(to right, var(--v3-card-bg), transparent); }
-}
-
-/* ── 600px–1200px ───────────────────────────────────────────── */
-@media (min-width: 600px) and (max-width: 1200px) {
-  .v3-action-outer::after {
-    content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 48px;
-    background: linear-gradient(to right, transparent, var(--v3-card-bg));
-    border-radius: 0 16px 16px 0; pointer-events: none; z-index: 2;
-  }
-  .v3-action-wrap { overflow-x: auto; scrollbar-width: none; }
-  .v3-action-wrap::-webkit-scrollbar { display: none; }
-  .v3-action-card { flex: 0 0 180px; min-height: 120px; max-width: none; justify-content: center; align-items: flex-start; }
 }
 
 /* ── 800px–1200px ───────────────────────────────────────────── */
