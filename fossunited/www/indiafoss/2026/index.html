@@ -79,11 +79,10 @@
       {% if timeline or action_cards %}
       <section id="timeline" aria-label="Event timeline and resources">
 
-        <div class="v3-col-3-1">
+        <div class="d-flex flex-column gap-6">
 
-        {# Left (flex-col-3): timeline card + expanded list #}
         {% if timeline %}
-        <div class="v3-flex-3 relative isolate">
+        <div class="relative isolate">
 
           <div class="tl-card" role="region" aria-label="Timeline progress">
             {# Countdown heading — JS ticks D/H/M(/S) from data-start/end; markup below is SSR fallback #}
@@ -241,11 +240,9 @@
         </div>
         {% endif %}
 
-        {# Right (flex-col-1): action cards — grid on desktop, scroll on mobile #}
+        {# Action cards — horizontal grid below the timeline; mobile wraps 2-up, everything larger fits up to 6 per row #}
         {% if action_cards %}
-        <div class="v3-flex-1">
-          <div class="v3-action-outer">
-          <div class="v3-action-wrap">
+        <div class="v3-action-wrap">
             <div class="v3-action-grid" role="list" aria-label="Event resources">
               {% for card in action_cards %}
                 {% set badge = card.get('resolved_badge') or '' %}
@@ -299,8 +296,6 @@
                 </div>
               {% endfor %}
             </div>
-          </div>
-          </div>{# /v3-action-outer #}
         </div>
         {% endif %}
 
