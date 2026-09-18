@@ -239,7 +239,7 @@ watch(
 
 // Expand all while searching; restore defaults when search cleared
 watch(debouncedSearch, (term, prev) => {
-  if (!allGroups.valeue) return
+  if (!allGroups.value) return
   if (term) {
     for (const { key } of allGroups.value) collapseState[key] = false
   } else if (prev && !term) {
