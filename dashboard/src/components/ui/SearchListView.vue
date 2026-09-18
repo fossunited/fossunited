@@ -200,7 +200,7 @@ const allGroups = computed(() => {
   if (!isGrouped.value) return null
 
   if (isPreGrouped.value) {
-    return props.rows.map((g) => ({ key: g.group, rows: g.rows }))
+    return props.rows.map((g) => ({ key: g.groupKey ?? g.group, label: g.group, rows: g.rows }))
   }
 
   const groupMap = new Map()
@@ -217,7 +217,7 @@ const allGroups = computed(() => {
       ]
     : [...groupMap.keys()]
 
-  return order.map((key) => ({ key, rows: groupMap.get(key) }))
+  return order.map((key) => ({ key, label: key, rows: groupMap.get(key) }))
 })
 
 // Initialize collapse state for newly seen group keys
@@ -239,7 +239,7 @@ watch(
 
 // Expand all while searching; restore defaults when search cleared
 watch(debouncedSearch, (term, prev) => {
-  if (!allGroups.value) return
+  if (!allGroups.valeue) return
   if (term) {
     for (const { key } of allGroups.value) collapseState[key] = false
   } else if (prev && !term) {
@@ -274,7 +274,7 @@ const matchesRow = (row) => {
 const filteredGroups = computed(() => {
   if (!allGroups.value) return null
   return allGroups.value
-    .map(({ key, rows }) => ({ key, rows: rows.filter(matchesRow) }))
+    .map(({ key, label, rows }) => ({ key, label, rows: rows.filter(matchesRow) }))
     .filter((g) => g.rows.length > 0)
 })
 
@@ -303,8 +303,8 @@ const visibleRows = computed(() => {
 // getter/setter on collapsed bridges ListView's direct mutation to collapseState
 const listRows = computed(() => {
   if (filteredGroups.value) {
-    return filteredGroups.value.map(({ key, rows }) => ({
-      group: key,
+    return filteredGroups.value.map(({ key, label, rows }) => ({
+      group: label,
       rows,
       get collapsed() {
         return collapseState[key] ?? false
