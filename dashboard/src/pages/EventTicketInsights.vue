@@ -37,6 +37,7 @@
               () => {
                 ticket_insights.fetch()
                 ticket_checkin_insights.fetch()
+                ticket_sales_trend.fetch()
               }
             "
           >
@@ -50,7 +51,7 @@
           <TicketTshirtInsightCard :insight="ticket_insights.data.tshirt_insights" />
         </div>
         <div
-          v-if="ticket_insights.data.tickets_sold_over_time?.length"
+          v-if="ticket_sales_trend.loading || ticket_sales_trend.data?.data?.length"
           class="w-full max-w-3xl rounded border border-outline-gray-2 bg-surface-white"
         >
           <div class="flex flex-wrap items-center justify-between gap-2 px-4 pt-3">
@@ -58,7 +59,7 @@
               <h3 class="text-sm font-medium text-ink-gray-9">Tickets Purchased Over Time</h3>
               <p class="text-xs text-ink-gray-5">Cumulative purchases by ticket type</p>
             </div>
-            <div class="flex items-center gap-1">
+            <div v-if="!ticket_sales_trend.loading" class="flex items-center gap-1">
               <Button label="CSV" variant="ghost" size="sm" @click="downloadChartCsv">
                 <template #prefix><IconDownload class="w-4 h-4" /></template>
               </Button>
@@ -75,7 +76,13 @@
               </Button>
             </div>
           </div>
-          <div ref="compactChart" class="h-[280px]">
+          <div
+            v-if="ticket_sales_trend.loading"
+            class="h-[280px] flex items-center justify-center"
+          >
+            <LoadingIndicator class="w-5 h-5" />
+          </div>
+          <div v-else ref="compactChart" class="h-[280px]">
             <AxisChart :config="ticketsSoldChartConfig" />
           </div>
         </div>
@@ -162,15 +169,29 @@ const ticket_insights = createResource({
   },
 })
 
+const ticket_sales_trend = createResource({
+  url: 'fossunited.api.tickets.get_tickets_sold_over_time',
+  makeParams() {
+    return {
+      event_id: props.event.data.name,
+    }
+  },
+  loading: true,
+  auto: true,
+  onError(error) {
+    toast.error(error.message)
+  },
+})
+
 const ticketSalesSeries = computed(() => {
-  const series = ticket_insights.data?.ticket_sales_series
+  const series = ticket_sales_trend.data?.series
   return series?.length ? series : [{ key: 'tickets_sold', label: 'All tickets' }]
 })
 
 const ticketsSoldChartConfig = computed(() => {
   const showDataPoints = ticketSalesSeries.value.length === 1
   return {
-    data: ticket_insights.data?.tickets_sold_over_time ?? [],
+    data: ticket_sales_trend.data?.data ?? [],
     title: '',
     xAxis: {
       key: 'date',
@@ -208,7 +229,7 @@ const downloadFile = (contents, filename, type) => {
 }
 
 const downloadChartCsv = () => {
-  const rows = ticket_insights.data?.tickets_sold_over_time ?? []
+  const rows = ticket_sales_trend.data?.data ?? []
   const escapeCsv = (value) => {
     const stringValue = String(value)
     const sanitized = /^[=+\-@\t\r]/.test(stringValue) ? `'${stringValue}` : stringValue
