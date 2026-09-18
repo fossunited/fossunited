@@ -45,6 +45,11 @@ class EventFreeTicketCode(Document):
 
     def before_save(self):
         self.permit_only_team()
+        self.sync_is_used()
+
+    def sync_is_used(self):
+        """Keep is_used in sync with max_count/used_count."""
+        self.is_used = 1 if int(self.used_count or 0) >= int(self.max_count or 0) else 0
 
     def warn_duplicate_email(self):
         """Non-blocking heads-up in Desk: this email already has a coupon
