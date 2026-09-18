@@ -34,65 +34,87 @@
         </div>
       </div>
 
-      <SearchListView
-        v-if="freeCodes.data && freeCodes.data.length > 0"
-        :rows="groupedRows"
-        class="mt-4 min-h-[300px]"
-        :columns="[
-          { label: 'Full Name', key: 'full_name', icon: 'user' },
-          { label: 'Coupon ID', key: 'name', width: '100px' },
-          { label: 'Email', key: 'mapped_email', icon: 'at-sign' },
-          {
-            label: 'Used / Max',
-            key: 'usage',
-            icon: 'check-circle',
-            width: '100px',
-            exportValue: (row) => `${row.used_count ?? 0} / ${row.max_count ?? 0}`,
-          },
-          { label: 'Tier', key: 'tier', icon: 'award', width: '200px' },
-          {
-            label: 'T-shirt',
-            key: 'tshirt_included',
-            icon: 'gift',
-            width: '90px',
-            exportValue: (row) => (row.tshirt_included ? 'Yes' : 'No'),
-          },
-          { label: 'Organization', key: 'company', icon: 'briefcase' },
-        ]"
-        row-key="name"
-        search-placeholder="Search free coupons…"
-        item-label="free coupons"
-        export-filename="event_coupons"
-        :options="{
-          emptyState: {
-            title: 'No Free Codes',
-            description: 'No free ticket codes have been added yet.',
-          },
-          onRowClick: (row) => handleEdit(row),
-        }"
+      <div
+        v-if="totals.codes"
+        class="mt-4 border border-outline-gray-2 rounded-lg overflow-hidden"
       >
-        <template #cell="{ item, row, column }">
-          <div v-if="column.key === 'usage'">
-            <span
-              class="px-2 py-1 rounded text-sm font-medium"
-              :class="
-                row.used_count >= row.max_count
-                  ? 'bg-surface-red-2 text-ink-red-3'
-                  : 'bg-surface-green-2 text-ink-green-3'
-              "
-            >
-              {{ row.used_count }} / {{ row.max_count }}
-            </span>
-          </div>
-          <div v-else-if="column.key === 'tshirt_included'">
-            <IconShirt v-if="row.tshirt_included" class="w-4 h-4 text-ink-green-3" />
-            <span v-else class="text-ink-gray-4">—</span>
-          </div>
-          <div v-else>
-            <span class="text-base truncate text-wrap">{{ item }}</span>
-          </div>
-        </template>
-      </SearchListView>
+        <div
+          class="flex flex-wrap items-center gap-2 px-4 py-2 bg-surface-gray-1 border-b border-outline-gray-2 text-sm"
+        >
+          <span class="font-medium text-ink-gray-8">
+            {{ totals.codes }} coupon{{ totals.codes === 1 ? '' : 's' }} ·
+            {{ totals.maxCount }} max claim{{ totals.maxCount === 1 ? '' : 's' }} total
+          </span>
+          <span class="text-ink-gray-5">·</span>
+          <span
+            v-for="t in tierTotals"
+            :key="t.tier"
+            class="text-xs px-2 py-1 rounded bg-surface-gray-2 text-ink-gray-7"
+          >
+            {{ t.tier }}: {{ t.codes }} · {{ t.maxCount }} max
+          </span>
+        </div>
+
+        <SearchListView
+          v-if="freeCodes.data && freeCodes.data.length > 0"
+          :rows="groupedRows"
+          class="min-h-[300px]"
+          :columns="[
+            { label: 'Full Name', key: 'full_name', icon: 'user' },
+            { label: 'Coupon ID', key: 'name', width: '100px' },
+            { label: 'Email', key: 'mapped_email', icon: 'at-sign' },
+            {
+              label: 'Used / Max',
+              key: 'usage',
+              icon: 'check-circle',
+              width: '100px',
+              exportValue: (row) => `${row.used_count ?? 0} / ${row.max_count ?? 0}`,
+            },
+            { label: 'Tier', key: 'tier', icon: 'award', width: '200px' },
+            {
+              label: 'T-shirt',
+              key: 'tshirt_included',
+              icon: 'gift',
+              width: '90px',
+              exportValue: (row) => (row.tshirt_included ? 'Yes' : 'No'),
+            },
+            { label: 'Organization', key: 'company', icon: 'briefcase' },
+          ]"
+          row-key="name"
+          search-placeholder="Search free coupons…"
+          item-label="free coupons"
+          export-filename="event_coupons"
+          :options="{
+            emptyState: {
+              title: 'No Free Codes',
+              description: 'No free ticket codes have been added yet.',
+            },
+            onRowClick: (row) => handleEdit(row),
+          }"
+        >
+          <template #cell="{ item, row, column }">
+            <div v-if="column.key === 'usage'">
+              <span
+                class="px-2 py-1 rounded text-sm font-medium"
+                :class="
+                  row.used_count >= row.max_count
+                    ? 'bg-surface-red-2 text-ink-red-3'
+                    : 'bg-surface-green-2 text-ink-green-3'
+                "
+              >
+                {{ row.used_count }} / {{ row.max_count }}
+              </span>
+            </div>
+            <div v-else-if="column.key === 'tshirt_included'">
+              <IconShirt v-if="row.tshirt_included" class="w-4 h-4 text-ink-green-3" />
+              <span v-else class="text-ink-gray-4">—</span>
+            </div>
+            <div v-else>
+              <span class="text-base truncate text-wrap">{{ item }}</span>
+            </div>
+          </template>
+        </SearchListView>
+      </div>
     </div>
     <Dialog v-model="showSpeakerDialog" :options="{ title: 'Speaker Coupons' }">
       <template #body-content>
@@ -172,6 +194,8 @@ const showDialog = ref(false)
 const inCreateMode = ref(false)
 const selectedRow = ref({})
 const groupedRows = ref([])
+const totals = ref({ codes: 0, maxCount: 0 })
+const tierTotals = ref([])
 
 const freeCodes = createResource({
   url: 'fossunited.api.tickets.get_event_free_codes',
@@ -244,10 +268,25 @@ watchEffect(() => {
 
   // Convert to array format for ListView
   groupedRows.value = Object.entries(groups).map(([tier, tierRows]) => ({
-    group: tier,
+    group: `${tier} (${tierRows.length})`,
+    groupKey: tier,
     collapsed: false,
     rows: tierRows,
   }))
+
+  // Per-tier and overall summary, shown above the list too.
+  tierTotals.value = Object.entries(groups)
+    .map(([tier, tierRows]) => ({
+      tier,
+      codes: tierRows.length,
+      maxCount: tierRows.reduce((sum, r) => sum + (r.max_count || 0), 0),
+    }))
+    .sort((a, b) => a.tier.localeCompare(b.tier))
+
+  totals.value = {
+    codes: rows.length,
+    maxCount: rows.reduce((sum, r) => sum + (r.max_count || 0), 0),
+  }
 })
 
 const handleEdit = (row) => {
