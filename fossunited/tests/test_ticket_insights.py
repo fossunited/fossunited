@@ -8,6 +8,7 @@ from fossunited.tests.factories import (
     FOSSChapterEventFactory,
     FOSSChapterFactory,
     FOSSEventTicketFactory,
+    UserFactory,
 )
 
 
@@ -16,13 +17,24 @@ class TestTicketInsightsAPI(FrappeTestCase):
 
     def setUp(self):
         self.fixture_time = now_datetime()
-        self.chapter = FOSSChapterFactory.create()
+        self.member = UserFactory.create("with_foss_website_user_role")
+        self.chapter = FOSSChapterFactory.create("with_members", members=[self.member.name])
         self.event = FOSSChapterEventFactory.create(
             "with_paid_tickets",
             chapter=self.chapter.name,
             tiers=[
-                {"enabled": 1, "title": "Early Bird", "price": 100, "maximum_tickets": 100},
-                {"enabled": 1, "title": "Regular", "price": 200, "maximum_tickets": 100},
+                {
+                    "enabled": 1,
+                    "title": "Early Bird",
+                    "price": 100,
+                    "maximum_tickets": 100,
+                },
+                {
+                    "enabled": 1,
+                    "title": "Regular",
+                    "price": 200,
+                    "maximum_tickets": 100,
+                },
                 {"enabled": 1, "title": "VIP", "price": 500, "maximum_tickets": 50},
             ],
         )
@@ -33,6 +45,7 @@ class TestTicketInsightsAPI(FrappeTestCase):
             frappe.delete_doc(EVENT_TICKET, ticket.name, force=True)
         frappe.delete_doc(EVENT, self.event.name, force=True)
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
+        frappe.delete_doc("User", self.member.name, force=True)
         frappe.db.rollback()
 
     def _create_ticket(self, tier="Regular", days_ago=0, event_name=None):
@@ -51,9 +64,17 @@ class TestTicketInsightsAPI(FrappeTestCase):
         )
         return ticket
 
+    def _get_trend(self, event_name=None):
+        """get_tickets_sold_over_time is gated to chapter/event members."""
+        frappe.set_user(self.member.name)
+        try:
+            return get_tickets_sold_over_time(event_name or self.event.name)
+        finally:
+            frappe.set_user("Administrator")
+
     def test_empty_event_returns_empty_series_and_data(self):
         """Events without ticket sales should return empty data and series."""
-        result = get_tickets_sold_over_time(self.event.name)
+        result = self._get_trend()
         self.assertEqual(result, {"data": [], "series": []})
 
     def test_single_ticket_single_day(self):
@@ -63,7 +84,7 @@ class TestTicketInsightsAPI(FrappeTestCase):
             frappe.db.get_value(EVENT_TICKET, ticket.name, "creation")
         ).isoformat()
 
-        result = get_tickets_sold_over_time(self.event.name)
+        result = self._get_trend()
 
         self.assertEqual(len(result["series"]), 1)
         self.assertEqual(result["series"][0], {"key": "ticket_type_0", "label": "Regular"})
@@ -83,7 +104,7 @@ class TestTicketInsightsAPI(FrappeTestCase):
         self._create_ticket(tier="Regular", days_ago=1)
         self._create_ticket(tier="Regular", days_ago=1)
 
-        result = get_tickets_sold_over_time(self.event.name)
+        result = self._get_trend()
 
         self.assertEqual(len(result["data"]), 2)
 
@@ -103,7 +124,7 @@ class TestTicketInsightsAPI(FrappeTestCase):
 
         self._create_ticket(tier="Regular", days_ago=1)
 
-        result = get_tickets_sold_over_time(self.event.name)
+        result = self._get_trend()
 
         # There should be 4 days in total: day -4, day -3, day -2, day -1
         self.assertEqual(len(result["data"]), 4)
@@ -131,7 +152,7 @@ class TestTicketInsightsAPI(FrappeTestCase):
         self._create_ticket(tier="early bird", days_ago=2)
         self._create_ticket(tier="VIP", days_ago=1)
 
-        result = get_tickets_sold_over_time(self.event.name)
+        result = self._get_trend()
 
         # Series should be sorted case-insensitively: "early bird" before "VIP"
         expected_series = [
@@ -158,7 +179,7 @@ class TestTicketInsightsAPI(FrappeTestCase):
         """Tickets without a tier should be grouped under 'Uncategorized'."""
         self._create_ticket(tier="", days_ago=1)
 
-        result = get_tickets_sold_over_time(self.event.name)
+        result = self._get_trend()
 
         self.assertEqual(len(result["series"]), 1)
         self.assertEqual(result["series"][0]["label"], "Uncategorized")
@@ -170,7 +191,7 @@ class TestTicketInsightsAPI(FrappeTestCase):
         self._create_ticket(tier="", days_ago=1)
         self._create_ticket(tier="Uncategorized", days_ago=1)
 
-        result = get_tickets_sold_over_time(self.event.name)
+        result = self._get_trend()
 
         self.assertEqual(len(result["series"]), 1)
         self.assertEqual(result["series"][0]["label"], "Uncategorized")
@@ -193,7 +214,7 @@ class TestTicketInsightsAPI(FrappeTestCase):
             self._create_ticket(tier="VIP", days_ago=1, event_name=other_event.name)
             self._create_ticket(tier="VIP", days_ago=1, event_name=other_event.name)
 
-            result = get_tickets_sold_over_time(self.event.name)
+            result = self._get_trend()
             self.assertEqual(result["data"][0]["tickets_sold"], 2)
             self.assertEqual(len(result["series"]), 1)
             self.assertEqual(result["series"][0]["label"], "Regular")
@@ -202,14 +223,28 @@ class TestTicketInsightsAPI(FrappeTestCase):
                 frappe.delete_doc(EVENT_TICKET, ticket.name, force=True)
             frappe.delete_doc(EVENT, other_event.name, force=True)
 
-    def test_get_tickets_insights_includes_trend_data(self):
-        """get_tickets_insights should include tickets_sold_over_time and ticket_sales_series."""
+    def test_get_tickets_insights_does_not_bundle_trend_data(self):
+        """Trend data is fetched via its own endpoint so it can load independently
+        of the main insights payload (lazy-loaded on the dashboard)."""
         self._create_ticket(tier="Regular", days_ago=1)
 
         insights = get_tickets_insights(self.event.name)
-        expected_trends = get_tickets_sold_over_time(self.event.name)
 
-        self.assertIn("tickets_sold_over_time", insights)
-        self.assertIn("ticket_sales_series", insights)
-        self.assertEqual(insights["tickets_sold_over_time"], expected_trends["data"])
-        self.assertEqual(insights["ticket_sales_series"], expected_trends["series"])
+        self.assertNotIn("tickets_sold_over_time", insights)
+        self.assertNotIn("ticket_sales_series", insights)
+
+    def test_trend_is_capped_at_event_end_date(self):
+        """The trend should never extend past the event's own end date, even if a
+        stray ticket (e.g. a coupon redeemed late) was created after it."""
+        self.event.event_end_date = add_days(self.fixture_time, -2)
+        self.event.save()
+
+        self._create_ticket(tier="Regular", days_ago=3)
+        self._create_ticket(tier="Regular", days_ago=0)  # after the event's end date
+
+        result = self._get_trend()
+
+        self.assertEqual(len(result["data"]), 2)  # days -3 and -2 only
+        expected_end_date = getdate(self.event.event_end_date).isoformat()
+        self.assertEqual(result["data"][-1]["date"], expected_end_date)
+        self.assertEqual(result["data"][-1]["tickets_sold"], 1)  # the late ticket isn't counted
