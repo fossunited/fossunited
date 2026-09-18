@@ -195,7 +195,6 @@ def get_tickets_insights(event_id: str) -> dict:
         dict: Insights of the tickets
     """
     total_sold = frappe.db.count(EVENT_TICKET, filters={"event": event_id})
-    ticket_sales = get_tickets_sold_over_time(event_id)
 
     # Get the insights of the t-shirts
     tshirt_insights = get_tshirt_insights(event_id)
@@ -244,13 +243,13 @@ def get_tickets_insights(event_id: str) -> dict:
         "total_sold": total_sold,
         "tshirt_insights": tshirt_insights,
         "tickets_sold_today": tickets_sold_today,
-        "tickets_sold_over_time": ticket_sales["data"],
-        "ticket_sales_series": ticket_sales["series"],
         "total_percentage_change": percentage_change,
         "tier_data": combined_tier_data,
     }
 
 
+@frappe.whitelist()
+@require_chapter_or_event_member(event_id="event_id")
 def get_tickets_sold_over_time(event_id: str) -> dict:
     """Return daily cumulative ticket sales split by ticket type."""
     daily_counts = frappe.db.get_all(
@@ -277,6 +276,12 @@ def get_tickets_sold_over_time(event_id: str) -> dict:
     dates = {date for date, _ticket_type in counts_by_date_and_type}
     current_date = min(dates)
     final_date = max(dates)
+
+    # Never draw the trend past the event's own end date (future proof)
+    event_end_date = frappe.db.get_value(EVENT, event_id, "event_end_date")
+    if event_end_date:
+        final_date = min(final_date, frappe.utils.getdate(event_end_date))
+
     cumulative_by_type = dict.fromkeys(ticket_types, 0)
     sales_over_time = []
 
