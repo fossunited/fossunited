@@ -49,3 +49,23 @@ class TestEventFreeTicketCodeController(FrappeTestCase):
     def test_invalid_mapped_email_throws_error(self):
         with self.assertRaises(frappe.ValidationError):
             FreeTicketCodeFactory.create(event=self.event.name, mapped_email="not-an-email")
+
+    def test_topping_up_an_exhausted_coupon_clears_is_used(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=2, used_count=2)
+        frappe.db.set_value(FREE_TICKET_CODE, coupon.name, "is_used", 1)
+        coupon.reload()
+        self.assertEqual(int(coupon.is_used), 1)
+
+        coupon.max_count = 5
+        coupon.save()
+
+        self.assertEqual(int(coupon.is_used), 0)
+
+    def test_lowering_max_count_below_used_count_sets_is_used(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=5, used_count=3)
+        self.assertEqual(int(coupon.is_used), 0)
+
+        coupon.max_count = 2
+        coupon.save()
+
+        self.assertEqual(int(coupon.is_used), 1)
