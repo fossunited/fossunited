@@ -17,6 +17,7 @@
 {% set is_proposals = (active_tab == 'proposals') or (not active_tab and req_path and ('/cfp' in req_path or '/proposals' in req_path)) %}
 {% set is_devrooms = (active_tab == 'devrooms') or (not active_tab and req_path and ('/devrooms' in req_path)) %}
 {% set is_booths = (active_tab == 'booths') or (not active_tab and req_path and ('/booths' in req_path)) %}
+{% set is_speakers = (active_tab == 'speakers') or (not active_tab and req_path and ('/speakers' in req_path)) %}
 {% set is_archive = (active_tab == 'archive') or (not active_tab and req_path and ('/archive' in req_path)) %}
 <header class="v3-event-header" aria-label="IndiaFOSS navigation">
 
@@ -47,7 +48,7 @@
     {% endif %}
 
     {% if show_speakers %}
-      <a href="/indiafoss/speakers" class="if-nav-link" aria-label="IndiaFOSS speakers">Speakers</a>
+      <a href="/indiafoss/speakers" class="if-nav-link{% if is_speakers %} is-active{% endif %}" {% if is_speakers %}aria-current="page"{% endif %} aria-label="IndiaFOSS speakers">Speakers</a>
     {% endif %}
 
     {% if show_statistics %}
@@ -104,7 +105,7 @@
       {% if show_proposals %}<a href="/dashboard/cfp/all/indiafoss/{{ current_year }}" class="if-nav-link{% if is_proposals %} is-active{% endif %}">Proposals</a>{% endif %}
       {% if show_devrooms %}<a href="/indiafoss/{{ current_year }}/devrooms" class="if-nav-link{% if is_devrooms %} is-active{% endif %}">Devrooms</a>{% endif %}
       {% if show_booths %}<a href="/indiafoss/{{ current_year }}/booths" class="if-nav-link{% if is_booths %} is-active{% endif %}">Booths</a>{% endif %}
-      {% if show_speakers %}<a href="/indiafoss/speakers" class="if-nav-link">Speakers</a>{% endif %}
+      {% if show_speakers %}<a href="/indiafoss/speakers" class="if-nav-link{% if is_speakers %} is-active{% endif %}" {% if is_speakers %}aria-current="page"{% endif %}>Speakers</a>{% endif %}
       {% if show_statistics %}<a href="/indiafoss/{{ current_year }}/stats" class="if-nav-link">Statistics</a>{% endif %}
       {% if show_archive %}<a href="/indiafoss/archive" class="if-nav-link{% if is_archive %} is-active{% endif %}">Archive</a>{% endif %}
       {% if years | length > 1 %}

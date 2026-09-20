@@ -102,8 +102,11 @@
       <button
         v-if="isIndiaFoss"
         type="button"
+        id="indiafoss-mobile-menu-btn"
         class="md:hidden flex items-center justify-center p-1.5 rounded border border-outline-gray-3 bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-gray-9 dark:hover:text-ink-gray-1"
         :aria-label="mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'"
+        :aria-expanded="mobileMenuOpen"
+        aria-controls="indiafoss-mobile-menu"
         @click="mobileMenuOpen = !mobileMenuOpen"
       >
         <IconMenu2 v-if="!mobileMenuOpen" class="w-5 h-5" />
@@ -115,6 +118,7 @@
   <!-- Mobile Collapsible Menu for IndiaFOSS -->
   <div
     v-if="isIndiaFoss && mobileMenuOpen"
+    id="indiafoss-mobile-menu"
     class="md:hidden border-b border-outline-gray-3 bg-surface-white dark:bg-surface-gray-1 px-4 py-3 flex flex-col gap-1 shadow-sm"
   >
     <a
@@ -127,6 +131,7 @@
           ? 'bg-surface-gray-3 dark:bg-surface-gray-3 text-ink-gray-9 dark:text-ink-gray-1'
           : 'text-ink-gray-7 dark:text-ink-gray-8 hover:bg-surface-gray-2 dark:hover:bg-surface-gray-3'
       "
+      :aria-current="activeTab === link.id ? 'page' : undefined"
       @click="mobileMenuOpen = false"
     >
       {{ link.label }}
@@ -148,6 +153,8 @@ const props = defineProps({
   sticky: { type: Boolean, default: true },
   event: { type: Object, default: null },
   activeTab: { type: String, default: '' },
+  showDevrooms: { type: Boolean, default: true },
+  showBooths: { type: Boolean, default: true },
 })
 
 const route = useRoute()
@@ -181,14 +188,21 @@ const activeTab = computed(() => {
   return ''
 })
 
-const navLinks = computed(() => [
-  { id: 'overview', label: 'Overview', url: `/indiafoss/${currentYear.value}` },
-  { id: 'schedule', label: 'Schedule', url: `/dashboard/schedule/indiafoss/${currentYear.value}` },
-  { id: 'proposals', label: 'Proposals', url: `/dashboard/cfp/all/indiafoss/${currentYear.value}` },
-  { id: 'devrooms', label: 'Devrooms', url: `/indiafoss/${currentYear.value}/devrooms` },
-  { id: 'booths', label: 'Booths', url: `/indiafoss/${currentYear.value}/booths` },
-  { id: 'archive', label: 'Archive', url: '/indiafoss/archive' },
-])
+const navLinks = computed(() => {
+  const links = [
+    { id: 'overview', label: 'Overview', url: `/indiafoss/${currentYear.value}` },
+    { id: 'schedule', label: 'Schedule', url: `/dashboard/schedule/indiafoss/${currentYear.value}` },
+    { id: 'proposals', label: 'Proposals', url: `/dashboard/cfp/all/indiafoss/${currentYear.value}` },
+  ]
+  if (props.showDevrooms) {
+    links.push({ id: 'devrooms', label: 'Devrooms', url: `/indiafoss/${currentYear.value}/devrooms` })
+  }
+  if (props.showBooths) {
+    links.push({ id: 'booths', label: 'Booths', url: `/indiafoss/${currentYear.value}/booths` })
+  }
+  links.push({ id: 'archive', label: 'Archive', url: '/indiafoss/archive' })
+  return links
+})
 
 const session = inject('$session')
 
