@@ -100,14 +100,14 @@
   <div class="collapse d-md-none position-absolute" id="ifMobileMenu"
        style="top: 100%; right: 0; min-width: 220px; z-index: 1050;">
     <div class="v3-card rounded p-3 mt-2 d-flex flex-column gap-2 shadow-sm">
-      {% if show_overview %}<a href="/indiafoss/{{ current_year }}" class="if-nav-link{% if is_overview %} is-active{% endif %}">Overview</a>{% endif %}
-      {% if show_schedule %}<a href="/dashboard/schedule/indiafoss/{{ current_year }}" class="if-nav-link{% if is_schedule %} is-active{% endif %}">Schedule</a>{% endif %}
-      {% if show_proposals %}<a href="/dashboard/cfp/all/indiafoss/{{ current_year }}" class="if-nav-link{% if is_proposals %} is-active{% endif %}">Proposals</a>{% endif %}
-      {% if show_devrooms %}<a href="/indiafoss/{{ current_year }}/devrooms" class="if-nav-link{% if is_devrooms %} is-active{% endif %}">Devrooms</a>{% endif %}
-      {% if show_booths %}<a href="/indiafoss/{{ current_year }}/booths" class="if-nav-link{% if is_booths %} is-active{% endif %}">Booths</a>{% endif %}
+      {% if show_overview %}<a href="/indiafoss/{{ current_year }}" class="if-nav-link{% if is_overview %} is-active{% endif %}" {% if is_overview %}aria-current="page"{% endif %}>Overview</a>{% endif %}
+      {% if show_schedule %}<a href="/dashboard/schedule/indiafoss/{{ current_year }}" class="if-nav-link{% if is_schedule %} is-active{% endif %}" {% if is_schedule %}aria-current="page"{% endif %}>Schedule</a>{% endif %}
+      {% if show_proposals %}<a href="/dashboard/cfp/all/indiafoss/{{ current_year }}" class="if-nav-link{% if is_proposals %} is-active{% endif %}" {% if is_proposals %}aria-current="page"{% endif %}>Proposals</a>{% endif %}
+      {% if show_devrooms %}<a href="/indiafoss/{{ current_year }}/devrooms" class="if-nav-link{% if is_devrooms %} is-active{% endif %}" {% if is_devrooms %}aria-current="page"{% endif %}>Devrooms</a>{% endif %}
+      {% if show_booths %}<a href="/indiafoss/{{ current_year }}/booths" class="if-nav-link{% if is_booths %} is-active{% endif %}" {% if is_booths %}aria-current="page"{% endif %}>Booths</a>{% endif %}
       {% if show_speakers %}<a href="/indiafoss/speakers" class="if-nav-link{% if is_speakers %} is-active{% endif %}" {% if is_speakers %}aria-current="page"{% endif %}>Speakers</a>{% endif %}
       {% if show_statistics %}<a href="/indiafoss/{{ current_year }}/stats" class="if-nav-link">Statistics</a>{% endif %}
-      {% if show_archive %}<a href="/indiafoss/archive" class="if-nav-link{% if is_archive %} is-active{% endif %}">Archive</a>{% endif %}
+      {% if show_archive %}<a href="/indiafoss/archive" class="if-nav-link{% if is_archive %} is-active{% endif %}" {% if is_archive %}aria-current="page"{% endif %}>Archive</a>{% endif %}
       {% if years | length > 1 %}
         <select class="v3-select" style="width: 100%;"
                 onchange="window.location=this.value;">
