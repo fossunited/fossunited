@@ -1,5 +1,5 @@
 <template>
-  <Header />
+  <Header :event="cfpData.data?.event" active-tab="proposals" />
   <div class="w-full flex flex-col items-center bg-surface-gray-1 mb-20 min-h-screen">
     <main
       v-if="cfpData.data"
@@ -174,7 +174,9 @@ usePageMeta(() => {
 const breadcrumb_items = ref([
   {
     label: cfpData.data?.event_name,
-    link: `/c/${route.params.route}`,
+    link: route.params.route?.startsWith('indiafoss')
+      ? `/${route.params.route}`
+      : `/c/${route.params.route}`,
   },
   {
     label: 'Call For Proposals',
@@ -189,6 +191,9 @@ watch(
   (newData) => {
     if (newData) {
       breadcrumb_items.value[0].label = newData.event_name
+      breadcrumb_items.value[0].link = route.params.route?.startsWith('indiafoss')
+        ? `/${route.params.route}`
+        : `/c/${route.params.route}`
     }
   },
   { deep: true },
