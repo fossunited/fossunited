@@ -2,6 +2,7 @@
 APIs for Tickets and Transfer Tickets
 """
 
+import hmac
 import io
 from datetime import timedelta
 
@@ -147,42 +148,116 @@ def create_transfer_request(ticket: str, receiver_details: dict):
     return {"name": transfer_request.name, "status": transfer_request.status}
 
 
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
-@rate_limit(limit=4, seconds=60 * 60 * 12)
-def get_transfer_details(id: str):
+def _is_authorized_for_transfer(doc, token) -> bool:
     """
-    Get the transfer doc
+    Same proof-of-access rule as change_transfer_status: either the correct
+    single-use token, or a session logged in as the ticket owner/receiver
+    (System Manager always allowed).
+    """
+    if token and doc.approval_token and hmac.compare_digest(token, doc.approval_token):
+        return True
+    if "System Manager" in frappe.get_roles():
+        return True
+    session_user = (frappe.session.user or "").strip().lower()
+    if session_user in ("", "guest"):
+        return False
+    owner_email = (doc.owner_email or "").strip().lower()
+    receiver_email = (doc.receiver_email or "").strip().lower()
+    return session_user in (owner_email, receiver_email)
+
+
+# nosemgrep: guest-whitelisted-method
+@frappe.whitelist(allow_guest=True, methods=["GET"])
+@rate_limit(limit=4, seconds=60 * 60 * 12)
+def get_transfer_details(id: str, token: str | None = None):
+    """
+    Get the transfer doc, plus enough context (event/tier, contact email) to
+    render a confirmation screen and a "need help" address on the frontend.
+
+    Only the status/ticket/event context is guest-readable by id alone -
+    owner_name/owner_email/receiver_name/receiver_email require the caller
+    to prove access first (see _is_authorized_for_transfer). Never returns
+    approval_token itself.
     """
     doc = frappe.db.get_value(
         TICKET_TRANSFER,
         id,
-        ["name", "status", "ticket"],
+        [
+            "name",
+            "status",
+            "ticket",
+            "owner_email",
+            "owner_name",
+            "receiver_email",
+            "receiver_name",
+            "approval_token",
+        ],
         as_dict=True,
     )
-    return doc
+    if not doc:
+        return doc
+
+    ticket_tier, event_id = frappe.db.get_value(EVENT_TICKET, doc.ticket, ["tier", "event"])
+    event_name, chapter_id = frappe.db.get_value(EVENT, event_id, ["event_name", "chapter"])
+    chapter_email = chapter_id and frappe.db.get_value("FOSS Chapter", chapter_id, "email")
+
+    result = frappe._dict(
+        name=doc.name,
+        status=doc.status,
+        ticket=doc.ticket,
+        ticket_tier=ticket_tier,
+        event_name=event_name,
+        contact_email=chapter_email or "developers@fossunited.org",
+    )
+
+    if _is_authorized_for_transfer(doc, token):
+        result.owner_email = doc.owner_email
+        result.owner_name = doc.owner_name
+        result.receiver_email = doc.receiver_email
+        result.receiver_name = doc.receiver_name
+
+    return result
 
 
 # nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=True, methods=["POST"])
 @rate_limit(limit=3, seconds=60 * 60 * 12)
-def change_transfer_status(transfer_id: str, status: str):
+def change_transfer_status(transfer_id: str, status: str, token: str | None = None):
     """
-    Change the status of the transfer request
-    """
-    if frappe.session.user == "Guest":
-        frappe.throw(
-            _("Please login with your FOSS United account to process this transfer"),
-            frappe.AuthenticationError,
-        )
+    Approve or reject a transfer request.
 
+    Verified either by the single-use `token` from the emailed Approve/Reject
+    link (no login needed), or - for links sent before tokens existed - by
+    the logged-in session user matching the ticket owner/receiver email.
+    """
     if status not in ["Completed", "Cancelled"]:
         frappe.throw(_("Invalid status provided for ticket transfer"))
 
     doc = frappe.get_doc(TICKET_TRANSFER, transfer_id)
-    doc.status = status
-    # Auth enforced in controller before_save — ignore doctype write perm
-    doc.save(ignore_permissions=True)
+
+    token_valid = (
+        bool(token) and bool(doc.approval_token) and hmac.compare_digest(token, doc.approval_token)
+    )
+
+    if token_valid:
+        frappe.flags.ticket_transfer_token_verified = True
+    elif frappe.session.user == "Guest":
+        frappe.throw(
+            _(
+                "This link is invalid or has expired. Please use the exact "
+                "Approve/Reject link from your email, or log in with your "
+                "FOSS United account to continue."
+            ),
+            frappe.AuthenticationError,
+        )
+
+    try:
+        doc.status = status
+        # Auth enforced in controller before_save — ignore doctype write perm
+        doc.save(ignore_permissions=True)
+    finally:
+        frappe.flags.ticket_transfer_token_verified = False
+
     return True
 
 
