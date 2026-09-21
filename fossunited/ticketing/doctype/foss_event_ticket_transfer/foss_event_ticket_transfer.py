@@ -17,6 +17,7 @@ class FOSSEventTicketTransfer(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        approval_token: DF.Data | None
         designation: DF.Data | None
         event: DF.Link | None
         organization: DF.Data | None
@@ -35,6 +36,7 @@ class FOSSEventTicketTransfer(Document):
         self.validate_ticket_exists()
         self.validate_status_is_pending()
         self.validate_non_transferable_free_tier()
+        self.approval_token = frappe.generate_hash(length=32)
 
     def before_save(self):
         if self.has_value_changed("status"):
@@ -46,9 +48,17 @@ class FOSSEventTicketTransfer(Document):
     def validate_status_change_permission(self):
         if "System Manager" in frappe.get_roles():
             return
+        # The API already verified the single-use token from the emailed link
+        # no need for the caller to also be logged in as owner/receiver.
+        if frappe.flags.ticket_transfer_token_verified:
+            return
         if self.status == "Completed" and frappe.session.user != self.owner_email:
             frappe.throw(
-                _("Only the ticket owner can approve a transfer"),
+                _(
+                    "Only the ticket owner ({0}) can approve this transfer. "
+                    "Please log in with that email address, or use the "
+                    "Approve link from the transfer email."
+                ).format(self.owner_email),
                 frappe.PermissionError,
             )
         if self.status == "Cancelled" and frappe.session.user not in [
@@ -56,7 +66,11 @@ class FOSSEventTicketTransfer(Document):
             self.receiver_email,
         ]:
             frappe.throw(
-                _("You are not authorized to cancel this transfer"),
+                _(
+                    "Only {0} or {1} can reject this transfer. Please log in "
+                    "with one of those email addresses, or use the Reject "
+                    "link from the transfer email."
+                ).format(self.owner_email, self.receiver_email),
                 frappe.PermissionError,
             )
 
