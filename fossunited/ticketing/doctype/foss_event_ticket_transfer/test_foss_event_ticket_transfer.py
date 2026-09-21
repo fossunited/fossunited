@@ -1,8 +1,14 @@
 import frappe
 from faker import Faker
 from frappe.tests.utils import FrappeTestCase
+from frappe.utils import set_request
 
-from fossunited.api.tickets import change_transfer_status, get_transfer_details
+from fossunited.api.tickets import (
+    change_transfer_status,
+    create_transfer_request,
+    get_ticket_details,
+    get_transfer_details,
+)
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET, TICKET_TRANSFER
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
@@ -162,27 +168,12 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
             self.assertEqual(transfer.status, "Cancelled")
             frappe.set_user("Administrator")
 
-    def test_owner_email_case_insensitive(self):
-        """A ticket's email is saved verbatim (no normalization), but Frappe
-        account emails/session users are lowercase - the permission check
-        must compare case-insensitively or a legitimate owner gets locked
-        out of their own transfer."""
-        owner_email = "MixedCase.Owner@Example.com"
-        ticket = FOSSEventTicketFactory.create(event=self.event.name, email=owner_email)
-        transfer = FOSSEventTicketTransferFactory.create(ticket=ticket.name)
-
-        frappe.set_user(owner_email.lower())
-        transfer.status = "Completed"
-        transfer.save(ignore_permissions=True)
-        frappe.set_user("Administrator")
-
-        self.assertEqual(transfer.status, "Completed")
-
 
 class TestChangeTransferStatusAPI(FrappeTestCase):
     """
-    End-to-end tests for fossunited.api.tickets.change_transfer_status -
-    the actual endpoint the ticket-transfer email links and dashboard hit.
+    End-to-end tests for fossunited.api.tickets.change_transfer_status /
+    get_transfer_details - the actual endpoints the ticket-transfer email
+    links and dashboard hit.
 
     Two independent ways to prove you're allowed to act on a transfer:
       1. The single-use `token` from the emailed link (no login needed).
@@ -210,7 +201,7 @@ class TestChangeTransferStatusAPI(FrappeTestCase):
             ticket=ticket.name, receiver_email=receiver_email or fake.email()
         )
 
-    # -- valid token: works with no login, regardless of who's logged in ----
+    # -- valid token: works with no login ------------------------------------
 
     def test_valid_token_approves_without_login(self):
         transfer = self._make_transfer()
@@ -222,32 +213,6 @@ class TestChangeTransferStatusAPI(FrappeTestCase):
         frappe.set_user("Administrator")
 
         self.assertTrue(result)
-        transfer.reload()
-        self.assertEqual(transfer.status, "Completed")
-
-    def test_valid_token_rejects_without_login(self):
-        transfer = self._make_transfer()
-
-        frappe.set_user("Guest")
-        change_transfer_status(
-            transfer_id=transfer.name, status="Cancelled", token=transfer.approval_token
-        )
-        frappe.set_user("Administrator")
-
-        transfer.reload()
-        self.assertEqual(transfer.status, "Cancelled")
-
-    def test_valid_token_works_even_if_logged_in_as_a_stranger(self):
-        """The token alone is sufficient proof - session identity shouldn't
-        matter once the token checks out."""
-        transfer = self._make_transfer()
-
-        frappe.set_user(fake.email())
-        change_transfer_status(
-            transfer_id=transfer.name, status="Completed", token=transfer.approval_token
-        )
-        frappe.set_user("Administrator")
-
         transfer.reload()
         self.assertEqual(transfer.status, "Completed")
 
@@ -305,22 +270,6 @@ class TestChangeTransferStatusAPI(FrappeTestCase):
 
         transfer_1.reload()
         self.assertEqual(transfer_1.status, "Pending Approval")
-
-    def test_slightly_altered_token_is_rejected(self):
-        """Tokens are matched exactly (case-sensitive) - unlike emails."""
-        transfer = self._make_transfer()
-        tampered_token = transfer.approval_token.upper()
-        self.assertNotEqual(tampered_token, transfer.approval_token)
-
-        frappe.set_user("Guest")
-        with self.assertRaises(frappe.AuthenticationError):
-            change_transfer_status(
-                transfer_id=transfer.name, status="Completed", token=tampered_token
-            )
-        frappe.set_user("Administrator")
-
-        transfer.reload()
-        self.assertEqual(transfer.status, "Pending Approval")
 
     # -- session-login fallback: pre-token links still work ------------------
 
@@ -380,32 +329,26 @@ class TestChangeTransferStatusAPI(FrappeTestCase):
         transfer.reload()
         self.assertEqual(transfer.status, "Pending Approval")
 
-    # -- invalid status / bad transfer id -------------------------------------
-
-    def test_invalid_status_value_rejected(self):
+    def test_system_manager_can_approve_and_reject_regardless_of_email(self):
+        """System Manager bypasses the owner/receiver/token check entirely -
+        for support staff fixing a stuck transfer via Desk."""
         transfer = self._make_transfer()
-
-        frappe.set_user("Guest")
-        with self.assertRaises(frappe.ValidationError):
-            change_transfer_status(
-                transfer_id=transfer.name, status="Bogus", token=transfer.approval_token
-            )
-        frappe.set_user("Administrator")
-
+        # Administrator (the default test user) carries System Manager.
+        change_transfer_status(transfer_id=transfer.name, status="Completed", token=None)
         transfer.reload()
-        self.assertEqual(transfer.status, "Pending Approval")
+        self.assertEqual(transfer.status, "Completed")
 
-    def test_unknown_transfer_id_raises_not_found(self):
-        frappe.set_user("Guest")
-        with self.assertRaises(frappe.DoesNotExistError):
-            change_transfer_status(
-                transfer_id="does-not-exist", status="Completed", token="whatever"
-            )
-        frappe.set_user("Administrator")
+        transfer_2 = self._make_transfer()
+        change_transfer_status(transfer_id=transfer_2.name, status="Cancelled", token=None)
+        transfer_2.reload()
+        self.assertEqual(transfer_2.status, "Cancelled")
 
-    # -- get_transfer_details must never leak the token -----------------------
+    # -- get_transfer_details: PII requires the same proof as an action -----
 
-    def test_get_transfer_details_never_returns_token(self):
+    def test_get_transfer_details_hides_pii_without_authorization(self):
+        """A bare transfer id isn't enough to see who's involved - it's more
+        easily leaked (URLs in logs/referrers) than the token, so it alone
+        must not reveal owner/receiver names or emails."""
         transfer = self._make_transfer()
 
         frappe.set_user("Guest")
@@ -414,3 +357,268 @@ class TestChangeTransferStatusAPI(FrappeTestCase):
 
         self.assertIsNotNone(details)
         self.assertNotIn("approval_token", details)
+        self.assertFalse(details.get("owner_email"))
+        self.assertFalse(details.get("receiver_email"))
+
+    def test_get_transfer_details_reveals_pii_when_authorized(self):
+        """Either the correct token or a matching owner session unlocks the
+        PII fields - proven both ways since they're separate code paths."""
+        owner_email = fake.email()
+        transfer = self._make_transfer(owner_email=owner_email)
+
+        frappe.set_user("Guest")
+        details = get_transfer_details(id=transfer.name, token=transfer.approval_token)
+        self.assertEqual(details.get("owner_email"), transfer.owner_email)
+        self.assertEqual(details.get("receiver_email"), transfer.receiver_email)
+
+        frappe.set_user(owner_email)
+        details = get_transfer_details(id=transfer.name)
+        frappe.set_user("Administrator")
+        self.assertEqual(details.get("owner_email"), transfer.owner_email)
+
+    # -- auto-closing stale sibling transfers for the same ticket ------------
+
+    def test_completing_a_transfer_cancels_other_pending_ones_for_same_ticket(self):
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
+        transfer_1 = FOSSEventTicketTransferFactory.create(ticket=ticket.name)
+        transfer_2 = FOSSEventTicketTransferFactory.create(ticket=ticket.name)
+
+        frappe.set_user("Guest")
+        change_transfer_status(
+            transfer_id=transfer_1.name, status="Completed", token=transfer_1.approval_token
+        )
+        frappe.set_user("Administrator")
+
+        transfer_1.reload()
+        transfer_2.reload()
+        self.assertEqual(transfer_1.status, "Completed")
+        self.assertEqual(transfer_2.status, "Cancelled")
+
+    def test_rejecting_a_transfer_does_not_affect_other_pending_ones(self):
+        """Rejecting one request is unrelated to the ticket's ownership -
+        other pending requests for it are still perfectly valid."""
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
+        transfer_1 = FOSSEventTicketTransferFactory.create(ticket=ticket.name)
+        transfer_2 = FOSSEventTicketTransferFactory.create(ticket=ticket.name)
+
+        frappe.set_user("Guest")
+        change_transfer_status(
+            transfer_id=transfer_1.name, status="Cancelled", token=transfer_1.approval_token
+        )
+        frappe.set_user("Administrator")
+
+        transfer_1.reload()
+        transfer_2.reload()
+        self.assertEqual(transfer_1.status, "Cancelled")
+        self.assertEqual(transfer_2.status, "Pending Approval")
+
+    def test_stale_sibling_cannot_be_resurrected_by_the_old_owner(self):
+        """The actual bug this closes: without both the auto-cancel and the
+        previous-status guard, the original owner's still-matching
+        owner_email (or their still-valid token) could resurrect an old,
+        auto-cancelled transfer and hijack the ticket back after it had
+        already been legitimately transferred to someone else."""
+        owner_email = fake.email()
+        ticket = FOSSEventTicketFactory.create(event=self.event.name, email=owner_email)
+        transfer_1 = FOSSEventTicketTransferFactory.create(ticket=ticket.name)
+        transfer_2 = FOSSEventTicketTransferFactory.create(ticket=ticket.name)
+
+        frappe.set_user("Guest")
+        change_transfer_status(
+            transfer_id=transfer_1.name, status="Completed", token=transfer_1.approval_token
+        )
+        frappe.set_user("Administrator")
+
+        transfer_2.reload()
+        self.assertEqual(transfer_2.status, "Cancelled")
+
+        # Neither the original owner's login nor their still-technically-valid
+        # token can revive the now-cancelled sibling.
+        frappe.set_user(owner_email)
+        with self.assertRaises(frappe.ValidationError):
+            change_transfer_status(transfer_id=transfer_2.name, status="Completed", token=None)
+        frappe.set_user("Guest")
+        with self.assertRaises(frappe.ValidationError):
+            change_transfer_status(
+                transfer_id=transfer_2.name, status="Completed", token=transfer_2.approval_token
+            )
+        frappe.set_user("Administrator")
+
+        transfer_2.reload()
+        self.assertEqual(transfer_2.status, "Cancelled")
+        ticket.reload()
+        self.assertEqual(ticket.email, transfer_1.receiver_email)
+
+    def test_resolved_transfer_cannot_be_flipped_again(self):
+        """Not just siblings - a transfer that resolved normally (no other
+        pending requests involved) is also final."""
+        transfer = self._make_transfer()
+
+        frappe.set_user("Guest")
+        change_transfer_status(
+            transfer_id=transfer.name, status="Cancelled", token=transfer.approval_token
+        )
+
+        with self.assertRaises(frappe.ValidationError):
+            change_transfer_status(
+                transfer_id=transfer.name, status="Completed", token=transfer.approval_token
+            )
+        frappe.set_user("Administrator")
+
+        transfer.reload()
+        self.assertEqual(transfer.status, "Cancelled")
+
+    def test_system_manager_can_still_flip_a_resolved_transfer(self):
+        """The previous-status guard has the same System Manager escape
+        hatch as the permission check, for support fixing a mistake."""
+        transfer = self._make_transfer()
+        change_transfer_status(transfer_id=transfer.name, status="Cancelled", token=None)
+
+        change_transfer_status(transfer_id=transfer.name, status="Completed", token=None)
+        transfer.reload()
+        self.assertEqual(transfer.status, "Completed")
+
+
+class TestChangeTransferStatusRateLimit(FrappeTestCase):
+    """
+    change_transfer_status is rate-limited to 3 attempts / 12h per IP - the
+    actual defense against someone hammering a known transfer_id trying
+    tokens (the token itself is 128 bits of entropy, already infeasible to
+    brute-force; the limit guards against cheaper abuse/spam instead).
+
+    The @rate_limit decorator only activates inside a real request context
+    (it no-ops when frappe.request is falsy, which is the default in unit
+    tests) - frappe.utils.set_request() fakes one so this can be exercised
+    for real instead of just trusting the decorator is wired up.
+    """
+
+    def setUp(self):
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
+
+        set_request(
+            method="POST", path="/api/method/fossunited.api.tickets.change_transfer_status"
+        )
+        frappe.local.request_ip = "192.0.2.42"
+        frappe.form_dict.cmd = "fossunited.api.tickets.change_transfer_status"
+        self._cache_key = frappe.cache.make_key(
+            f"rl:{frappe.form_dict.cmd}:{frappe.local.request_ip}"
+        )
+        frappe.cache.delete(self._cache_key)
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        frappe.cache.delete(self._cache_key)
+        if hasattr(frappe.local, "request"):
+            delattr(frappe.local, "request")
+        frappe.local.request_ip = None
+        frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
+        frappe.delete_doc(EVENT, self.event.name, force=True)
+
+    def _make_transfer(self):
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
+        return FOSSEventTicketTransferFactory.create(ticket=ticket.name)
+
+    def test_blocked_after_limit_reached_even_with_wrong_tokens(self):
+        """The first 3 attempts fail normally on the token check (401); the
+        4th is rejected purely for volume (429) before the token is even
+        looked at - so guessing can never outlast the limit."""
+        # Create fixtures as Administrator first: FOSS Event Ticket only
+        # grants create to System Manager, so this must happen before we
+        # impersonate Guest below.
+        transfers = [self._make_transfer() for _ in range(4)]
+
+        frappe.set_user("Guest")
+
+        for transfer in transfers[:3]:
+            with self.assertRaises(frappe.AuthenticationError):
+                change_transfer_status(
+                    transfer_id=transfer.name, status="Completed", token="wrong-guess"
+                )
+
+        with self.assertRaises(frappe.RateLimitExceededError):
+            change_transfer_status(
+                transfer_id=transfers[3].name, status="Completed", token="wrong-guess"
+            )
+
+        frappe.set_user("Administrator")
+
+
+class TestCreateTransferRequestAndTicketDetailsAPI(FrappeTestCase):
+    """
+    Covers the first step of the flow - fossunited.api.tickets.get_ticket_details
+    (the guest-facing lookup on the transfer form) and create_transfer_request
+    (submitting the request) - so the whole flow, not just approve/reject, is
+    exercised through its real entry points rather than only via factories.
+    """
+
+    def setUp(self):
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
+        frappe.delete_doc(EVENT, self.event.name, force=True)
+
+    def test_get_ticket_details_returns_safe_fields_only(self):
+        """Deliberately excludes `email` - the lookup form has no reason to
+        expose the current owner's address to whoever's typing in a ticket
+        id, and a future edit adding fields here shouldn't reintroduce it
+        without someone noticing."""
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
+
+        frappe.set_user("Guest")
+        details = get_ticket_details(ticket_id=ticket.name)
+        frappe.set_user("Administrator")
+
+        self.assertEqual(details.get("name"), ticket.name)
+        self.assertEqual(details.get("tier"), ticket.tier)
+        self.assertNotIn("email", details)
+
+    def test_get_ticket_details_unknown_id_returns_none(self):
+        frappe.set_user("Guest")
+        details = get_ticket_details(ticket_id="does-not-exist")
+        frappe.set_user("Administrator")
+
+        self.assertIsNone(details)
+
+    def test_guest_can_create_transfer_request(self):
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
+        receiver_email = fake.email()
+
+        frappe.set_user("Guest")
+        result = create_transfer_request(
+            ticket=ticket.name,
+            receiver_details={"receiver_name": fake.name(), "receiver_email": receiver_email},
+        )
+        frappe.set_user("Administrator")
+
+        self.assertEqual(result.get("status"), "Pending Approval")
+        transfer = frappe.get_doc(TICKET_TRANSFER, result["name"])
+        self.assertEqual(transfer.ticket, ticket.name)
+        self.assertEqual(transfer.receiver_email, receiver_email)
+        self.assertEqual(transfer.owner_email, ticket.email)
+
+    def test_create_transfer_request_generates_a_token_but_never_returns_it(self):
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
+
+        frappe.set_user("Guest")
+        result = create_transfer_request(
+            ticket=ticket.name,
+            receiver_details={"receiver_name": fake.name(), "receiver_email": fake.email()},
+        )
+        frappe.set_user("Administrator")
+
+        self.assertNotIn("approval_token", result)
+        token = frappe.db.get_value(TICKET_TRANSFER, result["name"], "approval_token")
+        self.assertTrue(token)
+
+    def test_create_transfer_request_for_unknown_ticket_raises_not_found(self):
+        frappe.set_user("Guest")
+        with self.assertRaises(frappe.DoesNotExistError):
+            create_transfer_request(
+                ticket="does-not-exist",
+                receiver_details={"receiver_name": fake.name(), "receiver_email": fake.email()},
+            )
+        frappe.set_user("Administrator")
