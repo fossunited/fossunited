@@ -342,7 +342,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
             self.assertTrue(submission.can_check_in(event.event_start_date, event.event_end_date))
 
     def test_self_check_in_api_by_owner_succeeds(self):
-        with self.set_user("Guest"):
+        with self.set_user(self.website_user.name):
             submission = FOSSEventRSVPSubmissionFactory.create(
                 linked_rsvp=self.rsvp.name, submitted_by=self.website_user.name
             )
@@ -356,7 +356,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
     def test_self_check_in_api_by_team_member_succeeds(self):
         """Chapter/event team members check attendees in on their behalf from
         the dashboard - they are not the submission owner."""
-        with self.set_user("Guest"):
+        with self.set_user(self.website_user.name):
             submission = FOSSEventRSVPSubmissionFactory.create(
                 linked_rsvp=self.rsvp.name, submitted_by=self.website_user.name
             )
@@ -368,7 +368,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         self.assertTrue(submission.has_checked_in_today())
 
     def test_self_check_in_api_by_outsider_fails(self):
-        with self.set_user("Guest"):
+        with self.set_user(self.website_user.name):
             submission = FOSSEventRSVPSubmissionFactory.create(
                 linked_rsvp=self.rsvp.name, submitted_by=self.website_user.name
             )
@@ -377,7 +377,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
             self_check_in(submission_name=submission.name)
 
     def test_remove_checkin_api_by_team_member_succeeds(self):
-        with self.set_user("Guest"):
+        with self.set_user(self.website_user.name):
             submission = FOSSEventRSVPSubmissionFactory.create(
                 linked_rsvp=self.rsvp.name, submitted_by=self.website_user.name
             )
@@ -392,7 +392,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         self.assertFalse(submission.has_checked_in_today())
 
     def test_remove_checkin_api_by_outsider_fails(self):
-        with self.set_user("Guest"):
+        with self.set_user(self.website_user.name):
             submission = FOSSEventRSVPSubmissionFactory.create(
                 linked_rsvp=self.rsvp.name, submitted_by=self.website_user.name
             )
