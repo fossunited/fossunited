@@ -59,7 +59,14 @@
           class="w-fit"
           variant="subtle"
           theme="blue"
-          label="Transferred"
+          label="Transferred to you"
+        />
+        <Badge
+          v-else-if="ticket.is_attendee === false"
+          class="w-fit"
+          variant="subtle"
+          theme="gray"
+          label="Purchased by you for other email"
         />
       </div>
     </button>

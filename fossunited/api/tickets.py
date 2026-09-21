@@ -26,7 +26,7 @@ from fossunited.utils.decorators import require_chapter_or_event_member
 
 
 # nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=True, methods=["POST"])
 @rate_limit(limit=2, seconds=60 * 60 * 12)
 def get_ticket_details(ticket_id: str):
     """
@@ -51,17 +51,74 @@ def get_ticket_details(ticket_id: str):
     return ticket
 
 
-@frappe.whitelist()
+def _ticket_belongs_to_user(ticket: dict, session_user: str) -> bool:
+    """
+    A ticket belongs to a user if the current attendee email matches. If not,
+    and only when the ticket was never transferred away (a transfer hands it
+    to someone else), it also belongs to whoever bought it - either as the
+    record's `owner`, or via the email typed on the linked Razorpay Payment
+    at checkout. Both fallbacks are needed because ticket creation can run
+    under a webhook/system user instead of the buyer's own session (Razorpay
+    webhooks flip the user to Administrator - see FOSSEventTicket's
+    `handle_payment_on_update`), so `owner` isn't reliably the real buyer,
+    and the checkout email can differ from both the account and ticket email.
+
+    Comparisons are lowercased: Frappe account emails are normalized to
+    lowercase, but a ticket's `email` is saved exactly as the attendee typed
+    it at purchase.
+    """
+    if not ticket:
+        return False
+    if session_user == (ticket.get("email") or "").strip().lower():
+        return True
+    if ticket.get("is_transfer_ticket"):
+        return False
+    if session_user == (ticket.get("owner") or "").strip().lower():
+        return True
+    payment_email = (ticket.get("payment_email") or "").strip().lower()
+    return bool(payment_email) and session_user == payment_email
+
+
+@frappe.whitelist(methods=["POST"])
 def get_session_user_tickets() -> list:
     """
     Get all tickets belonging to the logged-in user, for the "My Tickets" page.
-
-    A ticket belongs to the user if its email matches the session user, or if
-    the session user created the ticket (e.g. on someone else's behalf).
+    See `_ticket_belongs_to_user` for the matching rules.
     """
+    from frappe.query_builder import DocType
+
+    session_user = (frappe.session.user or "").strip().lower()
+
+    Ticket = DocType(EVENT_TICKET)
+    Payment = DocType(RAZORPAY_PAYMENT)
+
+    matches = (
+        frappe.qb.from_(Ticket)
+        .left_join(Payment)
+        .on(Ticket.razorpay_payment == Payment.name)
+        .where(
+            (Ticket.email == session_user)
+            | ((Ticket.owner == session_user) & (Ticket.is_transfer_ticket != 1))
+            | ((Payment.email == session_user) & (Ticket.is_transfer_ticket != 1))
+        )
+        .select(Ticket.name, Ticket.email)
+        .distinct()
+    ).run(as_dict=True)
+
+    if not matches:
+        return []
+
+    # Whether *this* session user is the ticket's attendee (email matched),
+    # vs. only its buyer/organizer (matched via owner or payment instead) -
+    # the "My Tickets" page uses this to label tickets bought for someone
+    # else, since a match by email alone is the unremarkable common case.
+    is_attendee_by_name = {
+        m.name: (m.email or "").strip().lower() == session_user for m in matches
+    }
+
     tickets = frappe.get_all(
         EVENT_TICKET,
-        or_filters={"email": frappe.session.user, "owner": frappe.session.user},
+        filters={"name": ["in", list(is_attendee_by_name)]},
         fields=[
             "name",
             "event",
@@ -89,18 +146,20 @@ def get_session_user_tickets() -> list:
     for ticket in tickets:
         event_date = ticket.event_end_date or ticket.event_start_date
         ticket["is_concluded"] = bool(event_date and frappe.utils.getdate(event_date) < today)
+        ticket["is_attendee"] = is_attendee_by_name.get(ticket.name, True)
 
     return tickets
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["GET"])
 def get_ticket_qr(ticket_id: str):
     """
     Render a QR code (SVG) for a ticket, encoding the plain ticket ID.
 
-    Ownership-gated: only the ticket's email owner or its creator may fetch it.
-    A ticket's QR content never changes once issued, so the response is
-    cacheable by the requesting browser.
+    Ownership-gated via `_ticket_belongs_to_user` - the same rule used for
+    the "My Tickets" list, so a ticket that shows up there is never blocked
+    here. A ticket's QR content never changes once issued, so the response
+    is cacheable by the requesting browser.
 
     Uses pyqrcode's .svg() (same as frappe.twofactor.get_qr_svg_code) since
     .png() needs the separate `pypng` package, which isn't installed here.
@@ -108,10 +167,23 @@ def get_ticket_qr(ticket_id: str):
     import pyqrcode
     from werkzeug.wrappers import Response
 
-    ticket = frappe.db.get_value(EVENT_TICKET, ticket_id, ["email", "owner"], as_dict=True)
+    ticket = frappe.db.get_value(
+        EVENT_TICKET,
+        ticket_id,
+        ["email", "owner", "is_transfer_ticket", "razorpay_payment"],
+        as_dict=True,
+    )
+    payment_email = (
+        ticket
+        and ticket.razorpay_payment
+        and frappe.db.get_value(RAZORPAY_PAYMENT, ticket.razorpay_payment, "email")
+    )
+    session_user = (frappe.session.user or "").strip().lower()
     # Same error for "doesn't exist" and "not yours"; avoids leaking which
     # ticket IDs are valid to a caller who doesn't own them.
-    if not ticket or frappe.session.user not in (ticket.email, ticket.owner):
+    if not _ticket_belongs_to_user(
+        {**(ticket or {}), "payment_email": payment_email}, session_user
+    ):
         frappe.throw(_("Not permitted to access this ticket"), frappe.PermissionError)
 
     buf = io.BytesIO()
@@ -125,7 +197,7 @@ def get_ticket_qr(ticket_id: str):
 
 
 # nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=True, methods=["POST"])
 @rate_limit(limit=3, seconds=60 * 60 * 12)
 def create_transfer_request(ticket: str, receiver_details: dict):
     """
