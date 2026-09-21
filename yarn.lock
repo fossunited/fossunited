@@ -129,10 +129,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@knadh/autocomp@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@knadh/autocomp/-/autocomp-1.2.0.tgz#69f0f691e8563b7bcd3e9a123493ef1af7e27506"
-  integrity sha512-RnhmlWDhEXdCmkaRPRivvB8VBTLLMlF2r4BPeNDgqCqyYW6ELlK+WjsVebfFdLjqAgVOf9LoZbUUSETKmobKRA==
+"@knadh/autocomp@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@knadh/autocomp/-/autocomp-1.3.0.tgz#1b884e48c28c92a497a279d164bfb55d7b8e5e49"
+  integrity sha512-Hzs96+KAzICWxmMcp9EpXmZ1Gy+idxknUO/pW16yQkTLxLyU8LCt1z763q74LKNhIONJQywwbVrC8a0YSTuUDQ==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
