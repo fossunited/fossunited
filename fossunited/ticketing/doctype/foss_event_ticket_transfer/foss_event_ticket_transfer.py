@@ -40,10 +40,28 @@ class FOSSEventTicketTransfer(Document):
 
     def before_save(self):
         if self.has_value_changed("status"):
+            self.validate_previous_status_is_pending()
             self.validate_status_change_permission()
             if self.status == "Completed":
                 self.validate_ticket_exists()
                 self.transfer_ticket()
+
+    def validate_previous_status_is_pending(self):
+        """
+        A transfer can only be resolved once. Without this, a transfer that
+        was auto-cancelled as a stale sibling (see close_other_pending_transfers)
+        - or one already approved/rejected - could still be flipped again by
+        whoever originally had valid owner/receiver credentials for it, even
+        though the ticket has since moved on.
+        """
+        if "System Manager" in frappe.get_roles():
+            return
+        previous = self.get_doc_before_save()
+        if previous and previous.status != "Pending Approval":
+            frappe.throw(
+                _("This transfer request has already been resolved and can no longer be changed."),
+                frappe.ValidationError,
+            )
 
     def validate_status_change_permission(self):
         if "System Manager" in frappe.get_roles():
@@ -110,6 +128,25 @@ class FOSSEventTicketTransfer(Document):
             ticket.save(ignore_permissions=True)
         except Exception as e:
             frappe.throw(str(e), frappe.ValidationError)
+
+        self.close_other_pending_transfers()
+
+    def close_other_pending_transfers(self):
+        """
+        Once this transfer completes, any other still-pending transfer
+        request for the same ticket is stale - its `owner_email` is a
+        snapshot from creation time and no longer reflects who actually
+        owns the ticket, so leaving it actionable would let an old,
+        now-irrelevant request take the ticket away again later. Close
+        them silently (no email, no permission re-check - this is a system
+        cleanup, not a user action) via a direct bulk update.
+        """
+        frappe.db.set_value(
+            self.doctype,
+            {"ticket": self.ticket, "status": "Pending Approval", "name": ["!=", self.name]},
+            "status",
+            "Cancelled",
+        )
 
     def handle_already_transferred_ticket(self, ticket):
         """
