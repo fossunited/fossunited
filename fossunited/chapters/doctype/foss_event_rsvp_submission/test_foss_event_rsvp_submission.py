@@ -3,6 +3,10 @@ from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, nowdate
 
+from fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission import (
+    remove_checkin_for_today,
+    self_check_in,
+)
 from fossunited.doctype_ids import EVENT, EVENT_RSVP
 from fossunited.tests.factories.foss_chapter_event_factory import FOSSChapterEventFactory
 from fossunited.tests.factories.foss_chapter_factory import FOSSChapterFactory
@@ -19,6 +23,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
     def setUp(self):
         self.core_team_user = UserFactory.create("with_foss_website_user_role")
         self.website_user = UserFactory.create("with_foss_website_user_role")
+        self.outsider_user = UserFactory.create("with_foss_website_user_role")
 
         self.chapter = FOSSChapterFactory.create(
             "with_members", members=[self.core_team_user.name]
@@ -335,3 +340,68 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
             event.save()
 
             self.assertTrue(submission.can_check_in(event.event_start_date, event.event_end_date))
+
+    def test_self_check_in_api_by_owner_succeeds(self):
+        with self.set_user("Guest"):
+            submission = FOSSEventRSVPSubmissionFactory.create(
+                linked_rsvp=self.rsvp.name, submitted_by=self.website_user.name
+            )
+
+        with self.set_user(self.website_user.name):
+            self_check_in(submission_name=submission.name)
+
+        submission.reload()
+        self.assertTrue(submission.has_checked_in_today())
+
+    def test_self_check_in_api_by_team_member_succeeds(self):
+        """Chapter/event team members check attendees in on their behalf from
+        the dashboard - they are not the submission owner."""
+        with self.set_user("Guest"):
+            submission = FOSSEventRSVPSubmissionFactory.create(
+                linked_rsvp=self.rsvp.name, submitted_by=self.website_user.name
+            )
+
+        with self.set_user(self.core_team_user.name):
+            self_check_in(submission_name=submission.name)
+
+        submission.reload()
+        self.assertTrue(submission.has_checked_in_today())
+
+    def test_self_check_in_api_by_outsider_fails(self):
+        with self.set_user("Guest"):
+            submission = FOSSEventRSVPSubmissionFactory.create(
+                linked_rsvp=self.rsvp.name, submitted_by=self.website_user.name
+            )
+
+        with self.set_user(self.outsider_user.name), self.assertRaises(frappe.PermissionError):
+            self_check_in(submission_name=submission.name)
+
+    def test_remove_checkin_api_by_team_member_succeeds(self):
+        with self.set_user("Guest"):
+            submission = FOSSEventRSVPSubmissionFactory.create(
+                linked_rsvp=self.rsvp.name, submitted_by=self.website_user.name
+            )
+
+        with self.set_user(self.website_user.name):
+            self_check_in(submission_name=submission.name)
+
+        with self.set_user(self.core_team_user.name):
+            remove_checkin_for_today(submission_name=submission.name)
+
+        submission.reload()
+        self.assertFalse(submission.has_checked_in_today())
+
+    def test_remove_checkin_api_by_outsider_fails(self):
+        with self.set_user("Guest"):
+            submission = FOSSEventRSVPSubmissionFactory.create(
+                linked_rsvp=self.rsvp.name, submitted_by=self.website_user.name
+            )
+
+        with self.set_user(self.website_user.name):
+            self_check_in(submission_name=submission.name)
+
+        with self.set_user(self.outsider_user.name), self.assertRaises(frappe.PermissionError):
+            remove_checkin_for_today(submission_name=submission.name)
+
+        submission.reload()
+        self.assertTrue(submission.has_checked_in_today())
