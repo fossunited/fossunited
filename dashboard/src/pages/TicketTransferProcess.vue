@@ -139,6 +139,11 @@ function handleConfirm() {
 }
 
 function goToLogin() {
-  window.location.href = `/login?redirect-to=${encodeURIComponent(window.location.pathname + window.location.search)}`
+  // Reconstructed from just id+status - dropping `token` on purpose: this
+  // path only fires when the token already failed to verify (or was never
+  // present), so it's not needed post-login, and there's no reason to carry
+  // it through an extra URL param (login-page logs, browser history, etc).
+  const target = `${window.location.pathname}?${new URLSearchParams({ id: transferID, status: toApprove }).toString()}`
+  window.location.href = `/login?redirect-to=${encodeURIComponent(target)}`
 }
 </script>

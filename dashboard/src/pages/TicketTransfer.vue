@@ -188,13 +188,13 @@ const ticket = createResource({
     }
   },
   onError(err) {
+    ticket.data = null
+    event.data = null
     const { kind, message } = getFriendlyError(err)
-    if (kind === 'rate-limit') {
-      ticket.data = null
-      ticketValidateError.value = message
-      return
+    ticketValidateError.value = message
+    if (kind !== 'rate-limit') {
+      showError(err, 'Failed to fetch ticket details')
     }
-    showError(err, 'Failed to fetch ticket details')
   },
 })
 
