@@ -117,9 +117,13 @@ export function getFriendlyError(error) {
     Array.isArray(error?.messages) && error.messages.length ? error.messages[0] : null
 
   if (excType === 'RateLimitExceededError' || status === 429) {
+    // Frappe's own rate-limit message doesn't say how long, so we always
+    // show our own text here rather than the server's generic one.
     return {
       kind: 'rate-limit',
-      message: serverMessage || "You've made too many attempts. Please wait a while and try again.",
+      message:
+        "You've made too many attempts. Please try again after 12 hours from your last " +
+        'attempt, or email developers@fossunited.org if you need this done sooner.',
     }
   }
   if (excType === 'AuthenticationError' || status === 401) {
