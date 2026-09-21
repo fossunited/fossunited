@@ -6,6 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 
 from fossunited.api.chapter import check_if_chapter_or_event_core_member
+from fossunited.doctype_ids import EVENT
 
 
 class EventFreeTicketCode(Document):
@@ -38,6 +39,7 @@ class EventFreeTicketCode(Document):
     # end: auto-generated types
 
     def before_insert(self):
+        self.validate_event_eligibility()
         self.warn_duplicate_email()
 
     def on_trash(self):
@@ -46,6 +48,20 @@ class EventFreeTicketCode(Document):
     def before_save(self):
         self.permit_only_team()
         self.sync_is_used()
+
+    def validate_event_eligibility(self):
+        """Only issue free ticket codes for paid events that is Live"""
+        event = frappe.db.get_value(
+            EVENT, self.event, ["is_paid_event", "event_start_date"], as_dict=True
+        )
+        if not event:
+            frappe.throw(_("Selected event does not exist."))
+
+        if not event.is_paid_event:
+            frappe.throw(_("Free ticket codes can only be issued for paid events."))
+
+        if event.event_start_date and event.event_start_date <= frappe.utils.now_datetime():
+            frappe.throw(_("Free ticket codes can only be issued for upcoming Live events only."))
 
     def sync_is_used(self):
         """Keep is_used in sync with max_count/used_count."""
