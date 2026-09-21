@@ -133,7 +133,7 @@
     }
   ],
   "links": [],
-  "modified": "2026-09-21 20:30:59.254019",
+  "modified": "2026-09-21 20:56:38.412257",
   "modified_by": "Administrator",
   "module": "Ticketing",
   "name": "FOSS Event Ticket Transfer",
@@ -151,10 +151,6 @@
       "role": "System Manager",
       "share": 1,
       "write": 1
-    },
-    {
-      "create": 1,
-      "role": "All"
     }
   ],
   "row_format": "Dynamic",
