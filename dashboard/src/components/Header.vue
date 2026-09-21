@@ -52,7 +52,7 @@
         IndiaFOSS {{ currentYear }}
       </span>
 
-      <ThemeToggle size="20" />
+      <ThemeToggle :size="20" />
       <div v-if="session.isLoggedIn" class="flex items-center">
         <Dropdown
           :options="[
