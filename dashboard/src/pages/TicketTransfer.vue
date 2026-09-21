@@ -132,7 +132,7 @@ import {
   usePageMeta,
 } from 'frappe-ui'
 import { reactive, ref } from 'vue'
-import { showError } from '@/helpers/utils'
+import { showError, getFriendlyError } from '@/helpers/utils'
 
 usePageMeta(() => {
   return {
@@ -171,7 +171,8 @@ const ticket = createResource({
   onSuccess(data) {
     if (!data) {
       ticket.data = null
-      ticketValidateError.value = 'Invalid Ticket ID'
+      ticketValidateError.value =
+        "We couldn't find a ticket with that ID. Please double-check and try again."
       return
     }
     if (data.tier && data.tier.toLowerCase().includes('free pass')) {
@@ -187,7 +188,13 @@ const ticket = createResource({
     }
   },
   onError(err) {
-    showError(err, 'Failed to fetch ticket details')
+    ticket.data = null
+    event.data = null
+    const { kind, message } = getFriendlyError(err)
+    ticketValidateError.value = message
+    if (kind !== 'rate-limit') {
+      showError(err, 'Failed to fetch ticket details')
+    }
   },
 })
 
@@ -249,6 +256,11 @@ const createTransferDoc = createResource({
     inSuccess.value = true
   },
   onError(err) {
+    const { kind, message } = getFriendlyError(err)
+    if (kind === 'rate-limit') {
+      ticketErrors.value = message
+      return
+    }
     showError(err, 'Failed to initiate transfer')
   },
 })
