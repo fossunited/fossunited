@@ -3,7 +3,11 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate, nowdate
 
-from fossunited.api.chapter import check_if_chapter_member, get_chapter_members_email
+from fossunited.api.chapter import (
+    check_if_chapter_member,
+    check_if_chapter_or_event_core_member,
+    get_chapter_members_email,
+)
 from fossunited.api.checkins import (
     add_checkin,
     has_checked_in_today,
@@ -242,7 +246,9 @@ def self_check_in(submission_name: str):
         frappe.throw(_("Not permitted"), frappe.PermissionError)
 
     doc = frappe.get_doc(RSVP_RESPONSE, submission_name)
-    if doc.submitted_by != frappe.session.user:
+    if doc.submitted_by != frappe.session.user and not check_if_chapter_or_event_core_member(
+        doc.event
+    ):
         frappe.throw(_("Not permitted"), frappe.PermissionError)
     return doc.add_check_in()
 
@@ -254,6 +260,8 @@ def remove_checkin_for_today(submission_name: str):
         frappe.throw(_("Not permitted"), frappe.PermissionError)
 
     doc = frappe.get_doc(RSVP_RESPONSE, submission_name)
-    if doc.submitted_by != frappe.session.user:
+    if doc.submitted_by != frappe.session.user and not check_if_chapter_or_event_core_member(
+        doc.event
+    ):
         frappe.throw(_("Not permitted"), frappe.PermissionError)
     return doc.remove_today_check_in()
