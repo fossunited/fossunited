@@ -34,7 +34,7 @@ class TestSpeakerCoupons(FrappeTestCase):
         frappe.set_user("Administrator")
         cls.team_member = UserFactory.create("with_foss_website_user_role")
         cls.chapter = FOSSChapterFactory.create("with_members", members=[cls.team_member.name])
-        cls.event = FOSSChapterEventFactory.create(chapter=cls.chapter.name)
+        cls.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=cls.chapter.name)
         cls.cfp = FOSSEventCFPFactory.create(event=cls.event.name)
 
     @classmethod
