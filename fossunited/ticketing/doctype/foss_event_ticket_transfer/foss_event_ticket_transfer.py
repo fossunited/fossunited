@@ -52,7 +52,11 @@ class FOSSEventTicketTransfer(Document):
         # no need for the caller to also be logged in as owner/receiver.
         if frappe.flags.ticket_transfer_token_verified:
             return
-        if self.status == "Completed" and frappe.session.user != self.owner_email:
+        # Case-insensitive: the ticket's `email` is saved as the attendee
+        session_user = (frappe.session.user or "").strip().lower()
+        owner_email = (self.owner_email or "").strip().lower()
+        receiver_email = (self.receiver_email or "").strip().lower()
+        if self.status == "Completed" and session_user != owner_email:
             frappe.throw(
                 _(
                     "Only the ticket owner ({0}) can approve this transfer. "
@@ -61,9 +65,9 @@ class FOSSEventTicketTransfer(Document):
                 ).format(self.owner_email),
                 frappe.PermissionError,
             )
-        if self.status == "Cancelled" and frappe.session.user not in [
-            self.owner_email,
-            self.receiver_email,
+        if self.status == "Cancelled" and session_user not in [
+            owner_email,
+            receiver_email,
         ]:
             frappe.throw(
                 _(
