@@ -37,16 +37,21 @@
         required
         @update:model-value="update('full_name', $event)"
       />
-      <FormControl
-        :model-value="attendee.email"
-        type="email"
-        label="Email"
-        size="sm"
-        variant="subtle"
-        placeholder="example@email.com"
-        required
-        @update:model-value="update('email', $event)"
-      />
+      <div class="flex flex-col gap-1">
+        <FormControl
+          :model-value="attendee.email"
+          type="email"
+          label="Email"
+          size="sm"
+          variant="subtle"
+          placeholder="example@email.com"
+          required
+          @update:model-value="update('email', $event)"
+        />
+        <p class="text-xs text-ink-gray-5">
+          Used for the sending ticket email and also to authorize during ticket transfer.
+        </p>
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormControl
           :model-value="attendee.designation"
