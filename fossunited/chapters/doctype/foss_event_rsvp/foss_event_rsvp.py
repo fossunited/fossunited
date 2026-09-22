@@ -95,6 +95,10 @@ class FOSSEventRSVP(WebsiteGenerator):
 
         context.event_concluded = context.event.status == "Concluded"
         context.rsvp_full = self.is_full()
+
+        if frappe.db.exists("DocType", "Ograph Settings"):
+            context.og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
+
         context.no_cache = 1
 
     def set_route(self):
