@@ -73,6 +73,11 @@ jinja = {
 
 signup_form_template = "fossunited.plugins.show_custom_signup"
 
+# Custom 404 page override
+custom_404_page_context = [
+    "fossunited.foss_profiles.doctype.foss_user_profile.foss_user_profile.get_404_context",
+]
+
 # Document Events
 # ---------------
 # Hook on document methods and events

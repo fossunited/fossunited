@@ -1,0 +1,37 @@
+{% extends "templates/web.html" %}
+
+{%- block title -%}
+  {{ custom_404.title if custom_404 else _("Page not found") }}
+{%- endblock -%}
+
+{% block page_content %}
+  <script>
+    window.is_404 = true
+  </script>
+
+  <div class="v3-container py-5">
+    <div class="v3-card text-center mx-auto" style="max-width: 30rem;">
+      <h1 class="text-2xl semi-bold v3-text-primary mb-3">
+        {{ custom_404.title if custom_404 else _("Page not found") }}
+      </h1>
+      <p class="text-base v3-text-secondary mb-4">
+        {{ custom_404.message if custom_404 else _("The page you're looking for doesn't exist or may have been moved.") }}
+      </p>
+      {% if custom_404 and custom_404.links %}
+        <div class="d-flex justify-content-center flex-wrap gap-3 mb-4">
+          {% for link in custom_404.links %}
+            <a
+              href="{{ link.url }}"
+              class="v3-btn v3-btn-secondary v3-btn--sm"
+              target="_blank"
+              rel="noopener"
+            >
+              {{ link.label }}
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <a href="/" class="v3-btn v3-btn-primary">{{ _("Back to Home") }}</a>
+    </div>
+  </div>
+{% endblock %}
