@@ -642,15 +642,15 @@ class FOSSUserProfile(WebsiteGenerator):
             image = (
                 "{og_url}/gen/profile?"
                 "username={username}&"
-                "full_name={full_name}&"
+                "profile_name={profile_name}&"
                 "designation={designation}&"
-                "image={image}"
+                "profile_image={profile_image}"
             ).format(
                 og_url=og_url,
                 username=self.username,
-                full_name=self.full_name,
+                profile_name=self.full_name,
                 designation=self.bio or "FOSS United User",
-                image=self.profile_photo
+                profile_image=self.profile_photo
                 or "/assets/fossunited/images/defaults/user_profile_image.png",
             )
         else:
