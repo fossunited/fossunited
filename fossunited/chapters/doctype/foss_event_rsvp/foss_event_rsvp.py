@@ -48,10 +48,14 @@ class FOSSEventRSVP(WebsiteGenerator):
         og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
         context.image = ""
         if og_url:
-            context.image = f"{og_url}/gen/rsvp?{urlencode({
-                'event_name': context.event.event_name,
-                'event_chapter': context.event.chapter_name,
-            })}"
+            context.image = f"{og_url}/gen/rsvp?{
+                urlencode(
+                    {
+                        'event_name': context.event.event_name,
+                        'event_chapter': context.event.chapter_name,
+                    }
+                )
+            }"
         is_guest = frappe.session.user in ("Guest", "Administrator")
 
         form_fields = [
