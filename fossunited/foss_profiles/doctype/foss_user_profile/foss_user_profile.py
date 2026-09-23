@@ -30,8 +30,8 @@ from fossunited.doctype_ids import (
     LOCALHOST_ORGANIZER,
     PROPOSAL,
     RSVP_RESPONSE,
-    USER_PROFILE,
     SPEAKER,
+    USER_PROFILE,
 )
 from fossunited.fossunited.utils import sanitize_text_content
 
@@ -647,10 +647,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 "designation": self.bio or "FOSS United User",
                 "profile_image": self.profile_photo
                 or "/assets/fossunited/images/defaults/user_profile_image.png",
-                **{
-                    key: str(value).lower()
-                    for key, value in self.get_profile_badges().items()
-                },
+                **{key: str(value).lower() for key, value in self.get_profile_badges().items()},
             }
             image = f"{og_url}/gen/profile?{urlencode(profile_image_params)}"
         else:
@@ -672,10 +669,7 @@ class FOSSUserProfile(WebsiteGenerator):
         approved_speaker = (
             frappe.qb.from_(Proposal)
             .left_join(Speaker)
-            .on(
-                (Speaker.parent == Proposal.name)
-                & (Speaker.parenttype == PROPOSAL)
-            )
+            .on((Speaker.parent == Proposal.name) & (Speaker.parenttype == PROPOSAL))
             .select(Proposal.name)
             .where(
                 (Proposal.status == "Approved")
