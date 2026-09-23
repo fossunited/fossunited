@@ -1,6 +1,7 @@
 # Copyright (c) 2023, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 import json
+from urllib.parse import urlencode
 
 import frappe
 from frappe import _
@@ -44,6 +45,13 @@ class FOSSEventRSVP(WebsiteGenerator):
     def get_context(self, context):
         context.event = frappe.get_doc(EVENT, self.event)
         context.event_name = self.event_name
+        og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
+        context.image = ""
+        if og_url:
+            context.image = f"{og_url}/gen/rsvp?{urlencode({
+                'event_name': context.event.event_name,
+                'event_chapter': context.event.chapter_name,
+            })}"
         is_guest = frappe.session.user in ("Guest", "Administrator")
 
         form_fields = [

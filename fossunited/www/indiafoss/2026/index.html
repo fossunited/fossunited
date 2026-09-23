@@ -1,8 +1,6 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/indiafoss.html" import if_header, if_footer, if_tagline %}
-{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
 
-{% block meta_block %}{{ meta_tags(pagetitle, description, image) }}{% endblock %}
 {% block title %}{{ pagetitle }} | FOSS United{% endblock %}
 
 {% block page_content %}

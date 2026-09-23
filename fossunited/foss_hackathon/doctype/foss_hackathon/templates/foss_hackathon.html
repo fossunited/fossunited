@@ -1,5 +1,4 @@
 {% extends 'templates/foss_base.html' %}
-{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
 {% from "fossunited/templates/macros/volunteers_card.html" import people_card %}
 {% from "fossunited/templates/macros/agenda_card.html" import agenda_card %}
 {% from "fossunited/templates/macros/sponsor_card.html" import sponsor_card %}
@@ -80,10 +79,6 @@
     >
   </div>
 {% endmacro %}
-{% block meta_block %}
-  {{ meta_tags(pagetitle, description, image) }}
-{% endblock %}
-
 {% block content %}
   <style>
     body {
