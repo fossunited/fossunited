@@ -292,17 +292,16 @@ class FOSSChapterEvent(WebsiteGenerator):
             if path.endswith(suffix):
                 return pagetitle, description, f"{og_url}/gen/{template}?{chapter_params}"
 
-        og_image = f"{og_url}/gen/events_new?{
-            urlencode(
-                {
-                    'event_name': self.event_name,
-                    'event_date': self.event_start_date.strftime('%-d %B %Y'),
-                    'event_type': self.event_type,
-                    'event_chapter': self.chapter_name,
-                    'event_location': self.event_location,
-                }
-            )
-        }"
+        event_params = urlencode(
+            {
+                "event_name": self.event_name,
+                "event_date": self.event_start_date.strftime("%-d %B %Y"),
+                "event_type": self.event_type,
+                "event_chapter": self.chapter_name,
+                "event_location": self.event_location,
+            }
+        )
+        og_image = f"{og_url}/gen/events_new?{event_params}"
         image = frappe.utils.get_url(self.banner_image) or og_image
 
         return pagetitle, description, image
