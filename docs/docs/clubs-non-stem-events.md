@@ -41,3 +41,4 @@ Our team worked on this list as part of [Youth Dreamers Foundation's](https://yd
 | Sociology | 1) Record a local proverb or saying in Bhojpuri, Maithili or Magahi for Mozilla Common Voice.<br><br>2) Write about a local custom or festival, such as Chhath or Sama-Chakeva. Publish it on your college's wiki page.<br><br>3) Mark a community space (chaupal, akhara, temple) on OpenStreetMap. | Phone with mic, browser, Common Voice/OpenStreetMap accounts |
 | Urdu | 1) Record a few Urdu sentences or a couplet's recitation for Common Voice. | Phone/computer, on-screen Urdu keyboard, browser, Common Voice account |
 | Zoology | 1) Photograph or record a local bird or animal and upload it with location to iNaturalist.<br><br>2) Add your area's species checklist to your college's wiki.<br><br>3) Record a bird call on your phone and share it on Wikimedia Commons. | Smartphone camera/mic, iNaturalist app |
+
