@@ -1,0 +1,28 @@
+info:
+  name: set-cover-image-path-traversal
+  type: http
+  seq: 3
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.profile.set_cover_image'
+  body:
+    type: json
+    data: |-
+      {
+        "file_url": "../../../etc/passwd"
+      }
+runtime:
+  scripts:
+    - type: tests
+      code: |
+        test("path traversal should be rejected with 403 or 417", function() {
+          expect(res.getStatus()).to.be.oneOf([403, 417]);
+        });
+
+        test("error message indicates invalid path", function() {
+          const body = JSON.stringify(res.getBody()).toLowerCase();
+          expect(body).to.include("invalid file path");
+        });
+docs: |-
+  set_cover_image path traversal: deeper traversal attempt via ../../../etc/passwd.
+  Same os.path.realpath() protection as set_profile_image.

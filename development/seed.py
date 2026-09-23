@@ -19,8 +19,8 @@ Default credentials
 Role       Email                                        Password
 ========== ============================================ ===========
 Admin      Administrator                                (bench pwd)
-Attendee   attendee-{1,2}@example.com                   password
-Speaker    speaker-{1,2}@example.com                    password
+Attendee   mock-attendee-{1,2}@example.com              password
+Speaker    mock-speaker-{1,2}@example.com               password
 Lead       {bangalore,mumbai,kochi,campus}-lead@...      password
 ========== ============================================ ===========
 
@@ -55,10 +55,11 @@ from fossunited.doctype_ids import (
     TICKET_TIER,
     TICKET_TRANSFER,
     USER_PROFILE,
-    GLOBAL_CFP_SETTINGS,
 )
 from fossunited.id.roles import (
     CHAPTER_MEMBER as CHAPTER_TEAM_MEMBER_ROLE,
+)
+from fossunited.id.roles import (
     REVIEWER as REVIEWER_ROLE,
 )
 from fossunited.tests.factories import (
@@ -84,10 +85,28 @@ MOCK_PREFIX = "MOCK-"
 GENERATION_STRATEGY_NATIVE = "native"
 GENERATION_STRATEGY_CLONE = "clone"
 FREE_EVENT_RSVP_MAX_COUNT = 500
-PAID_TEST_EVENT_NAME = "MOCK-Test Conference 2026"
-PAID_TEST_EVENT_PERMALINK = "mock-test-conference-2026"
-PAID_TEST_EVENT_TIER_TITLE = "MOCK-Standard"
-PAID_TEST_EVENT_TIER_PRICE = 1000
+DEMO_YEAR = datetime.now().year
+PAID_TEST_EVENT_NAME = f"MOCK-KochiFOSS {DEMO_YEAR}"
+PAID_TEST_EVENT_PERMALINK = f"mock-kochifoss-{DEMO_YEAR}"
+PAID_TEST_EVENT_TIER_TITLE = "MOCK-Regular"
+PAID_TEST_EVENT_TIERS = [
+    {"title": "MOCK-Early Bird", "price": 500, "maximum_tickets": 100},
+    {"title": PAID_TEST_EVENT_TIER_TITLE, "price": 1000, "maximum_tickets": 400},
+    {"title": "MOCK-Supporter", "price": 2500, "maximum_tickets": 75},
+    {"title": "MOCK-Free Pass", "price": 0, "maximum_tickets": 50},
+]
+DEMO_TICKET_TYPE_CYCLE = [
+    "MOCK-Early Bird",
+    "MOCK-Regular",
+    "MOCK-Regular",
+    "MOCK-Regular",
+    "MOCK-Supporter",
+    "MOCK-Free Pass",
+]
+SEED_PROFILES = {
+    "quick": {"ticket_count": 18, "ticket_sales_days": 14},
+    "full": {"ticket_count": 120, "ticket_sales_days": 60},
+}
 
 fake = Faker()
 
@@ -195,45 +214,45 @@ CHAPTER_DATA = [
 
 EVENT_TEMPLATES = [
     {
-        "name": "{city} FOSS Meetup 2026",
-        "permalink": "{slug}-foss-meetup-2026",
+        "name": "{city} September FOSS Meetup",
+        "permalink": "{slug}-september-foss-meetup-{year}",
         "event_type": "Meet Up",
         "status": "Live",
         "is_published": 1,
         "day_offset": 30,
         "duration_hours": 6,
         "description": (
-            "<p>Join us for the {city} FOSS Meetup 2026! A day of talks, "
+            "<p>Join us for the {city} monthly FOSS meetup! A day of talks, "
             "demos, and networking with the local open-source community.</p>"
         ),
         "location": "Tech Hub, {city}",
         "bucket": "live",
     },
     {
-        "name": "{city} FOSS Conference 2025",
-        "permalink": "{slug}-foss-conf-2025",
+        "name": "{city}FOSS {previous_year}",
+        "permalink": "{slug}-foss-{previous_year}",
         "event_type": "Conference",
         "status": "Concluded",
         "is_published": 1,
         "day_offset": -60,
         "duration_hours": 24,
         "description": (
-            "<p>The {city} FOSS Conference 2025 brought together developers, "
+            "<p>{city}FOSS {previous_year} brought together developers, "
             "designers, and advocates of free and open-source software.</p>"
         ),
         "location": "Convention Centre, {city}",
         "bucket": "concluded",
     },
     {
-        "name": "{city} FOSS Workshop 2026 (Draft)",
-        "permalink": "{slug}-foss-workshop-2026-draft",
+        "name": "{city} Linux Install Party (Draft)",
+        "permalink": "{slug}-linux-install-party-{year}-draft",
         "event_type": "Workshop",
         "status": "Draft",
         "is_published": 0,
         "day_offset": 60,
         "duration_hours": 4,
         "description": (
-            "<p>A hands-on workshop in {city} — still being planned. "
+            "<p>A hands-on Linux installation party in {city} — still being planned. "
             "This event is not yet published.</p>"
         ),
         "location": "Co-working Space, {city}",
@@ -376,10 +395,19 @@ def _mock_seed_user(user_cfg):
 # ===========================================================================
 
 
-def seed():
+def seed(profile="full"):
     """Create all seed data in dependency order. Safe to run repeatedly."""
     if not frappe.conf.get("developer_mode"):
         frappe.throw(_("Seed script can only be run in developer mode."))
+
+    profile = (profile or "full").strip().lower()
+    if profile not in SEED_PROFILES:
+        frappe.throw(
+            _("Unknown seed profile '{0}'. Choose one of: {1}").format(
+                profile, ", ".join(sorted(SEED_PROFILES))
+            )
+        )
+    profile_config = SEED_PROFILES[profile]
 
     prev_ignore_permissions = frappe.flags.get("ignore_permissions", False)
     prev_in_test = frappe.flags.get("in_test", False)
@@ -402,6 +430,7 @@ def seed():
         _create_cfps(events["live"])
         _create_hackathon(chapters)
         _bootstrap_ticket_prototype()
+        ticket_summary = _ensure_demo_tickets(profile_config)
 
         frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
         try:
@@ -417,6 +446,13 @@ def seed():
     finally:
         frappe.flags.ignore_permissions = prev_ignore_permissions
         frappe.flags.in_test = prev_in_test
+
+    return {
+        "profile": profile,
+        "chapters": len(chapters),
+        "events": sum(len(bucket) for bucket in events.values()) + 1,
+        "tickets": ticket_summary,
+    }
 
 
 def _create_users():
@@ -482,7 +518,7 @@ def _create_chapters():
 def _get_city_community_chapters(chapters):
     return [
         chapter
-        for chapter, chapter_data in zip(chapters, CHAPTER_DATA)
+        for chapter, chapter_data in zip(chapters, CHAPTER_DATA, strict=True)
         if chapter_data["chapter_type"] == CITY_COMMUNITY
     ]
 
@@ -505,9 +541,7 @@ def _link_chapter_members(chapters):
             )
             continue
 
-        profile_name = frappe.db.get_value(
-            USER_PROFILE, {"user": user_cfg["email"]}, "name"
-        )
+        profile_name = frappe.db.get_value(USER_PROFILE, {"user": user_cfg["email"]}, "name")
         if not profile_name:
             continue
 
@@ -532,7 +566,12 @@ def _create_events(city_chapters):
     buckets = {"live": [], "concluded": [], "draft": []}
 
     for chapter in city_chapters:
-        fmt = {"city": chapter.city, "slug": chapter.slug}
+        fmt = {
+            "city": chapter.city,
+            "slug": chapter.slug,
+            "year": now.year,
+            "previous_year": now.year - 1,
+        }
 
         for tpl in EVENT_TEMPLATES:
             permalink = _mock_permalink(tpl["permalink"].format(**fmt))
@@ -615,16 +654,12 @@ def _ensure_paid_test_conference(city_chapters=None):
         city_chapters = _get_city_community_chapters(chapters)
 
     if not city_chapters:
-        frappe.throw(
-            _("Unable to bootstrap city community chapter for paid test event.")
-        )
+        frappe.throw(_("Unable to bootstrap city community chapter for paid test event."))
 
     anchor_chapter = next(
         (ch for ch in city_chapters if ch.slug == "foss-kochi"), city_chapters[0]
     )
-    event_name = frappe.db.get_value(
-        EVENT, {"event_permalink": PAID_TEST_EVENT_PERMALINK}, "name"
-    )
+    event_name = frappe.db.get_value(EVENT, {"event_permalink": PAID_TEST_EVENT_PERMALINK}, "name")
 
     if event_name:
         event = frappe.get_doc(EVENT, event_name)
@@ -647,10 +682,9 @@ def _ensure_paid_test_conference(city_chapters=None):
             tiers=[
                 {
                     "enabled": 1,
-                    "title": PAID_TEST_EVENT_TIER_TITLE,
-                    "price": PAID_TEST_EVENT_TIER_PRICE,
-                    "maximum_tickets": 500,
+                    **tier,
                 }
+                for tier in PAID_TEST_EVENT_TIERS
             ],
         )
 
@@ -672,31 +706,20 @@ def _ensure_paid_test_conference(city_chapters=None):
         event.tickets_status = "Live"
         event_changed = True
 
-    tier = next(
-        (
-            row
-            for row in event.get("tiers", [])
-            if row.title == PAID_TEST_EVENT_TIER_TITLE
-        ),
-        None,
-    )
-    if not tier:
-        event.append(
-            "tiers",
-            {
-                "enabled": 1,
-                "title": PAID_TEST_EVENT_TIER_TITLE,
-                "price": PAID_TEST_EVENT_TIER_PRICE,
-                "maximum_tickets": 500,
-            },
-        )
-        event_changed = True
-    else:
+    tiers_by_title = {row.title: row for row in event.get("tiers", [])}
+    for tier_config in PAID_TEST_EVENT_TIERS:
+        tier = tiers_by_title.get(tier_config["title"])
+        if not tier:
+            event.append("tiers", {"enabled": 1, **tier_config})
+            event_changed = True
+            continue
+
+        for fieldname in ("price", "maximum_tickets"):
+            if tier.get(fieldname) != tier_config[fieldname]:
+                tier.set(fieldname, tier_config[fieldname])
+                event_changed = True
         if not tier.enabled:
             tier.enabled = 1
-            event_changed = True
-        if tier.price != PAID_TEST_EVENT_TIER_PRICE:
-            tier.price = PAID_TEST_EVENT_TIER_PRICE
             event_changed = True
 
     if event_changed:
@@ -795,9 +818,7 @@ def _create_cfps(live_events):
     )
 
     if speaker1 not in user_emails or speaker2 not in user_emails:
-        logger.warning(
-            "Speaker users not found in SEED_USERS; skipping CFP submissions"
-        )
+        logger.warning("Speaker users not found in SEED_USERS; skipping CFP submissions")
         return
 
     for event in live_events:
@@ -863,9 +884,7 @@ def _create_hackathon(chapters):
         logger.info("Skipped hackathon '%s' (already exists)", hackathon_name)
         return
 
-    chapter = next(
-        (ch for ch in chapters if ch.slug == cfg["chapter_slug"]), chapters[0]
-    )
+    chapter = next((ch for ch in chapters if ch.slug == cfg["chapter_slug"]), chapters[0])
 
     hackathon = FOSSHackathonFactory.create(
         chapter=chapter.name,
@@ -973,9 +992,7 @@ def _find_ticket_prototype():
 def _ensure_paid_event_for_ticket_generation():
     paid_event = _ensure_paid_test_conference()
     if not paid_event:
-        frappe.throw(
-            _("Unable to bootstrap paid test conference for mock ticket generation.")
-        )
+        frappe.throw(_("Unable to bootstrap paid test conference for mock ticket generation."))
     return paid_event
 
 
@@ -1001,6 +1018,59 @@ def _bootstrap_ticket_prototype():
     frappe.throw(_("Unable to bootstrap a prototype for {0}.").format(EVENT_TICKET))
 
 
+def _ensure_demo_tickets(profile_config):
+    """Populate the paid demo event with a stable, realistic sales history."""
+    event = _ensure_paid_event_for_ticket_generation()
+    target_count = profile_config["ticket_count"]
+    existing_count = frappe.db.count(
+        EVENT_TICKET,
+        filters={
+            "event": event.name,
+            "full_name": ["like", f"{MOCK_PREFIX}%"],
+        },
+    )
+    missing_count = max(target_count - existing_count, 0)
+    if not missing_count:
+        return {"target": target_count, "created": 0, "total": existing_count}
+
+    cfg = _get_mock_config(EVENT_TICKET)
+    prototype = _get_or_bootstrap_prototype(EVENT_TICKET, cfg)
+    sales_end = datetime.now()
+    sales_start = sales_end - timedelta(days=profile_config["ticket_sales_days"])
+    context = {
+        "mock_user_pool": _get_mock_ticket_attendee_pool(),
+        "demo_ticket_types": DEMO_TICKET_TYPE_CYCLE,
+        "demo_ticket_index_offset": existing_count,
+    }
+
+    created = 0
+    for index in range(missing_count):
+        ticket = _generate_one_by_strategy(
+            cfg,
+            index,
+            prototype=prototype,
+            context=context,
+        )
+        global_index = existing_count + index
+        progress = global_index / max(target_count - 1, 1)
+        created_at = sales_start + ((sales_end - sales_start) * progress)
+        frappe.db.set_value(
+            EVENT_TICKET,
+            ticket.name,
+            {"creation": created_at, "modified": created_at},
+            update_modified=False,
+        )
+        created += 1
+
+    logger.info(
+        "Created %d demo tickets across %d days for %s",
+        created,
+        profile_config["ticket_sales_days"],
+        event.event_name,
+    )
+    return {"target": target_count, "created": created, "total": existing_count + created}
+
+
 def _get_ticket_tier_for_event(event_name):
     tier = frappe.db.get_value(
         "FOSS Ticket Tier",
@@ -1010,9 +1080,7 @@ def _get_ticket_tier_for_event(event_name):
     if tier:
         return tier
 
-    return (
-        frappe.db.get_value("FOSS Ticket Tier", {"parent": event_name}, "title") or ""
-    )
+    return frappe.db.get_value("FOSS Ticket Tier", {"parent": event_name}, "title") or ""
 
 
 def _create_mock_identity(index):
@@ -1066,9 +1134,7 @@ def _generate_mock_profile(index):
         )
         if not profile_name:
             frappe.throw(
-                _("Unable to locate auto-created profile for {0}").format(
-                    identity["email"]
-                )
+                _("Unable to locate auto-created profile for {0}").format(identity["email"])
             )
 
         profile = frappe.get_doc(USER_PROFILE, profile_name)
@@ -1130,12 +1196,24 @@ def _mutate_ticket_clone(clone, _index, context=None):
     clone.event = event_doc.name
     clone.full_name = attendee["full_name"]
     clone.email = attendee["email"]
-    clone.tier = _get_ticket_tier_for_event(event_doc.name)
+    ticket_types = context.get("demo_ticket_types")
+    global_index = context.get("demo_ticket_index_offset", 0) + _index
+    clone.tier = (
+        ticket_types[global_index % len(ticket_types)]
+        if ticket_types
+        else _get_ticket_tier_for_event(event_doc.name)
+    )
     clone.subscribe_chapter_mailing = 0
     clone.is_transfer_ticket = 0
     clone.razorpay_payment = None
     clone.custom_fields = []
     clone.check_ins = []
+    if ticket_types and global_index % 3 == 0:
+        clone.wants_tshirt = 1
+        clone.tshirt_size = ("S", "M", "L", "XL")[global_index % 4]
+    else:
+        clone.wants_tshirt = 0
+        clone.tshirt_size = None
 
 
 def _generate_one_by_strategy(cfg, index, prototype=None, context=None):
@@ -1143,8 +1221,7 @@ def _generate_one_by_strategy(cfg, index, prototype=None, context=None):
     strategy = cfg["strategy"]
 
     if strategy == GENERATION_STRATEGY_NATIVE:
-        cfg["generate_one"](index)
-        return
+        return cfg["generate_one"](index)
 
     clone = frappe.copy_doc(prototype)
     clone.name = None
@@ -1153,6 +1230,7 @@ def _generate_one_by_strategy(cfg, index, prototype=None, context=None):
     clone.insert(ignore_permissions=True)
     if cfg.get("post_insert"):
         cfg["post_insert"](clone)
+    return clone
 
 
 def _safe_delete(doctype, name):
@@ -1173,9 +1251,7 @@ def _teardown_mock_profiles():
     )
 
     users_to_delete = {
-        row.user
-        for row in profiles
-        if row.user and row.user not in {"Administrator", "Guest"}
+        row.user for row in profiles if row.user and row.user not in {"Administrator", "Guest"}
     }
     users_to_delete.update(
         user
@@ -1256,15 +1332,11 @@ def _get_mock_config(doctype):
     strategy = cfg.get("strategy")
 
     if strategy not in {GENERATION_STRATEGY_NATIVE, GENERATION_STRATEGY_CLONE}:
-        frappe.throw(
-            _("Invalid generation strategy configured for {0}").format(doctype)
-        )
+        frappe.throw(_("Invalid generation strategy configured for {0}").format(doctype))
 
     if strategy == GENERATION_STRATEGY_NATIVE and not cfg.get("generate_one"):
         frappe.throw(
-            _("Native generation config is missing 'generate_one' for {0}").format(
-                doctype
-            )
+            _("Native generation config is missing 'generate_one' for {0}").format(doctype)
         )
 
     if strategy == GENERATION_STRATEGY_CLONE and (
@@ -1332,9 +1404,7 @@ def generate_mock_data(doctype, count=10):
                 created += 1
             except Exception:
                 failed += 1
-                logger.exception(
-                    "Failed creating mock %s (%d/%d)", doctype, idx + 1, count
-                )
+                logger.exception("Failed creating mock %s (%d/%d)", doctype, idx + 1, count)
 
         frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
         try:
@@ -1354,9 +1424,7 @@ def generate_mock_data(doctype, count=10):
 
     except Exception:
         frappe.db.rollback()
-        logger.exception(
-            "Mock generation failed before commit — transaction rolled back"
-        )
+        logger.exception("Mock generation failed before commit — transaction rolled back")
         raise
     finally:
         frappe.flags.ignore_permissions = prev_ignore_permissions
@@ -1384,9 +1452,7 @@ def teardown_mock_data(doctype=None):
         try:
             frappe.clear_cache()
         except Exception:
-            logger.warning(
-                "Mock teardown committed, but cache clear failed", exc_info=True
-            )
+            logger.warning("Mock teardown committed, but cache clear failed", exc_info=True)
 
         logger.info("Mock teardown summary: %s", summary)
         return summary
@@ -1594,12 +1660,8 @@ def teardown_all():
                 page_length=100000,
             )
 
-        summary[RSVP_CUSTOM_FIELD] = _delete_many(
-            RSVP_CUSTOM_FIELD, rsvp_custom_answer_names
-        )
-        summary[RSVP_RESPONSE] = _delete_many(
-            RSVP_RESPONSE, list(mock_rsvp_submission_names)
-        )
+        summary[RSVP_CUSTOM_FIELD] = _delete_many(RSVP_CUSTOM_FIELD, rsvp_custom_answer_names)
+        summary[RSVP_RESPONSE] = _delete_many(RSVP_RESPONSE, list(mock_rsvp_submission_names))
         summary[SPEAKER] = _delete_many(SPEAKER, speaker_names)
         summary[PROPOSAL] = _delete_many(PROPOSAL, list(mock_proposal_names))
         summary[EVENT_CFP] = _delete_many(EVENT_CFP, cfp_names)
@@ -1630,20 +1692,14 @@ def teardown_all():
                 page_length=100000,
             )
 
-        summary[HACKATHON_PROJECT] = _delete_many(
-            HACKATHON_PROJECT, hackathon_project_names
-        )
-        summary[HACKATHON_LOCALHOST] = _delete_many(
-            HACKATHON_LOCALHOST, hackathon_localhost_names
-        )
+        summary[HACKATHON_PROJECT] = _delete_many(HACKATHON_PROJECT, hackathon_project_names)
+        summary[HACKATHON_LOCALHOST] = _delete_many(HACKATHON_LOCALHOST, hackathon_localhost_names)
         summary[HACKATHON_TEAM] = _delete_many(HACKATHON_TEAM, hackathon_team_names)
         summary[HACKATHON] = _delete_many(HACKATHON, list(mock_hackathon_names))
 
         summary[EVENT] = _delete_many(EVENT, list(mock_event_names))
 
-        mock_chapter_emails = [
-            _mock_email(c.get("email")) for c in CHAPTER_DATA if c.get("email")
-        ]
+        mock_chapter_emails = [_mock_email(c.get("email")) for c in CHAPTER_DATA if c.get("email")]
         mock_chapter_names = frappe.get_all(
             CHAPTER,
             filters={"email": ["in", mock_chapter_emails]},
@@ -1659,9 +1715,7 @@ def teardown_all():
         try:
             frappe.clear_cache()
         except Exception:
-            logger.warning(
-                "Seed teardown committed, but cache clear failed", exc_info=True
-            )
+            logger.warning("Seed teardown committed, but cache clear failed", exc_info=True)
 
         logger.info("Seed teardown summary: %s", summary)
         return summary

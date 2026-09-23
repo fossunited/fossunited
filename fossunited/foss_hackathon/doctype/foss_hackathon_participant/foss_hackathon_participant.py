@@ -18,6 +18,21 @@ from fossunited.doctype_ids import (
     HACKATHON_TEAM_MEMBER,
 )
 
+PARTICIPANT_SAFE_FIELDS = [
+    "name",
+    "user",
+    "user_profile",
+    "full_name",
+    "email",
+    "is_student",
+    "git_profile",
+    "organization",
+    "hackathon",
+    "wants_to_attend_locally",
+    "localhost",
+    "localhost_request_status",
+]
+
 
 class FOSSHackathonParticipant(Document):
     # begin: auto-generated types
@@ -251,7 +266,7 @@ class FOSSHackathonParticipant(Document):
         prev_doc = self.get_doc_before_save()
         return prev_doc.localhost_request_status if prev_doc else None
 
-    def has_permission(self, ptype="read", user=None):
+    def has_permission(self, ptype="read", *, debug=False, user=None):
         """Participants can only edit their own record"""
         user = user or frappe.session.user
 

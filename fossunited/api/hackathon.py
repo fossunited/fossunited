@@ -17,6 +17,15 @@ from fossunited.doctype_ids import (
     LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
+from fossunited.foss_hackathon.doctype.foss_hackathon.foss_hackathon import (
+    HACKATHON_SAFE_FIELDS,
+)
+from fossunited.foss_hackathon.doctype.foss_hackathon_participant.foss_hackathon_participant import (
+    PARTICIPANT_SAFE_FIELDS,
+)
+from fossunited.foss_hackathon.doctype.foss_hackathon_project.foss_hackathon_project import (
+    PROJECT_SAFE_FIELDS,
+)
 from fossunited.integrations.github import GithubHelper
 from fossunited.utils.decorators import (
     require_hackathon_participant,
@@ -37,7 +46,10 @@ def get_hackathon(name: str) -> dict:
     Returns:
         dict: Hackathon document as a dictionary
     """
-    return frappe.get_doc(HACKATHON, name)
+    doc = frappe.db.get_value(HACKATHON, name, HACKATHON_SAFE_FIELDS, as_dict=True)
+    if not doc:
+        frappe.throw(_("Hackathon not found"), frappe.DoesNotExistError)
+    return doc
 
 
 # nosemgrep: guest-whitelisted-method
@@ -52,7 +64,10 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
     Returns:
         dict: Hackathon document as a dictionary
     """
-    return frappe.get_doc(HACKATHON, {"permalink": permalink})
+    hackathon_name = frappe.db.get_value(HACKATHON, {"permalink": permalink}, "name")
+    if not hackathon_name:
+        frappe.throw(_("Hackathon not found"), frappe.DoesNotExistError)
+    return frappe.db.get_value(HACKATHON, hackathon_name, HACKATHON_SAFE_FIELDS, as_dict=True)
 
 
 @frappe.whitelist()
@@ -119,9 +134,11 @@ def get_participant(hackathon: str) -> dict:
     Returns:
         dict: Participant document as a dictionary
     """
-    return frappe.get_doc(
+    return frappe.db.get_value(
         HACKATHON_PARTICIPANT,
         {"hackathon": hackathon, "user": frappe.session.user},
+        PARTICIPANT_SAFE_FIELDS,
+        as_dict=True,
     )
 
 
@@ -263,13 +280,12 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
         dict: Project document as a dictionary or None if the team has no project created.
     """
 
-    try:
-        return frappe.get_doc(
-            HACKATHON_PROJECT,
-            {"hackathon": hackathon, "team": team},
-        )
-    except frappe.DoesNotExistError:
-        return None
+    return frappe.db.get_value(
+        HACKATHON_PROJECT,
+        {"hackathon": hackathon, "team": team},
+        PROJECT_SAFE_FIELDS,
+        as_dict=True,
+    )
 
 
 @frappe.whitelist()
@@ -322,7 +338,7 @@ def get_localhost_requests_by_team(
             "localhost",
             "localhost_request_status",
         ],
-        page_length=99999,
+        page_length=500,
         order_by="creation",
     )
 
@@ -412,7 +428,7 @@ def get_session_user_hackathons():
         HACKATHON_PARTICIPANT,
         filters={"user": frappe.session.user},
         fields=["hackathon"],
-        page_length=9999,
+        page_length=100,
     )
 
     hackathons = []
@@ -444,8 +460,8 @@ def get_session_user_localhosts():
                 profile,
             ]
         ],
-        fields=["*"],
-        page_length=9999,
+        fields=["name", "localhost_name", "hackathon", "city", "state", "status"],
+        page_length=100,
     )
 
     return localhosts

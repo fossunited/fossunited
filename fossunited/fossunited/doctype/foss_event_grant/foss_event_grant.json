@@ -299,7 +299,7 @@
       "fieldname": "grant_amount",
       "fieldtype": "Currency",
       "label": "Approved Grant Amount",
-      "options": "INR"
+      "options": "Company:company:default_currency"
     },
     {
       "default": "0",
@@ -345,7 +345,7 @@
     }
   ],
   "links": [],
-  "modified": "2026-06-11 14:17:43.049441",
+  "modified": "2026-08-07 11:50:18.972766",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event Grant",

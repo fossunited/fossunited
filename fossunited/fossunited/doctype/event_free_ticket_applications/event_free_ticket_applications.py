@@ -7,6 +7,8 @@ from frappe.model.document import Document
 
 from fossunited.doctype_ids import EVENT_TICKET, FREE_TICKET_CODE
 
+TSHIRT_SKIPPED = "Skip T-shirt"
+
 
 class EventFreeTicketApplications(Document):
     # begin: auto-generated types
@@ -17,12 +19,18 @@ class EventFreeTicketApplications(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import (
+            FOSSTicketCustomField,
+        )
+
         coupon_id: DF.Link
+        custom_fields: DF.Table[FOSSTicketCustomField]
         designation: DF.Data | None
         email: DF.Data
         event: DF.Link | None
         full_name: DF.Data
         organization: DF.Data | None
+        tshirt_size: DF.Literal["", "XS", "S", "M", "L", "XL", "2XL", "3XL", "Skip T-shirt"]
     # end: auto-generated types
 
     def before_insert(self):
@@ -36,7 +44,7 @@ class EventFreeTicketApplications(Document):
         self.validate_email_not_used()
         coupon_data = self.validate_coupon()
         ticket_tier = self.get_ticket_tier(coupon_data)
-        self.create_free_ticket(ticket_tier)
+        self.create_free_ticket(ticket_tier, coupon_data)
         self.update_coupon_usage(coupon_data)
 
     def validate_coupon(self):
@@ -50,7 +58,7 @@ class EventFreeTicketApplications(Document):
         coupon_data = frappe.db.get_value(
             FREE_TICKET_CODE,
             self.coupon_id,
-            ["max_count", "used_count", "tier", "other_tier", "is_used"],
+            ["max_count", "used_count", "tier", "other_tier", "is_used", "tshirt_included"],
             as_dict=True,
         )
 
@@ -60,7 +68,28 @@ class EventFreeTicketApplications(Document):
         if coupon_data.is_used or (coupon_data.used_count >= coupon_data.max_count):
             frappe.throw(_("Reached max count of coupon usage."))
 
+        self.validate_tshirt_size(coupon_data)
+
         return coupon_data
+
+    def validate_tshirt_size(self, coupon_data):
+        """Require a t-shirt choice only when the coupon includes a t-shirt.
+
+        The web form hides the field for coupons without a t-shirt, so a size
+        sent for such a coupon is discarded here instead of reaching the ticket.
+        Claimants who do not want one pick "Skip T-shirt", which stays on the
+        application as a deliberate choice but leaves the ticket without a size.
+        """
+        if not coupon_data.tshirt_included:
+            self.tshirt_size = None
+            return
+
+        if not self.tshirt_size:
+            frappe.throw(
+                _("Select a t-shirt size, or choose {0} if you do not want one.").format(
+                    _(TSHIRT_SKIPPED)
+                )
+            )
 
     def get_ticket_tier(self, coupon_data):
         """Derive ticket tier name from coupon info."""
@@ -68,8 +97,11 @@ class EventFreeTicketApplications(Document):
             return f"{coupon_data.other_tier} Free Pass"
         return f"{coupon_data.tier} Free Pass"
 
-    def create_free_ticket(self, ticket_tier):
+    def create_free_ticket(self, ticket_tier, coupon_data):
         """Create a FOSS Event Ticket for the user."""
+        wants_tshirt = int(
+            bool(coupon_data.tshirt_included) and self.tshirt_size != TSHIRT_SKIPPED
+        )
         try:
             ticket = frappe.get_doc(
                 {
@@ -80,7 +112,14 @@ class EventFreeTicketApplications(Document):
                     "tier": ticket_tier,
                     "designation": self.designation,
                     "organization": self.organization,
+                    "wants_tshirt": wants_tshirt,
+                    "tshirt_size": self.tshirt_size if wants_tshirt else None,
                     "subscribe_chapter_mailing": 1,
+                    "custom_fields": [
+                        {"field_name": row.field_name, "data": row.data}
+                        for row in self.custom_fields
+                        if row.field_name and row.data
+                    ],
                 }
             )
             ticket.insert(ignore_permissions=True)

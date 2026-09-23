@@ -52,6 +52,7 @@ jinja = {
     "methods": [
         "fossunited.fossunited.utils.make_badge",
         "fossunited.fossunited.utils.get_doc_likes",
+        "fossunited.fossunited.utils.get_request_path",
         "fossunited.fossunited.utils.get_user_socials",
         "fossunited.fossunited.utils.get_user_editable_doctype_fields",
         "fossunited.fossunited.utils.get_signup_optin_checks",
@@ -71,6 +72,11 @@ jinja = {
 
 
 signup_form_template = "fossunited.plugins.show_custom_signup"
+
+# Custom 404 page override
+custom_404_page_context = [
+    "fossunited.foss_profiles.doctype.foss_user_profile.foss_user_profile.get_404_context",
+]
 
 # Document Events
 # ---------------
@@ -103,6 +109,9 @@ doc_events = {
     "FOSS Event CFP Submission": {
         "on_update": "fossunited.fossunited.event_media.clear_speakers_cache",
         "on_trash": "fossunited.fossunited.event_media.clear_speakers_cache",
+    },
+    "Newsletter": {
+        "autoname": "fossunited.overrides.newsletter_extend.autoname",
     },
 }
 
@@ -150,10 +159,6 @@ before_uninstall = "fossunited.uninstall.before_uninstall"
 permission_query_conditions = {
     "FOSS Event CFP Submission": "fossunited.fossunited.permissions.cfp_submission_query",
     "FOSS Event RSVP Submission": "fossunited.fossunited.permissions.rsvp_submission_query",
-}
-
-override_doctype_class = {
-    "Newsletter": "fossunited.overrides.newsletter_extend.NewsletterExtend",
 }
 
 before_tests = "fossunited.setup.before_tests"

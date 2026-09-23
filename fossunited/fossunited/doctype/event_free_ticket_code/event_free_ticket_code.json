@@ -11,6 +11,7 @@
   "mapped_email",
   "full_name",
   "max_count",
+  "tshirt_included",
   "used_count",
   "tier",
   "company",
@@ -27,6 +28,7 @@
    "fieldname": "event",
    "fieldtype": "Link",
    "label": "Event",
+   "link_filters": "[[\"FOSS Chapter Event\",\"is_paid_event\",\"=\",1],[\"FOSS Chapter Event\",\"status\",\"=\",\"Live\"]]",
    "options": "FOSS Chapter Event",
    "reqd": 1
   },
@@ -79,11 +81,18 @@
    "fieldtype": "Data",
    "label": "Other Tier",
    "mandatory_depends_on": "eval:doc.tier=='Other'"
+  },
+  {
+   "default": "0",
+   "description": "If free pass has t-shirt included to give. Mostly to collect t-shirt size while claiming.",
+   "fieldname": "tshirt_included",
+   "fieldtype": "Check",
+   "label": "T-shirt Included?"
   }
  ],
  "grid_page_length": 50,
  "links": [],
- "modified": "2025-11-04 23:05:04.412179",
+ "modified": "2026-09-21 14:38:22.628494",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Event Free Ticket Code",

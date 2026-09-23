@@ -32,10 +32,10 @@
           label="Speaker Image"
           :description="
             index === 0
-              ? 'Pre-filled from your account profile. Uploading a new photo here will also update your profile. Keep a recent 1:1 headshot for best results.'
+              ? 'Pre-filled from your account profile. Uploading a new photo here will ask if you want to update your profile too. Keep a recent 1:1 headshot for best results.'
               : 'Please keep the image ratio as 1:1'
           "
-          :required="true"
+          :required="getFieldRequired(speaker, 'photo')"
           @uploaded="index === 0 && syncProfilePhoto($event)"
         />
         <RenderField
@@ -68,6 +68,24 @@
         for updates on upcoming events and community news.
       </span>
     </div>
+
+    <Dialog
+      v-model="showProfilePhotoDialog"
+      :options="{ title: 'Update your profile picture too?' }"
+    >
+      <template #body-content>
+        <p class="text-sm text-ink-gray-6">
+          You uploaded a new speaker photo. Do you also want to set it as your FOSS United account
+          profile picture?
+        </p>
+      </template>
+      <template #actions>
+        <div class="grid grid-cols-2 gap-3">
+          <Button label="Yes, update profile" variant="solid" @click="confirmProfilePhotoSync" />
+          <Button label="No, just this proposal" @click="showProfilePhotoDialog = false" />
+        </div>
+      </template>
+    </Dialog>
   </section>
 </template>
 <script setup>
@@ -76,8 +94,11 @@ import TextEditor from '@/components/ui/TextEditor.vue'
 import { IconUserCircle } from '@tabler/icons-vue'
 import RenderField from '@/components/form/RenderField.vue'
 import { getSpeakerFields } from '@/helpers/cfp'
-import { createResource, Switch } from 'frappe-ui'
+import { createResource, Switch, Dialog, Button } from 'frappe-ui'
 import { inject, ref } from 'vue'
+
+// Provided by CfpForm.vue (new submission) and ProposalEdit.vue
+const cfpData = inject('$cfpData', null)
 
 const speakers = defineModel('speakers', {
   type: Array,
@@ -96,10 +117,12 @@ const props = defineProps({
   },
 })
 
-const fields = getSpeakerFields().filter((field) => !['photo', 'bio'].includes(field.fieldname))
+const fields = getSpeakerFields(cfpData?.data).filter(
+  (field) => !['photo', 'bio'].includes(field.fieldname),
+)
 
 const addSpeaker = () => {
-  speakers.value.push(getSpeakerFields())
+  speakers.value.push(getSpeakerFields(cfpData?.data))
 }
 
 const deleteSpeaker = (index) => {
@@ -108,6 +131,10 @@ const deleteSpeaker = (index) => {
 
 const getFieldIndex = (speaker, fieldname) => {
   return speaker.findIndex((field) => field.fieldname === fieldname)
+}
+
+const getFieldRequired = (speaker, fieldname) => {
+  return Boolean(speaker[getFieldIndex(speaker, fieldname)]?.required)
 }
 
 const session = inject('$session')
@@ -181,13 +208,22 @@ function mergeAndPrefill() {
 
 const updateProfilePhoto = createResource({ url: 'frappe.client.set_value' })
 
+const showProfilePhotoDialog = ref(false)
+const pendingPhotoUrl = ref(null)
+
 function syncProfilePhoto(url) {
   if (!profileData.value?.name) return
+  pendingPhotoUrl.value = url
+  showProfilePhotoDialog.value = true
+}
+
+function confirmProfilePhotoSync() {
   updateProfilePhoto.fetch({
     doctype: 'FOSS User Profile',
     name: profileData.value.name,
     fieldname: 'profile_photo',
-    value: url,
+    value: pendingPhotoUrl.value,
   })
+  showProfilePhotoDialog.value = false
 }
 </script>

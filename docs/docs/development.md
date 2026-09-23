@@ -165,21 +165,28 @@ bench execute fossunited.dev.seed.seed
 For Devcontainer (Docker/Podman) environments:
 ```sh
 <docker|podman> exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
-    ../env/bin/python /workspace/development/run_seed.py
+    ../env/bin/python /workspace/development/run_seed.py --profile full
 ```
 
 The script is **idempotent** — running it multiple times on the same database
 is safe. Existing records are detected and skipped.
+
+The `full` profile mirrors the variety and scale needed to explore the public
+site and organizer dashboard. It creates 120 ticket purchases spread across 60
+days. Use `--profile quick` for 18 purchases across 14 days when you only need
+a fast smoke-test dataset. With the repository Justfile, run `just demo full`
+or `just demo quick`.
 
 ### Data Hierarchy
 
 The script creates a tree of related records:
 
 ```text
-Users (8)
-├── Attendees (2)          attendee-{1,2}@example.com
-├── Speakers (2)           speaker-{1,2}@example.com
-└── Chapter Leads (4)      {bangalore,mumbai,kochi,campus}-lead@example.com
+Users (9)
+├── Attendees (2)          mock-attendee-{1,2}@example.com
+├── Speakers (2)           mock-speaker-{1,2}@example.com
+├── Chapter Leads (4)      mock-{bangalore,mumbai,kochi,campus}-lead@example.com
+└── Reviewer (1)           mock-reviewer@example.com
 
 Chapters (4)
 ├── FOSS Bangalore          City Community
@@ -188,15 +195,15 @@ Chapters (4)
 └── Campus Chapter          Student Club
 
 Events (13)  — one of each template per City Community chapter, plus one test conference
-├── FOSS Meetup 2026        status: Live     (3 chapters × 1)
-├── FOSS Conference 2025    status: Concluded
-├── FOSS Workshop 2026      status: Draft    (unpublished)
+├── September FOSS Meetup   status: Live     (3 chapters × 1)
+├── CityFOSS conference     status: Concluded
+├── Linux Install Party     status: Draft    (unpublished)
 ├── Mini FOSS Hackathon     status: Live
-└── Paid Test Conference    status: Live     (1 dedicated event for mock tickets)
+└── KochiFOSS conference    status: Live     (1 paid event with four ticket tiers)
 
 RSVPs (6 forms)  — one per Live event, each with 2 submissions
 CFPs  (6 forms)  — one per Live event, each with 2 talk submissions
-Tickets (1)      — one prototype ticket attached to the Paid Test Conference
+Tickets (120)    — full profile; cumulative purchases across 60 days and four tiers
 
 Hackathon — FOSSIT Hackathon (Campus Chapter)
 ├── Teams (4)              Phoenix / Aurora / Nebula / Comet
@@ -252,7 +259,7 @@ The demo uses your local repository changes, allowing for rapid iteration and te
 | User Profiles | 9 |
 | Chapters | 4 |
 | Events | 13 |
-| Event Tickets | 1 |
+| Event Tickets | 120 with `full`; 18 with `quick` |
 | RSVP forms | 6 |
 | RSVP submissions | 12 |
 | CFP forms | 6 |
@@ -267,14 +274,14 @@ All seed users share the same password.
 
 | Role | Email | Password |
 |---|---|---|
-| Attendee | attendee-1@example.com | `password` |
-| Attendee | attendee-2@example.com | `password` |
-| Speaker | speaker-1@example.com | `password` |
-| Speaker | speaker-2@example.com | `password` |
-| Chapter Lead (Bangalore) | bangalore-lead@example.com | `password` |
-| Chapter Lead (Mumbai) | mumbai-lead@example.com | `password` |
-| Chapter Lead (Kochi) | kochi-lead@example.com | `password` |
-| Chapter Lead (Campus) | campus-lead@example.com | `password` |
+| Attendee | mock-attendee-1@example.com | `password` |
+| Attendee | mock-attendee-2@example.com | `password` |
+| Speaker | mock-speaker-1@example.com | `password` |
+| Speaker | mock-speaker-2@example.com | `password` |
+| Chapter Lead (Bangalore) | mock-bangalore-lead@example.com | `password` |
+| Chapter Lead (Mumbai) | mock-mumbai-lead@example.com | `password` |
+| Chapter Lead (Kochi) | mock-kochi-lead@example.com | `password` |
+| Chapter Lead (Campus) | mock-campus-lead@example.com | `password` |
 
 ---
 
@@ -284,6 +291,7 @@ To automatically run linters before commits:
 
 - We use [ruff](https://docs.astral.sh/ruff/) for linting python files. It is recommended to use [prettier](https://prettier.io/) for formatting HTML, CSS & Vue files.
 - [Vale](https://vale.sh) is used for spell check and grammar check for docs content.
+- [Bruno CLI](https://docs.usebruno.com/testing/cli) runs API e2e tests when Python API files or `.bru` test files change.
 
 
 ```sh
@@ -292,6 +300,56 @@ pre-commit install
 ```
 
 Or use [uv](https://github.com/astral-sh/uv) as an alternative Python package manager.
+
+---
+
+## Bruno API Tests
+
+The `bruno-collection/` directory contains end-to-end API tests written in
+[Bruno](https://www.usebruno.com/) `.bru` format. These tests verify security
+hardening (field exposure, auth checks, mass assignment prevention, path
+traversal) against a running Frappe instance with seed data.
+
+### Setup
+
+1. Seed your dev site (see [Seed Script](#seed-script) above).
+2. Install dependencies:
+
+```sh
+yarn install # or: npm install @bru
+```
+
+### Running Tests
+
+From the `bruno-collection/` directory:
+
+```sh
+# Run a single test folder
+cd bruno-collection && yarn install
+yarn bru run api/hackathon --env local-development
+# npm users: npx bru run api/hackathon --env local-development
+
+# Run all test folders
+for folder in api/*/; do
+  yarn bru run "$folder" --env local-development
+  # npm users: npx bru run "$folder" --env local-development
+done
+```
+
+Tests also run automatically via the pre-commit hook when you change Python
+API files or `.bru` test files.
+
+### Environment Variables
+
+Edit `bruno-collection/environments/local-development.bru` to match your
+local seed data IDs. After running the seed script, look up docnames:
+
+```sh
+bench execute frappe.client.get_list \
+  --args '{"doctype":"FOSS Hackathon","filters":{"hackathon_name":["like","MOCK-%"]},"fields":["name","hackathon_name","permalink"]}'
+```
+
+See `bruno-collection/README.md` for the full variable reference.
 
 ---
 

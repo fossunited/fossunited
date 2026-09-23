@@ -3,8 +3,8 @@
   .like-icon.liked { color: var(--v3-error-text); }
 </style>
 <div id="likes" class="feedback-item d-flex flex-row align-items-center likes">
-  <button type="button" class="like-icon border-0 p-2" aria-pressed="false" aria-label="Like"></button>
-  <span class="like-count"></span>
+  <button type="button" class="like-icon border-0 p-2" aria-pressed="false"></button>
+  <span class="like-count" aria-hidden="true"></span>
 </div>
 
 <script type="text/javascript">
@@ -13,7 +13,12 @@
     let like_count = parseInt('{{ like_count or 0 }}')
     let in_queue = false
 
-    let toggle_like_icon = function (active) {
+    let like_label = function (count, active) {
+      const noun = count === 1 ? 'like' : 'likes'
+      return `${count} ${noun}. ${active ? 'You liked this.' : 'Click to like this.'}`
+    }
+
+    let toggle_like_icon = function (active, count) {
       const $btn = $('.like-icon')
       const $i = $btn.find('i')
       if (active) {
@@ -25,10 +30,11 @@
         $i.removeClass('ti-heart-filled').addClass('ti-heart')
         $btn.attr('aria-pressed', 'false')
       }
+      $btn.attr('aria-label', like_label(count, active))
     }
 
     $('.like-icon').append(`<i class="ti ti-heart" aria-hidden="true"></i>`)
-    toggle_like_icon(like)
+    toggle_like_icon(like, like_count)
 
     $('.like-count').text(like_count)
 
@@ -45,7 +51,7 @@
       const intended_count = intended_like ? like_count + 1 : like_count - 1
 
       // Update UI optimistically
-      toggle_like_icon(intended_like)
+      toggle_like_icon(intended_like, intended_count)
       $('.like-count').text(intended_count)
 
       return frappe
@@ -66,7 +72,7 @@
         })
         .catch((err) => {
           // Revert UI on error
-          toggle_like_icon(like)
+          toggle_like_icon(like, like_count)
           $('.like-count').text(like_count)
           in_queue = false
         })

@@ -7,6 +7,7 @@
   "engine": "InnoDB",
   "field_order": [
     "status",
+    "approval_token",
     "ticket_detail_section",
     "ticket",
     "owner_email",
@@ -122,10 +123,17 @@
       "fieldname": "tshirt_size",
       "fieldtype": "Data",
       "label": "Tshirt Size"
+    },
+    {
+      "fieldname": "approval_token",
+      "fieldtype": "Data",
+      "hidden": 1,
+      "label": "Approval Token",
+      "read_only": 1
     }
   ],
   "links": [],
-  "modified": "2026-05-14 12:40:52.705901",
+  "modified": "2026-09-21 20:56:38.412257",
   "modified_by": "Administrator",
   "module": "Ticketing",
   "name": "FOSS Event Ticket Transfer",
@@ -143,10 +151,6 @@
       "role": "System Manager",
       "share": 1,
       "write": 1
-    },
-    {
-      "create": 1,
-      "role": "All"
     }
   ],
   "row_format": "Dynamic",

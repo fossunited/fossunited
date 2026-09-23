@@ -2,7 +2,7 @@
   <Popover v-slot="{ open }">
     <PopoverButton
       v-slot="{ open }"
-      as="div"
+      as="template"
       ref="reference"
       @click="updatePosition"
       @focusin="updatePosition"

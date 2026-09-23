@@ -1,9 +1,9 @@
 <template>
   <div
-    class="w-full mt-3 bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-2 rounded-xl overflow-hidden"
+    class="w-full mt-3 bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-xl overflow-hidden"
   >
     <div class="p-3">
-      <div v-if="sessions.length === 0" class="py-16 text-center text-ink-gray-4 text-sm">
+      <div v-if="sessions.length === 0" class="py-16 text-center text-ink-gray-7 dark:text-ink-gray-8 text-sm">
         No sessions scheduled for this hall.
       </div>
       <div v-else class="flex flex-col">

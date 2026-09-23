@@ -10,9 +10,15 @@ $(document).ready(function () {
   setNavbarControl()
   tab_navigation()
 
-  // Global BS4 tooltip opt-in: any element with data-toggle="tooltip" gets one.
-  // Runs on every page (bundled in website.bundle.js) so pages need no init line.
+  // Global BS4 tooltip/popover opt-in: any element with data-toggle="tooltip"/"popover"
+  // gets one. Runs on every page (bundled in website.bundle.js) so pages need no init line.
+  // trigger: 'hover focus' (not the BS4 popover default of 'click') so keyboard-focused
+  // elements surface the content too — a plain focusable span never auto-fires 'click'
+  // on Enter/Space the way a real <button> does, so 'click' alone would lock out keyboard users.
   $('[data-toggle="tooltip"]').tooltip()
+  $('[data-toggle="popover"]').popover({ trigger: 'hover focus', html: false })
+
+  initTablistKeyboardNav()
 })
 
 function makeQuill(
@@ -66,25 +72,6 @@ function setNavbarControl() {
   })
 }
 
-function publish_form(e) {
-  let doctype = $(e).data('doctype')
-  let docname = $(e).data('docname')
-  let parent = $(e).data('parent')
-  frappe.call({
-    method: 'fossunited.fossunited.forms.publish_form',
-    args: {
-      doctype: doctype,
-      docname: docname,
-    },
-    callback: (r) => {
-      $(`#${parent}`).load(window.location.href + ` #${parent}`)
-    },
-    error: (e) => {
-      frappe.msgprint(e.message)
-    },
-  })
-}
-
 function tab_navigation() {
   let url = new URL(window.location.href)
   let tab = url.searchParams.get('tab')
@@ -96,22 +83,33 @@ function tab_navigation() {
   }
 }
 
-function unpublish_form(e) {
-  let doctype = $(e).data('doctype')
-  let docname = $(e).data('docname')
-  let parent = $(e).data('parent')
-  frappe.call({
-    method: 'fossunited.fossunited.forms.unpublish_form',
-    args: {
-      doctype: doctype,
-      docname: docname,
-    },
-    callback: (r) => {
-      $(`#${parent}`).load(window.location.href + ` #${parent}`)
-    },
-    error: (e) => {
-      frappe.msgprint(e.message)
-    },
+// APG tablist keyboard pattern (arrow keys move + activate, roving tabindex) for native
+// BS4 tabs. Scoped to [data-toggle="tab"]
+function initTablistKeyboardNav() {
+  document.querySelectorAll('[role="tablist"]').forEach((list) => {
+    const tabs = Array.from(list.querySelectorAll('[role="tab"][data-toggle="tab"]'))
+    if (!tabs.length) return
+
+    function activate(tab) {
+      tabs.forEach((t) => t.setAttribute('tabindex', '-1'))
+      tab.setAttribute('tabindex', '0')
+      tab.focus()
+      $(tab).tab('show')
+    }
+
+    list.addEventListener('keydown', (e) => {
+      const i = tabs.indexOf(document.activeElement)
+      if (i === -1) return
+      let next = null
+      if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length]
+      else if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length]
+      else if (e.key === 'Home') next = tabs[0]
+      else if (e.key === 'End') next = tabs[tabs.length - 1]
+      if (next) {
+        e.preventDefault()
+        activate(next)
+      }
+    })
   })
 }
 
@@ -319,6 +317,23 @@ function truncateStr(title, len) {
   return title.length > len ? title.substring(0, len) + '...' : title
 }
 
+var VIEW_MODE_KEY = 'fossunited-view-mode'
+
+function getViewMode() {
+  try {
+    var v = localStorage.getItem(VIEW_MODE_KEY)
+    return v === 'list' ? 'list' : 'grid'
+  } catch (e) {
+    return 'grid'
+  }
+}
+
+function saveViewMode(mode) {
+  try {
+    localStorage.setItem(VIEW_MODE_KEY, mode === 'list' ? 'list' : 'grid')
+  } catch (e) {}
+}
+
 function toggleSection(id) {
   const content = document.getElementById(id)
   if (!content) return
@@ -369,9 +384,8 @@ function setParams(obj) {
 Object.assign(window, {
   makeQuill,
   setNavbarControl,
-  publish_form,
   tab_navigation,
-  unpublish_form,
+  initTablistKeyboardNav,
   validate_mandatory_fields,
   check_if_logged_in,
   check_if_profile_complete,
@@ -382,6 +396,9 @@ Object.assign(window, {
   formatTimeOnly,
   formatShortDate,
   truncateStr,
+  VIEW_MODE_KEY,
+  getViewMode,
+  saveViewMode,
   toggleSection,
   debounce,
   buildPageWindow,

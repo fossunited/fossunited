@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
-from fossunited.doctype_ids import EVENT
+from fossunited.doctype_ids import EVENT, RAZORPAY_PAYMENT
 from fossunited.utils.payments import (
     get_in_razorpay_money,
     get_razorpay_client,
@@ -54,7 +54,7 @@ class RazorpayPayment(Document):
 
         client = get_razorpay_client()
         refund_amount = int(get_in_razorpay_money(self.amount))
-        refund = client.payment.refund(self.payment_id, refund_amount)
+        refund = client.payment.refund(self.payment_id, {"amount": refund_amount})
 
         self.refund_id = refund["id"]
         if refund["status"] == "processed":
@@ -74,10 +74,9 @@ class RazorpayPayment(Document):
 
         if order["status"] == "paid":
             frappe.errprint(payments)
-            if payments[0]["status"] == "captured" and self.status != "Captured":
-                self.status = "Captured"
-                self.payment_id = payments[0]["id"]
-                self.save()
+            if payments[0]["status"] == "captured":
+                capture_payment(self.order_id, payments[0]["id"])
+                self.reload()
             elif payments[0]["status"] == "refunded":
                 self.status = "Refunded"
                 self.save()
@@ -93,3 +92,43 @@ class RazorpayPayment(Document):
             )
             if ticket_status == "Closed":
                 frappe.throw(_("Ticket sale are closed for this event!"), frappe.PermissionError)
+
+
+def capture_payment(order_id: str, payment_id: str):
+    payment_name = frappe.db.get_value(
+        RAZORPAY_PAYMENT,
+        {"order_id": order_id},
+        "name",
+        for_update=True,
+    )
+    if not payment_name:
+        return
+
+    payment = frappe.get_doc(RAZORPAY_PAYMENT, payment_name)
+    if payment.status not in ["Pending", "Failed"]:
+        return payment.status
+
+    payment.status = "Captured"
+    payment.payment_id = payment_id
+    payment.save(ignore_permissions=True)
+    payment.reload()
+    return payment.status
+
+
+def fail_payment(order_id: str):
+    payment_name = frappe.db.get_value(
+        RAZORPAY_PAYMENT,
+        {"order_id": order_id},
+        "name",
+        for_update=True,
+    )
+    if not payment_name:
+        return
+
+    payment = frappe.get_doc(RAZORPAY_PAYMENT, payment_name)
+    if payment.status != "Pending":
+        return payment.status
+
+    payment.status = "Failed"
+    payment.save(ignore_permissions=True)
+    return payment.status

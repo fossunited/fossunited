@@ -5,6 +5,24 @@ import dayjs from 'dayjs'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 
 /**
+ * Speakers arrive either as a child table (`cfp_speakers`) or as a JSON string
+ * (`speakers`), depending on how the session was created. Callers outside a
+ * component setup (search filters, etc.) need this without the composable.
+ */
+export function resolveSpeakers(session) {
+  if (!session) return []
+  if (session.cfp_speakers?.length) return session.cfp_speakers
+  if (session.speakers) {
+    try {
+      return JSON.parse(session.speakers)
+    } catch {
+      return []
+    }
+  }
+  return []
+}
+
+/**
  * Shared session logic for SessionCard and TimeCapsule.
  * @param {import('vue').Ref} session - a ref to the session object (toRef(props, 'session'))
  */
@@ -16,14 +34,7 @@ export function useSession(session) {
     return dayjs(`1970-01-01 ${timeStr}`).format('h:mm A')
   }
 
-  const speakers = computed(() => {
-    const s = session.value
-    if (s.cfp_speakers?.length) return s.cfp_speakers
-    if (s.speakers) {
-      try { return JSON.parse(s.speakers) } catch { return [] }
-    }
-    return []
-  })
+  const speakers = computed(() => resolveSpeakers(session.value))
 
   const visibleSpeakers = computed(() => speakers.value.slice(0, 4))
 

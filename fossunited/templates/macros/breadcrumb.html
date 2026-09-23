@@ -13,7 +13,7 @@
       {% set ignore_segments = ignore_segments or [] %}
       {% set rename_map = rename_map or {} %}
       {% set ignore_indices = ignore_indices or [] %}
-      {% set path_parts = frappe.request.path.strip('/').split('/') %}
+      {% set path_parts = get_request_path().strip('/').split('/') %}
 
       {% set filtered_parts = [] %}
       {% set filtered_indices = [] %}

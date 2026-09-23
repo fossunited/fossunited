@@ -10,7 +10,7 @@
       :placeholder="placeholder"
       :fixed-menu="menuButtons"
       :editable="!disabled"
-      editor-class="w-full max-w-none min-h-[12rem] max-h-[48rem] overflow-y-auto border border-t-0 rounded-b-lg p-3"
+      :editor-class="editorClass"
       @change="emit('update:modelValue', $event)"
     />
     <small v-if="description" class="text-sm text-ink-gray-5">{{ description }}</small>
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 import { TextEditor as FrappeTextEditor } from 'frappe-ui'
 
 const uid = getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2, 7)
@@ -31,6 +31,13 @@ const props = defineProps({
   required: { type: Boolean, default: false },
   description: { type: String, default: '' },
   disabled: { type: Boolean, default: false },
+  // Taller editor for fields expected to hold longer content
+  large: { type: Boolean, default: false },
+})
+
+const editorClass = computed(() => {
+  const height = props.large ? 'min-h-[24rem]' : 'min-h-[12rem]'
+  return `w-full max-w-none ${height} max-h-[48rem] overflow-y-auto border border-t-0 rounded-b-lg p-3`
 })
 
 const emit = defineEmits(['update:modelValue'])

@@ -28,6 +28,7 @@ class EventVolunteer(Document):
         past_experience: DF.LongText | None
         phone_number: DF.Data | None
         photo: DF.AttachImage | None
+        tshirt_size: DF.Literal["XS", "S", "M", "L", "XL", "2XL", "3XL", "Skip T-shirt"]
         video_url: DF.Data | None
         volunteer_as: DF.Literal[
             "Marketing",

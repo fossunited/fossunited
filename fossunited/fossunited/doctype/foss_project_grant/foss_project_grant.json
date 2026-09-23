@@ -69,7 +69,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Grant amount",
-   "options": "INR"
+   "options": "Company:company:default_currency"
   },
   {
    "fieldname": "co_sponsor",
@@ -95,7 +95,7 @@
   }
  ],
  "links": [],
- "modified": "2026-04-27 11:30:20.479327",
+ "modified": "2026-08-07 11:55:08.151388",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Project Grant",

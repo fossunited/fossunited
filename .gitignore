@@ -21,3 +21,6 @@ docs/styles/config/*
 
 docs/styles/config/vocabularies/*
 !docs/styles/config/vocabularies/baseCLAUDE.md
+
+bruno-collection/.env
+security-plan.md

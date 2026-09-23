@@ -1,0 +1,33 @@
+info:
+  name: login-as-attacker
+  type: http
+  seq: 0
+http:
+  method: POST
+  url: '{{base}}/method/login'
+  body:
+    type: json
+    data: |-
+      {
+        "usr": "{{attendee_email}}",
+        "pwd": "{{attendee_password}}"
+      }
+runtime:
+  scripts:
+    - type: tests
+      code: |
+        test("should login as non-owner user", function() {
+          expect(res.getStatus()).to.equal(200);
+          expect(res.getBody()).to.have.property("full_name");
+        });
+
+        test("should capture attacker session cookie", function() {
+          const cookies = res.getHeaders()['set-cookie'];
+          expect(cookies).to.be.an("array").that.is.not.empty;
+          const sidCookie = cookies.find(c => c.startsWith('sid='));
+          expect(sidCookie).to.be.a("string");
+          bru.setVar("session_cookie_attacker", sidCookie.split(';')[0]);
+        });
+docs: |-
+  Login as mock-attendee-1 who does NOT own RSVP submissions by mock-attendee-2.
+  Simulates an attacker trying to check in or modify another user's RSVP.

@@ -29,6 +29,7 @@ from fossunited.doctype_ids import (
     LOCALHOST_ORGANIZER,
     PROPOSAL,
     RSVP_RESPONSE,
+    USER_PROFILE,
 )
 from fossunited.fossunited.utils import sanitize_text_content
 
@@ -37,6 +38,35 @@ class PrivateProfileError(PermissionError):
     """Exception raised when trying to access a private profile."""
 
     pass
+
+
+def get_404_context(path):
+    """Custom 404 context for unpublished FOSS User Profile routes.
+
+    New profiles are unpublished by default (see user_utils.create_profile_on_user_create)
+    to stop bot/spam signups from getting indexed. Hooked via `custom_404_page_context`
+    so the 404 page can explain that instead of showing a plain not-found.
+    """
+    if not frappe.db.exists(USER_PROFILE, {"route": path, "is_published": 0}):
+        return None
+
+    return {
+        "title": _("New profile pages are disabled"),
+        "message": _(
+            "We've temporarily disabled publishing new profile pages to cut down on "
+            "spam/bot signups. Existing published profiles are unaffected."
+        ),
+        "links": [
+            {
+                "label": _("Why is this disabled?"),
+                "url": "https://github.com/fossunited/fossunited/issues/1719",
+            },
+            {
+                "label": _("Forum discussion"),
+                "url": "https://forum.fossunited.org/t/new-user-profile-pages-are-disabled-by-default/7892",
+            },
+        ],
+    }
 
 
 class FOSSUserProfile(WebsiteGenerator):

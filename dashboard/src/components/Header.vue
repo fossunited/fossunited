@@ -1,6 +1,7 @@
 <template>
   <header
-    class="sticky top-0 z-50 flex items-center justify-between border-b bg-surface-white px-5 py-2.5"
+    class="z-50 flex items-center justify-between border-b bg-surface-white px-5 py-2.5"
+    :class="{ 'sticky top-0': sticky }"
   >
     <router-link
       to="/"
@@ -64,6 +65,12 @@ import { inject } from 'vue'
 import { Avatar, Dropdown } from 'frappe-ui'
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
 import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
+
+defineProps({
+  // Pages with their own sticky toolbar (e.g. Schedule) opt out, so two sticky
+  // layers do not compete for the same top edge.
+  sticky: { type: Boolean, default: true },
+})
 
 const session = inject('$session')
 

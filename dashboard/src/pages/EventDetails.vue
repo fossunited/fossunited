@@ -151,6 +151,13 @@
           label="Show Speakers Tab"
           description="Show speakers (added in event schedule) profile linked to their proposals."
         />
+        <FormControl
+          v-model="event.doc.deck_link"
+          type="url"
+          size="md"
+          label="Deck Link"
+          description="Link to the event's slide/sponsorship deck. Shared with partners and sponsors."
+        />
         <TextEditor
           label="Event Description"
           class="col-span-2"
@@ -211,6 +218,19 @@
           side="md"
           description="Prefer OpenStreetMap (OSM) links, e.g., https://osmapp.org/"
         />
+        <FormControl
+          v-model="event.doc.catering"
+          :type="'select'"
+          :options="[
+            { label: 'None', value: 'None' },
+            { label: 'Lunch only', value: 'Lunch only' },
+            { label: 'Breakfast + Lunch', value: 'Breakfast + Lunch' },
+            { label: 'Coffee/Tea only', value: 'Coffee/Tea only' },
+          ]"
+          size="md"
+          label="Lunch & Food"
+          description="If event provides any catering for attendees. Shown on the ticket page."
+        />
       </div>
     </div>
 
@@ -230,7 +250,7 @@
           type="textarea"
           size="md"
           label="Ticket Form Description"
-          description="Supports markdown (bold, italic, bullet points, headings). Shown at the top of the ticket purchase page."
+          description="Input markdown (bold, italic, bullet points, headings). Shown at the top of the ticket purchase page."
           class="col-span-2 [&_textarea]:min-h-[200px]"
         />
       </div>

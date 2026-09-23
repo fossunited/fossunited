@@ -1,29 +1,45 @@
 <script setup>
+import { computed } from 'vue'
 import ProposalBadgeGroup from '@/components/reviewers/ProposalBadgeGroup.vue'
 import { getStatusBadgeTheme } from '@/helpers/reviewer'
 import { statusIndicatorColor } from '@/helpers/cfp'
 import { IconHeart } from '@tabler/icons-vue'
 import { Badge, Avatar } from 'frappe-ui'
-defineProps({
+
+const props = defineProps({
   submission: {
     type: Object,
     required: true,
   },
+})
+
+const speakerNames = computed(() =>
+  (props.submission._speaker || []).map((s) => s.full_name).join(', '),
+)
+
+const accessibleLabel = computed(() => {
+  const s = props.submission
+  return [s.talk_title, s.session_type, speakerNames.value && `by ${speakerNames.value}`, `Status: ${s.status}`]
+    .filter(Boolean)
+    .join('. ')
 })
 </script>
 <template>
   <a
     :href="`/${submission.route}`"
     target="_blank"
+    rel="noopener noreferrer"
+    :aria-label="accessibleLabel"
     class="p-2 md:p-6 bg-surface-white rounded border flex gap-3 h-fit hover:border-outline-gray-4 transition-colors ease-in-out duration-200"
   >
     <!-- Status colour bar -->
     <div
       class="w-1 self-stretch rounded-full shrink-0"
       :class="'bg-' + statusIndicatorColor(submission.status)"
+      aria-hidden="true"
     />
 
-    <div class="flex flex-col gap-2 min-w-0 flex-1">
+    <div class="flex flex-col gap-2 min-w-0 flex-1" aria-hidden="true">
       <!-- Top row: session type left, likes right -->
       <div class="flex items-center justify-between gap-2">
         <Badge

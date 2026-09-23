@@ -45,8 +45,8 @@
             variant="solid"
             size="md"
             class="w-full"
-            :loading="downloading"
-            @click="downloadAll"
+            :loading="downloadingAll"
+            @click="onDownloadAllClick"
           >
             <span class="flex items-center justify-center gap-2">
               <IconDownload class="w-4 h-4" /> Download Tickets (PDF)
@@ -79,6 +79,14 @@
           />
         </div>
 
+        <router-link
+          v-if="session.isLoggedIn"
+          to="/my-tickets"
+          class="text-sm text-ink-gray-6 underline hover:text-ink-gray-8"
+        >
+          View this anytime in My Tickets
+        </router-link>
+
         <p class="text-xs text-ink-gray-4">
           For any assistance, email
           <a :href="`mailto:${contactEmail}`" class="underline">{{ contactEmail }}</a>
@@ -95,7 +103,10 @@ import { createResource, Button } from 'frappe-ui'
 import Header from '@/components/Header.vue'
 import EventHeader from '@/components/common/EventHeader.vue'
 import { IconCircleCheck, IconDownload, IconEye } from '@tabler/icons-vue'
-import { showError } from '@/helpers/utils'
+import { fetchBlobUrl, fetchAndDownload, showError } from '@/helpers/utils'
+import { getTicketsDownloadUrl } from '@/helpers/tickets'
+import { useDownloadAction } from '@/composables/useDownloadAction'
+import { session } from '@/data/session'
 
 const route = useRoute()
 const orderId = route.query.order_id
@@ -104,7 +115,6 @@ const eventId = route.query.event
 const confettiCanvas = ref(null)
 const ticketCount = ref(null)
 const ticketIds = ref([])
-const downloading = ref(false)
 const previewing = ref(false)
 const pdfPreviewUrl = ref(null)
 
@@ -136,22 +146,12 @@ watch(ticketIds, (ids) => {
   if (ids.length > 0 && !pdfPreviewUrl.value) loadPreview()
 })
 
-function apiUrl() {
-  if (ticketIds.value.length === 1) {
-    return `/api/method/fossunited.api.tickets.download_ticket?ticket_id=${encodeURIComponent(ticketIds.value[0])}`
-  }
-  return `/api/method/fossunited.api.tickets.download_all_tickets?ticket_ids=${encodeURIComponent(JSON.stringify(ticketIds.value))}`
-}
-
 async function loadPreview() {
   if (previewing.value || ticketIds.value.length === 0) return
   previewing.value = true
   try {
-    const res = await fetch(apiUrl())
-    if (!res.ok) throw new Error('Failed to fetch PDF')
-    const blob = await res.blob()
     if (pdfPreviewUrl.value) URL.revokeObjectURL(pdfPreviewUrl.value)
-    pdfPreviewUrl.value = URL.createObjectURL(blob)
+    pdfPreviewUrl.value = await fetchBlobUrl(getTicketsDownloadUrl(ticketIds.value))
   } catch (err) {
     showError(err, 'Could not preview ticket')
   } finally {
@@ -168,19 +168,10 @@ function togglePreview() {
   }
 }
 
-function downloadAll() {
-  if (downloading.value || ticketIds.value.length === 0) return
-  downloading.value = true
-  try {
-    const a = document.createElement('a')
-    a.href = apiUrl()
-    a.download = 'tickets.pdf'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-  } finally {
-    downloading.value = false
-  }
+const { loading: downloadingAll, run: downloadAll } = useDownloadAction('Could not download tickets')
+
+function onDownloadAllClick() {
+  downloadAll(() => fetchAndDownload(getTicketsDownloadUrl(ticketIds.value), 'tickets.pdf'))
 }
 
 function launchConfetti() {

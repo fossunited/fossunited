@@ -1,0 +1,35 @@
+info:
+  name: login
+  type: http
+  seq: 1
+http:
+  method: POST
+  url: '{{base}}/method/login'
+  body:
+    type: json
+    data: |-
+      {
+        "usr": "{{attendee_email}}",
+        "pwd": "{{attendee_password}}"
+      }
+runtime:
+  auth:
+    type: none
+tests:
+  value: |
+    test("should login successfully", function() {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(200);
+      expect(data).to.have.property("full_name");
+    });
+script:
+  post-response: |
+    const cookies = res.getHeaders()['set-cookie'];
+    if (cookies) {
+      const sidCookie = cookies.find(c => c.startsWith('sid='));
+      if (sidCookie) {
+        bru.setVar("session_cookie", sidCookie.split(';')[0]);
+      }
+    }
+docs: |-
+  Login as mock-attendee-1 to test dashboard API field exposure.

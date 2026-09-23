@@ -45,6 +45,8 @@
 .if-hero-meta-link { color: inherit; text-decoration: none; border-bottom: 1px dotted currentColor; }
 .if-hero-meta-link:hover { opacity: .75; color: inherit; text-decoration: none; }
 .if-hero-desc { max-width: 540px; color: #f4f4f4; margin: 0; }
+/* Desktop has room for the whole subtitle on one line; mobile keeps wrapping */
+@media (min-width: 840px) { .if-hero-desc { max-width: none; white-space: nowrap; } }
 /* Tagline white on dark image regardless of theme */
 .if-hero .if-tagline { color: #fff; }
 

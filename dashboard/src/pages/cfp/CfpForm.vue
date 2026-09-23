@@ -7,7 +7,6 @@
       :aria-label="`CFP Application — ${sectionLabel}`"
     >
       <Breadcrumb :items="breadcrumb_items" />
-      <FormHeader />
       <EventHeader v-if="cfpData.data.event" :event="cfpData.data.event" />
 
       <!-- visually-hidden live region announces step changes to screen readers -->
@@ -77,6 +76,7 @@
         </div>
       </template>
       <template v-else>
+        <GuidelineSection />
         <FormClosedSection />
       </template>
     </main>
@@ -88,7 +88,6 @@
 <script setup>
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
-import FormHeader from '@/components/cfp-public/FormHeader.vue'
 import EventHeader from '@/components/common/EventHeader.vue'
 import GuidelineSection from '@/components/cfp-public/GuidelineSection.vue'
 import SessionDetailForm from '@/components/cfp-public/SessionDetailForm.vue'
@@ -143,8 +142,6 @@ const proposalConfirmationFields = ref([])
 const subscribeNewsletter = ref(false)
 
 proposalReferences.value.push(getReferenceItemSchema())
-proposalSpeakers.value.push(getSpeakerFields())
-proposalConfirmationFields.value = getSubmissionConfirmationFields()
 
 const errorMessages = ref('')
 
@@ -160,6 +157,8 @@ const cfpData = createResource({
   onSuccess(data) {
     if (data) {
       proposalFormFields.value = getProposalFormFields(data).value
+      proposalSpeakers.value = [getSpeakerFields(data)]
+      proposalConfirmationFields.value = getSubmissionConfirmationFields(data)
     }
   },
 })
@@ -278,7 +277,11 @@ const insertProposal = createResource({
           ? 1
           : 0,
         ...getTransformedSubmissionFields(
-          proposalFormFields.value,
+          [
+            ...proposalFormFields.value,
+            // Custom "Check"-type confirmation checkboxes; accept_coc is handled above.
+            ...proposalConfirmationFields.value.filter((f) => f.fieldname !== 'accept_coc'),
+          ],
           proposalReferences.value,
           proposalSpeakers.value,
         ),

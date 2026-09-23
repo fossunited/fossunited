@@ -1,9 +1,15 @@
 <template>
   <div class="flex flex-col md:flex-row">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-surface-white focus:text-ink-gray-9 focus:px-3 focus:py-2 focus:rounded focus:shadow-lg"
+    >
+      Skip to main content
+    </a>
     <SideNavbar title="Manage Event" :menu-items="sidebarMenuItems" />
-    <div class="flex-1 min-w-0 overflow-x-hidden">
+    <main id="main-content" tabindex="-1" class="flex-1 min-w-0 overflow-x-hidden">
       <RouterView />
-    </div>
+    </main>
   </div>
 </template>
 

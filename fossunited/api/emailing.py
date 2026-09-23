@@ -304,7 +304,9 @@ def create_newsletter_campaign(
 
 @frappe.whitelist()
 def get_newsletter_campaigns(
-    reference_document: str | None = None, document_type: str = EVENT, chapter: str | None = None
+    reference_document: str | None = None,
+    document_type: str = EVENT,
+    chapter: str | None = None,
 ):
     """
     Get all newsletter / email campaigns specific to an event or a chapter
@@ -368,42 +370,56 @@ def get_campaign_detail(id: str) -> dict:
         dict: with details of the campaign/newsletter
     """
 
-    campaign = frappe.db.get_value(CAMPAIGN, id, ["*"], as_dict=1)
+    CAMPAIGN_FIELDS = [
+        "name",
+        "subject",
+        "sender_name",
+        "sender_email",
+        "content_type",
+        "message",
+        "message_md",
+        "message_html",
+        "email_sent",
+        "schedule_sending",
+        "schedule_send",
+        "total_recipients",
+        "total_views",
+        "reference_document",
+        "document_type",
+        "chapter",
+        "modified",
+        "creation",
+    ]
+    campaign = frappe.db.get_value(CAMPAIGN, id, CAMPAIGN_FIELDS, as_dict=1)
 
-    # transform attachments
     attachments = frappe.db.get_all(
         doctype="Newsletter Attachment",
         filters={"parent": campaign.name},
         page_length=999,
-        fields=["*"],
+        fields=["attachment"],
     )
     _attachments = []
     for item in attachments:
         file = frappe.db.get_value(
             "File",
-            {
-                "file_url": item["attachment"],
-            },
-            ["*"],
+            {"file_url": item["attachment"]},
+            ["name", "file_name", "file_url", "file_size", "file_type", "is_private"],
             as_dict=1,
         )
         _attachments.append(file)
 
-    # transform email groups
     email_groups = frappe.db.get_all(
         doctype="Newsletter Email Group",
-        filters={
-            "parent": campaign.name,
-        },
+        filters={"parent": campaign.name},
         page_length=999,
-        fields=["*"],
+        fields=["email_group"],
     )
     _email_groups = []
     for item in email_groups:
         group = frappe.db.get_value(
             EMAIL_GROUP,
             item.email_group,
-            ["*"],
+            ["name", "group_type", "total_subscribers"],
             as_dict=1,
         )
         _email_groups.append(
@@ -462,18 +478,30 @@ def update_campaign(campaign_id: str, data: dict):
         data: updated data
     """
 
+    ALLOWED_FIELDS = {
+        "subject",
+        "content_type",
+        "message",
+        "message_md",
+        "message_html",
+        "sender_name",
+        "sender_email",
+        "schedule_sending",
+        "schedule_send",
+        "attachments",
+        "email_group",
+    }
+
     campaign = frappe.get_doc(CAMPAIGN, campaign_id)
 
     for key, val in data.items():
-        if key == "status":
-            continue
-        if getattr(campaign, key) == val:
+        if key not in ALLOWED_FIELDS:
             continue
         if key == "attachments":
             campaign.set(key, get_formatted_attachment_list(val))
         elif key == "email_group":
             campaign.set(key, get_formatted_email_group(val))
-        else:
+        elif getattr(campaign, key) != val:
             campaign.set(key, val)
 
     campaign.save(ignore_permissions=True)
@@ -553,18 +581,18 @@ def get_formatted_attachment_list(attachments: list) -> list:
 @require_mailing_access(campaign_param="campaign_id")
 def send_campaign(campaign_id: str):
     """
-    Send the campaigns
+    Send the campaign now.
+
+    ignore_permissions is set because Newsletter's own DocPerm only grants
+    write access to "Newsletter Manager", a chapter member is authorized
+    here via require_mailing_access.
 
     args:
         campaign: id of campaign / newsletter doctype
     """
-    frappe.enqueue_doc(
-        CAMPAIGN,
-        campaign_id,
-        "send_emails",
-        queue="long",
-        enqueue_after_commit=True,
-    )
+    campaign = frappe.get_doc(CAMPAIGN, campaign_id)
+    campaign.flags.ignore_permissions = True
+    campaign.send_emails()
 
 
 @frappe.whitelist()

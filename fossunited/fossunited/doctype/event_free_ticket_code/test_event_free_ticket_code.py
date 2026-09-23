@@ -49,3 +49,40 @@ class TestEventFreeTicketCodeController(FrappeTestCase):
     def test_invalid_mapped_email_throws_error(self):
         with self.assertRaises(frappe.ValidationError):
             FreeTicketCodeFactory.create(event=self.event.name, mapped_email="not-an-email")
+
+    def test_topping_up_an_exhausted_coupon_clears_is_used(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=2, used_count=2)
+        frappe.db.set_value(FREE_TICKET_CODE, coupon.name, "is_used", 1)
+        coupon.reload()
+        self.assertEqual(int(coupon.is_used), 1)
+
+        coupon.max_count = 5
+        coupon.save()
+
+        self.assertEqual(int(coupon.is_used), 0)
+
+    def test_lowering_max_count_below_used_count_sets_is_used(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=5, used_count=3)
+        self.assertEqual(int(coupon.is_used), 0)
+
+        coupon.max_count = 2
+        coupon.save()
+
+        self.assertEqual(int(coupon.is_used), 1)
+
+    def test_coupon_blocked_for_non_paid_event(self):
+        free_event = FOSSChapterEventFactory.create(chapter=self.chapter.name)
+        with self.assertRaises(frappe.ValidationError):
+            FreeTicketCodeFactory.create(event=free_event.name)
+        frappe.delete_doc(EVENT, free_event.name, force=True)
+
+    def test_coupon_blocked_for_past_event(self):
+        past_event = FOSSChapterEventFactory.create(
+            "with_paid_tickets",
+            chapter=self.chapter.name,
+            event_start_date=frappe.utils.add_days(frappe.utils.now_datetime(), -2),
+            event_end_date=frappe.utils.add_days(frappe.utils.now_datetime(), -1),
+        )
+        with self.assertRaises(frappe.ValidationError):
+            FreeTicketCodeFactory.create(event=past_event.name)
+        frappe.delete_doc(EVENT, past_event.name, force=True)

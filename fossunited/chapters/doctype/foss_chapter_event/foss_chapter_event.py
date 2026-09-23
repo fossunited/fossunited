@@ -55,6 +55,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import FOSSTicketTier
 
         banner_image: DF.AttachImage | None
+        catering: DF.Literal["None", "Lunch only", "Breakfast + Lunch", "Coffee/Tea only"]
         chapter: DF.Link | None
         chapter_name: DF.Data | None
         community_partners: DF.Table[FOSSEventCommunityPartner]
@@ -96,7 +97,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         project_showcase: DF.Table[EventProjectShowcase]
         proposal_page_description: DF.Text | None
         route: DF.Data | None
-        schedule_page_description: DF.LongText | None
+        schedule_page_description: DF.MarkdownEditor | None
         show_photos: DF.Check
         show_schedule: DF.Check
         show_speakers: DF.Check

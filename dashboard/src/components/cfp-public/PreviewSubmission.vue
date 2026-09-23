@@ -65,7 +65,10 @@
               type="checkbox"
               class="rounded-sm mt-[1px] bg-surface-white border-outline-gray-4 text-ink-gray-9 hover:border-outline-gray-5 focus:ring-offset-0 focus:border-outline-gray-8 active:border-outline-gray-6 transition hover:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 active:bg-surface-gray-2 w-3.5 h-3.5 shrink-0"
             />
-            <label for="coc-cfp" class="block text-base font-medium text-ink-gray-8 select-none cursor-pointer leading-relaxed">
+            <label
+              for="coc-cfp"
+              class="block text-base font-medium text-ink-gray-8 select-none cursor-pointer leading-relaxed"
+            >
               By registering for this event, you agree to abide by the FOSS United
               <a
                 href="https://fossunited.org/code-of-conduct"
@@ -80,12 +83,10 @@
           </div>
         </template>
         <template v-else>
-          <FormControl
-            v-model="field.value"
-            type="checkbox"
-            :label="field.label"
-            :required="field.required"
-          />
+          <div class="inline-flex items-center gap-1">
+            <FormControl v-model="field.value" type="checkbox" :label="field.label" />
+            <span v-if="field.required" class="text-ink-red-3">*</span>
+          </div>
         </template>
       </div>
     </div>

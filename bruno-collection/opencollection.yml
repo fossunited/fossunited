@@ -1,0 +1,8 @@
+info:
+  name: Fossunited API Testing
+  summary: refer https://docs.usebruno.com/ and run "yarn bru run"
+opencollection: 1.0.0
+extensions:
+  bruno:
+    presets:
+      defaultEnvironment: local-development

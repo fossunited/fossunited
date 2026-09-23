@@ -15,7 +15,7 @@ export const getProposalFormFields = (cfpData) => {
       label: 'Session Type',
       fieldname: 'session_type',
       fieldtype: 'radio_group',
-      options: getSessionTypeOptions(cfpData.only_workshops, cfpData.only_talk_proposals),
+      options: getSessionTypeOptions(cfpData.allowed_session_types),
       required: true,
       value: '',
     },
@@ -23,7 +23,7 @@ export const getProposalFormFields = (cfpData) => {
       label: 'Session Category',
       fieldname: 'session_categories',
       fieldtype: 'multiselect',
-      options: getSessionCategoryOptions(),
+      options: getSessionCategoryOptions(cfpData.override_session_categories),
       required: true,
       value: [],
     },
@@ -76,6 +76,7 @@ export const getProposalFormFields = (cfpData) => {
       label: 'License',
       fieldname: 'talk_license',
       fieldtype: 'text',
+      required: true,
       value: '',
       description:
         'Specify the license(s) under which your project/talk is distributed. Examples: MIT License (software), CC BY-SA 4.0 (open data/documentation), CERN OHL-W (open hardware). Refer: https://opensource.org/licenses',
@@ -102,30 +103,58 @@ export const getProposalFormFields = (cfpData) => {
   return baseFields
 }
 
-const getSessionTypeOptions = (only_workshops, only_talk_proposals) => {
-  let options = [
-    { label: 'Talk', value: 'Talk', description: '25-30 mins' },
-    { label: 'Lightning Talk', value: 'Lightning Talk', description: 'Upto 15 mins' },
-    {
-      label: 'Birds of Feather(BoF)',
-      value: 'Birds of Feather(BoF)',
-      help: 'Birds of a Feather sessions (or BoFs) are informal gatherings of like-minded individuals who wish to discuss a certain topic without a pre-planned agenda',
-    },
-    { label: 'Panel Discussion', value: 'Panel Discussion' },
-    { label: 'Workshop', value: 'Workshop' },
-  ]
-  if (only_workshops) {
-    return [{ label: 'Workshop', value: 'Workshop' }]
-  }
+const SESSION_TYPE_OPTION_DEFS = [
+  { label: 'Talk', value: 'Talk', description: '25-30 mins' },
+  { label: 'Lightning Talk', value: 'Lightning Talk', description: 'Upto 15 mins' },
+  {
+    label: 'Birds of Feather(BoF)',
+    value: 'Birds of Feather(BoF)',
+    help: 'Birds of a Feather sessions (or BoFs) are informal gatherings of like-minded individuals who wish to discuss a certain topic without a pre-planned agenda',
+  },
+  { label: 'Panel Discussion', value: 'Panel Discussion' },
+  { label: 'Workshop', value: 'Workshop' },
+]
 
-  if (only_talk_proposals) {
-    return options.filter((option) => option.value !== 'Workshop')
-  }
+export const SESSION_TYPES = SESSION_TYPE_OPTION_DEFS.map((option) => option.value)
 
-  return options
+const parseAllowedSessionTypes = (allowedSessionTypes) => {
+  if (!allowedSessionTypes) return null
+  const allowed = allowedSessionTypes
+    .split('\n')
+    .map((t) => t.trim())
+    .filter(Boolean)
+  return allowed.length ? allowed : null
 }
 
-const getSessionCategoryOptions = () => {
+// Returns the updated `allowed_session_types` newline list after toggling one
+// type. An empty string means "no restriction, all types allowed".
+export const getUpdatedAllowedSessionTypes = (currentValue, type, checked) => {
+  let selected = parseAllowedSessionTypes(currentValue) || [...SESSION_TYPES]
+  selected = checked ? [...new Set([...selected, type])] : selected.filter((t) => t !== type)
+  if (!selected.length) return null
+  return selected.length === SESSION_TYPES.length ? '' : selected.join('\n')
+}
+
+export const isSessionTypeAllowed = (allowedSessionTypes, type) => {
+  const allowed = parseAllowedSessionTypes(allowedSessionTypes)
+  return !allowed || allowed.includes(type)
+}
+
+const getSessionTypeOptions = (allowedSessionTypes) => {
+  const allowed = parseAllowedSessionTypes(allowedSessionTypes)
+  if (!allowed) return SESSION_TYPE_OPTION_DEFS
+  return SESSION_TYPE_OPTION_DEFS.filter((option) => allowed.includes(option.value))
+}
+
+const getSessionCategoryOptions = (overrideCategories) => {
+  const override = (overrideCategories || '')
+    .split('\n')
+    .map((c) => c.trim())
+    .filter(Boolean)
+  if (override.length) {
+    return override.map((value) => ({ value, label: value }))
+  }
+
   return [
     {
       value: 'Introducing a FOSS project or a new version of a popular project',
@@ -152,9 +181,15 @@ const getSessionCategoryOptions = () => {
   ]
 }
 
+// Custom questions of type "Check" are treated as confirmation checkboxes
+// (see getCustomConfirmationFields) and rendered on the Preview step instead
+// of here. fieldname keeps the original table index regardless of which
+// bucket a question lands in, so custom_answers stay unambiguous.
 const getCustomQuestions = (questions) => {
-  return questions.map((question, index) => {
-    return {
+  return questions
+    .map((question, index) => ({ question, index }))
+    .filter(({ question }) => question.type !== 'Check')
+    .map(({ question, index }) => ({
       label: question.question,
       fieldname: 'custom_question_' + index,
       fieldtype: getQuestionType(question.type),
@@ -162,8 +197,21 @@ const getCustomQuestions = (questions) => {
       required: question.is_mandatory,
       value: '',
       description: question.description,
-    }
-  })
+    }))
+}
+
+const getCustomConfirmationFields = (questions) => {
+  return questions
+    .map((question, index) => ({ question, index }))
+    .filter(({ question }) => question.type === 'Check')
+    .map(({ question, index }) => ({
+      label: question.question,
+      fieldname: 'custom_question_' + index,
+      fieldtype: 'checkbox',
+      required: question.is_mandatory,
+      value: false,
+      description: question.description,
+    }))
 }
 
 const getQuestionType = (type) => {
@@ -199,18 +247,19 @@ export const getSpeakerSchema = () => {
     designation: '',
     organization: '',
     social_link: '',
+    contact_info: '',
     bio: '',
   }
 }
 
-export const getSpeakerFields = () => {
-  return [
+export const getSpeakerFields = (cfpData = {}) => {
+  const fields = [
     {
       label: 'Speaker Image',
       fieldname: 'photo',
       value: '',
       fieldtype: 'attach_image',
-      required: true,
+      required: Boolean(cfpData.require_speaker_photo ?? 1),
     },
     {
       label: 'Full Name',
@@ -260,46 +309,64 @@ export const getSpeakerFields = () => {
       required: true,
     },
   ]
+
+  if (cfpData.hide_contact_info) {
+    return fields.filter((field) => field.fieldname !== 'contact_info')
+  }
+  return fields
 }
 
-export const getSubmissionConfirmationFields = () => {
+// FOSS United's default acks, used unless the organizer has added their own
+// "Check"-type custom questions (same override-only-when-set convention as
+// allowed_session_types/override_session_categories).
+const DEFAULT_CONFIRMATION_ACKS = [
+  {
+    label: 'I have gone through the proposal guidelines before submitting the proposal',
+    fieldname: 'proposal_guidelines_ack',
+    fieldtype: 'checkbox',
+    required: true,
+    value: false,
+  },
+  {
+    label: 'I wrote this myself, it was NOT generated primarily by AI',
+    fieldname: 'authorship_ack',
+    fieldtype: 'checkbox',
+    required: true,
+    value: false,
+  },
+  {
+    label: 'I have included relevant references to provide as much context as possible',
+    fieldname: 'references_ack',
+    fieldtype: 'checkbox',
+    required: true,
+    value: false,
+  },
+  {
+    label: 'I can do a mock presentation of this talk if required',
+    fieldname: 'mock_presentation_ack',
+    fieldtype: 'checkbox',
+    required: true,
+    value: false,
+  },
+  {
+    label:
+      'I agree that my talk, slides, and related materials will be published under a Creative Commons (CC BY-SA 4.0) license if my proposal is accepted.',
+    fieldname: 'license_ack',
+    fieldtype: 'checkbox',
+    required: true,
+    value: false,
+  },
+]
+
+// Organizer-defined confirmation checkboxes from cfp_custom_questions check type
+export const getSubmissionConfirmationFields = (cfpData = {}) => {
+  const customAcks = getCustomConfirmationFields(cfpData.cfp_custom_questions || [])
+  const acks = customAcks.length
+    ? customAcks
+    : DEFAULT_CONFIRMATION_ACKS.map((field) => ({ ...field }))
+
   return [
-    {
-      label: 'I have gone through the proposal guidelines before submitting the proposal',
-      fieldname: 'proposal_guidelines_ack',
-      fieldtype: 'checkbox',
-      required: true,
-      value: false,
-    },
-    {
-      label: 'I wrote this myself, it was NOT generated primarily by AI',
-      fieldname: 'authorship_ack',
-      fieldtype: 'checkbox',
-      required: true,
-      value: false,
-    },
-    {
-      label: 'I have included relevant references to provide as much context as possible',
-      fieldname: 'references_ack',
-      fieldtype: 'checkbox',
-      required: true,
-      value: false,
-    },
-    {
-      label: 'I can do a mock presentation of this talk if required',
-      fieldname: 'mock_presentation_ack',
-      fieldtype: 'checkbox',
-      required: true,
-      value: false,
-    },
-    {
-      label:
-        'I agree that my talk, slides, and related materials will be published under a Creative Commons (CC BY-SA 4.0) license if my proposal is accepted.',
-      fieldname: 'license_ack',
-      fieldtype: 'checkbox',
-      required: true,
-      value: false,
-    },
+    ...acks,
     {
       label: 'Accepting Code of Conduct',
       fieldname: 'accept_coc',

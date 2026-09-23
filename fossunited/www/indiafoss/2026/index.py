@@ -3,13 +3,16 @@ import json
 
 import frappe
 
-from fossunited.doctype_ids import COMMUNITY_PARTNER, EVENT, EVENT_CFP
+from fossunited.doctype_ids import EVENT, EVENT_CFP
 from fossunited.fossunited.event_media import get_indiafoss_years
 from fossunited.fossunited.user_utils import fetch_user_profiles
 from fossunited.fossunited.utils import get_event_sponsors
 
 INDIAFOSS_2026_EVENT = "IndiaFOSS 2026"
-TIER1 = {"Maintainer", "Patrons", "Platinum", "Gold"}
+TIER1 = {"Maintainer", "Patrons", "Platinum", "Gold", "Maintainer Tier"}
+# Tiers that belong in the main Sponsors section. Anything else (e.g. "Diversity
+# Scholar") drops into its own section below, at the Contributor (tier-2) grid size.
+MAIN_TIERS = TIER1 | {"Contributor", "Contributor Tier"}
 
 
 # TODO: replace all short form url to /2026/ form
@@ -41,14 +44,14 @@ def get_context(context):
     # Sponsors — use shared util, split into tier1/tier2
     sponsors_dict = get_event_sponsors(event.sponsor_list)
     context.sponsors = [
-        {"tier": t, "sponsor_list": sl, "is_tier1": t in TIER1} for t, sl in sponsors_dict.items()
+        {"tier": t, "sponsor_list": sl, "is_tier1": t in TIER1}
+        for t, sl in sponsors_dict.items()
+        if t in MAIN_TIERS
     ]
-    context.partners = frappe.db.get_all(
-        COMMUNITY_PARTNER,
-        {"parent": event_docname, "parenttype": EVENT},
-        ["org_name", "link", "logo"],
-        page_length=99,
-    )
+    context.other_sponsors = [
+        {"tier": t, "sponsor_list": sl} for t, sl in sponsors_dict.items() if t not in MAIN_TIERS
+    ]
+    context.partners = event.community_partners
 
     devrooms = frappe.get_all(
         "Devroom Custom",
@@ -91,8 +94,6 @@ def get_context(context):
     cfp_tl = _get_cfp_timeline_items(cfp, today)
     manual_labels = {item.get("label") for item in manual_tl}
     cfp_tl = [item for item in cfp_tl if item.get("label") not in manual_labels]
-    # Order by closing date (the actionable deadline); milestones with no end fall
-    # back to their single start date.
     merged_tl = sorted(
         manual_tl + cfp_tl,
         key=lambda x: (
@@ -107,6 +108,13 @@ def get_context(context):
             item["resolved_status"] = tickets_status
     context.progress_segments, context.progress_markers = _get_progress_bar(
         context.timeline, today
+    )
+    context.progress_pct = round(
+        max(
+            0.0,
+            min(100.0, (today - BAR_START).days * 100.0 / (BAR_END - BAR_START).days),
+        ),
+        1,
     )
     context.action_cards = _enrich_action_cards(
         event_data.get("action_cards", []), context.timeline, today
@@ -157,6 +165,7 @@ def _empty_context(context):
             k: []
             for k in (
                 "sponsors",
+                "other_sponsors",
                 "partners",
                 "co_chairs",
                 "reviewers",

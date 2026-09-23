@@ -21,6 +21,7 @@
     "video_url",
     "column_break_uknn",
     "bio",
+    "tshirt_size",
     "photo",
     "affirmation_for_commitment",
     "past_experience"
@@ -145,10 +146,18 @@
       "in_standard_filter": 1,
       "label": "Volunteer Status",
       "options": "Accepted\nWaitlisted\nRejected"
+    },
+    {
+      "default": "Skip T-shirt",
+      "description": "To get sizes for pre-order if event includes volunteer t-shirts",
+      "fieldname": "tshirt_size",
+      "fieldtype": "Select",
+      "label": "T-shirt size",
+      "options": "XS\nS\nM\nL\nXL\n2XL\n3XL\nSkip T-shirt"
     }
   ],
   "links": [],
-  "modified": "2026-05-19 18:28:34.983497",
+  "modified": "2026-08-24 19:15:39.206291",
   "modified_by": "Administrator",
   "module": "Volunteering",
   "name": "Event Volunteer",

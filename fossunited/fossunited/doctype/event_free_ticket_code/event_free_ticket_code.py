@@ -6,6 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 
 from fossunited.api.chapter import check_if_chapter_or_event_core_member
+from fossunited.doctype_ids import EVENT
 
 
 class EventFreeTicketCode(Document):
@@ -33,14 +34,70 @@ class EventFreeTicketCode(Document):
             "Booth Manager",
             "Other",
         ]
+        tshirt_included: DF.Check
         used_count: DF.Int
     # end: auto-generated types
+
+    def before_insert(self):
+        self.validate_event_eligibility()
+        self.warn_duplicate_email()
 
     def on_trash(self):
         self.permit_only_team()
 
     def before_save(self):
         self.permit_only_team()
+        self.sync_is_used()
+
+    def validate_event_eligibility(self):
+        """Only issue free ticket codes for paid events that is Live"""
+        event = frappe.db.get_value(
+            EVENT, self.event, ["is_paid_event", "event_start_date"], as_dict=True
+        )
+        if not event:
+            frappe.throw(_("Selected event does not exist."))
+
+        if not event.is_paid_event:
+            frappe.throw(_("Free ticket codes can only be issued for paid events."))
+
+        if event.event_start_date and event.event_start_date <= frappe.utils.now_datetime():
+            frappe.throw(_("Free ticket codes can only be issued for upcoming Live events only."))
+
+    def sync_is_used(self):
+        """Keep is_used in sync with max_count/used_count."""
+        self.is_used = 1 if int(self.used_count or 0) >= int(self.max_count or 0) else 0
+
+    def warn_duplicate_email(self):
+        """Non-blocking heads-up in Desk: this email already has a coupon
+        for this event. Doesn't stop the save - duplicates are allowed
+        (e.g. a deliberate resend via an email alias).
+        """
+        if not self.mapped_email or not self.event:
+            return
+
+        existing = frappe.db.get_value(
+            self.doctype,
+            {
+                "event": self.event,
+                "mapped_email": self.mapped_email,
+                "name": ["!=", self.name or ""],
+            },
+            ["name", "tier", "other_tier"],
+            as_dict=True,
+        )
+        if existing:
+            tier_label = (
+                existing.other_tier
+                if existing.tier == "Other" and existing.other_tier
+                else existing.tier
+            )
+            frappe.msgprint(
+                _('note: {0} already has a coupon ({1}) under "{2}" for this event.').format(
+                    self.mapped_email, existing.name, tier_label
+                ),
+                indicator="orange",
+                alert=True,
+            )
 
     def permit_only_team(self):
         """Allow only event/chapter team members to modify."""

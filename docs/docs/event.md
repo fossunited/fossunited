@@ -45,7 +45,6 @@ Organizing a meetup, conference, or workshop requires careful planning and teamw
 ### 5. Secure Sponsorships
 - Identify and approach potential sponsors.
 - Create sponsorship packages that align with FOSS community values.
-- Note: FOSS United offers financial support up to INR 25,000 for conferences and INR 4,000 for meetups.
 
 ### 6. Promote the Event
 - Develop a marketing plan including social media, email newsletters, and community outreach.

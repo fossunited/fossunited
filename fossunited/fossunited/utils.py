@@ -45,6 +45,16 @@ def is_user_team_member(chapter, user):
     return False
 
 
+def get_request_path():
+    """Current request path, for use in Jinja templates.
+
+    frappe.request is no longer exposed to the sandboxed Jinja globals
+    (frappe/frappe#42390 removed it from exec_safe_globals).
+    """
+    request = getattr(frappe.local, "request", None)
+    return request.path if request else ""
+
+
 # Filter
 def make_badge(text="Default", size="sm"):
     # stored in the form of (background-color, text-color)
@@ -430,7 +440,7 @@ def sanitize_text_content(value: str | None, fallback=""):
 
     soup = BeautifulSoup(cleaned, "html.parser")
 
-    for tag in soup.find_all(["img", "svg", "math", "style", "script", "iframe", "object"]):
+    for tag in soup.find_all(["svg", "math", "style", "script", "iframe", "object"]):
         tag.decompose()
 
     for tag in soup.find_all(True):

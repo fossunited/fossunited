@@ -1,0 +1,25 @@
+info:
+  name: get-campaign-detail-safe-fields
+  type: http
+  seq: 3
+http:
+  method: POST
+  url: '{{base}}/method/fossunited.api.emailing.get_campaign_detail'
+  body:
+    type: json
+    data: |-
+      {
+        "id": "{{newsletter_id}}"
+      }
+runtime:
+  auth:
+    type: none
+tests:
+  value: |
+    test("non-chapter-member should be rejected from viewing campaign detail", function() {
+      const status = res.getStatus();
+      expect(status).to.be.oneOf([403, 417, 500]);
+    });
+docs: |-
+  get_campaign_detail field exposure: non-chapter-member should be rejected.
+  Previously used get_doc().as_dict() and get_value(["*"]) which leaked all fields.

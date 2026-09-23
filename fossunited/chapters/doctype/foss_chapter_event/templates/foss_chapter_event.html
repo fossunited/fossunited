@@ -349,6 +349,21 @@
               {% else %}
             </div>
             {% endif %}
+
+              {% if doc.catering and doc.catering != 'None' %}
+              <div class="ev-detail-row">
+                <div
+                  class="ev-icon"
+                  tabindex="0"
+                  data-toggle="tooltip"
+                  data-placement="right"
+                  title="{{ doc.catering }} provided for attendees"
+                >
+                  <i class="ti ti-soup" aria-hidden="true"></i>
+                </div>
+                <div class="ev-detail-secondary">{{ doc.catering }}</div>
+              </div>
+              {% endif %}
             </div>
 
             <!-- Do we need to make them repeat same content? -->
@@ -389,7 +404,7 @@
                       {% endif %}
                     {% elif schedule_data %}
                       <a
-                        href="#schedule-heading"
+                        href="/{{ doc.route }}/schedule"
                         class="v3-btn v3-btn-primary"
                         aria-label="View event schedule"
                       >
@@ -399,7 +414,7 @@
                     {% endif %}
                   {% elif status_concluded and schedule_data %}
                     <a
-                      href="#schedule-heading"
+                      href="/{{ doc.route }}/schedule"
                       class="v3-btn v3-btn-primary"
                       aria-label="View event schedule"
                     >
@@ -583,7 +598,7 @@
                   <img
                     class="{% if k in ['x', 'matrix-light'] %}bg-white img-rounded{% endif %}"
                     src="https://svgl.app/library/{{ k }}.svg"
-                    alt="{{ k|title }} icon"
+                    alt=""
                   />
                 </a>
                 {% endfor %}
@@ -623,7 +638,13 @@
                  var element = document.getElementById(mapId)
 
                  if (element) {
-                   var map = L.map(element).setView([lat, lng], 14)
+                   var map = L.map(element, {
+                     zoomControl: false,
+                     dragging: false,
+                     touchZoom: false,
+                     scrollWheelZoom: false,
+                     keyboard: false,
+                   }).setView([lat, lng], 14)
 
                    map.attributionControl.setPrefix('')
                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
