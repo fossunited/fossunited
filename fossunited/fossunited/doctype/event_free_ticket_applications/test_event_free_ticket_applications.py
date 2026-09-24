@@ -1,6 +1,8 @@
 # Copyright (c) 2025, Frappe x FOSSUnited and Contributors
 # See license.txt
 
+from unittest.mock import patch
+
 import frappe
 from faker import Faker
 from frappe.tests.utils import FrappeTestCase
@@ -11,6 +13,9 @@ from fossunited.doctype_ids import (
     EVENT_TICKET,
     FREE_TICKET_APPLY,
     FREE_TICKET_CODE,
+)
+from fossunited.fossunited.doctype.event_free_ticket_applications.event_free_ticket_applications import (
+    EventFreeTicketApplications,
 )
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
@@ -199,8 +204,89 @@ class TestEventFreeTicketApplications(FrappeTestCase):
 
     def test_second_application_after_max_count(self):
         coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=1, used_count=0)
-        FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
+        FreeTicketApplicationFactory.create(
+            coupon_id=coupon.name, event=self.event.name, email=coupon.mapped_email
+        )
         coupon.reload()
         self.assertEqual(coupon.is_used, 1)
-        with self.assertRaises(frappe.ValidationError):
+        with self.assertRaisesRegex(frappe.ValidationError, "max count"):
             FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
+
+    def test_single_use_coupon_rejects_other_email(self):
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=1)
+        other_email = fake.unique.email()
+
+        with self.assertRaises(frappe.ValidationError) as ctx:
+            FreeTicketApplicationFactory.create(
+                coupon_id=coupon.name, event=self.event.name, email=other_email
+            )
+
+        # whoever holds the code may not be its owner - don't tell them who is
+        self.assertNotIn(coupon.mapped_email, str(ctx.exception))
+        self.assertFalse(
+            frappe.db.exists(EVENT_TICKET, {"event": self.event.name, "email": other_email})
+        )
+        coupon.reload()
+        self.assertEqual(coupon.used_count, 0)
+        self.assertEqual(coupon.is_used, 0)
+
+    def test_single_use_coupon_accepts_mapped_email_case_insensitively(self):
+        coupon = FreeTicketCodeFactory.create(
+            event=self.event.name, max_count=1, mapped_email="Speaker.Name@Example.com"
+        )
+        FreeTicketApplicationFactory.create(
+            coupon_id=coupon.name, event=self.event.name, email="speaker.name@example.COM"
+        )
+
+        self.assertTrue(
+            frappe.db.exists(
+                EVENT_TICKET, {"event": self.event.name, "email": "speaker.name@example.COM"}
+            )
+        )
+        coupon.reload()
+        self.assertEqual(coupon.used_count, 1)
+        self.assertEqual(coupon.is_used, 1)
+
+    def test_multi_use_coupon_can_be_shared_with_other_emails(self):
+        # e.g. a sponsor passing seats to their team: not bound to mapped_email
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=2)
+        emails = [fake.unique.email(), fake.unique.email()]
+        for email in emails:
+            FreeTicketApplicationFactory.create(
+                coupon_id=coupon.name, event=self.event.name, email=email
+            )
+
+        for email in emails:
+            self.assertTrue(
+                frappe.db.exists(EVENT_TICKET, {"event": self.event.name, "email": email})
+            )
+        coupon.reload()
+        self.assertEqual(coupon.used_count, 2)
+        self.assertEqual(coupon.is_used, 1)
+
+    def test_losing_a_race_for_the_last_use_gets_no_ticket(self):
+        """
+        Simulate two people redeeming the last use at the same time: this
+        redemption passes validate_coupon, then another one commits before it
+        claims the use. It must be rejected rather than over-issuing.
+        """
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=2, used_count=1)
+        email = fake.unique.email()
+        validate_coupon = EventFreeTicketApplications.validate_coupon
+
+        def validate_then_lose_race(application):
+            coupon_data = validate_coupon(application)
+            frappe.db.set_value(FREE_TICKET_CODE, coupon.name, {"used_count": 2, "is_used": 1})
+            return coupon_data
+
+        with patch.object(EventFreeTicketApplications, "validate_coupon", validate_then_lose_race):
+            with self.assertRaisesRegex(frappe.ValidationError, "max count"):
+                FreeTicketApplicationFactory.create(
+                    coupon_id=coupon.name, event=self.event.name, email=email
+                )
+
+        self.assertFalse(
+            frappe.db.exists(EVENT_TICKET, {"event": self.event.name, "email": email})
+        )
+        coupon.reload()
+        self.assertEqual(coupon.used_count, 2)

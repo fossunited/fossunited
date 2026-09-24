@@ -43,9 +43,11 @@ class EventFreeTicketApplications(Document):
 
         self.validate_email_not_used()
         coupon_data = self.validate_coupon()
+        # Claim the coupon use before creating the ticket, so a concurrent
+        # redemption that lost the race never gets a ticket.
+        self.update_coupon_usage()
         ticket_tier = self.get_ticket_tier(coupon_data)
         self.create_free_ticket(ticket_tier, coupon_data)
-        self.update_coupon_usage(coupon_data)
 
     def validate_coupon(self):
         """Ensure the provided coupon is valid and not overused."""
@@ -58,7 +60,15 @@ class EventFreeTicketApplications(Document):
         coupon_data = frappe.db.get_value(
             FREE_TICKET_CODE,
             self.coupon_id,
-            ["max_count", "used_count", "tier", "other_tier", "is_used", "tshirt_included"],
+            [
+                "max_count",
+                "used_count",
+                "tier",
+                "other_tier",
+                "is_used",
+                "tshirt_included",
+                "mapped_email",
+            ],
             as_dict=True,
         )
 
@@ -68,9 +78,36 @@ class EventFreeTicketApplications(Document):
         if coupon_data.is_used or (coupon_data.used_count >= coupon_data.max_count):
             frappe.throw(_("Reached max count of coupon usage."))
 
+        self.validate_email_matches_coupon(coupon_data)
         self.validate_tshirt_size(coupon_data)
 
         return coupon_data
+
+    def validate_email_matches_coupon(self, coupon_data):
+        """A single-use coupon is issued to one person, so only the email it
+        was sent to can redeem it. Without this, anyone the code is forwarded
+        to (or who sees it posted) could claim the pass under their own email.
+
+        Multi-use coupons (max_count > 1) are meant to be shared - e.g. a
+        sponsor handing passes to their team - and one email can only hold
+        one ticket per event, so they can't be bound to `mapped_email`.
+
+        Comparison is case-insensitive: the web form keeps whatever casing
+        the claimant typed. The error doesn't reveal `mapped_email`, since
+        whoever is holding the code may not be its owner.
+        """
+        if int(coupon_data.max_count or 0) != 1:
+            return
+
+        mapped_email = (coupon_data.mapped_email or "").strip().lower()
+        if mapped_email and (self.email or "").strip().lower() != mapped_email:
+            frappe.throw(
+                _(
+                    "This coupon was issued to a different email address. Please "
+                    "use the email the coupon was sent to, or contact the organizers."
+                ),
+                frappe.ValidationError,
+            )
 
     def validate_tshirt_size(self, coupon_data):
         """Require a t-shirt choice only when the coupon includes a t-shirt.
@@ -129,13 +166,34 @@ class EventFreeTicketApplications(Document):
             frappe.log_error(f"Unexpected error creating free ticket: {e}")
             frappe.throw(_("An unexpected error occurred while creating your free ticket."))
 
-    def update_coupon_usage(self, coupon_data):
-        """Increment coupon usage and mark as used if max reached."""
-        new_used_count = int(coupon_data.used_count or 0) + 1
-        frappe.db.set_value(FREE_TICKET_CODE, self.coupon_id, "used_count", new_used_count)
+    def update_coupon_usage(self):
+        """
+        Increment coupon usage and mark as used if max reached.
 
-        if new_used_count >= int(coupon_data.max_count):
-            frappe.db.set_value(FREE_TICKET_CODE, self.coupon_id, "is_used", 1)
+        Re-reads the coupon with a row lock (SELECT ... FOR UPDATE) instead of
+        trusting the counts read in validate_coupon: otherwise two concurrent
+        redemptions could both see the last free use and both get a ticket.
+        The lock is held until the request's transaction ends, so a second
+        redemption waits here and then sees the updated count.
+        """
+        coupon = frappe.db.get_value(
+            FREE_TICKET_CODE,
+            self.coupon_id,
+            ["used_count", "max_count", "is_used"],
+            as_dict=True,
+            for_update=True,
+        )
+        used_count = int(coupon.used_count or 0)
+        max_count = int(coupon.max_count or 0)
+        if coupon.is_used or used_count >= max_count:
+            frappe.throw(_("Reached max count of coupon usage."))
+
+        new_used_count = used_count + 1
+        frappe.db.set_value(
+            FREE_TICKET_CODE,
+            self.coupon_id,
+            {"used_count": new_used_count, "is_used": int(new_used_count >= max_count)},
+        )
 
     def validate_email_not_used(self):
         """Ensure the email has not already claimed a free ticket for this event."""
