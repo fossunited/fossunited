@@ -3934,7 +3934,12 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
   color: var(--v3-text-color2); background: transparent; border: none;
   white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .15s;
 }
-.if-nav-link:hover { background: var(--v3-button-border); color: var(--v3-text-color2); text-decoration: none; }
+.if-nav-link:hover { background: var(--v3-button-border); color: var(--v3-text-color); text-decoration: none; }
+.if-nav-link.is-active,
+.if-nav-link[aria-current="page"] {
+  background: var(--v3-button-border);
+  color: var(--v3-text-color);
+}
 .if-nav-ticket { font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; padding: 8px 14px; margin-left: 4px; }
 
 .if-tagline { display: inline-flex; align-items: flex-end; gap: 8px; font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--v3-text-color); text-decoration: none; }
