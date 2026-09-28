@@ -98,7 +98,7 @@
                   <div class="v3-hover-shadow rounded h-100 p-2">
                     <div class="position-relative">
                       {% if m.youtube_id %}
-                        {{ video_embed(youtube_id=m.youtube_id, title=m.title, speaker=m.speaker, event=m.edition) }}
+                        {{ video_embed(youtube_id=m.youtube_id, title=m.title, speaker=m.speaker, event=m.edition, thumbnail="mq") }}
                       {% else %}
                         <div
                           class="m-video-aspect rounded d-flex align-items-center justify-content-center v3-bg-subtle"
