@@ -95,16 +95,14 @@ setup: up
         fi
         mkdir -p apps/fossunited/fossunited
         env/bin/pip install --quiet --editable /workspace
-        touch sites/apps.txt
-        if ! grep -qx fossunited sites/apps.txt; then
-            # Guard against a missing trailing newline (e.g. left by a prior get-app run),
-            # which would otherwise concatenate onto the last existing entry.
-            [ -s sites/apps.txt ] && [ -n "$(tail -c1 sites/apps.txt)" ] && printf '\n' >> sites/apps.txt
-            echo fossunited >> sites/apps.txt
-        fi
         if [ ! -d apps/frappe_factory_bot ]; then
             bench get-app --skip-assets --branch main https://github.com/harshtandiya/frappe_factory_bot
         fi
+        {
+            echo "frappe"
+            echo "frappe_factory_bot"
+            echo "fossunited"
+        } > sites/apps.txt
 
         if [ -f sites/fossunited.localhost/site_config.json ]; then
             bench --site fossunited.localhost reinstall --mariadb-root-password 123 --admin-password admin --yes
