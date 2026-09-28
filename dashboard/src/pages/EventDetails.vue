@@ -163,15 +163,21 @@
             :file-types="'application/pdf'"
             :validate-file="validateDeckFile"
             @success="(file) => setDeckLink(file.file_url)"
+            @failure="
+              (error) => toast.error('Failed to upload deck', { description: error?.message })
+            "
           >
-            <template #default="{ progress, uploading, openFileSelector }">
-              <Button
-                :variant="'subtle'"
-                :size="'sm'"
-                class="w-fit"
-                :label="uploading ? `Uploading ${progress}` : 'Or upload a PDF'"
-                @click="openFileSelector"
-              />
+            <template #default="{ progress, uploading, error, openFileSelector }">
+              <div class="flex flex-col gap-1">
+                <Button
+                  :variant="'subtle'"
+                  :size="'sm'"
+                  class="w-fit"
+                  :label="uploading ? `Uploading ${progress}` : 'Or upload a PDF'"
+                  @click="openFileSelector"
+                />
+                <div v-if="error" class="text-sm text-ink-red-4">{{ error }}</div>
+              </div>
             </template>
           </FileUploader>
         </div>
@@ -320,8 +326,8 @@ const validateDeckFile = (file) => {
 const setDeckLink = (fileUrl) => {
   const absoluteUrl = fileUrl.startsWith('http') ? fileUrl : window.location.origin + fileUrl
   event.doc.deck_link = absoluteUrl
-  event.setValue
-    .submit({ deck_link: absoluteUrl })
+  event.save
+    .submit()
     .then(() => toast.success('Deck uploaded successfully'))
     .catch((error) => toast.error('Failed to save deck link', { description: error.message }))
 }
