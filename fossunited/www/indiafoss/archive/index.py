@@ -7,7 +7,7 @@ from fossunited.fossunited.event_media import (
 
 
 def get_context(context):
-    context.no_cache = 1
+    context.no_cache = 0
     # Custom IndiaFOSS header + footer (if_header/if_footer); suppress the site defaults.
     context.hide_nav, context.hide_footer = True, True
 

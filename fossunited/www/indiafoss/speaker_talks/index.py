@@ -4,7 +4,7 @@ from fossunited.fossunited.event_media import get_indiafoss_years, get_speaker_t
 
 
 def get_context(context):
-    context.no_cache = 1
+    context.no_cache = 0
     context.hide_nav, context.hide_footer = True, True
 
     slug = frappe.form_dict.slug

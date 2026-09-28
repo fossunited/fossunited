@@ -8,7 +8,7 @@ from fossunited.fossunited.event_media import (
 
 
 def get_context(context):
-    context.no_cache = 1
+    context.no_cache = 0
     context.hide_nav, context.hide_footer = True, True
 
     context.speakers = get_speakers_index()["speakers"]
