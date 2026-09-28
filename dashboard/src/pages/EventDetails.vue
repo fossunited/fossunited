@@ -151,13 +151,30 @@
           label="Show Speakers Tab"
           description="Show speakers (added in event schedule) profile linked to their proposals."
         />
-        <FormControl
-          v-model="event.doc.deck_link"
-          type="url"
-          size="md"
-          label="Deck Link"
-          description="Link to the event's slide/sponsorship deck. Shared with partners and sponsors."
-        />
+        <div class="flex flex-col gap-2">
+          <FormControl
+            v-model="event.doc.deck_link"
+            type="url"
+            size="md"
+            label="Deck Link"
+            description="Link to the event's slide/sponsorship deck. Shared with partners and sponsors."
+          />
+          <FileUploader
+            :file-types="'application/pdf'"
+            :validate-file="validateDeckFile"
+            @success="(file) => setDeckLink(file.file_url)"
+          >
+            <template #default="{ progress, uploading, openFileSelector }">
+              <Button
+                :variant="'subtle'"
+                :size="'sm'"
+                class="w-fit"
+                :label="uploading ? `Uploading ${progress}` : 'Or upload a PDF'"
+                @click="openFileSelector"
+              />
+            </template>
+          </FileUploader>
+        </div>
         <TextEditor
           label="Event Description"
           class="col-span-2"
@@ -290,6 +307,23 @@ const validateFile = (file) => {
     toast.error('Only PNG and JPG images are allowed')
     return 'Only PNG and JPG images are allowed'
   }
+}
+
+const validateDeckFile = (file) => {
+  let extn = file.name.split('.').pop().toLowerCase()
+  if (extn !== 'pdf') {
+    toast.error('Only PDF files are allowed')
+    return 'Only PDF files are allowed'
+  }
+}
+
+const setDeckLink = (fileUrl) => {
+  const absoluteUrl = fileUrl.startsWith('http') ? fileUrl : window.location.origin + fileUrl
+  event.doc.deck_link = absoluteUrl
+  event.setValue
+    .submit({ deck_link: absoluteUrl })
+    .then(() => toast.success('Deck uploaded successfully'))
+    .catch((error) => toast.error('Failed to save deck link', { description: error.message }))
 }
 
 const getBannerImage = () => {
