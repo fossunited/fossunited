@@ -112,8 +112,7 @@ setup: up
             bench new-site fossunited.localhost \
                 --db-root-password 123 \
                 --admin-password admin \
-                --mariadb-user-host-login-scope=% \
-                --force
+                --mariadb-user-host-login-scope=%
         fi
 
         for app in frappe_factory_bot fossunited; do
