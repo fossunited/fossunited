@@ -8,7 +8,7 @@ FOSS United runs and supports a wide range of initiatives aimed at building a st
 2. **[Events](https://fossunited.org/events):**
    Organizes and sponsors events such as IndiaFOSS and FOSS Hack to bring together the community, foster collaboration, and celebrate FOSS culture.
 
-3. **[Public Policy Initiative](https://fossunited.org/policy):**
+3. **[Public Policy Initiative](https://fossunited.org/public-policy):**
    Conducts research and advocacy around FOSS-related public policies, aiming to influence government regulations and promote openness in technology governance.
 
 4. **[OASIS](https://oasishq.org/):**
@@ -17,7 +17,7 @@ FOSS United runs and supports a wide range of initiatives aimed at building a st
 5. **[FOSS Clubs Program](https://fossunited.org/clubs):**
    Supports the creation and growth of FOSS Clubs in educational institutions to nurture the next generation of open source contributors.
 
-6. **[FOSS Pledge](https://fossunited.org/pledge):**
+6. **[FOSS Pledge](https://archive.fossunited.org/foss-pledge):**
    A public declaration of support on Free and Open Source Software by individuals and organizations.
 
 7. **[Mon School](https://mon.school/) (Inactive):**
