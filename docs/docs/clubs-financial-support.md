@@ -12,7 +12,7 @@
 
 ### What are the requirements to avail financial support?
 - Work with our team during the planning phase of each event
-- Use the FOSS United platform for [event RSVPs]([event RSVPs](event-rsvp.md))
+- Use the FOSS United platform for [event RSVPs](event-rsvp.md)
 - Post a [report](clubs-peq.md) of the event on the [forum](https://forum.fossunited.org/).
 
 ### How do active clubs receive their annual ₹50,000 support?
