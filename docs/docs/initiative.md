@@ -23,7 +23,7 @@ FOSS United runs and supports a wide range of initiatives aimed at building a st
 7. **[FOSS Pledge](https://archive.fossunited.org/foss-pledge):**
    A public declaration of support on Free and Open Source Software by individuals and organizations.
 
-8. **[Mon School](https://mon.school/) (Inactive):**
+8. **[Mon School](https://web.archive.org/web/20250401032240/https://mon.school/) (Inactive):**
    An educational platform offering courses that emphasize creativity, critical thinking, and foundational skills, especially for beginners and young learners.
 
 9. **[Job Board](https://fossunited.org/jobs):**
