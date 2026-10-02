@@ -1,14 +1,12 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/indiafoss.html" import if_header, if_footer %}
 {% from "fossunited/templates/macros/video_embed.html" import video_embed %}
-{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
 
 {% set SOCIAL_ICONS = {
   "linkedin": "brand-linkedin", "x": "brand-x", "instagram": "brand-instagram",
   "github": "brand-github", "website": "world"
 } %}
 
-{% block meta_block %}{{ meta_tags(pagetitle, description, image) }}{% endblock %}
 {% block title %}{{ pagetitle }} | FOSS United{% endblock %}
 
 {% block page_content %}

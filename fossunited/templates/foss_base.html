@@ -1,5 +1,9 @@
 <!-- prettier-ignore-start -->
-{% extends "templates/base.html" %} {% block head_include %} {{ super() }}
+{% extends "templates/base.html" %}
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+
+{% block head_include %} {{ super() }}
+
 <script> // Apply theme immediately before page renders
   (function() {
     const savedTheme = localStorage.getItem('theme') ||
@@ -11,6 +15,12 @@
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
 />
+{% endblock %}
+
+{% block meta_block %}
+  {% if pagetitle or description or image %}
+    {{ meta_tags(pagetitle, description, image) }}
+  {% endif %}
 {% endblock %}
 
 {% set layout = layout | default("standard") %}

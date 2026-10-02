@@ -1,14 +1,9 @@
 {% extends "templates/foss_base.html" %}
-{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
 {% from "fossunited/templates/macros/breadcrumb.html" import theme_toggle %}
 {% from "fossunited/templates/macros/fosshack.html" import fosshack_navbar %}
 
 
 {% block title %}{{ hackathon.name }} - FOSS United{% endblock %}
-{% block meta_block %}
-  {{ meta_tags(pagetitle, description, image) }}
-{% endblock %}
-
 {% macro tier_badge(label, bars=3) %}
   <svg width="196" height="40" viewBox="0 0 196 40" fill="none" class="tier-badge">
     <rect width="196" height="40" fill="none" />
