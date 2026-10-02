@@ -20,7 +20,7 @@ FOSS United runs and supports a wide range of initiatives aimed at building a st
 6. **[FOSS Clubs Program](https://fossunited.org/clubs):**
    Supports the creation and growth of FOSS Clubs in educational institutions to nurture the next generation of open source contributors.
 
-7. **[FOSS Pledge](https://archive.fossunited.org/foss-pledge):**
+7. **[FOSS Pledge](https://fossunited.org/foss-pledge):**
    A public declaration of support on Free and Open Source Software by individuals and organizations.
 
 8. **[Mon School](https://web.archive.org/web/20250401032240/https://mon.school/) (Inactive):**
