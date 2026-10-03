@@ -9,7 +9,7 @@
 {% block page_content %}
   <div class="v3-page">
     <div class="v3-page-wide">
-      {{ if_header(years, current_year, show_statistics=False, show_archive=False, show_speakers=True) }}
+      {{ if_header(years, current_year, show_statistics=False, show_archive=True, active_tab="archive", show_speakers=True) }}
 
       <main id="main-content" role="main" class="d-flex flex-column gap-6 mt-4 pb-section">
         <header>
