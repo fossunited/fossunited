@@ -15,7 +15,7 @@ Mark one answer per question.
 
 ### Step 2: Your reading path
 
-Match your Q1 and Q4 answers. If Q2 is government or government-aided, add [Policy Tailwinds](education-policy.md#policy-tailwinds-government-institutions) after your playbook. If Q3 includes non-engineering disciplines, add [Beyond Engineering](education-cross-disciplinary.md) at the end.
+Match your Q1 and Q4 answers. If Q2 is government or government-aided, add [Policy Tailwinds](education-policy.md#policy-tailwinds) after your playbook. If Q3 includes non-engineering disciplines, add [Beyond Engineering](education-cross-disciplinary.md) at the end.
 
 | Your institution | Your starting point | Read in this order |
 |-----------------|--------------------|--------------------|
@@ -24,6 +24,6 @@ Match your Q1 and Q4 answers. If Q2 is government or government-aided, add [Poli
 | Mid-size College, 2,000 to 7,000, starting fresh | [Playbook B](education-playbooks.md#playbook-b-mid-size-college-2000-to-7000-students) | [Pillar IV](education-pillars.md#pillar-iv-open-culture-and-community) → [Pillar I](education-pillars.md#pillar-i-open-software) → [Pillar II](education-pillars.md#pillar-ii-open-education) → [Playbook B](education-playbooks.md#playbook-b-mid-size-college-2000-to-7000-students) |
 | Mid-size College, 2,000 to 7,000, some experience | [Playbook B](education-playbooks.md#playbook-b-mid-size-college-2000-to-7000-students) | [Pillars I to III](education-pillars.md#the-four-pillars) → [Pillar IV](education-pillars.md#pillar-iv-open-culture-and-community) → [Playbook B](education-playbooks.md#playbook-b-mid-size-college-2000-to-7000-students) |
 | Large College or Deemed University, 7,000 to 20,000 | [Playbook C](education-playbooks.md#playbook-c-large-college-and-deemed-university-7000-to-20000-students) | [Pillar IV](education-pillars.md#pillar-iv-open-culture-and-community) → [Pillars I to III](education-pillars.md#the-four-pillars) → [Playbook C](education-playbooks.md#playbook-c-large-college-and-deemed-university-7000-to-20000-students) |
-| Technical University, over 20,000 | [Playbook D](education-playbooks.md#playbook-d-technical-university-20000-students) | [All Pillars](education-pillars.md#the-four-pillars) → [Playbook D](education-playbooks.md#playbook-d-technical-university-20000-students) → [Policy](education-policy.md#policy-tailwinds-government-institutions) |
+| Technical University, over 20,000 | [Playbook D](education-playbooks.md#playbook-d-technical-university-20000-students) | [All Pillars](education-pillars.md#the-four-pillars) → [Playbook D](education-playbooks.md#playbook-d-technical-university-20000-students) → [Policy](education-policy.md#policy-tailwinds) |
 
 Before you begin your path, the single most important thing is identifying the right person to lead this. Read [Who should run this programme](education-program-manager.md) first if you have not already. Everything else moves faster once that person is in place.

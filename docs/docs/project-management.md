@@ -4,7 +4,7 @@ Work on the Platform is planned and executed using a [GitHub project](https://gi
 at the moment and known issues about the project are tracked using the GitHub
 [issues board](https://github.com/fossunited/fossunited/issues/).
 
-This is more or less reflected in [Changelog.md](changelog.md) in text format explaining the changes as monthly tech report from FOSS united foundation and platform. Updates are also be communicated in [blog](https://fossunited.org/blog/tech-report) and [forum post](https://forum.fossunited.org/t/foss-united-monthly-tech-report/) to keep the community informed.
+This is more or less reflected in [Changelog.md](changelog.md) in text format explaining the changes as monthly tech report from FOSS united foundation and platform. Updates are also be communicated in [blog](https://fossunited.org/blog/tech-report) and [forum post](https://forum.fossunited.org/t/foss-united-platform-monthly-tech-report/6431) to keep the community informed.
 
 The GitHub issues board organizes work in a clear workflow:
 
