@@ -32,3 +32,26 @@ You can browse the [issue tracker](https://github.com/fossunited/fossunited/issu
 - Checkout [conventionalcommits.org](https://www.conventionalcommits.org/en/v1.0.0/) for writing a decent and informative yet short commit message.
 - We expect the code to be properly formatted for better readability for the reviewers and developers. Extensions like [Prettier](https://prettier.io/) is helpful and is available on mostly all editor marketplaces.
 - Documentation: Currently the project is at its initial stage. For Documentation related contributions you can contact us at developers@fossunited.org for the same.
+- Tests: PRs that change behaviour should include tests (see below).
+
+### Tests
+
+PRs that fix a bug or change behaviour should add or update tests that cover the change, and the full test suite must pass in CI. For a bug fix, add a test that fails without your fix and passes with it.
+
+- **Python / server-side:** tests live next to the code they test, as `test_<doctype>.py` inside the doctype folder, or in `fossunited/tests/` for APIs and cross-cutting behaviour. Use the factories in `fossunited/tests/factories/` to create test data, and clean up whatever your test creates in `tearDown`.
+- **API endpoints:** if you add or change a whitelisted API, especially a guest (`allow_guest=True`) one, also add or update the [Bruno API tests](https://docs.fossunited.org/development/#bruno-api-tests) in `bruno-collection/`.
+
+Run tests locally before opening a PR (your site needs `allow_tests` enabled; see the [development guide](https://docs.fossunited.org/development/)):
+
+```bash
+# a single doctype
+bench --site <your-site> run-tests --app fossunited --doctype "Event Free Ticket Applications"
+
+# a single test module
+bench --site <your-site> run-tests --app fossunited --module fossunited.tests.test_speaker_coupons
+
+# everything, as CI does
+bench --site <your-site> run-parallel-tests --app fossunited
+```
+
+In the PR description, mention which tests you added and how you ran them.
