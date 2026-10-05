@@ -109,7 +109,7 @@ ARCHIVE_HACKATHONS = {
             },
             {
                 "name": "Rumqtt",
-                "url": "https://github.com/bytebeamio/rumqtt/tree/mqtt5",
+                "url": "https://github.com/bytebeamio/rumqtt/tree/mqtt5-client",
                 "description": "Added MQTT5 support to the Rust MQTT library, a great value addition to the Rust ecosystem.",
                 "cash_prize": "₹25,000",
                 "status": "Winner",

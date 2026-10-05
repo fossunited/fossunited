@@ -337,6 +337,7 @@ class FOSSChapter(WebsiteGenerator):
             "matrix": "matrix-light",
             "instagram": "instagram-icon",
             "facebook": "facebook-icon",
+            "github": "github_light",
         }
 
         REVERSE_RENAMES = {v: k for k, v in KEY_RENAMES.items()}

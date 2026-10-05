@@ -19,7 +19,7 @@ September was IndiaFOSS 2026 month. The event itself ran on a self-hosted live s
 
 ### IndiaFOSS 2026
 
-- **Live stream**: Was self-hosted at [stream.fossunited.org](https://stream.fossunited.org) (temp server only) using [MediaMTX](https://github.com/bluenviron/mediamtx), set up by Jasil and the streaming team. All streams are at [indiafoss/2026/live](https://fossunited.org/indiafoss/2026/live); the page also showed the live schedule for each hall/auditorium during the event, and now shows recorded links post-event. Big thanks to Jasil and team, it ran smoothly. More on the numbers in the [livestreaming/recording forum thread](https://forum.fossunited.org/t/if26-livestreaming-recording/8494/10).
+- **Live stream**: Was self-hosted at `stream.fossunited.org` (temp server only) using [MediaMTX](https://github.com/bluenviron/mediamtx), set up by Jasil and the streaming team. All streams are at [indiafoss/2026/live](https://fossunited.org/indiafoss/2026/live); the page also showed the live schedule for each hall/auditorium during the event, and now shows recorded links post-event. Big thanks to Jasil and team, it ran smoothly. More on the numbers in the [livestreaming/recording forum thread](https://forum.fossunited.org/t/if26-livestreaming-recording/8494/10).
 
 - **Devrooms**: [devrooms list](https://fossunited.org/indiafoss/2026/devrooms) and each devroom page (e.g. [AOSP](https://fossunited.org/indiafoss/2026/devrooms/aosp)) got their final pass to match the overall theme and show their schedule dynamically.
 
@@ -761,7 +761,7 @@ Three new RSS feeds added this month, completing the core RSS ecosystem:
 - [#1448](https://github.com/fossunited/fossunited/pull/1448) **Partner Project Template Page**
   New dedicated template page for partner and contributor projects with a responsive grid layout, project type indicator icons (contributor vs partner), and search functionality. Bidirectional redirect from the old `partner-project` URL path is in place.
 
-    Visit: [FOSSUnited Partner Page](httpshttps://fossunited.org/fosshack/2026/partner-projects/foss_united_platform)
+    Visit: [FOSSUnited Partner Page](https://fossunited.org/fosshack/2026/partner-projects/foss_united_platform)
 
 #### Accessibility Improvements
 
@@ -891,7 +891,7 @@ Significant accessibility work shipped this month, with multiple contributions f
 
 - [@jasilfaras](https://github.com/jasilfaras) (Jasil) — pinned `tatsu<5.10.0` to fix install crash on fresh setups ([#1474](https://github.com/fossunited/fossunited/pull/1474))
 - Jenisha Dsouza — FOSS Hack 2026 accessibility contributions across dashboard components ([#1489](https://github.com/fossunited/fossunited/pull/1489), [#1490](https://github.com/fossunited/fossunited/pull/1490), [#1493](https://github.com/fossunited/fossunited/pull/1493))
-- [@aflahaa](https://github.com/aflahaa) — refactored newsletter custom CSS with Bootstrap utilities ([#1473](https://github.com/fossunited/fossunited/pull/1473))
+- [@aflahaa](https://github.com/aflaha01) — refactored newsletter custom CSS with Bootstrap utilities ([#1473](https://github.com/fossunited/fossunited/pull/1473))
 - [@nimiverma](https://github.com/nimiverma) - Newsletter Subscription on RSVP Success #1513
 Returning contributors this month:
 - [@ni5arga](https://github.com/ni5arga) (Nisarga Adhikary) — security, performance, RSS feeds, and profile features
@@ -1154,7 +1154,7 @@ January kicked off with significant improvements focused on **FOSS Hack 2026** p
 
 - [#1356](https://github.com/fossunited/fossunited/pull/1356) **Grantees Page**
   New page showing all grant recipients across different grant types indicating total amount disbursed.
-  Visit: [Grantees](https://fossunited.org/grantees)
+  Visit: [Grantees](https://fossunited.org/grants/grantees)
 
 - [#1379](https://github.com/fossunited/fossunited/pull/1379) **Event Grant Doctype Updates**
   Added new fields (`event_description`, status options like "Ongoing" and "Disbursed") to Event Grant doctype for better tracking via web forms.
@@ -1185,7 +1185,7 @@ January kicked off with significant improvements focused on **FOSS Hack 2026** p
 - [#1368](https://github.com/fossunited/fossunited/pull/1368), [#1369](https://github.com/fossunited/fossunited/pull/1369) **Common Mailing Component**
   Refactored mailing functionality into reusable component. Added mailing feature for localhost hackathons.
 
-- [commit 4c0698163efa228cc4a568e2b6a5146fbfc47034](4c0698163efa228cc4a568e2b6a5146fbfc47034): Redesigned hackathon project page in v3 style.
+- [commit 4c0698163efa228cc4a568e2b6a5146fbfc47034](https://github.com/fossunited/fossunited/commit/4c0698163efa228cc4a568e2b6a5146fbfc47034): Redesigned hackathon project page in v3 style.
 
 #### Event Check-ins & RSVP Improvements
 
@@ -1201,7 +1201,7 @@ January kicked off with significant improvements focused on **FOSS Hack 2026** p
 - [#1393](https://github.com/fossunited/fossunited/pull/1393) **Ticket Check-in Insights by Event Days**
   Ticket check-in insights now show data grouped by event days, similar to RSVP check-ins.
 
-- [commit 8a9a74](8a9a7424c711c7fba7f2e47d78be46e53e778b5c): RSVP page now shows "RSVP Closed" message if form is unpublished and removed RSVP button to avoid 404 page.
+- [commit 8a9a74](https://github.com/fossunited/fossunited/commit/8a9a7424c711c7fba7f2e47d78be46e53e778b5c): RSVP page now shows "RSVP Closed" message if form is unpublished and removed RSVP button to avoid 404 page.
 - Added docs link to event RSVP pages for user guidance.
 - Schedule page now defaults to current day's date for better UX.
 
@@ -1772,7 +1772,7 @@ This is my first monthly tech report as part of the FOSS United team. I'd love y
 
 - [#1099](https://github.com/fossunited/fossunited/pull/1099) Updated Teams page with new Governing Board members
   Refreshed the macro logic and added profiles for the newly elected board.
-  Announcement: [Meet the first-ever elected community governance board](https://fossunited.org/blog/organisation/meet-the-first-ever-elected-community-governance-board-foss-united)
+  Announcement: [Meet the first-ever elected community governance board](https://fossunited.org/blog/organization/meet-the-first-ever-elected-community-governance-board-foss-united)
 
 #### Event Metadata Enhancements
 

@@ -8,26 +8,29 @@ FOSS United runs and supports a wide range of initiatives aimed at building a st
 2. **[Events](https://fossunited.org/events):**
    Organizes and sponsors events such as IndiaFOSS and FOSS Hack to bring together the community, foster collaboration, and celebrate FOSS culture.
 
-3. **[Public Policy Initiative](https://fossunited.org/policy):**
+3. **[Public Policy Initiative](https://fossunited.org/public-policy):**
    Conducts research and advocacy around FOSS-related public policies, aiming to influence government regulations and promote openness in technology governance.
 
-4. **[OASIS](https://oasishq.org/):**
+4. **[Licence to Learn](https://licencetolearn.in):**
+   A campaign mapping the proprietary software that India's public universities depend on, what it costs, and who controls it. Data comes from Right to Information requests and community-led coursework audits.
+
+5. **[OASIS](https://oasishq.org/):**
    A network of organizations committed to the belief that FOSS can empower social enterprises, citizen sector organizations, and communities to create scalable, positive impact.
 
-5. **[FOSS Clubs Program](https://fossunited.org/clubs):**
+6. **[FOSS Clubs Program](https://fossunited.org/clubs):**
    Supports the creation and growth of FOSS Clubs in educational institutions to nurture the next generation of open source contributors.
 
-6. **[FOSS Pledge](https://fossunited.org/pledge):**
+7. **[FOSS Pledge](https://fossunited.org/foss-pledge):**
    A public declaration of support on Free and Open Source Software by individuals and organizations.
 
-7. **[Mon School](https://mon.school/) (Inactive):**
+8. **[Mon School](https://web.archive.org/web/20250401032240/https://mon.school/) (Inactive):**
    An educational platform offering courses that emphasize creativity, critical thinking, and foundational skills, especially for beginners and young learners.
 
-8. **[Job Board](https://fossunited.org/jobs):**
+9. **[Job Board](https://fossunited.org/jobs):**
    Connects FOSS developers and contributors with organizations seeking talent, helping to bridge the gap between the FOSS ecosystem and the job market.
 
-9. **[FOSS Event Grant](https://fossunited.org/grants/events):**
-   Provides financial support to community-driven FOSS events.
+10. **[FOSS Event Grant](https://fossunited.org/grants/events):**
+    Provides financial support to community-driven FOSS events.
 
 ---
 
