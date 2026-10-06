@@ -2,6 +2,8 @@
 
 **Who is this for?** - Auditorium volunteers, managers and speaker manager inside the specific auditorium
 
+**What is called an Audi?** - An auditorium here is a room where there is a stage and audience can listen to live content delivered by a speaker. Historically, IndiaFOSS has been run at NIMHANS Convention Centre, Bengaluru where there are 3 audis with 700 to 300 capacity.
+
 **Time required** - This is an on ground responsbility. You do not need to spend much time before the event.
 
 As an Audi manager or volunteer, you play a crucial role in ensuring that talks stay on schedule at all times. These are the primary responsibilites and things to keep in mind.
