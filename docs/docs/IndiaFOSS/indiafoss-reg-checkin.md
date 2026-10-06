@@ -17,7 +17,7 @@ Set up and sign the tables. Log in to the check-in app on all devices and test s
 Scan the QR code, or ask for the name, booking reference or email. Find the person on the check-in app and mark attendance. Hand over a name sticker and a pen, and ask them to write their details on the sticker before they peel it off.
 
 5. **What do I do after check-in?**
-Ask general attendees to move for breakfast or lunch if the meal lines have opened. For speakers, connect with the main speaker manager, who sits with at Speakers & Media checkin booth.
+Ask general attendees to move for breakfast or lunch if the meal lines have opened. For speakers, connect them with the main speaker manager who should be at the checkin booth with you.
 
 6. **What if someone's name is not in the system?**
 Do not turn them away. Flag the name to the overall volunteer coordinators.
