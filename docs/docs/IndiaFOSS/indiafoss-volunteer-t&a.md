@@ -11,7 +11,7 @@ These are the usual policies for volunteer travel and accommodation.
 - Flight tickets will be considered only if train journey is more than 14 hrs
 - Maximum reimbursement amount is 10k per person
 - Reimbursements will be provided after the conference through the [reimbursements form](https://account.fossunited.org/desk/volunteer-expense/new)
-- Food and intercity travel is not included.
+- Food and intracity travel is not included.
 - Add-ons for the travel (fast-forward checkin, in-flight meals, window/XL seats) are not included.
 - We will not provide travel reimbursements for volunteers who want to help out only on-ground.
 
