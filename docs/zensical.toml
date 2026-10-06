@@ -44,8 +44,7 @@ nav = [
   ]},
 
   {"IndiaFOSS" = [
-    {"Beginner's Guide to IndiaFOSS" = "IndiaFOSS/event-first-timers-guide.md"},
-    {"General FAQ" = "IndiaFOSS/indiafoss.md"},
+    {"Guide to IndiaFOSS" = "IndiaFOSS/indiafoss.md"},
     {"Roles and Responsibilities" = "IndiaFOSS/indiafoss-volunteer-roles.md"},
     {"Registration & Checkin Booth" = "IndiaFOSS/indiafoss-reg-checkin.md"},
     {"F&B Volunteer" ="IndiaFOSS/indiafoss-f&b.md"},
@@ -59,6 +58,7 @@ nav = [
     {"Misc" = [
       {"NIMHANS Floor Map"="IndiaFOSS/indiafoss-NIMHANS-map.md"},
       {"Email Templates"= "IndiaFOSS/indiafoss-email-templates.md"},
+      {"IndiaFOSS Rundown 2026" = "https://docs.google.com/spreadsheets/d/1VxsM-KQOsHuQ-YwbEPC2t0sdOkymUUi-J-enIOkYLlU/edit?usp=sharing"}
     ]}
   ]},
 

@@ -67,7 +67,7 @@ IndiaFOSS is a chance to learn, contribute and build connections in the open sou
 ### Before the conference
 
 - Review the conference schedule.
-- Read about Free and Open Source Software (FOSS) and digital commons. The [Beginner's Guide to IndiaFOSS](event-first-timers-guide.md) is a good start.
+- Read about Free and Open Source Software (FOSS) and digital commons. The [Beginner's Guide to IndiaFOSS](indiafoss.md) is a good start.
 - Identify sessions you would like to attend.
 - Learn about the speakers and participating organisations. Visit community booths and get first-hand information about how projects and products work in real life.
 - Prepare questions for speakers and contributors.
