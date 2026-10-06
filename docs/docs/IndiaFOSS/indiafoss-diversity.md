@@ -99,7 +99,7 @@ Keep all of these, including the originals. Do not discard tickets, invoices, bo
 1. Create an account on [account.fossunited.org](https://account.fossunited.org).
 2. Open the [reimbursement form](https://account.fossunited.org/expense-reimbursement/new).
 3. Select IndiaFOSS 2026 as the event and Diversity Scholar as the category.
-4. Enter your approved reimbursement amount as the total, and complete the rest of the form.
+4. Enter documented eligible expenses, up to the approved amount, and complete the rest of the form.
 5. Upload your bills, receipts and other required documents in the attachment section.
 6. Add your bank details and supporting bank documents.
 7. Submit the claim for verification.
