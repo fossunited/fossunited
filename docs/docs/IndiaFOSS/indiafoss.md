@@ -1,8 +1,14 @@
-# First timer's Guide to IndiaFOSS
+# Volunteer FAQ for IndiaFOSS
 
-If this is your first IndiaFOSS or your first experience with the Free and Open Source Software (FOSS) community, this guide will help you prepare for the conference and make the most of your experience.
+If this is your first IndiaFOSS or your first experience with the Free and Open Source Software (FOSS) community, this guide will help you prepare for the conference and make the most of your experience. This document is meant for general attendees, speakers and even volunteers to familiarise themselves with the conference before the event days.
 
 You don't need to be an experienced open source contributor or an expert in technology to enjoy IndiaFOSS. Be curious, ask questions, meet people, and explore opportunities. Everyone starts somewhere, and we hope this IndiaFOSS is the beginning of your open source journey.
+
+> **Before going any further, please understand the difference between FOSS, FOSS United and IndiaFOSS**
+- FOSS is Free and Open Source Software, a ideology.
+- FOSS United is a non-profit foundation that strengthens and supports the FOSS and Digital Commons ecosystem in India
+- IndiaFOSS (and not FOSS India) is the FOSS United Community's annual festival of FOSS and Digital Commons.
+
 
 ---
 ## 1. Understanding FOSS
@@ -41,7 +47,7 @@ Read more at:
 - Events: https://fossunited.org/events
 
 ## 4. About IndiaFOSS
-IndiaFOSS is the FOSS United Community’s annual festival of FOSS and Digital Commons. It features:
+IndiaFOSS is the FOSS United Community’s annual festival of FOSS and Digital Commons. The conference is made possible because of the efforts of 100+ volunteers, community selected co-chairs of the festival and the staff members of the foundation. Last two editions have had close to 2500 people attending it in person and online. It features:
 - **Technical talks** - 10 to 20 minute talks explaining someone’s work in the open source ecosystem with emphasis on the technical implementation
 - **Workshops** - A hands-on event where you get to build and break things on the go
 - **Community booths** - An interactive setup where community members and other non-profit organisations tell you more about their work and ways to get involved
@@ -93,8 +99,10 @@ Stay involved by:
 6. Sharing your conference experience online. Share it with us to feature on our [newsletter](https://listmonk.fossunited.org/archive).
 7. Signing up to be a mentor for Diversity Scholars next year.
 
+## 10. [Volunteer Roles and Responsibilities](indiafoss-volunteer-roles.md)
 
-## 10. Credits
+
+## 11. Credits
 This guide is inspired by and uses work from the following:
 
 1. [First timer’s guide to FOSS conferences](https://opensource.com/life/16/2/first-timers-guide-foss-conferences)

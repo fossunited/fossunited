@@ -45,6 +45,7 @@ nav = [
 
   {"IndiaFOSS" = [
     {"Beginner's Guide to IndiaFOSS" = "IndiaFOSS/event-first-timers-guide.md"},
+    {"General FAQ" = "IndiaFOSS/indiafoss.md"},
     {"Roles and Responsibilities" = "IndiaFOSS/indiafoss-volunteer-roles.md"},
     {"Registration & Checkin Booth" = "IndiaFOSS/indiafoss-reg-checkin.md"},
     {"F&B Volunteer" ="IndiaFOSS/indiafoss-f&b.md"},
