@@ -80,13 +80,11 @@ nav = [
     {"Contribution Ideas" = "clubs/clubs-contribution-ideas.md"},
     {"Non-STEM Branches" = "clubs/clubs-non-stem-events.md"},
     {"Financial Support" = "clubs/clubs-financial-support.md"},
-=======
     {"Incidents Response" = "clubs-incidents-response-checklist.md"},
     {"Stages and Incentives" = "clubs-stages-incentives.md"},
     {"Contribution Ideas" = "clubs-contribution-ideas.md"},
     {"Non-STEM Branches" = "clubs-non-stem-events.md"},
     {"Financial Support" = "clubs-financial-support.md"},
->>>>>>> upstream/develop
   ]},
   {"Educational Institutions"= [
       {"Table of Contents" = "education/education.md"},
