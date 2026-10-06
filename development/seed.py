@@ -475,6 +475,11 @@ def _create_users():
         else:
             logger.info("Skipped User '%s' (already exists)", email)
 
+        # Ensure seed demo user profiles are published so /u/<username> works without 404
+        profile_name = frappe.db.get_value(USER_PROFILE, {"email": email}, "name")
+        if profile_name:
+            frappe.db.set_value(USER_PROFILE, profile_name, "is_published", 1, update_modified=False)
+
         if user_cfg["kind"] == "chapter":
             user_roles = frappe.get_roles(email)
             if CHAPTER_TEAM_MEMBER_ROLE not in user_roles:

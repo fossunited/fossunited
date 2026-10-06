@@ -50,6 +50,7 @@ def get_context(context):
 
         _name = html.escape(event.event_name or "", quote=True)
         _link = html.escape(event.link, quote=True)
+        event.link = _link
 
         event_details = f"""
         <![CDATA[

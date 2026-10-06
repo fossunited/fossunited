@@ -157,6 +157,7 @@ declare module 'vue' {
     TicketTshirtInsightCard: typeof import('./src/components/event/TicketTshirtInsightCard.vue')['default']
     TicketTshirtSection: typeof import('./src/components/event/TicketTshirtSection.vue')['default']
     TimeCapsule: typeof import('./src/components/schedule/TimeCapsule.vue')['default']
+    TransferConfirmation: typeof import('./src/components/ticket_transfer/TransferConfirmation.vue')['default']
     TransferSuccess: typeof import('./src/components/TransferSuccess.vue')['default']
   }
 }

@@ -12,7 +12,7 @@
 
 ### What are the requirements to avail financial support?
 - Work with our team during the planning phase of each event
-- Use the FOSS United platform for [event RSVPs]([event RSVPs](../event-rsvp.md))
+- Use the FOSS United platform for [event RSVPs](../event-rsvp.md)
 - Post a [report](clubs-peq.md) of the event on the [forum](https://forum.fossunited.org/).
 
 ### How do active clubs receive their annual ₹50,000 support?
@@ -55,7 +55,7 @@ FOSS Hack events receive higher budgets due to their larger, often multi-college
 ### How do I apply for reimbursement?
 Reimbursement Process:
 
-- Log in or sign up to the FOSS United platform at [https://accounts.fossunited.org](https://accounts.fossunited.org)
+- Log in or sign up to the FOSS United platform at [https://account.fossunited.org](https://account.fossunited.org)
 - Complete the [**reimbursement form**](https://account.fossunited.org/expense-reimbursement/new) with all details
 - Upload clear photos or PDFs of receipts (Max file size is 25 MB)
 - Submit the application

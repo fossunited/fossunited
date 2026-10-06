@@ -4,6 +4,8 @@ To help you get started, here's a list of contributions you can make and events 
 
 **Note**: Checkout the detailed list of non-stem contribution ideas [here](clubs-non-stem-events.md).
 
+**Note**: Checkout the detailed list of non-stem contribution ideas [here](clubs-non-stem-events.md).
+
 Note: The FOSS United Foundation does not partner with Web3/Blockchain events and organisations, and asks that you don't organise any such activities as part of the FOSS Club. Read more about our [thoughts on Blockchain](https://fossunited.org/blog/technology/a-note-on-blockchain).
 
 If you have other ideas, feel free to book a call to discuss with the foundation team.

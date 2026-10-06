@@ -1,9 +1,11 @@
-{% macro video_embed(url, title, youtube_id=None, speaker=None, event=None) %}
+{# thumbnail: "lq" | "mq" | "hq" (default) #}
+{% macro video_embed(url, title, youtube_id=None, speaker=None, event=None, thumbnail="hq") %}
 {% if url or youtube_id %}
   {% if youtube_id %}
     {%- set video_label = 'Watch talk: ' ~ title if (speaker or event) else 'Watch ' ~ title -%}
     {%- if speaker %}{% set video_label = video_label ~ ', given by ' ~ speaker %}{% endif -%}
     {%- if event %}{% set video_label = video_label ~ ', at ' ~ event %}{% endif -%}
+    {%- set thumb_file = {"lq": "default.jpg", "hq": "maxresdefault.jpg"}.get(thumbnail, "mqdefault.jpg") -%}
     <link rel="preconnect" href="https://www.youtube-nocookie.com">
     <link rel="preconnect" href="https://i.ytimg.com">
     <button type="button"
@@ -11,11 +13,10 @@
          id="ve-{{ youtube_id }}"
          aria-label="{{ video_label | e }}"
          data-yt="{{ youtube_id }}">
-      {# mqdefault = native 16:9 (320x180), no letterbox bars; matches the 16:9
-         box exactly. hqdefault is 4:3 with baked-in black bars. #}
-      <img src="https://img.youtube.com/vi/{{ youtube_id }}/mqdefault.jpg"
+      <img src="https://img.youtube.com/vi/{{ youtube_id }}/{{ thumb_file }}"
            alt="{{ title | e }}"
-           class="position-absolute w-100 h-100 object-cover" />
+           class="position-absolute w-100 h-100 object-cover"
+           {% if thumbnail == "hq" %}onerror="this.onerror=null;this.src='https://img.youtube.com/vi/{{ youtube_id }}/mqdefault.jpg';"{% endif %} />
       <div class="m-play-btn" aria-hidden="true">
         <i class="ti ti-player-play-filled text-white" style="font-size: 1.5rem;"></i>
       </div>
