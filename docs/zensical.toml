@@ -57,6 +57,7 @@ nav = [
     {"Devrooms" = "https://forum.fossunited.org/t/call-for-devrooms-for-indiafoss-2026/7587"},
     {"Misc" = [
       {"NIMHANS Floor Map"="IndiaFOSS/indiafoss-NIMHANS-map.md"},
+      {"Logistics Numbers 2026" = "IndiaFOSS/indiafoss-logistics.md"},
       {"Email Templates"= "IndiaFOSS/indiafoss-email-templates.md"},
       {"IndiaFOSS Rundown 2026" = "https://docs.google.com/spreadsheets/d/1VxsM-KQOsHuQ-YwbEPC2t0sdOkymUUi-J-enIOkYLlU/edit?usp=sharing"}
     ]}
