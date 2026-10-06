@@ -86,4 +86,4 @@ Here's a checklist for you to follow throughout the event:
 
 
 ## Credits
-1. [Immanuel Raj](https://github.com/iamimmanuelraj) 
+1. [Immanuel Raj](https://fossunited.org/u/iamimmanuelraj) 

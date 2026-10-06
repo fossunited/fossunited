@@ -24,4 +24,4 @@
 - This is oddly specific but sometimes the wifi doesn’t work and you have to resort to personal hotspot. Make sure your phone has enough battery or the battery-saving modes don’t interfere!
 
 ### **Credits:** 
-[Akshit Tyagi](https://github.com/exitflynn)
+[Akshit Tyagi](https://fossunited.org/u/exitflynn)
