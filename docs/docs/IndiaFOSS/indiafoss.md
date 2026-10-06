@@ -1,11 +1,11 @@
-# Volunteer FAQ for IndiaFOSS
+# IndiaFOSS FAQ
 
 If this is your first IndiaFOSS or your first experience with the Free and Open Source Software (FOSS) community, this guide will help you prepare for the conference and make the most of your experience. This document is meant for general attendees, speakers and even volunteers to familiarise themselves with the conference before the event days.
 
 You don't need to be an experienced open source contributor or an expert in technology to enjoy IndiaFOSS. Be curious, ask questions, meet people, and explore opportunities. Everyone starts somewhere, and we hope this IndiaFOSS is the beginning of your open source journey.
 
 > **Before going any further, please understand the difference between FOSS, FOSS United and IndiaFOSS**
-- FOSS is Free and Open Source Software, a ideology.
+- FOSS is Free and Open Source Software. Software available under a license that gives users the right to use, share, modify, and distribute the software — modified or not — to everyone and provides the means to exercise those rights using the software's source code
 - FOSS United is a non-profit foundation that strengthens and supports the FOSS and Digital Commons ecosystem in India
 - IndiaFOSS (and not FOSS India) is the FOSS United Community's annual festival of FOSS and Digital Commons.
 
