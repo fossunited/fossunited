@@ -12,7 +12,7 @@
 
 ### What are the requirements to avail financial support?
 - Work with our team during the planning phase of each event
-- Use the FOSS United platform for [event RSVPs]([event RSVPs](event-rsvp.md))
+- Use the FOSS United platform for [event RSVPs]([event RSVPs](../event-rsvp.md))
 - Post a [report](clubs-peq.md) of the event on the [forum](https://forum.fossunited.org/).
 
 ### How do active clubs receive their annual ₹50,000 support?
@@ -69,7 +69,7 @@ Application review: 5-10 days
 
 Payment processing after approval: 7-10 days (may vary based on request volume)
 
-> Note: Reimbursement request will only be approved if you have used the FOSS United platform for [event RSVPs](event-rsvp.md) and have posted a report on the [forum](https://forum.fossunited.org/) using [this template](clubs-peq.md).
+> Note: Reimbursement request will only be approved if you have used the FOSS United platform for [event RSVPs](../event-rsvp.md) and have posted a report on the [forum](https://forum.fossunited.org/) using [this template](clubs-peq.md).
 
 **Common rejection reasons:**
 
@@ -79,5 +79,5 @@ Reimbursements are rejected when:
 - Numbers don't match stated event details (e.g., attendee count compared to purchase quantities).
 - Significant expenses were made without advance communication.
 - Spending significantly exceeds necessary amounts or appears unrelated to the event.
-- Non-usage of the FOSS United platform for [event RSVPs](event-rsvp.md)
+- Non-usage of the FOSS United platform for [event RSVPs](../event-rsvp.md)
 - Failure to post the report on the [forum](https://forum.fossunited.org/).

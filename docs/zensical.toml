@@ -45,7 +45,14 @@ nav = [
 
   {"IndiaFOSS" = [
     {"Beginner's Guide to IndiaFOSS" = "IndiaFOSS/event-first-timers-guide.md"},
-    {"Managing Localhost" = "localhost.md"}
+    {"Roles and Responsibilities" = ""},
+    {"Registration & Checkin" = ""},
+    {"F&B" =""},
+    {"Audi Management"="IndiaFOSS/indiafoss-audi-mngmt.md"},
+    {"Speaker Management" = "IndiaFOSS/indiafoss-speaker-mngmt.md"},
+    {"Misc" = [
+      {"NIMHANS Floor Map"="IndiaFOSS/indiafoss-NIMHANS-map.md"}
+    ]}
   ]},
 
   {"Education" = [

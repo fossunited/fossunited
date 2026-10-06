@@ -61,4 +61,4 @@ If you need to hide an event, you can set the `"Event Status"` to `"Unpublished"
 If you need an event to be permanently removed, please reach out to [developers@fossunited.org](mailto:developers@fossunited.org).
 
 ## What next?
-After your event is listed, make a page for interested folks to [RSVP for your event](event-rsvp.md). If you are part of a FOSS Club and will be requesting reimbursements for the event, it's mandatory for you to use the platform for RSVPs.
+After your event is listed, make a page for interested folks to [RSVP for your event](../event-rsvp.md). If you are part of a FOSS Club and will be requesting reimbursements for the event, it's mandatory for you to use the platform for RSVPs.

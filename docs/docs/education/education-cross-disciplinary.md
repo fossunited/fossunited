@@ -2,7 +2,7 @@
 
 Engineering colleges increasingly include departments or electives in [design](#design), [law](#law-and-policy), [management](#management-and-entrepreneurship), and [humanities](#humanities-and-social-sciences). The open source and digital commons framework applies to all of them, though the specific tools and practices differ.
 
-Check out the [detailed list of non-stem departments and activities](clubs-non-stem-events.md) we worked on for our work with [Youth Dreamers Foundation](https://ydfindia.org/).
+Check out the [detailed list of non-stem departments and activities](../clubs/clubs-non-stem-events.md) we worked on for our work with [Youth Dreamers Foundation](https://ydfindia.org/).
 
 ### Design
 
