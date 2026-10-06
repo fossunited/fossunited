@@ -70,9 +70,9 @@ class FOSSChapter(WebsiteGenerator):
         self.handle_member_addition()
 
     def validate(self):
-        self.make_city_name_upper()
-        self.validate_slug()
         self.set_location()
+        self.set_default_chapter_name()
+        self.validate_slug()
 
     def before_save(self):
         self.set_route()
@@ -201,9 +201,8 @@ class FOSSChapter(WebsiteGenerator):
         context.past_members = self.get_past_members()
         context.social_links = self.get_social_links()
 
-    # make the chapter name upper case if it is a city community
-    def make_city_name_upper(self):
-        if self.chapter_type == CITY_COMMUNITY:
+    def set_default_chapter_name(self):
+        if self.chapter_type == CITY_COMMUNITY and not self.chapter_name and self.city:
             self.chapter_name = self.city.upper()
 
     def get_upcoming_events(self):
