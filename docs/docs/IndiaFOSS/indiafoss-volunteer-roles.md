@@ -6,7 +6,7 @@ Roles marked \* are generally led by or reserved for the full time team/nominate
 
 | Role | Count | Description |
 |---|---|---|
-| Auditorium Manager / Head (Audi 1 & 2) | 1 per Audi (4) | Oversees all volunteer activity within the auditorium across both days, ensuring sessions run on time and the space is well-managed. |
+| Auditorium Manager / Head (Audi 1 & 2) | 1 per Audi per shift (4) | Oversees all volunteer activity within the auditorium across both days, ensuring sessions run on time and the space is well-managed. |
 | Auditorium Volunteer (Audi 1 & 2) | 6 per Audi (by shifts)<br>3 for Audi 2 | Assists with seating, speaker setup, Q&A management, and attendee flow during sessions in the auditoriums. |
 | Emcee | 4 (2 per Audi) | Hosts and energises the auditorium by introducing speakers, managing transitions between sessions, and keeping the audience engaged. |
 | Registration Desk | 12 (2 Speakers/Guests/Contributor + 4 General each shift) | Manages check-in for all IndiaFOSS attendees. Distributes ID stickers, and redirects entry-related queries to helpdesk.<br>From 8-12 |
