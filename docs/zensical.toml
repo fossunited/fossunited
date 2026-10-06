@@ -19,7 +19,6 @@ nav = [
   ]},
 
   {"Events & Participation" = [
-    {"Beginner's Guide to IndiaFOSS" = "event-first-timers-guide.md"},
 
     {"Guidelines" = [
       {"Event Checklist" = "event-checklist.md"},
@@ -39,24 +38,48 @@ nav = [
 
   ]},
 
-  {"FOSS Hackathon" = [
+  {"FOSSHack" = [
     {"Participating" = "fosshack.md"},
     {"Managing Localhost" = "localhost.md"}
   ]},
 
+  {"IndiaFOSS" = [
+    {"Guide to IndiaFOSS" = "IndiaFOSS/indiafoss.md"},
+    {"Roles and Responsibilities" = "IndiaFOSS/indiafoss-volunteer-roles.md"},
+    {"Registration & Checkin Booth" = "IndiaFOSS/indiafoss-reg-checkin.md"},
+    {"F&B Volunteer" ="IndiaFOSS/indiafoss-f&b.md"},
+    {"Audi Management"="IndiaFOSS/indiafoss-audi-mngmt.md"},
+    {"Speaker Management" = "IndiaFOSS/indiafoss-speaker-mngmt.md"},
+    {"Emceeing" = "IndiaFOSS/indiafoss-emcee.md"},
+    {"Booth Managers" = "IndiaFOSS/indiafoss-booths.md" },
+    {"Diversity Scholarship" = "IndiaFOSS/indiafoss-diversity.md"},
+    {"Volunteer Travel & Accommodation" = "IndiaFOSS/indiafoss-volunteer-t&a.md"},
+    {"Devrooms" = "https://forum.fossunited.org/t/call-for-devrooms-for-indiafoss-2026/7587"},
+    {"Misc" = [
+      {"NIMHANS Floor Map"="IndiaFOSS/indiafoss-NIMHANS-map.md"},
+      {"Email Templates"= "IndiaFOSS/indiafoss-email-templates.md"},
+      {"IndiaFOSS Rundown 2026" = "https://docs.google.com/spreadsheets/d/1VxsM-KQOsHuQ-YwbEPC2t0sdOkymUUi-J-enIOkYLlU/edit?usp=sharing"}
+    ]}
+  ]},
+
   {"Education" = [
   {"FOSS Clubs"=[
-    {"Overview" = "clubs.md"},
-    {"Onboarding" = "clubs-onboarding.md"},
-    {"Team Formation" = "clubs-team-formation.md"},
-    {"Hosting an Event" = "clubs-hosting-events.md"},
-    {"Post Event Reporting" = "clubs-peq.md"},
+    {"Overview" = "clubs/clubs.md"},
+    {"Onboarding" = "clubs/clubs-onboarding.md"},
+    {"Team Formation" = "clubs/clubs-team-formation.md"},
+    {"Hosting an Event" = "clubs/clubs-hosting-events.md"},
+    {"Post Event Reporting" = "clubs/clubs-peq.md"},
     { "90 Day Plan" = [
-      {"Overview" = "clubs-first-quarter.md"},
-      {"Month 1" = "clubs-first-quarter-m1.md"},
-      {"Month 2" = "clubs-first-quarter-m2.md"},
-      {"Month 3" = "clubs-first-quarter-m3.md"},
+      {"Overview" = "clubs/clubs-first-quarter.md"},
+      {"Month 1" = "clubs/clubs-first-quarter-m1.md"},
+      {"Month 2" = "clubs/clubs-first-quarter-m2.md"},
+      {"Month 3" = "clubs/clubs-first-quarter-m3.md"},
     ]},
+    {"Incidents Response" = "clubs/clubs-incidents-response-checklist.md"},
+    {"Stages and Incentives" = "clubs/clubs-stages-incentives.md"},
+    {"Contribution Ideas" = "clubs/clubs-contribution-ideas.md"},
+    {"Non-STEM Branches" = "clubs/clubs-non-stem-events.md"},
+    {"Financial Support" = "clubs/clubs-financial-support.md"},
     {"Incidents Response" = "clubs-incidents-response-checklist.md"},
     {"Stages and Incentives" = "clubs-stages-incentives.md"},
     {"Contribution Ideas" = "clubs-contribution-ideas.md"},
@@ -64,17 +87,17 @@ nav = [
     {"Financial Support" = "clubs-financial-support.md"},
   ]},
   {"Educational Institutions"= [
-      {"Table of Contents" = "education.md"},
-      {"Overview" = "education-overview.md"},
-      {"Get started" = "education-start-here.md"},
-      {"Why bother?" = "education-why.md"},
-      {"Policy Tailwinds" = "education-policy.md"},
-      {"Program Manager" = "education-program-manager.md"},
-      {"Playbooks" = "education-playbooks.md"},
-      {"Pillars" = "education-pillars.md"},
-      {"Digital Commons Course" = "education-curriculum.md"},
-      {"Cross Disciplinary Efforts" = "education-cross-disciplinary.md" },
-      {"FOSS Alternatives" = "education-foss-alternatives.md" },
+      {"Table of Contents" = "education/education.md"},
+      {"Overview" = "education/education-overview.md"},
+      {"Get started" = "education/education-start-here.md"},
+      {"Why bother?" = "education/education-why.md"},
+      {"Policy Tailwinds" = "education/education-policy.md"},
+      {"Program Manager" = "education/education-program-manager.md"},
+      {"Playbooks" = "education/education-playbooks.md"},
+      {"Pillars" = "education/education-pillars.md"},
+      {"Digital Commons Course" = "education/education-curriculum.md"},
+      {"Cross Disciplinary Efforts" = "education/education-cross-disciplinary.md" },
+      {"FOSS Alternatives" = "education/education-foss-alternatives.md" },
     ]},
   ]},
 
