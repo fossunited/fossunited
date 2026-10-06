@@ -45,9 +45,9 @@ nav = [
 
   {"IndiaFOSS" = [
     {"Beginner's Guide to IndiaFOSS" = "IndiaFOSS/event-first-timers-guide.md"},
-    {"Roles and Responsibilities" = ""},
-    {"Registration & Checkin" = ""},
-    {"F&B" =""},
+    {"Roles and Responsibilities" = "IndiaFOSS/indiafoss-volunteer-roles.md"},
+    {"Registration & Checkin Booth" = "IndiaFOSS/indiafoss-reg-checkin.md"},
+    {"F&B" ="IndiaFOSS/indiafoss-f&b.md"},
     {"Audi Management"="IndiaFOSS/indiafoss-audi-mngmt.md"},
     {"Speaker Management" = "IndiaFOSS/indiafoss-speaker-mngmt.md"},
     {"Misc" = [

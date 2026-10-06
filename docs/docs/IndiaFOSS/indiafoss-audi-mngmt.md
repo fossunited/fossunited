@@ -13,6 +13,7 @@ As an Audi manager or volunteer, you play a crucial role in ensuring that talks 
    i. The audi manager oversees smooth and timely operations overall.
    ii. The volunteers are managing the crowd, setting up the speaker, giving the speaker time reminders and also helping with microphone passing during Q&A.
    iii.The speaker manager inside the auditorium is responsible to coordinate with the speaker manger outside to make sure at least two of the following speakers have reported to the auditorium and are ready to go to the stage as and when called. The speaker manager in the audi is not supposed to be leaving the venue to look for speakers. Refer the [speaker manager guide](indiafoss-speaker-mngmt.md) for more.
+   iv. An Emcee who hosts the crowd
 
 2. **Presence in the Audi**  
    Be physically present in the auditorium throughout the event.
@@ -38,7 +39,7 @@ As an Audi manager or volunteer, you play a crucial role in ensuring that talks 
 
 ## Checklist
 
-Here's a checklist for you to follow throughtout the event:
+Here's a checklist for you to follow throughout the event:
 
 ### Before the day / Team arrival
 
@@ -79,7 +80,7 @@ Here's a checklist for you to follow throughtout the event:
 
 - [ ] Keep a copy of the day's schedule and speaker list on hand (printed or digital) at all times
 - [ ] Keep speaker manager rep's contact details handy for quick reach
-
+- [ ] Before every meal break, make sure to reach out to overall volunteer managers or F&B volunteers to know what the meal situtaion is looking like. If it's too crowded, find ways to extend the current talk by allowing more audience questions.
 
 
 

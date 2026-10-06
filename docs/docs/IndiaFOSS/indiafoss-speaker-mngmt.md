@@ -34,7 +34,7 @@
 
 ## Checklist
 
-Here's a checklist for you to follow throughtout the event:
+Here's a checklist for you to follow throughout the event:
 
 ### Pre-event
 
