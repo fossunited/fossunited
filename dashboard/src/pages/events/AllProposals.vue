@@ -24,6 +24,9 @@ const cfpData = createResource({
   auto: true,
   onSuccess(data) {
     breadcrumb_items.value[1].label = data.event_name
+    breadcrumb_items.value[1].link = route.params.route?.startsWith('indiafoss')
+      ? `/${route.params.route}`
+      : `/c/${route.params.route}`
   },
 })
 
@@ -40,7 +43,9 @@ const breadcrumb_items = ref([
   },
   {
     label: cfpData.data?.event_name,
-    link: `/c/${route.params.route}`,
+    link: route.params.route?.startsWith('indiafoss')
+      ? `/${route.params.route}`
+      : `/c/${route.params.route}`,
   },
   {
     label: 'Talk Proposals',
@@ -54,7 +59,7 @@ usePageMeta(() => {
 })
 </script>
 <template>
-  <Header></Header>
+  <Header :event="cfpData.data?.event" active-tab="proposals"></Header>
   <NarrowLayout v-if="cfpData.data">
     <div class="flex items-center justify-between w-full">
       <Breadcrumb :items="breadcrumb_items" />
