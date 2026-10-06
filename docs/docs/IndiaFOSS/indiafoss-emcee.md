@@ -5,7 +5,7 @@
 
 - Prepare your script well in advace. While this sounds boring, we've found this helpful especially in getting feedback from other people
 
-- Check out speaker bios in their proposals on the IndiaFOSS website. While this will get you most information, we'd like for you to find their relevance to the open source/FOSS United community and highlight that as well. 
+- Check out speaker bios in their proposals on the IndiaFOSS website. While this will get you most information, we'd like for you to find their relevance to the open source/FOSS United community and highlight that as well.
 
 - Prepare for outro too. This is a few lines that you speak after every talk. It's important for you to highlight if they have a booth outside or any other CTA they'd like to shoutout through you.
 

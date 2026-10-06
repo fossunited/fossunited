@@ -4,19 +4,19 @@
 
 **Time required** - This is an on-ground responsibility. You maybe assigned other tasks pre-event.
 
-1. **Who is on the F&B team?**  
+1. **Who is on the F&B team?**
 F&B is typically led by 2 volunteers but may require more floating volunteers to assist.
 
-2. **Who do I work with?**  
+2. **Who do I work with?**
 You work with the F&B vendor, whom you meet through the logistics head. You also work with the low waste volunteers, the floating volunteers and the overall volunteer managers.
 
-3. **What is the F&B team responsible for?**  
+3. **What is the F&B team responsible for?**
 Keeping meal service smooth. The food area should never be crowded, choke points should be found and fixed, and attendees should be able to move in and out without getting stuck.
 
-4. **Where do speakers, guests and volunteers eat?**  
+4. **Where do speakers, guests and volunteers eat?**
 Find out before the day if there is a separate space for meals for speakers, guests and volunteers.
 
-5. **How do I manage crowds at the meal booths?**  
+5. **How do I manage crowds at the meal booths?**
 Find out which food booths need to start first and in what order. Keep looking for choke points during the meal and find a fix. If you need more hands, reach out to floating volunteers directly or through the overall volunteer managers.
 
 

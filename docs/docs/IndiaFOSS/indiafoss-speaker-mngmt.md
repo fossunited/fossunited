@@ -18,7 +18,7 @@
 4. **How is the speaker management team structured?**
     As of IndiaFOSS 2026, there are 2 speaker managers per auditorium along with one main speaker manager who will be near the registration booth as the first point of contact for all speakers.
 
-    Let's take the example of IndiaFOSS 2026 where we had 2 main track auditoriums and 5 speaker managers in total. Each auditorium is assigned 2 speaker managers, one of who is stationed outside the auditorium to look around the whole venue for a speaker, if the need arises. The one assigned inside the audi should be inside at all times. 
+    Let's take the example of IndiaFOSS 2026 where we had 2 main track auditoriums and 5 speaker managers in total. Each auditorium is assigned 2 speaker managers, one of who is stationed outside the auditorium to look around the whole venue for a speaker, if the need arises. The one assigned inside the audi should be inside at all times.
 
     ![Speaker Manager Map - IndiaFOSS 2026](indiafoss-speaker-manager-map.png){width=80%}
 
@@ -63,7 +63,5 @@ Here's a checklist for you to follow throughout the event:
 ### For Speaker Managers outside the Audi
 
 - [ ] Make sure to be in touch with the main speaker manager to meet speakers who checkin
-- [ ] Make sure you also find time to go check out other sections of the conference as and when you get time
-
-
-
+- [ ] Make sure you also find time to go check out other sections of the conference as and when you get
+time

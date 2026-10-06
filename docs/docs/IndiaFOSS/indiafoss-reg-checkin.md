@@ -4,25 +4,25 @@
 
 **Time required** - This is an on-ground responsibility. You maybe given other tasks to work on pre-event.
 
-1. **What does the registration desk do?**  
+1. **What does the registration desk do?**
 The registration desk is the first point of contact for all attendees. The team checks people in, hands out name stickers and points them towards venue.
 
-2. **What are the two booths?**  
+2. **What are the two booths?**
 There are two separate, clearly signed tables: Attendee Registration, and Speakers & Media. Speaker and media name stickers should look different from attendee stickers, for example in a different colour or marking.
 
-3. **What do I need to do before the booth opens?**  
+3. **What do I need to do before the booth opens?**
 Set up and sign the tables. Log in to the check-in app on all devices and test scan and search before the doors open. Stock each table with markers, name stickers and spare pens, and confirm Wi-Fi or data for the app. The checklist below has the full list.
 
-4. **How does check-in work?**  
+4. **How does check-in work?**
 Scan the QR code, or ask for the name, booking reference or email. Find the person on the check-in app and mark attendance. Hand over a name sticker and a pen, and ask them to write their details on the sticker before they peel it off.
 
-5. **What do I do after check-in?**  
+5. **What do I do after check-in?**
 Ask general attendees to move for breakfast or lunch if the meal lines have opened. For speakers, connect with the main speaker manager, who sits with at Speakers & Media checkin booth.
 
-6. **What if someone's name is not in the system?**  
+6. **What if someone's name is not in the system?**
 Do not turn them away. Flag the name to the overall volunteer coordinators.
 
-7. **Who do I report app issues to?**  
+7. **Who do I report app issues to?**
 Report issues such as app crashes and missing registrations to the foundation tech team.
 
 ## Checklist
