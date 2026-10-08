@@ -39,6 +39,7 @@
             type="button"
             v-for="tab in TABS"
             :key="tab.key"
+            :aria-pressed="activeTab === tab.key"
             class="px-3 py-2 border-b-2 transition-colors"
             :class="
               activeTab === tab.key
