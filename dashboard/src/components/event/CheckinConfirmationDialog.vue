@@ -102,7 +102,7 @@
           theme="green"
           :loading="checkinAttendee.loading"
           loading-text="Checking in..."
-          @click="checkinAttendee.fetch()"
+          @click="handleCheckInSubmit"
         />
       </div>
     </template>
@@ -155,6 +155,19 @@ watch(
     chosenTshirtSize.value = att?.tshirt_size || ''
   },
 )
+
+const handleCheckInSubmit = () => {
+  if (
+    assignTshirt.value &&
+    props.selectedAttendee?.wants_tshirt &&
+    !props.selectedAttendee?.tshirt_size &&
+    !chosenTshirtSize.value
+  ) {
+    toast.error('Please select a T-shirt size')
+    return
+  }
+  checkinAttendee.fetch()
+}
 
 const checkinAttendee = createResource({
   url: 'fossunited.api.checkins.checkin_attendee',

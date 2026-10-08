@@ -94,7 +94,7 @@
             variant="solid"
             :loading="assignTshirt.loading"
             loading-text="Assigning..."
-            @click="assignTshirt.fetch()"
+            @click="handleAssignTshirtSubmit"
           />
         </div>
       </div>
@@ -140,6 +140,14 @@ const showDialog = defineModel({
   type: Boolean,
   default: false,
 })
+
+const handleAssignTshirtSubmit = () => {
+  if (!props.selectedAttendee?.tshirt_size && !chosenTshirtSize.value) {
+    toast.error('Please select a T-shirt size')
+    return
+  }
+  assignTshirt.fetch()
+}
 
 const assignTshirt = createResource({
   url: 'fossunited.api.checkins.assign_tshirt',

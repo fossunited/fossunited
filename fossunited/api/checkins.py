@@ -109,10 +109,14 @@ def checkin_attendee(
 
     if already_checked_in:
         if assign_tshirt and ticket.get("wants_tshirt") and not ticket.get("tshirt_delivered"):
+            effective_size = tshirt_size or ticket.tshirt_size
+            if not effective_size:
+                frappe.throw(
+                    _("T-shirt size is required to assign a T-shirt"), frappe.ValidationError
+                )
             # Only update tshirt_delivered, do not add another check-in
             ticket.tshirt_delivered = True
-            if tshirt_size:
-                ticket.tshirt_size = tshirt_size
+            ticket.tshirt_size = effective_size
             ticket.save(ignore_permissions=True)
             return {
                 "name": ticket.name,
@@ -124,7 +128,13 @@ def checkin_attendee(
 
     # Perform full check-in
     ticket.append("check_ins", {"check_in_time": frappe.utils.now()})
-    if assign_tshirt:
+    if assign_tshirt and ticket.get("wants_tshirt"):
+        effective_size = tshirt_size or ticket.tshirt_size
+        if not effective_size:
+            frappe.throw(_("T-shirt size is required to assign a T-shirt"), frappe.ValidationError)
+        ticket.tshirt_delivered = True
+        ticket.tshirt_size = effective_size
+    elif assign_tshirt:
         ticket.tshirt_delivered = True
         if tshirt_size:
             ticket.tshirt_size = tshirt_size
@@ -182,9 +192,11 @@ def assign_tshirt(event_id: str, attendee: dict, tshirt_size: str | None = None)
     ticket = frappe.get_doc(EVENT_TICKET, ticket_name)
     if ticket.event != event_id:
         frappe.throw(_("Ticket does not belong to this event"), frappe.ValidationError)
+    effective_size = tshirt_size or ticket.tshirt_size
+    if not effective_size:
+        frappe.throw(_("T-shirt size is required to assign a T-shirt"), frappe.ValidationError)
     ticket.tshirt_delivered = True
-    if tshirt_size:
-        ticket.tshirt_size = tshirt_size
+    ticket.tshirt_size = effective_size
     ticket.save(ignore_permissions=True)
     return {
         "name": ticket.name,
