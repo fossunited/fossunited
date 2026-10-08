@@ -102,6 +102,8 @@ def checkin_attendee(
     """
     ticket_name = attendee.get("name") if isinstance(attendee, dict) else str(attendee)
     ticket = frappe.get_doc(EVENT_TICKET, ticket_name)
+    if ticket.event != event_id:
+        frappe.throw(_("Ticket does not belong to this event"), frappe.ValidationError)
 
     already_checked_in = check_if_already_checked_in(ticket_name)
 
@@ -163,6 +165,8 @@ def undo_attendee_checkin(event_id: str, attendee: dict):
     """
     ticket_name = attendee.get("name") if isinstance(attendee, dict) else str(attendee)
     ticket = frappe.get_doc(EVENT_TICKET, ticket_name)
+    if ticket.event != event_id:
+        frappe.throw(_("Ticket does not belong to this event"), frappe.ValidationError)
     if ticket.check_ins:
         ticket.check_ins.pop()
         ticket.save(ignore_permissions=True)
@@ -176,6 +180,8 @@ def assign_tshirt(event_id: str, attendee: dict, tshirt_size: str | None = None)
     """
     ticket_name = attendee.get("name") if isinstance(attendee, dict) else str(attendee)
     ticket = frappe.get_doc(EVENT_TICKET, ticket_name)
+    if ticket.event != event_id:
+        frappe.throw(_("Ticket does not belong to this event"), frappe.ValidationError)
     ticket.tshirt_delivered = True
     if tshirt_size:
         ticket.tshirt_size = tshirt_size
