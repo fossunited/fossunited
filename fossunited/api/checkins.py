@@ -8,20 +8,21 @@ from fossunited.utils.decorators import require_chapter_or_event_member
 
 @frappe.whitelist()
 @require_chapter_or_event_member(event_id="event_id")
-def get_attendee_with_checkin_data(event_id: str, filters: dict | None = None) -> dict:
+def get_attendee_with_checkin_data(event_id: str, filters: dict | None = None) -> list:
     """
-    Get the attendees of the event with their checkin details
+    Get the attendees of the event with their checkin details (bulk queried)
 
     Args:
         event_id (str): The event id
-        user (str): The user who is requesting the data
+        filters (dict | None): Optional search filters
 
     Returns:
-        dict: The attendees of the event with their checkin details
+        list: The attendees of the event with their checkin details
     """
     ALLOWED_FILTER_KEYS = {
         "name",
         "full_name",
+        "email",
         "designation",
         "organization",
         "tier",
@@ -30,7 +31,7 @@ def get_attendee_with_checkin_data(event_id: str, filters: dict | None = None) -
     _filters = {"event": event_id}
     if filters:
         for key, value in filters.items():
-            if key in ALLOWED_FILTER_KEYS:
+            if key in ALLOWED_FILTER_KEYS and value:
                 _filters[key] = ["like", f"%{value}%"]
 
     tickets = frappe.db.get_all(
@@ -39,6 +40,7 @@ def get_attendee_with_checkin_data(event_id: str, filters: dict | None = None) -
         [
             "name",
             "full_name",
+            "email",
             "designation",
             "organization",
             "wants_tshirt",
@@ -46,37 +48,49 @@ def get_attendee_with_checkin_data(event_id: str, filters: dict | None = None) -
             "tshirt_delivered",
             "tshirt_size",
         ],
+        order_by="creation desc",
     )
 
+    ticket_names = [t["name"] for t in tickets]
+    checkins_by_ticket = {}
+    if ticket_names:
+        all_checkins = frappe.db.get_all(
+            "Event Check In",
+            filters={"parent": ["in", ticket_names], "parenttype": EVENT_TICKET},
+            fields=["parent", "check_in_time", "owner"],
+            order_by="check_in_time asc",
+        )
+        for c in all_checkins:
+            checkins_by_ticket.setdefault(c["parent"], []).append(
+                {
+                    "check_in_time": c["check_in_time"],
+                    "checked_in_by": c.get("owner"),
+                }
+            )
+
     for ticket in tickets:
-        ticket["checkin_data"] = get_checkin_data(ticket["name"])
+        ticket["checkin_data"] = checkins_by_ticket.get(ticket["name"], [])
 
     return tickets
 
 
-def get_checkin_data(attendee_id: str) -> dict:
+def get_checkin_data(attendee_id: str) -> list:
     """
-    Get the checkin data for the attendee
-
-    Args:
-        attendee_id (str): The attendee / ticket id
-
-    Returns:
-        dict: The checkin data for the attendee
+    Get the checkin data for a single attendee
     """
-
-    checkin_data = frappe.db.get_all(
+    return frappe.db.get_all(
         "Event Check In",
         {"parent": attendee_id, "parenttype": EVENT_TICKET, "parentfield": "check_ins"},
-        ["check_in_time"],
+        ["check_in_time", "owner"],
+        order_by="check_in_time asc",
     )
-
-    return checkin_data
 
 
 @frappe.whitelist()
 @require_chapter_or_event_member(event_id="event_id")
-def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False):
+def checkin_attendee(
+    event_id: str, attendee: dict, assign_tshirt: bool = False, tshirt_size: str | None = None
+):
     """
     Check-in the attendee for the event.
 
@@ -84,17 +98,25 @@ def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False)
         event_id (str): The event ID
         attendee (dict): The attendee details / ticket details
         assign_tshirt (bool): Whether to assign a T-shirt to the attendee
+        tshirt_size (str | None): Optional T-shirt size if previously unspecified
     """
-    ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
+    ticket_name = attendee.get("name") if isinstance(attendee, dict) else str(attendee)
+    ticket = frappe.get_doc(EVENT_TICKET, ticket_name)
 
-    already_checked_in = check_if_already_checked_in(attendee["name"])
+    already_checked_in = check_if_already_checked_in(ticket_name)
 
     if already_checked_in:
         if assign_tshirt and ticket.get("wants_tshirt") and not ticket.get("tshirt_delivered"):
             # Only update tshirt_delivered, do not add another check-in
             ticket.tshirt_delivered = True
+            if tshirt_size:
+                ticket.tshirt_size = tshirt_size
             ticket.save(ignore_permissions=True)
-            return  # Success, exit early
+            return {
+                "name": ticket.name,
+                "tshirt_delivered": 1,
+                "tshirt_size": ticket.tshirt_size,
+            }
         else:
             frappe.throw(_("Attendee is already checked in"), frappe.ValidationError)
 
@@ -102,18 +124,19 @@ def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False)
     ticket.append("check_ins", {"check_in_time": frappe.utils.now()})
     if assign_tshirt:
         ticket.tshirt_delivered = True
+        if tshirt_size:
+            ticket.tshirt_size = tshirt_size
     ticket.save(ignore_permissions=True)
+    return {
+        "name": ticket.name,
+        "tshirt_delivered": bool(ticket.tshirt_delivered),
+        "tshirt_size": ticket.tshirt_size,
+    }
 
 
 def check_if_already_checked_in(attendee_id: str) -> bool:
     """
     Check if the attendee is already checked in
-
-    Args:
-        attendee_id (str): The attendee / ticket id
-
-    Returns:
-        bool: True if the attendee is already checked in, False otherwise
     """
     checkins = frappe.db.get_all(
         "Event Check In",
@@ -137,30 +160,31 @@ def check_if_already_checked_in(attendee_id: str) -> bool:
 def undo_attendee_checkin(event_id: str, attendee: dict):
     """
     Undo the check-in for the attendee
-
-    Args:
-        attendee (dict): The attendee details / ticket details
-        user (str): The user who is undoing the check-in
     """
-    ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
-    ticket.check_ins.pop()
-    ticket.save(ignore_permissions=True)
+    ticket_name = attendee.get("name") if isinstance(attendee, dict) else str(attendee)
+    ticket = frappe.get_doc(EVENT_TICKET, ticket_name)
+    if ticket.check_ins:
+        ticket.check_ins.pop()
+        ticket.save(ignore_permissions=True)
 
 
 @frappe.whitelist()
 @require_chapter_or_event_member(event_id="event_id")
-def assign_tshirt(event_id: str, attendee: dict):
+def assign_tshirt(event_id: str, attendee: dict, tshirt_size: str | None = None):
     """
-    Assign Tshirt to the attendee
-
-    Args:
-        event_id (str): The event id
-        attendee (dict): The attendee details / ticket details
-        user (str): The user who is assigning the Tshirt
+    Assign Tshirt to the attendee, optionally recording size
     """
-    ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
+    ticket_name = attendee.get("name") if isinstance(attendee, dict) else str(attendee)
+    ticket = frappe.get_doc(EVENT_TICKET, ticket_name)
     ticket.tshirt_delivered = True
+    if tshirt_size:
+        ticket.tshirt_size = tshirt_size
     ticket.save(ignore_permissions=True)
+    return {
+        "name": ticket.name,
+        "tshirt_delivered": 1,
+        "tshirt_size": ticket.tshirt_size,
+    }
 
 
 # for event checkins
