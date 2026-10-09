@@ -51,19 +51,20 @@ class TestCFPAssignmentAPIs(FrappeTestCase):
         frappe.db.delete("ToDo", {"reference_type": PROPOSAL, "reference_name": self.sub.name})
         frappe.db.delete("Notification Log", {"for_user": self.reviewer.name})
 
-    def test_assign_sends_notification(self):
-        frappe.set_user(CTM)
-        set_submission_reviewers(self.sub.name, [self.reviewer.name])
-        self.assertTrue(
-            frappe.db.exists(
-                "Notification Log",
-                {
-                    "for_user": self.reviewer.name,
-                    "document_type": PROPOSAL,
-                    "document_name": self.sub.name,
-                },
-            )
-        )
+    # remove in 40ea705d commit PR: #1829
+    # def test_assign_sends_notification(self):
+    #     frappe.set_user(CTM)
+    #     set_submission_reviewers(self.sub.name, [self.reviewer.name])
+    #     self.assertTrue(
+    #         frappe.db.exists(
+    #             "Notification Log",
+    #             {
+    #                 "for_user": self.reviewer.name,
+    #                 "document_type": PROPOSAL,
+    #                 "document_name": self.sub.name,
+    #             },
+    #         )
+    #     )
 
     def test_unassign_deletes_todo(self):
         frappe.set_user(CTM)
@@ -112,7 +113,9 @@ class TestCFPEditWindowAPI(FrappeTestCase):
         from fossunited.api.cfp import can_edit_proposal
 
         cfp = FOSSEventCFPFactory.create(
-            allow_cfp_edit=1, status="Live", deadline=add_to_date(now_datetime(), days=2)
+            allow_cfp_edit=1,
+            status="Live",
+            deadline=add_to_date(now_datetime(), days=2),
         )
         sub = FOSSEventCFPSubmissionFactory.create(
             linked_cfp=cfp.name, submitted_by="Administrator"
