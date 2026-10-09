@@ -7,10 +7,10 @@ from fossunited.doctype_ids import (
     HACKATHON_LOCALHOST,
     HACKATHON_PARTICIPANT,
 )
-from fossunited.tests.utils import (
-    insert_test_chapter,
-    insert_test_hackathon,
-    insert_test_hackathon_localhost,
+from fossunited.tests.factories import (
+    FOSSChapterFactory,
+    FOSSHackathonFactory,
+    FOSSHackathonLocalHostFactory,
 )
 
 
@@ -24,9 +24,9 @@ class TestFOSSHackathonParticipant(FrappeTestCase):
         self.ORGANIZER_EMAIL = "organizer@example.com"
 
         # Create test chapter and hackathon
-        self.chapter = insert_test_chapter()
-        self.hackathon = insert_test_hackathon(chapter=self.chapter.name)
-        self.localhost = insert_test_hackathon_localhost(parent_hackathon=self.hackathon.name)
+        self.chapter = FOSSChapterFactory.create()
+        self.hackathon = FOSSHackathonFactory.create(chapter=self.chapter.name)
+        self.localhost = FOSSHackathonLocalHostFactory.create(parent_hackathon=self.hackathon.name)
 
     def tearDown(self):
         """Clean up test data"""
@@ -137,7 +137,7 @@ class TestFOSSHackathonParticipant(FrappeTestCase):
         self._assert_in_group("Accepted", participant.email, self.localhost.name)
 
         # Create another localhost and switch
-        localhost2 = insert_test_hackathon_localhost(parent_hackathon=self.hackathon.name)
+        localhost2 = FOSSHackathonLocalHostFactory.create(parent_hackathon=self.hackathon.name)
 
         participant.localhost = localhost2.name
         participant.save()
@@ -335,7 +335,9 @@ class TestFOSSHackathonParticipant(FrappeTestCase):
             self._assert_in_group(status, participant.email, current_localhost)
 
             # Create new localhost
-            new_localhost = insert_test_hackathon_localhost(parent_hackathon=self.hackathon.name)
+            new_localhost = FOSSHackathonLocalHostFactory.create(
+                parent_hackathon=self.hackathon.name
+            )
 
             # Switch localhost
             participant.localhost = new_localhost.name

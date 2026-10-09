@@ -6,23 +6,23 @@ from fossunited.api.tickets import (
     search_tickets,
 )
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET, FREE_TICKET_CODE
-from fossunited.tests.utils import (
-    insert_test_chapter,
-    insert_test_coupon,
-    insert_test_coupon_application,
-    insert_test_event,
-    insert_test_ticket,
-    insert_user_profile,
+from fossunited.tests.factories import (
+    FOSSChapterEventFactory,
+    FOSSChapterFactory,
+    FOSSEventTicketFactory,
+    FreeTicketApplicationFactory,
+    FreeTicketCodeFactory,
+    UserFactory,
 )
 
 
 class TestTicketAPI(FrappeTestCase):
     def setUp(self):
         """Set up test data before each test"""
-        self.chapter = insert_test_chapter()
-        self.event = insert_test_event(self.chapter, is_paid_event=1, tickets_status="Live")
-        self.ticket = insert_test_ticket(self.event.name)
-        self.coupon = insert_test_coupon(self.event.name)
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
+        self.ticket = FOSSEventTicketFactory.create(event=self.event.name)
+        self.coupon = FreeTicketCodeFactory.create(event=self.event.name)
 
     def tearDown(self):
         """Clean up test data after each test"""
@@ -65,16 +65,16 @@ class TestTicketAPI(FrappeTestCase):
     def test_search_tickets_by_coupon_with_applications(self):
         """Should return tickets for users who applied with coupon"""
         # Create tickets and coupon applications
-        insert_test_coupon_application(self.coupon.name, self.event.name)
-        insert_test_coupon_application(self.coupon.name, self.event.name)
+        FreeTicketApplicationFactory.create(coupon_id=self.coupon.name, event=self.event.name)
+        FreeTicketApplicationFactory.create(coupon_id=self.coupon.name, event=self.event.name)
 
         result = search_tickets(self.coupon.name)
         self.assertEqual(len(result), 2)
 
     def test_search_returns_only_allowed_fields(self):
         """Should only return specified fields in search results"""
-        insert_test_ticket(self.event.name)
-        insert_test_coupon_application(self.coupon.name, self.event.name)
+        FOSSEventTicketFactory.create(event=self.event.name)
+        FreeTicketApplicationFactory.create(coupon_id=self.coupon.name, event=self.event.name)
 
         result = search_tickets(self.coupon.name)
 
@@ -90,23 +90,26 @@ class TestTicketQrAuth(FrappeTestCase):
         frappe.set_user("Administrator")
         self.buyer = "test_ticket_buyer@example.com"
         self.stranger = "test_ticket_stranger@example.com"
-        insert_user_profile(self.buyer)
-        insert_user_profile(self.stranger)
+        UserFactory.create(email=self.buyer)
+        UserFactory.create(email=self.stranger)
 
-        self.chapter = insert_test_chapter()
-        self.event = insert_test_event(self.chapter, is_paid_event=1, tickets_status="Live")
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
 
         # email match: created by Administrator, but the email field is the buyer's
-        self.email_match_ticket = insert_test_ticket(self.event.name, email=self.buyer)
+        self.email_match_ticket = FOSSEventTicketFactory.create(
+            event=self.event.name, email=self.buyer
+        )
 
         # owner match: created while logged in as the buyer, email is unrelated.
         # ignore_permissions=True since a plain user has no create perm on the
         # doctype (real ticket creation always goes through ignore_permissions);
         # owner is still set from the active session user regardless.
         frappe.set_user(self.buyer)
-        self.owner_match_ticket = insert_test_ticket(
-            self.event.name, email="someone-else@example.com", ignore_permissions=True
+        self.owner_match_ticket = FOSSEventTicketFactory.build(
+            event=self.event.name, email="someone-else@example.com"
         )
+        self.owner_match_ticket.insert(ignore_permissions=True)
         frappe.set_user("Administrator")
 
     def tearDown(self):

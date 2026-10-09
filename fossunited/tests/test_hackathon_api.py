@@ -21,11 +21,11 @@ from fossunited.doctype_ids import (
     HACKATHON_TEAM,
     USER_PROFILE,
 )
-from fossunited.tests.utils import (
-    insert_test_chapter,
-    insert_test_hackathon,
-    insert_test_hackathon_participant,
-    insert_user_profile,
+from fossunited.tests.factories import (
+    FOSSChapterFactory,
+    FOSSHackathonFactory,
+    FOSSHackathonParticipantFactory,
+    UserFactory,
 )
 
 
@@ -41,11 +41,11 @@ class TestHackathonAPI(FrappeTestCase):
 
         # Create user profiles
         for email in [self.user1, self.user2, self.user3]:
-            insert_user_profile(email)
+            UserFactory.create(email=email)
 
         # Create test chapter and hackathon
-        self.chapter = insert_test_chapter(chapter_name="Test Chapter")
-        self.hackathon = insert_test_hackathon(
+        self.chapter = FOSSChapterFactory.create(chapter_name="Test Chapter")
+        self.hackathon = FOSSHackathonFactory.create(
             chapter=self.chapter.name,
             hackathon_name="Test Hackathon",
             max_team_members=2,
@@ -109,8 +109,8 @@ class TestHackathonAPI(FrappeTestCase):
     def test_get_participant_own_data(self):
         """Test user can get their own participant data"""
         # Create participant using utility
-        participant = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        participant = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user1,
             email=self.user1,
             full_name="Test User 1",
@@ -124,8 +124,8 @@ class TestHackathonAPI(FrappeTestCase):
 
     def test_create_team_success(self):
         """Test that participant can create a team"""
-        insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user1,
             email=self.user1,
         )
@@ -151,13 +151,13 @@ class TestHackathonAPI(FrappeTestCase):
 
     def test_user_cannot_join_multiple_teams(self):
         """Test that a user cannot be in multiple teams"""
-        participant1 = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        participant1 = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user1,
             email=self.user1,
         )
-        participant2 = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        participant2 = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user2,
             email=self.user2,
         )
@@ -192,13 +192,13 @@ class TestHackathonAPI(FrappeTestCase):
 
     def test_join_team_success(self):
         """Test user can successfully join a team"""
-        insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user1,
             email=self.user1,
         )
-        participant2 = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        participant2 = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user2,
             email=self.user2,
         )
@@ -224,18 +224,18 @@ class TestHackathonAPI(FrappeTestCase):
         # Set max team size to 2
         frappe.db.set_value(HACKATHON, self.hackathon.name, "max_team_members", 2)
 
-        participant1 = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        participant1 = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user1,
             email=self.user1,
         )
-        insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user2,
             email=self.user2,
         )
-        insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user3,
             email=self.user3,
         )
@@ -264,8 +264,8 @@ class TestHackathonAPI(FrappeTestCase):
 
     def test_create_project_success(self):
         """Test team member can create project"""
-        participant = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        participant = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user1,
             email=self.user1,
         )
@@ -292,13 +292,13 @@ class TestHackathonAPI(FrappeTestCase):
 
     def test_create_project_non_member_fails(self):
         """Test non-team member cannot create project"""
-        participant1 = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        participant1 = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user1,
             email=self.user1,
         )
-        insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user2,
             email=self.user2,
         )
@@ -324,8 +324,8 @@ class TestHackathonAPI(FrappeTestCase):
 
     def test_create_duplicate_project_fails(self):
         """Test cannot create multiple projects for same team"""
-        participant = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        participant = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user1,
             email=self.user1,
         )
@@ -358,8 +358,8 @@ class TestHackathonAPI(FrappeTestCase):
 
     def test_delete_project_success(self):
         """Test team member can delete project"""
-        participant = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        participant = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user1,
             email=self.user1,
         )
@@ -386,13 +386,13 @@ class TestHackathonAPI(FrappeTestCase):
 
     def test_delete_project_non_member_fails(self):
         """Test non-team member cannot delete project"""
-        participant1 = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        participant1 = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user1,
             email=self.user1,
         )
-        insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name,
+        FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name,
             user=self.user2,
             email=self.user2,
         )
