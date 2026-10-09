@@ -372,12 +372,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         # Speaker profile URLs keyed by email (suppressed when CFP is anonymous)
         context.speaker_profile_map = {}
         if speaker_emails and not context.anonymous_cfps:
-            rows = frappe.db.get_all(
-                USER_PROFILE,
-                filters={"user": ["in", speaker_emails], **_visible_filters},
-                fields=["user", "username"],
-            )
-            context.speaker_profile_map = {p.user: f"/u/{p.username}" for p in rows if p.username}
+            context.speaker_profile_map = self.get_speaker_profile_map(_visible_filters)
 
         # Submitter profile (suppressed when CFP is anonymous)
         context.submitter_profile = None
@@ -446,6 +441,30 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             "positive": positive,
             "negative": negative,
             "unsure": unsure,
+        }
+
+    def get_speaker_profile_map(self, visible_filters: dict) -> dict:
+        """Map speaker email -> profile URL, preferring `linked_user` over an
+        email match (same precedence as event_media.fetch_speaker_rows).
+        """
+
+        def usernames_by(field, values):
+            if not values:
+                return {}
+            rows = frappe.db.get_all(
+                USER_PROFILE, {field: ["in", values], **visible_filters}, [field, "username"]
+            )
+            return {row[field]: row.username for row in rows if row.username}
+
+        by_name = usernames_by("name", [s.linked_user for s in self.speakers if s.linked_user])
+        by_email = usernames_by(
+            "user", [s.email for s in self.speakers if s.email and not s.linked_user]
+        )
+
+        return {
+            s.email: f"/u/{username}"
+            for s in self.speakers
+            if s.email and (username := by_name.get(s.linked_user) or by_email.get(s.email))
         }
 
     def get_likes(self) -> list:
