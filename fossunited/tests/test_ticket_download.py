@@ -88,10 +88,8 @@ class TestTicketQrAuth(FrappeTestCase):
 
     def setUp(self):
         frappe.set_user("Administrator")
-        self.buyer = "test_ticket_buyer@example.com"
-        self.stranger = "test_ticket_stranger@example.com"
-        UserFactory.create(email=self.buyer)
-        UserFactory.create(email=self.stranger)
+        self.buyer = UserFactory.create().name
+        self.stranger = UserFactory.create().name
 
         self.chapter = FOSSChapterFactory.create()
         self.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)

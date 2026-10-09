@@ -35,13 +35,9 @@ class TestHackathonAPI(FrappeTestCase):
     def setUp(self):
         """Set up before each test"""
         frappe.set_user("Administrator")
-        self.user1 = "test_user1@example.com"
-        self.user2 = "test_user2@example.com"
-        self.user3 = "test_user3@example.com"
-
-        # Create user profiles
-        for email in [self.user1, self.user2, self.user3]:
-            UserFactory.create(email=email)
+        self.user1 = UserFactory.create().name
+        self.user2 = UserFactory.create().name
+        self.user3 = UserFactory.create().name
 
         # Create test chapter and hackathon
         self.chapter = FOSSChapterFactory.create(chapter_name="Test Chapter")
