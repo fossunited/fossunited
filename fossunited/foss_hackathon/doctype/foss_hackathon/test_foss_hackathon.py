@@ -2,13 +2,13 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import EMAIL_GROUP, HACKATHON
-from fossunited.tests.utils import insert_test_chapter, insert_test_hackathon
+from fossunited.tests.factories import FOSSChapterFactory, FOSSHackathonFactory
 
 
 class TestFOSSHackathon(FrappeTestCase):
     def setUp(self):
-        self.chapter = insert_test_chapter()
-        self.hackathon = insert_test_hackathon(chapter=self.chapter.name)
+        self.chapter = FOSSChapterFactory.create()
+        self.hackathon = FOSSHackathonFactory.create(chapter=self.chapter.name)
 
     def tearDown(self):
         frappe.set_user("Administrator")
@@ -41,7 +41,7 @@ class TestFOSSHackathon(FrappeTestCase):
         self.assertEqual(frappe.db.count(EMAIL_GROUP, {"document_type": HACKATHON}), 1)
 
         # When a new hackathon is created
-        new_hackathon = insert_test_hackathon(chapter=self.chapter.name)
+        new_hackathon = FOSSHackathonFactory.create(chapter=self.chapter.name)
         # Then a new email group linked to this new hackathon must be created
         self.assertIsNotNone(
             frappe.db.exists(

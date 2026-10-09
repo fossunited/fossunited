@@ -5,10 +5,10 @@ from frappe.tests.utils import FrappeTestCase
 from fossunited.doctype_ids import (
     USER_PROFILE,
 )
-from fossunited.tests.utils import (
-    insert_test_chapter,
-    insert_test_hackathon,
-    insert_test_hackathon_localhost,
+from fossunited.tests.factories import (
+    FOSSChapterFactory,
+    FOSSHackathonFactory,
+    FOSSHackathonLocalHostFactory,
 )
 
 
@@ -18,9 +18,9 @@ class TestFOSSHackathonLocalHost(FrappeTestCase):
         self.organizer1_profile = frappe.get_doc(USER_PROFILE, {"user": self.ORGANIZER_1})
         self.ORGANIZER_2 = "test2@example.com"
         self.organizer2_profile = frappe.get_doc(USER_PROFILE, {"user": self.ORGANIZER_2})
-        self.chapter = insert_test_chapter()
-        self.hackathon = insert_test_hackathon(chapter=self.chapter.name)
-        self.localhost = insert_test_hackathon_localhost(parent_hackathon=self.hackathon.name)
+        self.chapter = FOSSChapterFactory.create()
+        self.hackathon = FOSSHackathonFactory.create(chapter=self.chapter.name)
+        self.localhost = FOSSHackathonLocalHostFactory.create(parent_hackathon=self.hackathon.name)
 
     def tearDown(self):
         frappe.set_user("Administrator")
@@ -35,7 +35,7 @@ class TestFOSSHackathonLocalHost(FrappeTestCase):
         self.assertFalse(self.has_organizer_role(self.ORGANIZER_2))
 
         # When a localhost is created with them as organizers
-        new_localhost = insert_test_hackathon_localhost(
+        new_localhost = FOSSHackathonLocalHostFactory.create(
             parent_hackathon=self.hackathon.name,
             organizers=[
                 {
@@ -145,7 +145,7 @@ class TestFOSSHackathonLocalHost(FrappeTestCase):
         self.assertTrue(self.has_organizer_role(self.ORGANIZER_1))
 
         # Create another localhost with Organizer 1 as an organizer
-        new_localhost = insert_test_hackathon_localhost(
+        new_localhost = FOSSHackathonLocalHostFactory.create(
             parent_hackathon=self.hackathon.name,
             organizers=[
                 {
