@@ -88,7 +88,6 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         )
 
         accept_coc: DF.Check
-        attendance_confirmed: DF.Check
         bio: DF.TextEditor | None
         chapter: DF.Data | None
         custom_answers: DF.Table[FOSSCustomAnswer]
