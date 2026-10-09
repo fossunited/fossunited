@@ -23,7 +23,8 @@ class TestCFPAssignmentAPIs(FrappeTestCase):
         cls.reviewer = UserFactory.create("with_foss_website_user_role")
         frappe.get_doc("User", cls.reviewer.name).add_roles("CFP Reviewer")
 
-        UserFactory.create(email=CTM)
+        if not frappe.db.exists("User", CTM):
+            UserFactory.create(email=CTM)
         cls.chapter = FOSSChapterFactory.create("with_members", members=[CTM])
         frappe.get_doc("User", CTM).add_roles("Chapter Team Member")
         cls.event = FOSSChapterEventFactory.create(chapter=cls.chapter.name)
