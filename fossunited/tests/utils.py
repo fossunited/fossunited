@@ -460,7 +460,6 @@ def insert_cfp_submission(linked_cfp: str, event: str, **kwargs):
         "linked_cfp": linked_cfp,
         "event": event,
         "submitted_by": submitted_by,
-        "email": kwargs.get("email", submitted_by) or fake.email(),
         "speakers": speakers,
         "is_first_talk": kwargs.get("is_first_talk", "No"),
         "session_type": kwargs.get("session_type", "Talk"),

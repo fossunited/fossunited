@@ -269,7 +269,7 @@ class FOSSUserProfile(WebsiteGenerator):
         proposals = frappe.db.get_all(
             PROPOSAL,
             fields=["event", "status", "talk_title", "route", "session_type"],
-            filters={"email": self.email},
+            filters={"submitted_by": self.user},
             page_length=9999,
         )
 
