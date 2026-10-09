@@ -76,6 +76,8 @@ for the broader community.</p><br/>
     )
 
 
+# reword on https://github.com/fossunited/fossunited/issues/1765
+# or delete this if this comment did not go away
 def notify_cfp_reviewer_assignment(doc, method=None) -> None:
     """
     doc_events hook: ToDo → after_insert.
