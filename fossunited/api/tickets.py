@@ -494,33 +494,94 @@ def get_checkin_insights(event_id: str) -> dict:
     return {"daily_data": daily_data}
 
 
+@frappe.whitelist()
 def get_tshirt_insights(event_id: str) -> dict:
     """
-    Get the insights of the t-shirts for the event
-
-    Returns:
-        dict: Insights of the t-shirts
+    Get comprehensive T-shirt insights for the event, categorized into
+    Pre-paid, Free Coupon / Pass, and Total, with size distributions and pending counters.
     """
-    tshirts_sold = frappe.db.count(
+    t_tickets = frappe.db.get_all(
         EVENT_TICKET,
         filters={"event": event_id, "wants_tshirt": 1},
+        fields=["name", "tier", "tshirt_size", "tshirt_delivered", "razorpay_payment"],
     )
 
-    # Group tshirts sold by size
-    tshirt_sizes = frappe.db.get_all(
-        EVENT_TICKET,
-        filters={"event": event_id, "wants_tshirt": 1},
-        fields=["tshirt_size"],
-    )
-    tshirt_sizes = [size.tshirt_size for size in tshirt_sizes]
+    size_order = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "Unspecified"]
 
-    tshirt_size_count = {}
-    for size in tshirt_sizes:
-        tshirt_size_count[size] = tshirt_size_count.get(size, 0) + 1
+    def _init_size_map():
+        return {s: {"allocated": 0, "delivered": 0, "pending": 0} for s in size_order}
+
+    prepaid_sizes = _init_size_map()
+    free_sizes = _init_size_map()
+    total_sizes = _init_size_map()
+
+    categories = {
+        "prepaid": {"allocated": 0, "delivered": 0, "pending": 0, "sizes": prepaid_sizes},
+        "free_coupon": {"allocated": 0, "delivered": 0, "pending": 0, "sizes": free_sizes},
+        "total": {"allocated": 0, "delivered": 0, "pending": 0, "sizes": total_sizes},
+    }
+
+    tier_breakdown = {}
+
+    for t in t_tickets:
+        is_prepaid = bool(t.razorpay_payment)
+        cat_key = "prepaid" if is_prepaid else "free_coupon"
+        raw_size = (t.tshirt_size or "").strip()
+        size = (
+            raw_size if raw_size in size_order else ("Unspecified" if not raw_size else raw_size)
+        )
+        if size not in total_sizes:
+            total_sizes[size] = {"allocated": 0, "delivered": 0, "pending": 0}
+            prepaid_sizes[size] = {"allocated": 0, "delivered": 0, "pending": 0}
+            free_sizes[size] = {"allocated": 0, "delivered": 0, "pending": 0}
+
+        delivered = bool(t.tshirt_delivered)
+
+        # Update category counts
+        categories[cat_key]["allocated"] += 1
+        categories["total"]["allocated"] += 1
+        categories[cat_key]["sizes"][size]["allocated"] += 1
+        categories["total"]["sizes"][size]["allocated"] += 1
+
+        if delivered:
+            categories[cat_key]["delivered"] += 1
+            categories["total"]["delivered"] += 1
+            categories[cat_key]["sizes"][size]["delivered"] += 1
+            categories["total"]["sizes"][size]["delivered"] += 1
+        else:
+            categories[cat_key]["pending"] += 1
+            categories["total"]["pending"] += 1
+            categories[cat_key]["sizes"][size]["pending"] += 1
+            categories["total"]["sizes"][size]["pending"] += 1
+
+        # Tier breakdown
+        tier_name = t.tier or "Standard"
+        if tier_name not in tier_breakdown:
+            tier_breakdown[tier_name] = {
+                "title": tier_name,
+                "allocated": 0,
+                "delivered": 0,
+                "pending": 0,
+                "sizes": {},
+            }
+        tier_breakdown[tier_name]["allocated"] += 1
+        if delivered:
+            tier_breakdown[tier_name]["delivered"] += 1
+        else:
+            tier_breakdown[tier_name]["pending"] += 1
+        tier_sizes = tier_breakdown[tier_name]["sizes"]
+        tier_sizes[size] = tier_sizes.get(size, 0) + 1
+
+    tshirts_sold = categories["total"]["allocated"]
+    tshirt_size_count = {s: d["allocated"] for s, d in total_sizes.items() if d["allocated"] > 0}
 
     return {
         "tshirts_sold": tshirts_sold,
+        "tshirts_delivered": categories["total"]["delivered"],
+        "tshirts_pending": categories["total"]["pending"],
         "tshirt_size_count": tshirt_size_count,
+        "categories": categories,
+        "tier_breakdown": list(tier_breakdown.values()),
     }
 
 
