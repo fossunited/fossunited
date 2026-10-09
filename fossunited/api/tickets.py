@@ -793,44 +793,26 @@ def _get_approved_speaker_emails_for_event(event: str) -> dict[str, str]:
     """Return {email: full_name} for unique speakers across approved proposals.
 
     One coupon per speaker regardless of how many approved proposals they
-    appear in. Speaker child rows take priority; proposal-level email is a
-    fallback when no child rows exist.
+    appear in.
     """
-    proposals = frappe.get_all(
+    proposal_names = frappe.get_all(
         PROPOSAL,
         filters={"event": event, "status": "Approved"},
-        fields=["name", "email", "full_name"],
+        pluck="name",
     )
-    if not proposals:
+    if not proposal_names:
         return {}
 
-    proposal_names = [p.name for p in proposals]
     speaker_rows = frappe.get_all(
         SPEAKER,
         filters={"parent": ["in", proposal_names], "parenttype": PROPOSAL},
-        fields=["email", "full_name", "parent"],
+        fields=["email", "full_name"],
     )
 
-    rows_by_proposal = {}
-    for r in speaker_rows:
-        rows_by_proposal.setdefault(r.parent, []).append(r)
-
     email_data = {}  # email → full_name
-
-    for p in proposals:
-        p_emails = set()
-
-        for r in rows_by_proposal.get(p.name, []):
-            if r.email:
-                key = r.email.strip().lower()
-                p_emails.add(key)
-                email_data.setdefault(key, r.full_name or "")
-
-        # Fallback: proposal-level email if no speaker child rows on this proposal
-        if not p_emails and p.email:
-            key = p.email.strip().lower()
-            p_emails.add(key)
-            email_data.setdefault(key, p.full_name or "")
+    for r in speaker_rows:
+        if r.email:
+            email_data.setdefault(r.email.strip().lower(), r.full_name or "")
 
     return email_data
 

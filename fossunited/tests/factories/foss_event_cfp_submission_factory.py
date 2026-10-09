@@ -47,7 +47,6 @@ class FOSSEventCFPSubmissionFactory(BaseFactory):
             "event": event,
             "chapter": frappe.db.get_value(EVENT, event, "chapter"),
             "submitted_by": submitted_by,
-            "email": self.overrides.get("email", submitted_by),
             "talk_title": fake.text(max_nb_chars=60).strip("."),
             "talk_description": fake.paragraph(),
             "session_type": "Talk",

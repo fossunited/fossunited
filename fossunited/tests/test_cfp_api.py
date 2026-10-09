@@ -116,7 +116,7 @@ class TestCFPEditWindowAPI(FrappeTestCase):
             allow_cfp_edit=1, status="Live", deadline=add_to_date(now_datetime(), days=2)
         )
         sub = FOSSEventCFPSubmissionFactory.create(
-            linked_cfp=cfp.name, submitted_by="Administrator", email="Administrator"
+            linked_cfp=cfp.name, submitted_by="Administrator"
         )
         frappe.set_user("Administrator")
         self.assertTrue(can_edit_proposal(sub.name))

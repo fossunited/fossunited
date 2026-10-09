@@ -88,26 +88,17 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         )
 
         accept_coc: DF.Check
-        attendance_confirmed: DF.Check
-        bio: DF.TextEditor | None
         chapter: DF.Data | None
         custom_answers: DF.Table[FOSSCustomAnswer]
-        designation: DF.Data | None
-        email: DF.Data | None
         event: DF.Data | None
         event_name: DF.Data | None
-        first_name: DF.Data | None
-        full_name: DF.Data | None
         intended_audience: DF.Literal["Beginner", "Intermediate", "Advanced"]
         is_first_talk: DF.Literal["Yes", "No"]
         is_published: DF.Check
         is_withdrawn: DF.Check
         key_takeaways: DF.TextEditor | None
-        last_name: DF.Data | None
         linked_cfp: DF.Link
         negative_reviews: DF.Data | None
-        organization: DF.Data | None
-        picture_url: DF.Data | None
         positive_reviews: DF.Data | None
         reason: DF.SmallText | None
         references: DF.Table[CFPSubmissionReference]
@@ -154,7 +145,6 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         return super().has_permission(permtype, debug=debug, user=user)
 
     def validate(self):
-        self.bio = sanitize_text_content(self.bio)
         self.talk_description = sanitize_text_content(self.talk_description)
         self.key_takeaways = sanitize_text_content(self.key_takeaways)
 
@@ -163,15 +153,6 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.validate_linked_cfp_exists()
         if "System Manager" not in frappe.get_roles():
             self.validate_form_is_live()
-        self._set_name_from_first_speaker()
-
-    def _set_name_from_first_speaker(self):
-        if not self.speakers:
-            return
-        parts = (self.speakers[0].full_name or "").strip().split(" ", 1)
-        self.first_name = parts[0]
-        self.last_name = parts[1] if len(parts) > 1 else ""
-        self.full_name = self.speakers[0].full_name
 
     def before_save(self):
         self.validate_proposer_edit_window()
@@ -364,7 +345,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         user = frappe.session.user
         speaker_emails = [s.email for s in self.speakers if s.email]
         context.is_owner = user != "Guest" and (
-            user == self.submitted_by or user == self.email or user in speaker_emails
+            user == self.submitted_by or user in speaker_emails
         )
 
         _visible_filters = {"is_published": 1, "cfp_visibility": "Everyone"}
@@ -386,7 +367,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             if profile and profile.username:
                 context.submitter_profile = {
                     "url": f"/u/{profile.username}",
-                    "full_name": profile.full_name or self.full_name or self.submitted_by,
+                    "full_name": profile.full_name or self.submitted_by,
                     "photo": profile.profile_photo,
                 }
 
@@ -539,10 +520,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         """Notify chapter members that an approved proposal has been withdrawn by proposer."""
         team_emails = get_chapter_members_email(self.chapter)
         to = frappe.db.get_value(CHAPTER, self.chapter, "email")
+        submitter_name = frappe.utils.get_fullname(self.submitted_by)
         message = f"""
         <p>Dear {self.chapter} team,</p>
 
-        <p><b>{self.full_name}</b> has withdrawn their proposal from <b>{self.event_name}</b>,
+        <p><b>{submitter_name}</b> has withdrawn their proposal from <b>{self.event_name}</b>,
         which was <b>approved</b> before for the event.</p>
 
         Proposal title: {self.talk_title}
@@ -563,7 +545,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             frappe.sendmail(
                 recipients=[to],
                 cc=team_emails,
-                subject=f"{self.full_name} has Withdrawn their proposal from {self.event_name}",
+                subject=f"{submitter_name} has Withdrawn their proposal from {self.event_name}",
                 message=message,
                 reference_doctype=PROPOSAL,
                 reference_name=self.name,
