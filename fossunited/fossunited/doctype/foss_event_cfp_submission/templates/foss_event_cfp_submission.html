@@ -24,8 +24,6 @@
 
   /* Speaker card */
   .speaker-col { min-width: 0; }
-  .speaker-social { min-width: 0; overflow: hidden; }
-  .speaker-social-url { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   /* Misc */
   .yt-icon { color: oklch(0.62 0.22 29); line-height: 1; transition: color 0.2s; }
@@ -164,7 +162,7 @@
 
 {% macro prose_container(label, content) %}
 {% if content %}
-<fieldset class="prose-box border rounded p-3">
+<fieldset class="prose-box border rounded p-4">
   <legend class="v3-text-tertiary medium w-fit px-2 mb-0">{{ label }}</legend>
   <div class="v3-text-primary v3-html-content">{{ content }}</div>
 </fieldset>
@@ -213,9 +211,9 @@
 {% macro render_talk_license() %}
 {% if doc.talk_license %}
 <div class="d-flex align-items-center gap-2">
-  <i class="ti ti-license v3-text-secondary text-lg" aria-hidden="true"></i>
-  <span class="v3-text-tertiary text-sm medium">Talk License:</span>
-  <span class="v3-text-secondary text-sm">{{ doc.talk_license }}</span>
+  <i class="ti ti-license v3-text-secondary text-lg flex-shrink-0" aria-hidden="true"></i>
+  <span class="v3-text-tertiary text-sm medium text-nowrap">Talk License:</span>
+  <span class="v3-text-secondary text-sm text-break">{{ doc.talk_license }}</span>
 </div>
 {% endif %}
 {% endmacro %}
@@ -235,8 +233,15 @@
 
 {% macro speaker_card(speaker) %}
 {% set sp_url = speaker_profile_map.get(speaker.email) %}
-<div class="border border-section rounded p-3 d-flex flex-column gap-2" role="listitem">
-  {% if sp_url %}<a href="{{ sp_url }}" class="d-flex align-items-start justify-content-between gap-6 text-decoration-none" aria-label="View {{ speaker.full_name }}'s profile">{% else %}<div class="d-flex align-items-start justify-content-between gap-6">{% endif %}
+<div class="border border-section rounded p-4 d-flex flex-column gap-2" role="listitem">
+  {% if sp_url %}<a href="{{ sp_url }}" class="d-flex align-items-center gap-3 text-decoration-none" aria-label="View {{ speaker.full_name }}'s profile">{% else %}<div class="d-flex align-items-center gap-3">{% endif %}
+    <img
+      class="border border-section rounded flex-shrink-0 speaker-photo"
+      src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+      alt="{{ speaker.full_name }}"
+      loading="lazy"
+      onerror="this.onerror=null;this.src='/assets/fossunited/images/defaults/user_profile_image.png';"
+    />
     <div class="d-flex flex-column gap-1 speaker-col">
       <span class="v3-text-primary text-lg semi-bold mb-0">{{ speaker.full_name }}</span>
       {% if speaker.designation or speaker.organization %}
@@ -250,30 +255,25 @@
           {%- endif -%}
         </span>
       {% endif %}
-      {% if speaker.bio %}
-        <span class="v3-text-secondary text-sm py-2 mb-0">{{ speaker.bio }}</span>
-      {% endif %}
     </div>
-    <img
-      class="border border-section rounded flex-shrink-0 speaker-photo"
-      src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-      alt="{{ speaker.full_name }}"
-      loading="lazy"
-      onerror="this.onerror=null;this.src='/assets/fossunited/images/defaults/user_profile_image.png';"
-    />
   {% if sp_url %}</a>{% else %}</div>{% endif %}
+
+  {% if speaker.bio %}
+    <div class="v3-text-secondary text-sm v3-html-content">{{ speaker.bio }}</div>
+  {% endif %}
+
   {% if speaker.social_link %}
     {% set social_url = speaker.social_link if speaker.social_link.startswith('http://') or speaker.social_link.startswith('https://') else 'https://' + speaker.social_link %}
-    <a
-      href="{{ social_url | e }}"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="{{ speaker.full_name }}'s social profile"
-      class="d-flex align-items-center gap-1 border border-section rounded v3-text-secondary text-xs px-2 py-1 mt-1 speaker-social"
-    >
-      <i class="ti ti-world flex-shrink-0" aria-hidden="true"></i>
-      <span class="speaker-social-url">{{ speaker.social_link | e }}</span>
-    </a>
+    <div class="d-flex align-items-center gap-2">
+      <i class="ti ti-world v3-text-secondary text-lg flex-shrink-0" aria-hidden="true"></i>
+      <a
+        href="{{ social_url | e }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="{{ speaker.full_name }}'s social profile"
+        class="v3-text-secondary text-sm text-break"
+      >{{ speaker.social_link | e }}</a>
+    </div>
   {% endif %}
 </div>
 {% endmacro %}
