@@ -4,20 +4,22 @@
     <EventHeader :event="event.data" class="p-4 md:p-8" />
     <hr />
     <div class="p-4 md:px-8 md:py-6">
-      <div
-        v-if="ticket_checkin_insights.data?.daily_data?.length"
-        class="flex flex-col gap-4 my-2"
-      >
+      <div class="flex flex-col gap-4 my-2">
         <div class="flex items-center justify-between gap-4">
           <div class="prose">
-            <h4>Daily Check-in Insights</h4>
+            <h4>Check-in & Logistics Insights</h4>
           </div>
           <Button
             label="Refresh"
             variant="subtle"
             size="sm"
-            :loading="ticket_checkin_insights.loading"
-            @click="ticket_checkin_insights.fetch()"
+            :loading="ticket_checkin_insights.loading || tshirt_insights.loading"
+            @click="
+              () => {
+                ticket_checkin_insights.fetch()
+                tshirt_insights.fetch()
+              }
+            "
           >
             <template #prefix>
               <IconRefresh class="w-4 h-4" />
@@ -26,17 +28,21 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <TicketTierInsightCard
-            v-for="day in ticket_checkin_insights.data.daily_data"
+            v-for="day in ticket_checkin_insights.data?.daily_data || []"
             :key="day.title"
             :tier="day"
+          />
+          <TicketTshirtInsightCard
+            v-if="tshirt_insights.data"
+            :insight="tshirt_insights.data"
           />
         </div>
       </div>
 
-      <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center justify-between gap-4 mt-6">
         <div class="prose">
           <h2 class="mb-1">Attendee Check-Ins</h2>
-          <p class="text-sm">Check in attendees as they arrive at the event.</p>
+          <p class="text-sm">Check in attendees and manage T-shirt handouts as they arrive.</p>
         </div>
         <Button
           label="Refresh"
@@ -101,12 +107,33 @@
                 variant="solid"
                 @click="handleCheckIn(row)"
               />
-              <Button v-else class="w-fit" label="Manage" @click="handleManage(row)" />
+              <Button
+                v-else
+                class="w-fit"
+                :label="row.wants_tshirt && !row.tshirt_delivered ? 'Give T-shirt' : 'Manage'"
+                :variant="row.wants_tshirt && !row.tshirt_delivered ? 'outline' : 'subtle'"
+                :theme="row.wants_tshirt && !row.tshirt_delivered ? 'amber' : 'gray'"
+                @click="handleManage(row)"
+              />
             </template>
-            <template
-              v-else-if="column.key === 'wants_tshirt' || column.key === 'tshirt_delivered'"
-            >
-              <Checkbox :model-value="Boolean(item)" :disabled="true" class="w-4 h-4" />
+            <template v-else-if="column.key === 'tshirt_status'">
+              <div v-if="row.wants_tshirt" class="flex items-center gap-1">
+                <Badge
+                  v-if="row.tshirt_delivered"
+                  theme="green"
+                  class="font-mono text-xs font-medium"
+                >
+                  ✓ {{ row.tshirt_size || 'Delivered' }}
+                </Badge>
+                <Badge
+                  v-else
+                  theme="amber"
+                  class="font-mono text-xs font-semibold"
+                >
+                  ⏳ Pending ({{ row.tshirt_size || 'Missing Size' }})
+                </Badge>
+              </div>
+              <span v-else class="text-ink-gray-4 text-xs font-mono">-</span>
             </template>
             <template v-else-if="column.key === 'name'">
               <span class="font-mono text-sm font-semibold text-ink-gray-8 truncate text-wrap">{{
@@ -126,6 +153,7 @@
                         class="text-xs bg-surface-gray-7 text-ink-white px-2 py-1 rounded-full"
                       >
                         {{ formatCheckinDateTime(data.check_in_time) }}
+                        <template v-if="data.checked_in_by"> (by {{ data.checked_in_by }})</template>
                       </span>
                     </template>
                     <Badge
@@ -158,13 +186,13 @@
     v-model="showConfirmDialog"
     :selected-attendee="selectedAttendee"
     :attendees="attendees"
-    @updated="attendees.fetch()"
+    @updated="handleDataUpdated"
   />
   <CheckinManageDialog
     v-model="showManageDialog"
     :selected-attendee="selectedAttendee"
     :attendees="attendees"
-    @updated="attendees.fetch()"
+    @updated="handleDataUpdated"
   />
 </template>
 
@@ -175,13 +203,13 @@ import CheckinConfirmationDialog from '@/components/event/CheckinConfirmationDia
 import CheckinManageDialog from '@/components/event/CheckinManageDialog.vue'
 import QRTicketScanner from '@/components/event/QRTicketScanner.vue'
 import TicketTierInsightCard from '@/components/event/TicketTierInsightCard.vue'
+import TicketTshirtInsightCard from '@/components/event/TicketTshirtInsightCard.vue'
 import {
   createResource,
   usePageMeta,
   LoadingText,
   Badge,
   Tooltip,
-  Checkbox,
   Button,
 } from 'frappe-ui'
 import { useRoute } from 'vue-router'
@@ -253,6 +281,24 @@ const ticket_checkin_insights = createResource({
   },
 })
 
+const tshirt_insights = createResource({
+  url: 'fossunited.api.tickets.get_tshirt_insights',
+  makeParams() {
+    return { event_id: route.params.id }
+  },
+  loading: true,
+  auto: true,
+  onError(error) {
+    toast.error(error.message)
+  },
+})
+
+const handleDataUpdated = () => {
+  attendees.fetch()
+  ticket_checkin_insights.fetch()
+  tshirt_insights.fetch()
+}
+
 const loading = computed(() => !attendees.data)
 
 // Processed attendees — derived group fields, no mutation of API data
@@ -280,9 +326,8 @@ const processedAttendees = computed(() =>
 const columns = [
   { label: 'Name', key: 'full_name', width: '200px' },
   { label: 'Ticket ID', key: 'name', width: '100px' },
-  { label: 'Bought T-shirt?', key: 'wants_tshirt', width: '100px' },
-  { label: 'T-shirt Delivered?', key: 'tshirt_delivered', width: '100px' },
-  { label: 'Check-in Status', key: 'checkin_status', width: '200px' },
+  { label: 'T-shirt Status', key: 'tshirt_status', width: '150px' },
+  { label: 'Check-in Status', key: 'checkin_status', width: '180px' },
   { label: 'Actions', key: 'action', width: '100px' },
 ]
 
@@ -300,12 +345,20 @@ const exportColumns = [
     exportValue: (row) => (row.tshirt_delivered ? 'Yes' : 'No'),
   },
   {
+    label: 'T-shirt Size',
+    key: 'tshirt_size',
+    exportValue: (row) => row.tshirt_size || '',
+  },
+  {
     label: 'Check-in Status',
     key: 'checkin_data',
     exportValue: (row) => {
       if (!row.checkin_data?.length) return 'Not Checked-in'
       return row.checkin_data
-        .map((d) => dayjs(d.check_in_time).format('DD MMM YYYY, hh:mm A'))
+        .map((d) => {
+          const t = dayjs(d.check_in_time).format('DD MMM YYYY, hh:mm A')
+          return d.checked_in_by ? `${t} (by ${d.checked_in_by})` : t
+        })
         .join('; ')
     },
   },
