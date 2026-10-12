@@ -16,13 +16,13 @@
           <Button
             variant="solid"
             label="Create Free Coupon"
-            icon-left="plus"
+            :icon-left="IconPlus"
             @click="handleCreate"
           />
           <Button
             variant="outline"
             label="Speaker Coupons"
-            icon-left="users"
+            :icon-left="IconUsers"
             :disabled="!canCreateSpeakerCoupons"
             :title="
               canCreateSpeakerCoupons
@@ -173,7 +173,7 @@ import { toast } from 'vue-sonner'
 import FreeTicketCodeDialog from '@/components/event/FreeTicketCodeDialog.vue'
 import { useRoute } from 'vue-router'
 import SearchListView from '@/components/ui/SearchListView.vue'
-import { IconShirt } from '@tabler/icons-vue'
+import { IconShirt, IconPlus, IconUsers } from '@tabler/icons-vue'
 
 const props = defineProps({
   event: {

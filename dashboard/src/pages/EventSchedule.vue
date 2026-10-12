@@ -1,5 +1,5 @@
 <script setup>
-import { IconArrowUpRight } from '@tabler/icons-vue'
+import { IconArrowUpRight, IconPlus } from '@tabler/icons-vue'
 import { Breadcrumbs, createResource, FormControl, Switch } from 'frappe-ui'
 import { inject, onMounted, ref, computed, provide } from 'vue'
 import { toast } from 'vue-sonner'
@@ -194,7 +194,7 @@ const saveScheduleDescription = () => {
           size="sm"
           variant="ghost"
           label="Go to Schedule Page"
-          icon-right="arrow-up-right"
+          :icon-right="IconArrowUpRight"
           @click="redirectRoute(`${event.doc?.route}/schedule`)"
         />
       </div>
@@ -234,7 +234,7 @@ const saveScheduleDescription = () => {
           v-model:schedule="schedule[selectedDate]"
           @modify-item="handleModify($event)"
         />
-        <Button label="Add Schedule" icon-left="plus" @click="addScheduleItem(selectedDate)" />
+        <Button label="Add Schedule" :icon-left="IconPlus" @click="addScheduleItem(selectedDate)" />
       </div>
     </div>
     <Suspense>

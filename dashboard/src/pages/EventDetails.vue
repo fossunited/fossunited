@@ -16,7 +16,7 @@
           class="w-fit"
           size="md"
           :theme="event.doc.is_published ? 'red' : 'green'"
-          :icon-left="event.doc.is_published ? 'slash' : 'eye'"
+          :icon-left="event.doc.is_published ? IconCancel : IconEye"
           :label="event.doc.is_published ? 'Unpublish Event' : 'Publish Event'"
           @click="togglePublishEvent"
         />
@@ -24,7 +24,7 @@
           class="w-fit"
           size="md"
           label="Update Details"
-          icon-left="edit"
+          :icon-left="IconEdit"
           @click="updateDetails()"
         ></Button>
       </div>
@@ -99,7 +99,7 @@
           <Button
             label="See on Website"
             class="w-fit"
-            icon-right="external-link"
+            :icon-right="IconExternalLink"
             :link="createAbsoluteUrlFromRoute(event.doc.route)"
             :disabled="['Draft', 'Cancelled'].includes(event.doc.status)"
           />
@@ -295,6 +295,7 @@ import FormActionBar from '@/components/FormActionBar.vue'
 import { createDocumentResource, createResource, FileUploader, FormControl } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
+import { IconEdit, IconExternalLink, IconCancel, IconEye } from '@tabler/icons-vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 import { inject } from 'vue'
 

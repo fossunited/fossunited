@@ -30,7 +30,7 @@
     <div class="max-w-screen-xl w-full">
       <Button
         variant="ghost"
-        icon-left="arrow-left"
+        :icon-left="IconArrowLeft"
         label="Go Back"
         class="mt-4 mb-2"
         @click="
@@ -104,7 +104,7 @@
       </div>
       <div v-else class="prose mt-4 flex items-top gap-4">
         <h2>{{ project.data.title }}</h2>
-        <Button v-if="!isHackathonEnded" icon="edit-3" @click="inNameEdit = true" />
+        <Button v-if="!isHackathonEnded" :icon="IconEdit" @click="inNameEdit = true" />
       </div>
 
       <!-- Tabs -->
@@ -163,6 +163,7 @@ import { inject, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from 'radix-vue'
+import { IconArrowLeft, IconEdit } from '@tabler/icons-vue'
 
 const route = useRoute()
 const router = useRouter()

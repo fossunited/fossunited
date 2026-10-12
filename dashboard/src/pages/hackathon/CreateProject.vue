@@ -4,7 +4,7 @@
     <div class="w-full max-w-screen-xl">
       <Button
         variant="ghost"
-        icon-left="arrow-left"
+        :icon-left="IconArrowLeft"
         label="Go Back"
         class="mt-4 mb-2"
         @click="
@@ -92,7 +92,7 @@
         <Button
           variant="ghost"
           label="Go Back"
-          icon-left="arrow-left"
+          :icon-left="IconArrowLeft"
           @click="
             () => {
               inCreateProject = false
@@ -110,7 +110,7 @@
         <Button
           variant="ghost"
           label="Go Back"
-          icon-left="arrow-left"
+          :icon-left="IconArrowLeft"
           @click="
             () => {
               inContribute = false
@@ -281,7 +281,7 @@ import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted, reactive, ref, watch } from 'vue'
 import { toast } from 'vue-sonner'
-import { IconBrandGithub } from '@tabler/icons-vue'
+import { IconBrandGithub, IconArrowLeft } from '@tabler/icons-vue'
 import DocsInfo from '@/components/DocsInfo.vue'
 
 const route = useRoute()

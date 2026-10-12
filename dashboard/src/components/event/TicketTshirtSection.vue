@@ -30,14 +30,14 @@
             placeholder="0.00"
           >
           </Input>
-          <Button icon="x" @click="inPriceEdit = false" />
-          <Button icon="check" theme="green" @click="handleTshirtPriceUpdate" />
+          <Button :icon="IconX" @click="inPriceEdit = false" />
+          <Button :icon="IconCheck" theme="green" @click="handleTshirtPriceUpdate" />
         </div>
         <div v-else class="prose flex items-center gap-2">
           <h3 class="font-medium mb-0">
             {{ event.data.t_shirt_price }} <span class="text-lg">INR</span>
           </h3>
-          <Button icon="edit" @click="inPriceEdit = true" />
+          <Button :icon="IconEdit" @click="inPriceEdit = true" />
         </div>
       </div>
       <ErrorMessage :message="errorMessages" />
@@ -47,6 +47,7 @@
 <script setup>
 import { defineProps, ref } from 'vue'
 import { createResource, ErrorMessage } from 'frappe-ui'
+import { IconX, IconCheck, IconEdit } from '@tabler/icons-vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
 import Input from '@/components/Input.vue'

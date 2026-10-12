@@ -3,6 +3,7 @@ import { ref, nextTick, inject } from 'vue'
 import { Button, DatePicker, Popover, Dialog } from 'frappe-ui'
 import dayjs from 'dayjs'
 import { toast } from 'vue-sonner'
+import { IconX, IconPlus } from '@tabler/icons-vue'
 
 const event = inject('event')
 const emit = defineEmits(['update:schedule', 'reset:selected-schedule'])
@@ -81,7 +82,7 @@ const handleRemoveScheduleDate = () => {
       v-for="(date, index) in dates"
       :key="index"
       :label="dayjs(date).format('D MMM YYYY')"
-      icon-right="x"
+      :icon-right="IconX"
       :variant="getDateButtonVariant(date)"
       @click="selectedDate = date"
     >
@@ -89,7 +90,7 @@ const handleRemoveScheduleDate = () => {
         <Button
           variant="ghost"
           theme="white"
-          icon="x"
+          :icon="IconX"
           @click="
             () => {
               dateToRemove = date
@@ -101,7 +102,7 @@ const handleRemoveScheduleDate = () => {
     </Button>
     <Popover @open="onPopoverOpen">
       <template #target="{ togglePopover }">
-        <Button label="Add Date" variant="outline" icon-left="plus" @click.stop="togglePopover()">
+        <Button label="Add Date" variant="outline" :icon-left="IconPlus" @click.stop="togglePopover()">
         </Button>
         <span v-show="false" @vue:mounted="closePopoverFn = togglePopover"></span>
       </template>

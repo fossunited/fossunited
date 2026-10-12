@@ -46,7 +46,7 @@
             class="text-base hover:underline hover:cursor-pointer flex items-center gap-1"
           >
             <span>View Git Profile</span>
-            <FeatherIcon name="external-link" class="h-4 w-4 inline-block" />
+            <IconExternalLink class="h-4 w-4 inline-block" />
           </a>
         </div>
         <div class="flex flex-col gap-1">
@@ -61,7 +61,7 @@
             @click="redirectRoute(participant.project_route)"
           >
             {{ participant.project_title
-            }}<FeatherIcon name="external-link" class="w-4 h-4 inline-block" />
+            }}<IconExternalLink class="w-4 h-4 inline-block" />
           </div>
           <div v-else>No Project Yet</div>
         </div>
@@ -105,7 +105,8 @@
 </template>
 <script setup>
 import { defineProps, defineEmits } from 'vue'
-import { Dialog, FeatherIcon } from 'frappe-ui'
+import { Dialog } from 'frappe-ui'
+import { IconExternalLink } from '@tabler/icons-vue'
 import { redirectRoute } from '@/helpers/utils'
 
 const props = defineProps({

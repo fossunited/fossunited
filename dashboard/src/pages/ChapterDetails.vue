@@ -7,14 +7,14 @@
           class="w-fit"
           size="md"
           label="Update Details"
-          icon-left="edit"
+          :icon-left="IconEdit"
           @click="updateDetails()"
         ></Button>
         <Button
           class="w-fit bg-green-600 text-ink-gray-9 hover:bg-green-700 disabled:opacity-80 disabled:text-ink-white disabled:cursor-not-allowed"
           size="md"
           label="See on website"
-          icon-left="external-link"
+          :icon-left="IconExternalLink"
           :disabled="!chapter.doc.is_published"
           @click="redirectRoute(`${chapter.doc.route}`)"
         ></Button>
@@ -249,6 +249,8 @@ import { toast } from 'vue-sonner'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import {
   IconAt,
+  IconEdit,
+  IconExternalLink,
   IconBrandFacebook,
   IconBrandInstagram,
   IconBrandLinkedin,

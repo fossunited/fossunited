@@ -1,5 +1,5 @@
 <script setup>
-import { IconCircleCheckFilled } from '@tabler/icons-vue'
+import { IconCircleCheckFilled, IconTrash } from '@tabler/icons-vue'
 import { Badge, FormControl, Dialog, ErrorMessage } from 'frappe-ui'
 import { computed, inject, ref, onMounted, onUnmounted } from 'vue'
 import { toast } from 'vue-sonner'
@@ -282,7 +282,7 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
 
       <div class="bg-surface-white flex gap-2 items-center">
         <Button
-          icon="trash"
+          :icon="IconTrash"
           theme="red"
           class="basis-1/6"
           @click="showDeleteConfirmation = true"

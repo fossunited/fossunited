@@ -51,7 +51,7 @@
             <span v-else class="text-sm text-ink-gray-5">No Remarks</span>
             <div class="flex items-center gap-2">
               <Button label="Edit" @click="editReview(review)" />
-              <Button icon="trash" theme="red" @click="deleteReview(review.name)" />
+              <Button :icon="IconTrash" theme="red" @click="deleteReview(review.name)" />
             </div>
           </div>
           <Badge
@@ -96,7 +96,7 @@
 import { cleanedHTML } from '@/helpers/utils'
 import { ref, inject, computed } from 'vue'
 import { Badge, Tooltip, createResource } from 'frappe-ui'
-import { IconChecks, IconAlertTriangle, IconStar, IconInfoCircle } from '@tabler/icons-vue'
+import { IconChecks, IconAlertTriangle, IconStar, IconInfoCircle, IconTrash } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import { defaultSelectedReviewValue } from '@/helpers/reviewer'
 import MessageBanner from '@/components/ui/MessageBanner.vue'

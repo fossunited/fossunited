@@ -40,7 +40,7 @@
     <Button
       class="w-full md:w-fit"
       label="Link Issue / PR / Discussion"
-      icon-left="plus"
+      :icon-left="IconPlus"
       variant="solid"
       @click="showAddDialog = true"
     />
@@ -58,8 +58,8 @@
         </a>
       </div>
       <div v-else-if="column.key == 'actions'" class="flex gap-1">
-        <Button icon="edit" size="sm" variant="subtle" @click="openEditDialog(row)" />
-        <Button icon="trash" size="sm" theme="red" variant="subtle" @click="deleteIssuePr(row)" />
+        <Button :icon="IconEdit" size="sm" variant="subtle" @click="openEditDialog(row)" />
+        <Button :icon="IconTrash" size="sm" theme="red" variant="subtle" @click="deleteIssuePr(row)" />
       </div>
       <div v-else class="text-base truncate text-wrap">{{ item }}</div>
     </template>
@@ -69,7 +69,7 @@
 import { computed, ref, watch, defineProps, defineEmits, reactive } from 'vue'
 import { ErrorMessage, FormControl, ListView, Dialog, createDocumentResource } from 'frappe-ui'
 import { toast } from 'vue-sonner'
-import { IconArrowUpRight } from '@tabler/icons-vue'
+import { IconArrowUpRight, IconPlus, IconEdit, IconTrash } from '@tabler/icons-vue'
 
 const props = defineProps({
   project: { type: Object, required: true },

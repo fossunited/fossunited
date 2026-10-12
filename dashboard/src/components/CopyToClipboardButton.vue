@@ -1,10 +1,11 @@
 <template>
   <Tooltip :text="tooltipText">
-    <Button icon="copy" class="w-4" variant="ghost" @click="handleCopy" />
+    <Button :icon="IconCopy" class="w-4" variant="ghost" @click="handleCopy" />
   </Tooltip>
 </template>
 <script setup>
 import { Tooltip } from 'frappe-ui'
+import { IconCopy } from '@tabler/icons-vue'
 import { copyToClipboard } from '@/helpers/utils'
 import { ref } from 'vue'
 

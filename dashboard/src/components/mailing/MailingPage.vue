@@ -10,7 +10,7 @@
         <h3>Campaigns</h3>
       </div>
       <Button
-        icon-left="plus"
+        :icon-left="IconPlus"
         label="Create Campaign"
         size="md"
         class="w-fit"
@@ -44,6 +44,7 @@ import { ref, reactive, watch, computed } from 'vue'
 import CreateCampaignDrawer from '@/components/mailing/CreateCampaignDrawer.vue'
 import CampaignList from '@/components/mailing/CampaignList.vue'
 import ManageCampaignDrawer from '@/components/mailing/ManageCampaignDrawer.vue'
+import { IconPlus } from '@tabler/icons-vue'
 
 const props = defineProps({
   doctype: {

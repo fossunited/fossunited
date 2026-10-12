@@ -15,8 +15,8 @@
   <div class="border p-4 flex flex-col gap-2 rounded items-center">
     <div class="relative w-full">
       <div v-if="editable" class="top-0 right-0 absolute flex flex-row-reverse gap-2 z-10">
-        <Button icon="trash" theme="red" @click="showConfirmation = true" />
-        <Button icon="edit" @click="emit('edit')" />
+        <Button :icon="IconTrash" theme="red" @click="showConfirmation = true" />
+        <Button :icon="IconEdit" @click="emit('edit')" />
       </div>
       <img
         :src="item[imageKey]"
@@ -33,6 +33,7 @@
 import { inject, ref } from 'vue'
 import { toast } from 'vue-sonner'
 import { Dialog } from 'frappe-ui'
+import { IconTrash, IconEdit } from '@tabler/icons-vue'
 
 const props = defineProps({
   item: { type: Object, required: true },

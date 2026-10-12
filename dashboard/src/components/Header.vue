@@ -18,22 +18,22 @@
           :options="[
             {
               label: 'My Profile',
-              icon: 'user',
+              icon: IconUser,
               onClick: redirectToProfile,
             },
             {
               label: 'Dashboard',
-              icon: 'layout',
+              icon: IconLayoutDashboard,
               onClick: goToDashboard,
             },
             {
               label: 'Go to website',
-              icon: 'globe',
+              icon: IconWorld,
               onClick: goToPublicSite,
             },
             {
               label: 'Logout',
-              icon: 'log-out',
+              icon: IconLogout,
               onClick: () => {
                 session.logout.fetch()
               },
@@ -63,6 +63,7 @@
 <script setup>
 import { inject } from 'vue'
 import { Avatar, Dropdown } from 'frappe-ui'
+import { IconUser, IconLayoutDashboard, IconWorld, IconLogout } from '@tabler/icons-vue'
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
 import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
 

@@ -27,7 +27,7 @@
       </div>
       <div v-else class="prose mt-4 flex items-top gap-4">
         <h2>{{ team.data.team_name }}</h2>
-        <Button icon="edit-3" @click="inNameEdit = true" />
+        <Button :icon="IconEdit" @click="inNameEdit = true" />
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 w-full mb-4 gap-6">
         <HackathonAttendanceMode :hackathon="hackathon" class="w-full" />
@@ -111,6 +111,7 @@ import { createResource, usePageMeta, Dialog } from 'frappe-ui'
 import { inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
+import { IconEdit } from '@tabler/icons-vue'
 
 const session = inject('$session')
 const route = useRoute()
