@@ -88,7 +88,7 @@ import {
   IconMapPin,
   IconSquareCheck,
   IconFileText,
-  IconCreditCard,
+  IconTicket,
 } from '@tabler/icons-vue'
 import { useRoute } from 'vue-router'
 
@@ -115,7 +115,7 @@ const ICON_MAP = {
   'map-pin': IconMapPin,
   'check-square': IconSquareCheck,
   'file-text': IconFileText,
-  'credit-card': IconCreditCard,
+  ticket: IconTicket,
 }
 
 const session = inject('$session')

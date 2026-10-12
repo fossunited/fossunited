@@ -6,7 +6,7 @@
           class="w-fit"
           size="md"
           :theme="rsvp.doc.is_published ? 'red' : 'green'"
-          :icon-left="rsvp.doc.is_published ? IconSlash : IconUpload"
+          :icon-left="rsvp.doc.is_published ? IconCancel : IconUpload"
           :label="rsvp.doc.is_published ? 'Unpublish Form' : 'Publish Form'"
           @click="togglePublishForm"
         />
@@ -218,7 +218,7 @@ import {
 import { reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
-import { IconPlus, IconSlash, IconUpload } from '@tabler/icons-vue'
+import { IconPlus, IconCancel, IconUpload } from '@tabler/icons-vue'
 import CopyToClipboardComponent from '../components/CopyToClipboardComponent.vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import FormActionBar from '@/components/FormActionBar.vue'

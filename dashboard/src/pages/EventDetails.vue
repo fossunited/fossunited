@@ -16,7 +16,7 @@
           class="w-fit"
           size="md"
           :theme="event.doc.is_published ? 'red' : 'green'"
-          :icon-left="event.doc.is_published ? IconSlash : IconEye"
+          :icon-left="event.doc.is_published ? IconCancel : IconEye"
           :label="event.doc.is_published ? 'Unpublish Event' : 'Publish Event'"
           @click="togglePublishEvent"
         />
@@ -295,7 +295,7 @@ import FormActionBar from '@/components/FormActionBar.vue'
 import { createDocumentResource, createResource, FileUploader, FormControl } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
-import { IconEdit, IconExternalLink, IconSlash, IconEye } from '@tabler/icons-vue'
+import { IconEdit, IconExternalLink, IconCancel, IconEye } from '@tabler/icons-vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 import { inject } from 'vue'
 

@@ -14,7 +14,7 @@
 
         <Button
           :theme="localhost.doc.is_published ? 'red' : 'green'"
-          :icon-left="localhost.doc.is_published ? IconSlash : IconUpload"
+          :icon-left="localhost.doc.is_published ? IconCancel : IconUpload"
           :label="localhost.doc.is_published ? 'Unpublish' : 'Publish'"
           @click="togglePublish"
         />
@@ -144,7 +144,7 @@ import { createDocumentResource, FileUploader, FormControl, Button, Switch } fro
 import { computed, provide } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
-import { IconArrowLeft, IconSlash, IconUpload } from '@tabler/icons-vue'
+import { IconArrowLeft, IconCancel, IconUpload } from '@tabler/icons-vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import FormActionBar from '@/components/FormActionBar.vue'
 import LocalhostHeader from '@/components/localhost/LocalhostHeader.vue'
