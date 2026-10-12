@@ -60,7 +60,12 @@ const proposals = createResource({
       ],
       orderBy: 'creation',
       limit_page_length: 999,
-      or_filters: { email: session.user, submitted_by: session.user },
+      // Submitted by me or I'm a listed speaker
+      or_filters: [
+        ['FOSS Event CFP Submission', 'submitted_by', '=', session.user],
+        ['CFP Submission Speaker', 'email', '=', session.user],
+      ],
+      group_by: 'name',
     }
   },
   auto: true,
