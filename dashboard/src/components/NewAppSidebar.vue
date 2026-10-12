@@ -86,7 +86,7 @@ import {
   IconUsers,
   IconCalendar,
   IconMapPin,
-  IconSquareCheck,
+  IconGavel,
   IconFileText,
   IconTicket,
 } from '@tabler/icons-vue'
@@ -113,7 +113,7 @@ const ICON_MAP = {
   calendar: IconCalendar,
   user: IconUser,
   'map-pin': IconMapPin,
-  'check-square': IconSquareCheck,
+  'gavel': IconGavel,
   'file-text': IconFileText,
   ticket: IconTicket,
 }

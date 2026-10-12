@@ -70,7 +70,7 @@ def get_sidebar_items(user: str = frappe.session.user):
                     {
                         "label": "Review Proposals",
                         "route": "/review",
-                        "icon": "check-square",
+                        "icon": "gavel",
                     },
                 ],
             }
