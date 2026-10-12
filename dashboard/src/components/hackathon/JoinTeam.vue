@@ -48,8 +48,8 @@
             </div>
           </div>
           <div class="flex gap-1">
-            <Button icon="check" theme="green" @click="acceptInvite(invite.name)" />
-            <Button icon="x" theme="red" @click="rejectInvite(invite.name)" />
+            <Button :icon="IconCheck" theme="green" @click="acceptInvite(invite.name)" />
+            <Button :icon="IconX" theme="red" @click="rejectInvite(invite.name)" />
           </div>
         </div>
       </div>
@@ -61,6 +61,7 @@ import { FormControl, createResource, Badge, createDocumentResource } from 'frap
 import { ref, defineProps, onMounted, inject } from 'vue'
 import { toast } from 'vue-sonner'
 import { redirectRoute } from '@/helpers/utils'
+import { IconCheck, IconX } from '@tabler/icons-vue'
 
 const teamCode = ref('')
 const session = inject('$session')

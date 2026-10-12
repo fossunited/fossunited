@@ -13,7 +13,7 @@
         class="w-fit"
         label="Add New Member"
         v-if="isCoreTeam()"
-        icon-left="plus"
+        :icon-left="IconPlus"
         size="md"
         @click="showAddmodal = true"
       />
@@ -105,6 +105,7 @@
 import { useRoute } from 'vue-router'
 import { createDocumentResource, Badge, Dialog } from 'frappe-ui'
 import { ref, inject } from 'vue'
+import { IconPlus } from '@tabler/icons-vue'
 import AddMemberDialog from '@/components/chapter/AddMember.vue'
 import EditMemberDialog from '@/components/chapter/EditMember.vue'
 import ChapterHeader from '@/components/ChapterHeader.vue'

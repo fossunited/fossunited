@@ -5,7 +5,7 @@
         class="w-fit"
         size="md"
         :theme="cfp.doc.status == 'Live' ? 'red' : 'green'"
-        :icon-left="cfp.doc.status == 'Live' ? 'slash' : 'upload'"
+        :icon-left="cfp.doc.status == 'Live' ? IconSlash : IconUpload"
         :label="cfp.doc.status == 'Live' ? 'Unpublish Form' : 'Publish Form'"
         @click="togglePublishForm"
       />
@@ -168,7 +168,7 @@
       <Button
         class="mt-3"
         size="md"
-        icon-left="plus"
+        :icon-left="IconPlus"
         label="Add Custom Field"
         @click="() => (show_dialog = true)"
       />
@@ -282,6 +282,7 @@ import { createDocumentResource, createResource, FormControl, ListView, Dialog }
 import { reactive, ref, watch, defineEmits, computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
+import { IconPlus, IconSlash, IconUpload } from '@tabler/icons-vue'
 import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import FormActionBar from '@/components/FormActionBar.vue'

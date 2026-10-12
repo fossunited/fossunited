@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { Sidebar, createResource, FeatherIcon, useTheme } from 'frappe-ui'
+import { Sidebar, createResource, useTheme } from 'frappe-ui'
 import { computed, inject, ref, h, watch } from 'vue'
 import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
 import {
@@ -68,8 +68,55 @@ import {
   IconSun,
   IconMoon,
   IconExternalLink,
+  IconUser,
+  IconLogout,
+  IconArrowLeft,
+  IconInfoCircle,
+  IconCircleCheck,
+  IconMicrophone,
+  IconClock,
+  IconBriefcase,
+  IconDeviceDesktop,
+  IconHeart,
+  IconMail,
+  IconTag,
+  IconUserCheck,
+  IconBolt,
+  IconEdit,
+  IconUsers,
+  IconCalendar,
+  IconMapPin,
+  IconSquareCheck,
+  IconFileText,
+  IconCreditCard,
 } from '@tabler/icons-vue'
 import { useRoute } from 'vue-router'
+
+// Shared sidebar/profile-menu icon vocabulary: items authored in this file,
+// in page-level `sidebarMenuItems` arrays, and returned by the
+// `fossunited.api.sidebar.get_sidebar_items` backend all use these names.
+const ICON_MAP = {
+  'arrow-left': IconArrowLeft,
+  info: IconInfoCircle,
+  'check-circle': IconCircleCheck,
+  mic: IconMicrophone,
+  clock: IconClock,
+  briefcase: IconBriefcase,
+  monitor: IconDeviceDesktop,
+  heart: IconHeart,
+  mail: IconMail,
+  tag: IconTag,
+  'user-check': IconUserCheck,
+  zap: IconBolt,
+  edit: IconEdit,
+  users: IconUsers,
+  calendar: IconCalendar,
+  user: IconUser,
+  'map-pin': IconMapPin,
+  'check-square': IconSquareCheck,
+  'file-text': IconFileText,
+  'credit-card': IconCreditCard,
+}
 
 const session = inject('$session')
 const route = useRoute()
@@ -135,8 +182,8 @@ const isItemActive = (menuRoute, index) => {
 }
 
 const itemIcon = (icon, label) =>
-  icon
-    ? () => h(FeatherIcon, { name: icon, class: 'w-4 h-4' })
+  icon && ICON_MAP[icon]
+    ? () => h(ICON_MAP[icon], { class: 'w-4 h-4' })
     : () =>
         h(
           'span',
@@ -168,19 +215,19 @@ const sidebarHeader = computed(() => ({
     {
       label: currentTheme.value === 'dark' ? 'Switch to Light' : 'Switch to Dark',
       onClick: toggleTheme,
-      icon: 'sun',
+      icon: currentTheme.value === 'dark' ? IconSun : IconMoon,
     },
     {
       label: 'My Profile',
       onClick: () => (window.location.href = '/me'),
-      icon: 'user',
+      icon: IconUser,
     },
     {
       label: 'Go To Website',
       onClick: () => (window.location.href = '/'),
-      icon: 'external-link',
+      icon: IconExternalLink,
     },
-    { label: 'Logout', onClick: () => session.logout.fetch(), icon: 'log-out' },
+    { label: 'Logout', onClick: () => session.logout.fetch(), icon: IconLogout },
   ],
 }))
 </script>

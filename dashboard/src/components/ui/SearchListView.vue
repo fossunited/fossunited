@@ -43,7 +43,7 @@
         <slot name="actions" :filtered-rows="visibleRows" :search="searchRaw">
           <Button
             v-if="exportable"
-            icon-left="download"
+            :icon-left="IconDownload"
             :label="exportLabel"
             class="h-10 px-3"
             @click="handleExport"
@@ -108,6 +108,7 @@ import { ref, computed, reactive, watch, onUnmounted } from 'vue'
 import { debounce } from 'lodash-es'
 import { matchesQuery, tokenizeQuery } from '@/helpers/search'
 import { toast } from 'vue-sonner'
+import { IconDownload } from '@tabler/icons-vue'
 
 const props = defineProps({
   rows: { type: Array, required: true },

@@ -10,17 +10,17 @@
         :options="[
           {
             label: 'My Profile',
-            icon: 'user',
+            icon: IconUser,
             onClick: redirectToProfile,
           },
           {
             label: 'Go to website',
-            icon: 'globe',
+            icon: IconWorld,
             onClick: goToPublicSite,
           },
           {
             label: 'Logout',
-            icon: 'log-out',
+            icon: IconLogout,
             onClick: () => {
               session.logout.fetch()
             },
@@ -53,7 +53,7 @@
 <script setup>
 import { inject, ref, defineEmits } from 'vue'
 import { Avatar, Dropdown } from 'frappe-ui'
-import { IconMenu2 } from '@tabler/icons-vue'
+import { IconMenu2, IconUser, IconWorld, IconLogout } from '@tabler/icons-vue'
 import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
 
 let session = inject('$session')

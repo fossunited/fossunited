@@ -43,7 +43,7 @@
                     >
                       <span class="absolute -inset-2.5" />
                       <span class="sr-only">Close panel</span>
-                      <Button icon="x" />
+                      <Button :icon="IconX" />
                     </button>
                   </div>
                 </TransitionChild>
@@ -70,6 +70,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { IconX } from '@tabler/icons-vue'
 
 const open = defineModel({ type: Boolean })
 

@@ -4,7 +4,7 @@
       <div class="text-base font-medium">Manage Localhost</div>
 
       <RouterLink :to="{ name: 'LocalhostEdit', params: { id: route.params.id } }">
-        <Button label="Edit Details" icon-left="edit" />
+        <Button label="Edit Details" :icon-left="IconEdit" />
       </RouterLink>
     </div>
 
@@ -84,6 +84,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { createListResource, createResource, usePageMeta } from 'frappe-ui'
+import { IconEdit } from '@tabler/icons-vue'
 import AttendeeRequestList from '@/components/localhost/AttendeeRequestList.vue'
 
 const route = useRoute()
