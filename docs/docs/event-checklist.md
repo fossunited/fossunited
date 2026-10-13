@@ -5,7 +5,7 @@ Make a note of the timeline we usually follow.
 
 ### 3 months
 - [ ] Communicate your interest in organising an event. Expect a reply within 3-5 days
-- [ ] [Schedule a call](https://cal.com/team/fossunited/community-events) to talk about draft budget, [discussion topics](https://docs.fossunited.org/clubs-contribution-ideas/), venue, and dates
+- [ ] [Schedule a call](https://cal.com/team/fossunited/community-events) to talk about draft budget, [discussion topics](/clubs/clubs-contribution-ideas/), venue, and dates
     - [ ] If the event plan is approved, bi-weekly check-ins begin
     - [ ] Request FOSS United swag during the call. Stickers will be provided, while T-Shirts and button badges depend on the stock availability
 - [ ] Form your team of core volunteers
