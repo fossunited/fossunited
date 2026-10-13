@@ -72,7 +72,7 @@ Make a note of the timeline we usually follow.
     - [ ] Get speaker and attendee testimonials ([example](https://www.youtube.com/watch?v=u4sIVuETLQA))
 
 ### After the event
-- [ ] Post wrap-up report on the forum within 14 days (attendance, photos, feedback, highlights). Refer this [template](https://docs.fossunited.org/clubs-peq).
+- [ ] Post wrap-up report on the forum within 14 days (attendance, photos, feedback, highlights). Refer this [template](https://docs.fossunited.org/clubs/clubs-peq).
 - [ ] Clear payment with vendors, if any
 - [ ] Submit [reimbursement claims](https://account.fossunited.org/expense-reimbursement/new) with receipts within 7 days (settles in 15–20 days). Reimbursement will be settled only after the forum post is live.
 - [ ] [Book a meeting](https://cal.com/team/fossunited/community-events) with the FOSS United Events team to debrief within 7 days of the event
