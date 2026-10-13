@@ -1,38 +1,20 @@
 {% extends 'templates/foss_base.html' %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
 
 {% block meta_block %}
-  <meta name="title" content="{{ event.event_name }}" />
+  {% set chapter_suffix = ", " ~ event.chapter_name | title if event.event_type in ['Meet Up'] else "" %}
   {% if doc.is_published %}
-    {% if event.event_type in ['Meet Up'] %}
-      <meta
-        property="og:title"
-        content="🔴 RSVP form is live! - {{ event.event_name }}, {{ event.chapter_name | title }}"
-      />
-    {% else %}
-      <meta property="og:title" content="🔴 RSVP form is live! - {{ event.event_name }}" />
-    {% endif %}
+    {% set rsvp_title = "🔴 RSVP form is live! - " ~ event.event_name ~ chapter_suffix %}
   {% else %}
-    <meta
-      property="og:title"
-      content="RSVP is coming soon! - {{ event.event_name }}, {{ event.chapter_name | title }}"
-    />
+    {% set rsvp_title = "RSVP is coming soon! - " ~ event.event_name ~ chapter_suffix %}
   {% endif %}
   {% if event.event_type in ['Meet Up'] %}
-    <meta
-      property="og:description"
-      content="RSVP forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B') }} - {{ event.chapter_name | title }}"
-    />
+    {% set rsvp_description = "RSVP forms are live for " ~ event.event_name ~ " " ~ event.event_start_date.strftime('%B') ~ " - " ~ event.chapter_name | title %}
   {% else %}
-    <meta
-      property="og:description"
-      content="RSVP forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B') }}"
-    />
+    {% set rsvp_description = "RSVP forms are live for " ~ event.event_name ~ " " ~ event.event_start_date.strftime('%B') %}
   {% endif %}
-
-  <meta property="og:image" content="https://fossunited.org/files/og-image.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+  {{ meta_tags(rsvp_title, rsvp_description, image) }}
 {% endblock %}
 
 {% block title %}{{ _("RSVP Form Submission") }}{% endblock %}
