@@ -65,7 +65,7 @@ nav = [
 
   {"Education" = [
   {"FOSS Clubs"=[
-    {"Overview" = "clubs/clubs.md"},
+    {"Overview" = "clubs/index.md"},
     {"Onboarding" = "clubs/clubs-onboarding.md"},
     {"Team Formation" = "clubs/clubs-team-formation.md"},
     {"Hosting an Event" = "clubs/clubs-hosting-events.md"},

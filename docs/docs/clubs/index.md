@@ -97,7 +97,7 @@ Check [Getting involved](https://docs.fossunited.org/#getting-involved) and/or [
 
 **For Generic Issues:**
 
-[Praneel](https://t.me/Praneel_s), [Nilabrata](https://t.me/Nilabrata), [Ganesh](https://t.me/sudo_medark) — For general questions not answered in FAQs
+[Praneel](https://t.me/Praneel_s), [Nilabrata](https://t.me/Nilabrata), [Ganesh](https://t.me/vecto_sudo) — For general questions not answered in FAQs
 
 **For Technical Issues:**
 
