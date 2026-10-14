@@ -248,7 +248,7 @@ const availableYears = computed(() => {
 
 const selectedYearUrl = computed(() => {
   const match = availableYears.value.find(
-    (y) => String(y.year) === String(currentYear.value) || y.url?.includes(currentYear.value),
+    (y) => y.url?.includes(currentYear.value) || String(y.year) === String(currentYear.value),
   )
   return match ? match.url : `/indiafoss/${currentYear.value}`
 })
