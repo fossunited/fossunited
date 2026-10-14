@@ -9,12 +9,12 @@
 
       <div class="flex flex-wrap gap-2">
         <RouterLink :to="{ name: 'ManageLocalhost', params: { id: route.params.id } }">
-          <Button variant="subtle" icon-left="arrow-left" label="Back to Manage" />
+          <Button variant="subtle" :icon-left="IconArrowLeft" label="Back to Manage" />
         </RouterLink>
 
         <Button
           :theme="localhost.doc.is_published ? 'red' : 'green'"
-          :icon-left="localhost.doc.is_published ? 'slash' : 'upload'"
+          :icon-left="localhost.doc.is_published ? IconCancel : IconUpload"
           :label="localhost.doc.is_published ? 'Unpublish' : 'Publish'"
           @click="togglePublish"
         />
@@ -144,6 +144,7 @@ import { createDocumentResource, FileUploader, FormControl, Button, Switch } fro
 import { computed, provide } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
+import { IconArrowLeft, IconCancel, IconUpload } from '@tabler/icons-vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import FormActionBar from '@/components/FormActionBar.vue'
 import LocalhostHeader from '@/components/localhost/LocalhostHeader.vue'

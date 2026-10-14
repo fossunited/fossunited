@@ -8,7 +8,7 @@
         class="w-fit"
         label="Add Volunteer"
         v-if="isCoreTeam()"
-        icon-left="plus"
+        :icon-left="IconPlus"
         size="md"
         @click="showAddmodal = true"
       />
@@ -99,6 +99,7 @@ import EditMemberDialog from '@/components/chapter/EditMember.vue'
 import { createDocumentResource, Badge, Dialog } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { ref, inject } from 'vue'
+import { IconPlus } from '@tabler/icons-vue'
 const session = inject('$session')
 
 const route = useRoute()

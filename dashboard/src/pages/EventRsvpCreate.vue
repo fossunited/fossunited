@@ -60,7 +60,7 @@
       <Button
         class="mt-3"
         size="md"
-        icon-left="plus"
+        :icon-left="IconPlus"
         label="Add Custom Field"
         @click="() => (show_dialog = true)"
       />
@@ -164,6 +164,7 @@ import {
 import { reactive, ref, defineEmits } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
+import { IconPlus } from '@tabler/icons-vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
 
 const route = useRoute()

@@ -396,7 +396,6 @@ def get_proposal_filter_fields(event_id: str) -> list:
         "speakers",
         "custom_answers",
         "is_first_talk",
-        "organization",
         "session_categories",
         "submitted_by",
     }

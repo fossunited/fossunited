@@ -8,7 +8,7 @@
       <Button
         class="w-fit"
         label="Create New Event"
-        icon-left="plus"
+        :icon-left="IconPlus"
         size="md"
         route="events/create"
       />
@@ -38,6 +38,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { createDocumentResource, createListResource } from 'frappe-ui'
+import { IconPlus } from '@tabler/icons-vue'
 import EventCard from '@/components/EventCard.vue'
 import ChapterHeader from '@/components/ChapterHeader.vue'
 const route = useRoute()

@@ -3,7 +3,7 @@
     <div class="text-sm text-ink-gray-5">Delete Project</div>
     <p class="text-base">Delete this project and create something new.</p>
     <Button
-      icon-left="trash"
+      :icon-left="IconTrash"
       label="Trash"
       theme="red"
       class="w-fit"
@@ -13,6 +13,7 @@
 </template>
 <script setup>
 import { defineEmits } from 'vue'
+import { IconTrash } from '@tabler/icons-vue'
 
 defineEmits(['delete-project'])
 </script>

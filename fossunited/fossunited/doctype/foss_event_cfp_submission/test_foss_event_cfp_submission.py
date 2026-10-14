@@ -123,7 +123,6 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             linked_cfp=cfp.name,
             event=self.event.name,
             submitted_by=Submitter,
-            email=Submitter,
         )
         return cfp, sub
 

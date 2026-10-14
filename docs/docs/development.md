@@ -291,7 +291,7 @@ To automatically run linters before commits:
 
 - We use [ruff](https://docs.astral.sh/ruff/) for linting python files. It is recommended to use [prettier](https://prettier.io/) for formatting HTML, CSS & Vue files.
 - [Vale](https://vale.sh) is used for spell check and grammar check for docs content.
-- [Bruno CLI](https://docs.usebruno.com/testing/cli) runs API e2e tests when Python API files or `.bru` test files change.
+- [Bruno CLI](https://docs.usebruno.com/bru-cli/overview) runs API e2e tests when Python API files or `.bru` test files change.
 
 
 ```sh

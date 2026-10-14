@@ -1,54 +1,37 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import HACKATHON_TEAM, HACKATHON_TEAM_MEMBER, USER_PROFILE
-from fossunited.tests.utils import (
-    insert_test_chapter,
-    insert_test_hackathon,
-    insert_test_hackathon_participant,
-    insert_test_hackathon_team,
-    insert_user_profile,
+from fossunited.doctype_ids import HACKATHON_TEAM, HACKATHON_TEAM_MEMBER
+from fossunited.tests.factories import (
+    FOSSChapterFactory,
+    FOSSHackathonFactory,
+    FOSSHackathonParticipantFactory,
+    FOSSHackathonTeamFactory,
 )
 
 
 class TestFOSSHackathonTeam(FrappeTestCase):
     def setUp(self):
-        self.chapter = insert_test_chapter()
-        self.hackathon = insert_test_hackathon(
+        self.chapter = FOSSChapterFactory.create()
+        self.hackathon = FOSSHackathonFactory.create(
             chapter=self.chapter.name, is_team_mandatory=True, max_team_members=3
         )
 
-        self.team = insert_test_hackathon_team(hackathon=self.hackathon)
+        self.team = FOSSHackathonTeamFactory.create(hackathon=self.hackathon.name)
 
-        self.participants = []
-        for i in range(4):
-            email = f"team_user_{i}@test.com"
-            insert_user_profile(email)
-
-            participant = insert_test_hackathon_participant(
-                hackathon_id=self.hackathon.name,
-                email=email,
-                user=email,
-            )
-
-            self.participants.append(participant)
+        self.participants = [
+            FOSSHackathonParticipantFactory.create("with_user", hackathon=self.hackathon.name)
+            for _ in range(4)
+        ]
 
     def tearDown(self):
         frappe.set_user("Administrator")
-        self.chapter.delete(force=True)
         if frappe.db.exists(HACKATHON_TEAM, self.team.name):
             self.team.delete(force=True)
         for participant in self.participants:
             participant.delete(force=True)
         self.hackathon.delete(force=True)
-
-        for i in range(4):
-            email = f"team_user_{i}@test.com"
-            profile = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
-            if profile:
-                frappe.delete_doc(USER_PROFILE, profile, force=True)
-            if frappe.db.exists("User", email):
-                frappe.delete_doc("User", email, force=True)
+        self.chapter.delete(force=True)
 
     def test_add_member_to_team(self):
         # Given a hackathon with a defined max_team_members size
@@ -95,7 +78,7 @@ class TestFOSSHackathonTeam(FrappeTestCase):
         self.team.save()
 
         # Create second team
-        team2 = insert_test_hackathon_team(hackathon=self.hackathon)
+        team2 = FOSSHackathonTeamFactory.create(hackathon=self.hackathon.name)
 
         team2.append("members", {"member": participant.name})
 

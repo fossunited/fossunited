@@ -26,7 +26,7 @@
       </FormControl>
       <Button
         v-if="references.length > 1"
-        icon="trash"
+        :icon="IconTrash"
         size="sm"
         theme="red"
         :aria-label="`Remove reference ${index + 1}`"
@@ -34,12 +34,12 @@
       />
     </div>
     <ErrorMessage :message="errorMessages" />
-    <Button size="sm" label="Add another link" icon-left="plus" class="w-fit" @click="addLink" />
+    <Button size="sm" label="Add another link" :icon-left="IconPlus" class="w-fit" @click="addLink" />
   </div>
 </template>
 <script setup>
 import { ErrorMessage, FormControl } from 'frappe-ui'
-import { IconLink } from '@tabler/icons-vue'
+import { IconLink, IconTrash, IconPlus } from '@tabler/icons-vue'
 import { getReferenceItemSchema } from '@/helpers/cfp'
 import { ensureHttpsPrefix } from '@/helpers/utils'
 import { ref, watch } from 'vue'

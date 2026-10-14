@@ -46,7 +46,7 @@
         <Button
           v-if="currentView === 'checkins'"
           size="md"
-          icon-left="refresh-cw"
+          :icon-left="IconRefresh"
           @click="refreshCheckins"
         >
           Refresh
@@ -216,6 +216,7 @@
 import { useRoute } from 'vue-router'
 import { computed, ref, watchEffect } from 'vue'
 import { createResource, Button, frappeRequest } from 'frappe-ui'
+import { IconRefresh } from '@tabler/icons-vue'
 import SearchListView from '@/components/ui/SearchListView.vue'
 import CheckInsTable from '@/components/ui/CheckInsTable.vue'
 import { toast } from 'vue-sonner'

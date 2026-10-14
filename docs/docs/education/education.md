@@ -6,7 +6,7 @@ A guide to adopt Free and Open Source Software, Open Education, and Digital Comm
 - [Overview](education-overview.md): State of computer science education in India
 - [Start here: Find your path](education-start-here.md): Answer four questions to find which playbook and pillars to read first, plus a progress tracker you can use across the semester.
 - [Why open? The bigger picture](education-why.md): The case for open source made in terms that move institutional decisions.
-- [Policy tailwinds](education-policy.md#policy-tailwinds-government-institutions): The national policies that already mandate or encourage open source adoption.
+- [Policy tailwinds](education-policy.md): The national policies that already mandate or encourage open source adoption.
 - [The four pillars](education-pillars.md#the-four-pillars): The core framework. Every institution can act on all four; your size determines where to begin.
     - [Pillar I: Open Software](education-pillars.md#pillar-i-open-software)
     - [Pillar II: Open Education](education-pillars.md#pillar-ii-open-education)

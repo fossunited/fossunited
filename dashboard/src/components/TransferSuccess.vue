@@ -14,7 +14,7 @@
         <br />
         <br />
         For further assistance, send an email to
-        <a class="underline" href="mailto:team@fossunited.org">team@fossunited.org</a>
+        <a class="underline" href="mailto:developers@fossunited.org">developers@fossunited.org</a>
       </p>
     </div>
   </div>

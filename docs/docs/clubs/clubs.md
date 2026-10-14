@@ -39,7 +39,7 @@ Support and benefits include, but are not limited to:
 - **Direct Support**: Access to FOSS United Program Managers to help scope your club's roadmap and support your personal growth as a leader.
 - **Networking**: Connection to a network of thousands of community members who serve as mentors, speakers, or contributors to your projects.
 - **Collaboration**: Opportunities to work alongside students and industry professionals from across the country.
-- **Organise flagship events**: Opportunity to be a localhost for [FOSS Hack](clubs-hosting-events.md/#what-is-foss-hack) or the venue for city conferences organised by FOSS United.
+- **Organise flagship events**: Opportunity to be a localhost for [FOSS Hack](clubs-hosting-events.md#what-is-foss-hack) or the venue for city conferences organised by FOSS United.
 - **Career Opportunities**: Opportunity to get referred to open-source companies and organizations seeking top-tier open-source talent.
 - **Visibility**: Opportunities to present your work at premier events attended by thousands of open-source enthusiasts and decision-makers.
 - **Leadership & Governance**: The chance to join the program committee and help shape the future of the FOSS Clubs initiative.

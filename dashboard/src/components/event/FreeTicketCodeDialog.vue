@@ -59,7 +59,7 @@
         <Button
           v-if="!inCreateMode"
           class="w-full"
-          icon="trash"
+          :icon="IconTrash"
           theme="red"
           @click="handleDelete"
         />
@@ -80,6 +80,7 @@
 <script setup>
 import { defineProps, defineModel, watch, reactive, ref } from 'vue'
 import { Dialog, FormControl, ErrorMessage, Button, createResource } from 'frappe-ui'
+import { IconTrash } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 
 const props = defineProps({

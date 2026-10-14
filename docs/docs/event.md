@@ -66,7 +66,7 @@ Organizing a meetup, conference, or workshop requires careful planning and teamw
 ### 10. Execute On-the-Day Coordination
 - Ensure smooth attendee registration and session flow.
 - Provide clear directions, assistance, and enforce safety protocols.
-- Enforce the [Code of Conduct](https://fossunited.org/events/code-of-conduct) to maintain a respectful and inclusive environment.
+- Enforce the [Code of Conduct](https://fossunited.org/code-of-conduct) to maintain a respectful and inclusive environment.
 
 ### 11. Conduct Post-Event Follow-up
 - Collect feedback from attendees, speakers, sponsors, and volunteers.

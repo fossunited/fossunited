@@ -10,7 +10,7 @@ Just starting off? Check out the [90 Day plan](clubs-first-quarter.md) guide we 
 ### Where do I create an RSVP page for events?
 We require events to use the FOSS United platform for event RSVPs. We are mandating this to ensure data privacy and that it doesn't get shared to other sponsors/partners without proper consent of the attendees and the foundation.
 
-For instructions on setting up a page, after your club has been onboarded, checkout [Event RSVP](event-rsvp.md).
+For instructions on setting up a page, after your club has been onboarded, checkout [Event RSVP](../event-rsvp.md).
 
 ### What is the process to organise an event?
 

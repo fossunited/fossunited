@@ -54,7 +54,7 @@ The anti AI-slop principle still applies across all written work in the course: 
 
 ### Pre-approved project list
 
-Before the course begins, the faculty coordinator identifies 4 to 6 FOSS projects suitable for student contributions. This practice comes from the [HFOSS program](hfoss.readthedocs.io), which found that students who choose from a faculty-vetted shortlist spend their time contributing rather than searching for a viable project.
+Before the course begins, the faculty coordinator identifies 4 to 6 FOSS projects suitable for student contributions. This practice comes from the [HFOSS program](https://hfoss.readthedocs.io), which found that students who choose from a faculty-vetted shortlist spend their time contributing rather than searching for a viable project.
 
 A suitable project has: an active maintainer who responds to issues within a week or two, a labelled list of beginner-friendly issues ("good first issue" or similar), public documentation good enough for a newcomer to understand the codebase, and a community that is welcoming of student contributors.
 
@@ -159,7 +159,7 @@ Survey the Indian FOSS ecosystem: Frappe and ERPNext, Zerodha's open source stac
 
 Cover organisations that work entirely in the open and use free software to address public problems.
 Example:
-- **[OpenHealthcare Network](ohc.network)**: A network of developers and healthcare workers building open source clinical tools for India's public health system. All software is freely available and contributions are actively welcomed.
+- **[OpenHealthcare Network](https://ohc.network)**: A network of developers and healthcare workers building open source clinical tools for India's public health system. All software is freely available and contributions are actively welcomed.
 - **[CivicDataLab](https://civicdatalab.in/)**: They build open-source tools and data collaboratives (such as CivicDataSpace) to make public information machine-readable and actionable.
 
 ***Activity:*** Students identify one civic or social problem in their own college town or district and write a 1,000-word research note covering: what the problem is, whether an open source tool or organisation already addresses it, and if not, what the gap looks like. The note should be written in a way that could be shared with a civic organisation. Faculty coordinators review these before students share them externally.
@@ -265,7 +265,7 @@ The presentation should cover the full arc: what project was chosen and why, wha
 - Advice for College Students: [frappe.io/blog/engineering/advice-for-college-students](https://frappe.io/blog/engineering/advice-for-college-students)
 
 **Digital commons and social impact:**
-- Yochai Benkler, "The Wealth of Networks" (Chapter 3): [free online at benkler.org](http://www.benkler.org/Benkler_Wealth_Of_Networks.pdf)
+- Yochai Benkler, "The Wealth of Networks" (Chapter 3): [free online at benkler.org](https://web.archive.org/web/20231220115858/http://www.benkler.org/Benkler_Wealth_Of_Networks.pdf)
 - OpenHealthcare Network: [ohc.network](https://ohc.network)
 - eGov Foundation: [egov.org.in](https://egov.org.in)
 - Sunbird documentation: [sunbird.org](https://sunbird.org)

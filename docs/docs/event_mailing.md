@@ -9,7 +9,7 @@ First, log in to [fossunited.org](https://fossunited.org). Once you're in, click
 
 On the left side of your dashboard, you'll see several options. Look for "Organisers Dashboard" and click on "Manage Chapter".
 
-<img src="/assets/mailing-sidebar.png" alt="Mailing in Sidebar" width="200">
+<img src="assets/mailing-sidebar.png" alt="Mailing in Sidebar" width="200">
 
 You can send emails to two types of people:
 - People who RSVPed to a specific scheduled event
@@ -28,7 +28,7 @@ Click the "Create Campaign" button. You'll see a dropdown menu asking who you wa
 - Accepted proposers
 - Rejected proposers
 
-<img src="/assets/mailing-email.png" alt="Create Email" width="700">
+<img src="assets/mailing-email.png" alt="Create Email" width="700">
 
 Pick the group you need, then write your subject line and type out your message.
 

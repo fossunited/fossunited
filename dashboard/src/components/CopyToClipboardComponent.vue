@@ -3,7 +3,7 @@
     <Button
       class="w-fit my-2 font-mono text-left"
       size="md"
-      icon-left="copy"
+      :icon-left="IconCopy"
       @click="copyRouteToClipboard"
     >
       <span class="break-all whitespace-normal block">
@@ -15,6 +15,7 @@
 
 <script setup>
 import { Tooltip } from 'frappe-ui'
+import { IconCopy } from '@tabler/icons-vue'
 import { ref, defineProps } from 'vue'
 
 let tooltip_label = ref('Copy to clipboard')

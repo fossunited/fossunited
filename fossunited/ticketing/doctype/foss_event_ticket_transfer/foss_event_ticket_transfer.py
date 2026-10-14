@@ -17,6 +17,7 @@ class FOSSEventTicketTransfer(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        approval_token: DF.Data | None
         designation: DF.Data | None
         event: DF.Link | None
         organization: DF.Data | None
@@ -35,28 +36,63 @@ class FOSSEventTicketTransfer(Document):
         self.validate_ticket_exists()
         self.validate_status_is_pending()
         self.validate_non_transferable_free_tier()
+        self.approval_token = frappe.generate_hash(length=32)
 
     def before_save(self):
         if self.has_value_changed("status"):
+            self.validate_previous_status_is_pending()
             self.validate_status_change_permission()
             if self.status == "Completed":
                 self.validate_ticket_exists()
                 self.transfer_ticket()
 
+    def validate_previous_status_is_pending(self):
+        """
+        A transfer can only be resolved once. Without this, a transfer that
+        was auto-cancelled as a stale sibling (see close_other_pending_transfers)
+        - or one already approved/rejected - could still be flipped again by
+        whoever originally had valid owner/receiver credentials for it, even
+        though the ticket has since moved on.
+        """
+        if "System Manager" in frappe.get_roles():
+            return
+        previous = self.get_doc_before_save()
+        if previous and previous.status != "Pending Approval":
+            frappe.throw(
+                _("This transfer request has already been resolved and can no longer be changed."),
+                frappe.ValidationError,
+            )
+
     def validate_status_change_permission(self):
         if "System Manager" in frappe.get_roles():
             return
-        if self.status == "Completed" and frappe.session.user != self.owner_email:
+        # The API already verified the single-use token from the emailed link
+        # no need for the caller to also be logged in as owner/receiver.
+        if frappe.flags.ticket_transfer_token_verified:
+            return
+        # Case-insensitive: the ticket's `email` is saved as the attendee
+        session_user = (frappe.session.user or "").strip().lower()
+        owner_email = (self.owner_email or "").strip().lower()
+        receiver_email = (self.receiver_email or "").strip().lower()
+        if self.status == "Completed" and session_user != owner_email:
             frappe.throw(
-                _("Only the ticket owner can approve a transfer"),
+                _(
+                    "Only the ticket owner ({0}) can approve this transfer. "
+                    "Please log in with that email address, or use the "
+                    "Approve link from the transfer email."
+                ).format(self.owner_email),
                 frappe.PermissionError,
             )
-        if self.status == "Cancelled" and frappe.session.user not in [
-            self.owner_email,
-            self.receiver_email,
+        if self.status == "Cancelled" and session_user not in [
+            owner_email,
+            receiver_email,
         ]:
             frappe.throw(
-                _("You are not authorized to cancel this transfer"),
+                _(
+                    "Only {0} or {1} can reject this transfer. Please log in "
+                    "with one of those email addresses, or use the Reject "
+                    "link from the transfer email."
+                ).format(self.owner_email, self.receiver_email),
                 frappe.PermissionError,
             )
 
@@ -92,6 +128,25 @@ class FOSSEventTicketTransfer(Document):
             ticket.save(ignore_permissions=True)
         except Exception as e:
             frappe.throw(str(e), frappe.ValidationError)
+
+        self.close_other_pending_transfers()
+
+    def close_other_pending_transfers(self):
+        """
+        Once this transfer completes, any other still-pending transfer
+        request for the same ticket is stale - its `owner_email` is a
+        snapshot from creation time and no longer reflects who actually
+        owns the ticket, so leaving it actionable would let an old,
+        now-irrelevant request take the ticket away again later. Close
+        them silently (no email, no permission re-check - this is a system
+        cleanup, not a user action) via a direct bulk update.
+        """
+        frappe.db.set_value(
+            self.doctype,
+            {"ticket": self.ticket, "status": "Pending Approval", "name": ["!=", self.name]},
+            "status",
+            "Cancelled",
+        )
 
     def handle_already_transferred_ticket(self, ticket):
         """

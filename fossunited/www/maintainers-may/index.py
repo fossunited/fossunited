@@ -4,7 +4,7 @@ from fossunited.doctype_ids import EVENT
 
 
 def get_context(context):
-    context.no_cache = 1
+    context.no_cache = 0
 
     events = frappe.get_all(
         EVENT,

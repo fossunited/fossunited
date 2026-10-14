@@ -1,3 +1,5 @@
+import json
+
 import click
 import frappe
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
@@ -9,11 +11,34 @@ def before_migrate():
     try:
         handle_custom_fields()
         handle_custom_roles()
+        ensure_app_priority()
     except Exception as e:
         BUG_REPORT_URL = "https://github.com/fossunited/fossunited/issues/new"
         click.secho("Before migration failed for app: fossunited :(", fg="bright_red")
         click.secho(f"Please try reinstalling the app or report the bug at {BUG_REPORT_URL}")
         raise e
+
+
+def ensure_app_priority():
+    """
+    Keep "fossunited" last in the installed-apps order.
+
+    Frappe resolves same-named www/ pages (e.g. 404.html) by walking installed
+    apps in reverse install order, first match wins. Frappe Builder ships its
+    own www/404.html, and when it's installed after fossunited it silently
+    wins, so our custom 404 (and custom_404_page_context hook) never runs.
+    Re-asserted on every migrate since a site restore can reset the order.
+    """
+    installed_apps = frappe.get_installed_apps()
+    if "fossunited" not in installed_apps or installed_apps[-1] == "fossunited":
+        return
+
+    installed_apps.remove("fossunited")
+    installed_apps.append("fossunited")
+    frappe.db.set_global("installed_apps", json.dumps(installed_apps))
+    click.secho(
+        "Re-asserted fossunited as highest-priority app for www page resolution.", fg="cyan"
+    )
 
 
 def handle_custom_fields():

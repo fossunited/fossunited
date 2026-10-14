@@ -54,7 +54,7 @@
           <Button
             v-if="isCheckedInToday(selectedAttendee)"
             class="!text-sm border-outline-orange-1 hover:border-orange-400 text-ink-amber-3"
-            icon-left="alert-triangle"
+            :icon-left="IconAlertTriangle"
             label="Undo Check-In for Today"
             size="sm"
             variant="outline"
@@ -88,6 +88,7 @@
 <script setup>
 import { defineProps, defineModel, inject } from 'vue'
 import { Dialog, createResource } from 'frappe-ui'
+import { IconAlertTriangle } from '@tabler/icons-vue'
 import dayjs from 'dayjs'
 
 const props = defineProps({

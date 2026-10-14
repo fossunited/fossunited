@@ -112,7 +112,7 @@ FOSS tools installed in a lab that no one knows how to use are just files on a s
 
 ### Building momentum
 
-- **Host a local FOSS event:** FOSS United's flagship hackathon (FOSS Hack) and conference formats can be hosted locally. You can find more details on [hosting events](clubs-hosting-events.md) under FOSS Clubs documentation.
+- **Host a local FOSS event:** FOSS United's flagship hackathon (FOSS Hack) and conference formats can be hosted locally. You can find more details on [hosting events](../clubs/clubs-hosting-events.md) under FOSS Clubs documentation.
 
 - **Summer projects:** Structure a summer program where students spend 4 to 8 weeks on a real FOSS project with a real maintainer. FOSS United can connect your institution with open source projects looking for contributors and maintainers willing to mentor. The IIIT Delhi pilot showed this produces both technical skills and a lasting sense of community belonging. [Read about it on the forum.](https://forum.fossunited.org/t/foss-and-software-engg-education/4934)
 

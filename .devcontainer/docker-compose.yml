@@ -49,6 +49,8 @@ services:
     command: sleep infinity
     environment:
       - SHELL=/bin/bash
+    extra_hosts:
+      - "fossunited.localhost:127.0.0.1"
     volumes:
       - ..:/workspace:Z,cached
       # Enable if you require git cloning

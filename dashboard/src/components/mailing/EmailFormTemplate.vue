@@ -44,7 +44,7 @@
           <template #default="{ uploading, progress, message, error, openFileSelector }">
             <Button
               :loading="uploading"
-              icon-left="plus"
+              :icon-left="IconPlus"
               label="Add Attachments"
               @click="openFileSelector"
             />
@@ -60,7 +60,7 @@
               :href="createAbsoluteUrlFromRoute(item.file_url.substring(1))"
               target="_blank"
             >
-              <FeatherIcon name="file" class="w-4 h-4" />
+              <IconFile class="w-4 h-4" />
               {{ item.file_name }}
             </a>
           </div>
@@ -90,7 +90,8 @@
 </template>
 <script setup>
 import TextEditor from '@/components/ui/TextEditor.vue'
-import { FormControl, FileUploader, FeatherIcon, createResource, Autocomplete } from 'frappe-ui'
+import { FormControl, FileUploader, createResource, Autocomplete } from 'frappe-ui'
+import { IconPlus, IconFile } from '@tabler/icons-vue'
 import { reactive, ref, watch } from 'vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 

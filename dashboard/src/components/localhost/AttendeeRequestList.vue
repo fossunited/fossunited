@@ -46,7 +46,7 @@
       <Button
         v-if="currentView === 'checkins'"
         size="md"
-        icon-left="refresh-cw"
+        :icon-left="IconRefresh"
         @click="refreshCheckins"
       >
         Refresh
@@ -159,12 +159,12 @@
           >
             <Button
               v-if="row.localhost_request_status === 'Pending'"
-              icon="check"
+              :icon="IconCheck"
               label="Accept"
               theme="green"
               @click.stop="acceptRequest(row)"
             />
-            <Button icon="x" label="Reject" theme="red" @click.stop="rejectRequest(row)" />
+            <Button :icon="IconX" label="Reject" theme="red" @click.stop="rejectRequest(row)" />
           </div>
         </div>
 
@@ -188,7 +188,7 @@ import { truncateStr, redirectRoute } from '@/helpers/utils'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
 import SearchListView from '@/components/ui/SearchListView.vue'
 import CheckInsTable from '@/components/ui/CheckInsTable.vue'
-import { IconArrowUpRight } from '@tabler/icons-vue'
+import { IconArrowUpRight, IconRefresh, IconCheck, IconX } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 
 const props = defineProps({

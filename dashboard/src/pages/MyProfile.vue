@@ -26,7 +26,7 @@
                   <Button
                     :variant="'outline'"
                     :size="'sm'"
-                    icon="edit-3"
+                    :icon="IconEdit"
                     aria-label="Edit Banner Image"
                     title="Edit Banner Image"
                     @click="openFileSelector"
@@ -36,7 +36,7 @@
               </FileUploader>
               <Button
                 v-if="profileDoc.doc.cover_image"
-                icon="trash"
+                :icon="IconTrash"
                 variant="solid"
                 theme="red"
                 aria-label="Remove Banner Image"
@@ -65,7 +65,7 @@
                 <Button
                   :variant="'outline'"
                   :size="'sm'"
-                  icon="edit-3"
+                  :icon="IconEdit"
                   aria-label="Edit Profile Picture"
                   title="Edit Profile Picture"
                   @click="openFileSelector"
@@ -207,7 +207,7 @@
                 v-if="!showAddProject"
                 variant="outline"
                 size="sm"
-                icon="plus"
+                :icon="IconPlus"
                 label="Add Project"
                 @click="openAddProject()"
               />
@@ -235,14 +235,14 @@
                 </div>
                 <div class="flex gap-1 shrink-0">
                   <Button
-                    icon="edit-3"
+                    :icon="IconEdit"
                     variant="ghost"
                     size="sm"
                     :title="`Edit ${project.project_name}`"
                     @click="startEditProject(project)"
                   />
                   <Button
-                    icon="trash"
+                    :icon="IconTrash"
                     variant="ghost"
                     size="sm"
                     theme="red"
@@ -346,7 +346,7 @@
 </template>
 <script setup>
 import TextEditor from '@/components/ui/TextEditor.vue'
-import { IconCheck } from '@tabler/icons-vue'
+import { IconCheck, IconEdit, IconTrash, IconPlus } from '@tabler/icons-vue'
 import { createResource, createDocumentResource, FileUploader, Switch, FormControl, ErrorMessage } from 'frappe-ui'
 import { isValidUrl, ensureHttpsPrefix } from '@/helpers/utils'
 import { fetchSessionProfile, sessionProfileResource } from '@/data/session'

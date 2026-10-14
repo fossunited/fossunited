@@ -16,7 +16,7 @@
           class="w-fit"
           size="md"
           :theme="event.doc.is_published ? 'red' : 'green'"
-          :icon-left="event.doc.is_published ? 'slash' : 'eye'"
+          :icon-left="event.doc.is_published ? IconCancel : IconEye"
           :label="event.doc.is_published ? 'Unpublish Event' : 'Publish Event'"
           @click="togglePublishEvent"
         />
@@ -24,7 +24,7 @@
           class="w-fit"
           size="md"
           label="Update Details"
-          icon-left="edit"
+          :icon-left="IconEdit"
           @click="updateDetails()"
         ></Button>
       </div>
@@ -99,7 +99,7 @@
           <Button
             label="See on Website"
             class="w-fit"
-            icon-right="external-link"
+            :icon-right="IconExternalLink"
             :link="createAbsoluteUrlFromRoute(event.doc.route)"
             :disabled="['Draft', 'Cancelled'].includes(event.doc.status)"
           />
@@ -151,13 +151,36 @@
           label="Show Speakers Tab"
           description="Show speakers (added in event schedule) profile linked to their proposals."
         />
-        <FormControl
-          v-model="event.doc.deck_link"
-          type="url"
-          size="md"
-          label="Deck Link"
-          description="Link to the event's slide/sponsorship deck. Shared with partners and sponsors."
-        />
+        <div class="flex flex-col gap-2">
+          <FormControl
+            v-model="event.doc.deck_link"
+            type="url"
+            size="md"
+            label="Deck Link"
+            description="Link to the event's slide/sponsorship deck. Shared with partners and sponsors."
+          />
+          <FileUploader
+            :file-types="'application/pdf'"
+            :validate-file="validateDeckFile"
+            @success="(file) => setDeckLink(file.file_url)"
+            @failure="
+              (error) => toast.error('Failed to upload deck', { description: error?.message })
+            "
+          >
+            <template #default="{ progress, uploading, error, openFileSelector }">
+              <div class="flex flex-col gap-1">
+                <Button
+                  :variant="'subtle'"
+                  :size="'sm'"
+                  class="w-fit"
+                  :label="uploading ? `Uploading ${progress}` : 'Or upload a PDF'"
+                  @click="openFileSelector"
+                />
+                <div v-if="error" class="text-sm text-ink-red-4">{{ error }}</div>
+              </div>
+            </template>
+          </FileUploader>
+        </div>
         <TextEditor
           label="Event Description"
           class="col-span-2"
@@ -272,6 +295,7 @@ import FormActionBar from '@/components/FormActionBar.vue'
 import { createDocumentResource, createResource, FileUploader, FormControl } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
+import { IconEdit, IconExternalLink, IconCancel, IconEye } from '@tabler/icons-vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 import { inject } from 'vue'
 
@@ -290,6 +314,23 @@ const validateFile = (file) => {
     toast.error('Only PNG and JPG images are allowed')
     return 'Only PNG and JPG images are allowed'
   }
+}
+
+const validateDeckFile = (file) => {
+  let extn = file.name.split('.').pop().toLowerCase()
+  if (extn !== 'pdf') {
+    toast.error('Only PDF files are allowed')
+    return 'Only PDF files are allowed'
+  }
+}
+
+const setDeckLink = (fileUrl) => {
+  const absoluteUrl = fileUrl.startsWith('http') ? fileUrl : window.location.origin + fileUrl
+  event.doc.deck_link = absoluteUrl
+  event.save
+    .submit()
+    .then(() => toast.success('Deck uploaded successfully'))
+    .catch((error) => toast.error('Failed to save deck link', { description: error.message }))
 }
 
 const getBannerImage = () => {

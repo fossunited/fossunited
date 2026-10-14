@@ -70,9 +70,8 @@ class FOSSChapter(WebsiteGenerator):
         self.handle_member_addition()
 
     def validate(self):
-        self.make_city_name_upper()
-        self.validate_slug()
         self.set_location()
+        self.validate_slug()
 
     def before_save(self):
         self.set_route()
@@ -200,11 +199,6 @@ class FOSSChapter(WebsiteGenerator):
         context.members = self.get_members()
         context.past_members = self.get_past_members()
         context.social_links = self.get_social_links()
-
-    # make the chapter name upper case if it is a city community
-    def make_city_name_upper(self):
-        if self.chapter_type == CITY_COMMUNITY:
-            self.chapter_name = self.city.upper()
 
     def get_upcoming_events(self):
         return frappe.get_all(
@@ -337,6 +331,7 @@ class FOSSChapter(WebsiteGenerator):
             "matrix": "matrix-light",
             "instagram": "instagram-icon",
             "facebook": "facebook-icon",
+            "github": "github_light",
         }
 
         REVERSE_RENAMES = {v: k for k, v in KEY_RENAMES.items()}

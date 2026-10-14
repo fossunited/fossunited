@@ -531,7 +531,7 @@
             {% endif %}
 
             <!-- Sponsors -->
-            {% if sponsors_dict %}
+            {% if sponsors_dict or doc.deck_link %}
               <section class="ev-sponsors-section" aria-labelledby="sponsors-heading">
                 <h2 id="sponsors-heading" class="sr-only">Event Sponsors</h2>
                 {{ sponsor_card(sponsors_dict, doc.deck_link) }}

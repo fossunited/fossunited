@@ -375,7 +375,7 @@
                   label="Back"
                   size="lg"
                   variant="subtle"
-                  icon-left="chevron-left"
+                  :icon-left="IconChevronLeft"
                   class="uppercase !font-medium"
                   @click="prevStep"
                 />
@@ -383,7 +383,7 @@
                   label="Next"
                   size="lg"
                   variant="solid"
-                  icon-right="chevron-right"
+                  :icon-right="IconChevronRight"
                   class="uppercase !font-medium !px-6"
                   :disabled="currentStep === 1 && totalTickets === 0"
                   @click="nextStep"
@@ -395,7 +395,7 @@
                 label="Back"
                 size="lg"
                 variant="subtle"
-                icon-left="chevron-left"
+                :icon-left="IconChevronLeft"
                 class="uppercase !font-medium"
                 aria-label="Go back to verify details"
                 @click="prevStep"
@@ -404,7 +404,7 @@
                 label="Proceed to Pay"
                 size="lg"
                 variant="solid"
-                icon-right="chevron-right"
+                :icon-right="IconChevronRight"
                 class="uppercase !font-medium !px-6"
                 :loading="rzpCheckout?.resource.loading"
                 aria-label="Proceed to payment"
@@ -541,6 +541,8 @@ import {
   IconSoup,
   IconChevronUp,
   IconChevronDown,
+  IconChevronLeft,
+  IconChevronRight,
 } from '@tabler/icons-vue'
 import { cleanedHTML, showError } from '@/helpers/utils'
 

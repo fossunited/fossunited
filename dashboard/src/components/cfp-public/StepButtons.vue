@@ -5,7 +5,7 @@
       label="Back"
       size="lg"
       variant="subtle"
-      icon-left="chevron-left"
+      :icon-left="IconChevronLeft"
       class="uppercase !min-w-8 !font-medium !pr-4"
       @click="$emit('back')"
     />
@@ -13,7 +13,7 @@
       :label="actionButtonLabel"
       size="lg"
       variant="solid"
-      :icon-right="!isLastStep ? 'chevron-right' : ''"
+      :icon-right="!isLastStep ? IconChevronRight : ''"
       class="uppercase !min-w-8 !font-medium !px-4"
       :loading="loading"
       :disabled="loading"
@@ -24,6 +24,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-vue'
 const props = defineProps({
   isFirstStep: {
     type: Boolean,

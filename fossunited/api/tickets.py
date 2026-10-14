@@ -2,6 +2,7 @@
 APIs for Tickets and Transfer Tickets
 """
 
+import hmac
 import io
 from datetime import timedelta
 
@@ -25,7 +26,7 @@ from fossunited.utils.decorators import require_chapter_or_event_member
 
 
 # nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=True, methods=["POST"])
 @rate_limit(limit=2, seconds=60 * 60 * 12)
 def get_ticket_details(ticket_id: str):
     """
@@ -50,17 +51,74 @@ def get_ticket_details(ticket_id: str):
     return ticket
 
 
-@frappe.whitelist()
+def _ticket_belongs_to_user(ticket: dict, session_user: str) -> bool:
+    """
+    A ticket belongs to a user if the current attendee email matches. If not,
+    and only when the ticket was never transferred away (a transfer hands it
+    to someone else), it also belongs to whoever bought it - either as the
+    record's `owner`, or via the email typed on the linked Razorpay Payment
+    at checkout. Both fallbacks are needed because ticket creation can run
+    under a webhook/system user instead of the buyer's own session (Razorpay
+    webhooks flip the user to Administrator - see FOSSEventTicket's
+    `handle_payment_on_update`), so `owner` isn't reliably the real buyer,
+    and the checkout email can differ from both the account and ticket email.
+
+    Comparisons are lowercased: Frappe account emails are normalized to
+    lowercase, but a ticket's `email` is saved exactly as the attendee typed
+    it at purchase.
+    """
+    if not ticket:
+        return False
+    if session_user == (ticket.get("email") or "").strip().lower():
+        return True
+    if ticket.get("is_transfer_ticket"):
+        return False
+    if session_user == (ticket.get("owner") or "").strip().lower():
+        return True
+    payment_email = (ticket.get("payment_email") or "").strip().lower()
+    return bool(payment_email) and session_user == payment_email
+
+
+@frappe.whitelist(methods=["POST"])
 def get_session_user_tickets() -> list:
     """
     Get all tickets belonging to the logged-in user, for the "My Tickets" page.
-
-    A ticket belongs to the user if its email matches the session user, or if
-    the session user created the ticket (e.g. on someone else's behalf).
+    See `_ticket_belongs_to_user` for the matching rules.
     """
+    from frappe.query_builder import DocType
+
+    session_user = (frappe.session.user or "").strip().lower()
+
+    Ticket = DocType(EVENT_TICKET)
+    Payment = DocType(RAZORPAY_PAYMENT)
+
+    matches = (
+        frappe.qb.from_(Ticket)
+        .left_join(Payment)
+        .on(Ticket.razorpay_payment == Payment.name)
+        .where(
+            (Ticket.email == session_user)
+            | ((Ticket.owner == session_user) & (Ticket.is_transfer_ticket != 1))
+            | ((Payment.email == session_user) & (Ticket.is_transfer_ticket != 1))
+        )
+        .select(Ticket.name, Ticket.email)
+        .distinct()
+    ).run(as_dict=True)
+
+    if not matches:
+        return []
+
+    # Whether *this* session user is the ticket's attendee (email matched),
+    # vs. only its buyer/organizer (matched via owner or payment instead) -
+    # the "My Tickets" page uses this to label tickets bought for someone
+    # else, since a match by email alone is the unremarkable common case.
+    is_attendee_by_name = {
+        m.name: (m.email or "").strip().lower() == session_user for m in matches
+    }
+
     tickets = frappe.get_all(
         EVENT_TICKET,
-        or_filters={"email": frappe.session.user, "owner": frappe.session.user},
+        filters={"name": ["in", list(is_attendee_by_name)]},
         fields=[
             "name",
             "event",
@@ -88,18 +146,20 @@ def get_session_user_tickets() -> list:
     for ticket in tickets:
         event_date = ticket.event_end_date or ticket.event_start_date
         ticket["is_concluded"] = bool(event_date and frappe.utils.getdate(event_date) < today)
+        ticket["is_attendee"] = is_attendee_by_name.get(ticket.name, True)
 
     return tickets
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["GET"])
 def get_ticket_qr(ticket_id: str):
     """
     Render a QR code (SVG) for a ticket, encoding the plain ticket ID.
 
-    Ownership-gated: only the ticket's email owner or its creator may fetch it.
-    A ticket's QR content never changes once issued, so the response is
-    cacheable by the requesting browser.
+    Ownership-gated via `_ticket_belongs_to_user` - the same rule used for
+    the "My Tickets" list, so a ticket that shows up there is never blocked
+    here. A ticket's QR content never changes once issued, so the response
+    is cacheable by the requesting browser.
 
     Uses pyqrcode's .svg() (same as frappe.twofactor.get_qr_svg_code) since
     .png() needs the separate `pypng` package, which isn't installed here.
@@ -107,10 +167,23 @@ def get_ticket_qr(ticket_id: str):
     import pyqrcode
     from werkzeug.wrappers import Response
 
-    ticket = frappe.db.get_value(EVENT_TICKET, ticket_id, ["email", "owner"], as_dict=True)
+    ticket = frappe.db.get_value(
+        EVENT_TICKET,
+        ticket_id,
+        ["email", "owner", "is_transfer_ticket", "razorpay_payment"],
+        as_dict=True,
+    )
+    payment_email = (
+        ticket
+        and ticket.razorpay_payment
+        and frappe.db.get_value(RAZORPAY_PAYMENT, ticket.razorpay_payment, "email")
+    )
+    session_user = (frappe.session.user or "").strip().lower()
     # Same error for "doesn't exist" and "not yours"; avoids leaking which
     # ticket IDs are valid to a caller who doesn't own them.
-    if not ticket or frappe.session.user not in (ticket.email, ticket.owner):
+    if not _ticket_belongs_to_user(
+        {**(ticket or {}), "payment_email": payment_email}, session_user
+    ):
         frappe.throw(_("Not permitted to access this ticket"), frappe.PermissionError)
 
     buf = io.BytesIO()
@@ -124,7 +197,7 @@ def get_ticket_qr(ticket_id: str):
 
 
 # nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=True, methods=["POST"])
 @rate_limit(limit=3, seconds=60 * 60 * 12)
 def create_transfer_request(ticket: str, receiver_details: dict):
     """
@@ -147,42 +220,116 @@ def create_transfer_request(ticket: str, receiver_details: dict):
     return {"name": transfer_request.name, "status": transfer_request.status}
 
 
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
-@rate_limit(limit=4, seconds=60 * 60 * 12)
-def get_transfer_details(id: str):
+def _is_authorized_for_transfer(doc, token) -> bool:
     """
-    Get the transfer doc
+    Same proof-of-access rule as change_transfer_status: either the correct
+    single-use token, or a session logged in as the ticket owner/receiver
+    (System Manager always allowed).
+    """
+    if token and doc.approval_token and hmac.compare_digest(token, doc.approval_token):
+        return True
+    if "System Manager" in frappe.get_roles():
+        return True
+    session_user = (frappe.session.user or "").strip().lower()
+    if session_user in ("", "guest"):
+        return False
+    owner_email = (doc.owner_email or "").strip().lower()
+    receiver_email = (doc.receiver_email or "").strip().lower()
+    return session_user in (owner_email, receiver_email)
+
+
+# nosemgrep: guest-whitelisted-method
+@frappe.whitelist(allow_guest=True, methods=["GET"])
+@rate_limit(limit=4, seconds=60 * 60 * 12)
+def get_transfer_details(id: str, token: str | None = None):
+    """
+    Get the transfer doc, plus enough context (event/tier, contact email) to
+    render a confirmation screen and a "need help" address on the frontend.
+
+    Only the status/ticket/event context is guest-readable by id alone -
+    owner_name/owner_email/receiver_name/receiver_email require the caller
+    to prove access first (see _is_authorized_for_transfer). Never returns
+    approval_token itself.
     """
     doc = frappe.db.get_value(
         TICKET_TRANSFER,
         id,
-        ["name", "status", "ticket"],
+        [
+            "name",
+            "status",
+            "ticket",
+            "owner_email",
+            "owner_name",
+            "receiver_email",
+            "receiver_name",
+            "approval_token",
+        ],
         as_dict=True,
     )
-    return doc
+    if not doc:
+        return doc
+
+    ticket_tier, event_id = frappe.db.get_value(EVENT_TICKET, doc.ticket, ["tier", "event"])
+    event_name, chapter_id = frappe.db.get_value(EVENT, event_id, ["event_name", "chapter"])
+    chapter_email = chapter_id and frappe.db.get_value("FOSS Chapter", chapter_id, "email")
+
+    result = frappe._dict(
+        name=doc.name,
+        status=doc.status,
+        ticket=doc.ticket,
+        ticket_tier=ticket_tier,
+        event_name=event_name,
+        contact_email=chapter_email or "developers@fossunited.org",
+    )
+
+    if _is_authorized_for_transfer(doc, token):
+        result.owner_email = doc.owner_email
+        result.owner_name = doc.owner_name
+        result.receiver_email = doc.receiver_email
+        result.receiver_name = doc.receiver_name
+
+    return result
 
 
 # nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=True, methods=["POST"])
 @rate_limit(limit=3, seconds=60 * 60 * 12)
-def change_transfer_status(transfer_id: str, status: str):
+def change_transfer_status(transfer_id: str, status: str, token: str | None = None):
     """
-    Change the status of the transfer request
-    """
-    if frappe.session.user == "Guest":
-        frappe.throw(
-            _("Please login with your FOSS United account to process this transfer"),
-            frappe.AuthenticationError,
-        )
+    Approve or reject a transfer request.
 
+    Verified either by the single-use `token` from the emailed Approve/Reject
+    link (no login needed), or - for links sent before tokens existed - by
+    the logged-in session user matching the ticket owner/receiver email.
+    """
     if status not in ["Completed", "Cancelled"]:
         frappe.throw(_("Invalid status provided for ticket transfer"))
 
     doc = frappe.get_doc(TICKET_TRANSFER, transfer_id)
-    doc.status = status
-    # Auth enforced in controller before_save — ignore doctype write perm
-    doc.save(ignore_permissions=True)
+
+    token_valid = (
+        bool(token) and bool(doc.approval_token) and hmac.compare_digest(token, doc.approval_token)
+    )
+
+    if token_valid:
+        frappe.flags.ticket_transfer_token_verified = True
+    elif frappe.session.user == "Guest":
+        frappe.throw(
+            _(
+                "This link is invalid or has expired. Please use the exact "
+                "Approve/Reject link from your email, or log in with your "
+                "FOSS United account to continue."
+            ),
+            frappe.AuthenticationError,
+        )
+
+    try:
+        doc.status = status
+        # Auth enforced in controller before_save — ignore doctype write perm
+        doc.save(ignore_permissions=True)
+    finally:
+        frappe.flags.ticket_transfer_token_verified = False
+
     return True
 
 
@@ -646,44 +793,26 @@ def _get_approved_speaker_emails_for_event(event: str) -> dict[str, str]:
     """Return {email: full_name} for unique speakers across approved proposals.
 
     One coupon per speaker regardless of how many approved proposals they
-    appear in. Speaker child rows take priority; proposal-level email is a
-    fallback when no child rows exist.
+    appear in.
     """
-    proposals = frappe.get_all(
+    proposal_names = frappe.get_all(
         PROPOSAL,
         filters={"event": event, "status": "Approved"},
-        fields=["name", "email", "full_name"],
+        pluck="name",
     )
-    if not proposals:
+    if not proposal_names:
         return {}
 
-    proposal_names = [p.name for p in proposals]
     speaker_rows = frappe.get_all(
         SPEAKER,
         filters={"parent": ["in", proposal_names], "parenttype": PROPOSAL},
-        fields=["email", "full_name", "parent"],
+        fields=["email", "full_name"],
     )
 
-    rows_by_proposal = {}
-    for r in speaker_rows:
-        rows_by_proposal.setdefault(r.parent, []).append(r)
-
     email_data = {}  # email → full_name
-
-    for p in proposals:
-        p_emails = set()
-
-        for r in rows_by_proposal.get(p.name, []):
-            if r.email:
-                key = r.email.strip().lower()
-                p_emails.add(key)
-                email_data.setdefault(key, r.full_name or "")
-
-        # Fallback: proposal-level email if no speaker child rows on this proposal
-        if not p_emails and p.email:
-            key = p.email.strip().lower()
-            p_emails.add(key)
-            email_data.setdefault(key, p.full_name or "")
+    for r in speaker_rows:
+        if r.email:
+            email_data.setdefault(r.email.strip().lower(), r.full_name or "")
 
     return email_data
 

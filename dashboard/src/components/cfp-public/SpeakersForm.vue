@@ -21,7 +21,7 @@
         >
           <h5 class="font-medium text-base">Speaker #{{ index + 1 }}</h5>
           <Button
-            icon="trash"
+            :icon="IconTrash"
             theme="red"
             :aria-label="`Remove Speaker ${index + 1}`"
             @click="deleteSpeaker(index)"
@@ -52,7 +52,7 @@
         />
       </div>
     </div>
-    <Button label="Add Speaker" icon-left="plus" class="w-fit" @click="addSpeaker" />
+    <Button label="Add Speaker" :icon-left="IconPlus" class="w-fit" @click="addSpeaker" />
 
     <div class="flex items-center gap-3 pt-2 border-t border-outline-gray-2">
       <Switch v-model="subscribeNewsletter" />
@@ -91,7 +91,7 @@
 <script setup>
 import FileUploaderArea from '@/components/ui/FileUploaderArea.vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
-import { IconUserCircle } from '@tabler/icons-vue'
+import { IconUserCircle, IconTrash, IconPlus } from '@tabler/icons-vue'
 import RenderField from '@/components/form/RenderField.vue'
 import { getSpeakerFields } from '@/helpers/cfp'
 import { createResource, Switch, Dialog, Button } from 'frappe-ui'

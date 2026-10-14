@@ -8,7 +8,7 @@
     <div class="prose">
       <h2 class="mb-1">Ticket Tiers</h2>
       <p class="text-sm">Manage the ticket tiers for this event here.</p>
-      <Button variant="solid" label="Add Tier" icon-left="plus" @click="showDialog = true" />
+      <Button variant="solid" label="Add Tier" :icon-left="IconPlus" @click="showDialog = true" />
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 my-4 gap-4">
       <TicketTierCard
@@ -23,6 +23,7 @@
 <script setup>
 import TicketTierCard from '@/components/event/TicketTierCard.vue'
 import ManageTicketTierDialog from '@/components/event/ManageTicketTierDialog.vue'
+import { IconPlus } from '@tabler/icons-vue'
 import { defineProps, ref } from 'vue'
 
 const props = defineProps({

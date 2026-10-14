@@ -2,26 +2,26 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import HACKATHON_TEAM_MEMBER
-from fossunited.tests.utils import (
-    insert_test_chapter,
-    insert_test_hackathon,
-    insert_test_hackathon_join_request,
-    insert_test_hackathon_participant,
-    insert_test_hackathon_team,
+from fossunited.tests.factories import (
+    FOSSChapterFactory,
+    FOSSHackathonFactory,
+    FOSSHackathonJoinTeamRequestFactory,
+    FOSSHackathonParticipantFactory,
+    FOSSHackathonTeamFactory,
 )
 
 
 class TestFOSSHackathonJoinTeamRequest(FrappeTestCase):
     def setUp(self):
-        self.chapter = insert_test_chapter()
-        self.hackathon = insert_test_hackathon(chapter=self.chapter.name)
+        self.chapter = FOSSChapterFactory.create()
+        self.hackathon = FOSSHackathonFactory.create(chapter=self.chapter.name)
 
         self.member1 = "test1@example.com"
-        participant = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name, user=self.member1, email=self.member1
+        participant = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name, user=self.member1, email=self.member1
         )
 
-        self.team = insert_test_hackathon_team(hackathon=self.hackathon)
+        self.team = FOSSHackathonTeamFactory.create(hackathon=self.hackathon.name)
         # add member 1 to self.team
         self.team.append(
             "members",
@@ -34,8 +34,8 @@ class TestFOSSHackathonJoinTeamRequest(FrappeTestCase):
         self.team.save()
 
         self.reciever_email = "test4@example.com"
-        self.reciever_participant = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name, user=self.reciever_email, email=self.reciever_email
+        self.reciever_participant = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name, user=self.reciever_email, email=self.reciever_email
         )
 
     def tearDown(self):
@@ -49,9 +49,9 @@ class TestFOSSHackathonJoinTeamRequest(FrappeTestCase):
         frappe.set_user(self.member1)
         # when the user tries to create a join request
         # then it should be created without any problem
-        insert_test_hackathon_join_request(
-            hackathon_id=self.hackathon.name,
-            team_id=self.team.name,
+        FOSSHackathonJoinTeamRequestFactory.create(
+            hackathon=self.hackathon.name,
+            team=self.team.name,
             requested_by=self.member1,
             reciever_email=self.reciever_email,
         )
@@ -61,9 +61,9 @@ class TestFOSSHackathonJoinTeamRequest(FrappeTestCase):
         frappe.set_user(non_member_user)
         # then it should throw a frappe.ValidationError
         with self.assertRaises(frappe.ValidationError):
-            insert_test_hackathon_join_request(
-                hackathon_id=self.hackathon.name,
-                team_id=self.team.name,
+            FOSSHackathonJoinTeamRequestFactory.create(
+                hackathon=self.hackathon.name,
+                team=self.team.name,
                 requested_by=non_member_user,
                 reciever_email=self.reciever_email,
             )
@@ -71,9 +71,9 @@ class TestFOSSHackathonJoinTeamRequest(FrappeTestCase):
     def test_add_to_team(self):
         # Given a join request
         frappe.set_user(self.member1)
-        request = insert_test_hackathon_join_request(
-            hackathon_id=self.hackathon.name,
-            team_id=self.team.name,
+        request = FOSSHackathonJoinTeamRequestFactory.create(
+            hackathon=self.hackathon.name,
+            team=self.team.name,
             requested_by=self.member1,
             reciever_email=self.reciever_email,
         )
@@ -101,10 +101,10 @@ class TestFOSSHackathonJoinTeamRequest(FrappeTestCase):
     def test_reject_other_responses(self):
         team1 = self.team
         team1_member = self.member1
-        team2 = insert_test_hackathon_team(hackathon=self.hackathon)
+        team2 = FOSSHackathonTeamFactory.create(hackathon=self.hackathon.name)
         team2_member = "test2@example.com"
-        team2_participant = insert_test_hackathon_participant(
-            hackathon_id=self.hackathon.name, user=team2_member, email=team2_member
+        team2_participant = FOSSHackathonParticipantFactory.create(
+            hackathon=self.hackathon.name, user=team2_member, email=team2_member
         )
         team2.append(
             "members",
@@ -122,9 +122,9 @@ class TestFOSSHackathonJoinTeamRequest(FrappeTestCase):
         # As member of team 1
         frappe.set_user(team1_member)
         # Create a join request for request_reciever
-        request1 = insert_test_hackathon_join_request(
-            hackathon_id=self.hackathon.name,
-            team_id=team1.name,
+        request1 = FOSSHackathonJoinTeamRequestFactory.create(
+            hackathon=self.hackathon.name,
+            team=team1.name,
             requested_by=frappe.session.user,
             reciever_email=request_reciever,
         )
@@ -133,9 +133,9 @@ class TestFOSSHackathonJoinTeamRequest(FrappeTestCase):
         # As member of team 2
         frappe.set_user(team2_member)
         # create a join request for same request_reciever
-        request2 = insert_test_hackathon_join_request(
-            hackathon_id=self.hackathon.name,
-            team_id=team2.name,
+        request2 = FOSSHackathonJoinTeamRequestFactory.create(
+            hackathon=self.hackathon.name,
+            team=team2.name,
             requested_by=frappe.session.user,
             reciever_email=request_reciever,
         )

@@ -14,14 +14,14 @@
     </div>
     <Button
       label="See Public Page"
-      icon-right="arrow-up-right"
+      :icon-right="IconArrowUpRight"
       @click="redirectRoute(submission.route)"
     />
   </div>
 </template>
 <script setup>
 import { Badge } from 'frappe-ui'
-import { IconLock } from '@tabler/icons-vue'
+import { IconLock, IconArrowUpRight } from '@tabler/icons-vue'
 import { redirectRoute } from '@/helpers/utils'
 
 defineProps({

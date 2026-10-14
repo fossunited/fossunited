@@ -85,7 +85,7 @@
                   @click="togglePopover()"
                 >
                   <template #prefix>
-                    <FeatherIcon name="plus" class="h-4" />
+                    <IconPlus class="h-4" />
                   </template>
                 </Button>
               </template>
@@ -105,11 +105,11 @@
 </template>
 
 <script setup>
-import { Autocomplete, Badge, FeatherIcon, FormControl } from 'frappe-ui'
+import { Autocomplete, Badge, FormControl } from 'frappe-ui'
+import { IconPlus, IconFilter2 } from '@tabler/icons-vue'
 import { computed, h } from 'vue'
 import NestedPopover from './NestedPopover.vue'
 import SearchComplete from './SearchComplete.vue'
-import { IconFilter2 } from '@tabler/icons-vue'
 
 const typeCheck = ['Check']
 const typeLink = ['Link']

@@ -1,7 +1,9 @@
 import frappe
+from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.checkins import checkin_attendee
+from fossunited.api.tickets import get_session_user_tickets
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET, TICKET_TIER
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
@@ -11,6 +13,8 @@ from fossunited.tests.factories import (
     UserFactory,
 )
 from fossunited.tests.factories.razorpay_payment_factory import _make_attendee
+
+fake = Faker()
 
 
 class TestFOSSEventTicket(FrappeTestCase):
@@ -338,3 +342,63 @@ class TestFOSSEventTicketTshirt(FrappeTestCase):
         ticket = frappe.get_doc(EVENT_TICKET, {"razorpay_payment": payment.name})
         self.assertEqual(ticket.wants_tshirt, 1)
         self.assertEqual(ticket.tshirt_size, "L")
+
+
+class TestGetSessionUserTickets(FrappeTestCase):
+    """
+    Covers the "My Tickets" ownership-matching logic in
+    fossunited.api.tickets.get_session_user_tickets / _ticket_belongs_to_user:
+    a ticket matches by attendee email always, or - only when it was never
+    transferred away - by whoever bought it (owner or Razorpay payment
+    email). `is_attendee` on the response tells the frontend which case it
+    was, so "My Tickets" can label tickets bought for someone else.
+    """
+
+    def setUp(self):
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        frappe.delete_doc(EVENT, self.event.name, force=True)
+        frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
+
+    def test_email_match_is_marked_as_attendee(self):
+        my_email = fake.email()
+        FOSSEventTicketFactory.create(event=self.event.name, email=my_email)
+
+        frappe.set_user(my_email)
+        tickets = get_session_user_tickets()
+        frappe.set_user("Administrator")
+
+        self.assertEqual(len(tickets), 1)
+        self.assertTrue(tickets[0].is_attendee)
+
+    def test_buyer_only_match_is_marked_as_not_attendee(self):
+        """Bought for someone else: the ticket's `owner` (Frappe's own
+        creator field) is forced to the buyer, but `email` stays the
+        attendee's - matches via owner, not email."""
+        buyer_email = fake.email()
+        ticket = FOSSEventTicketFactory.create(event=self.event.name, email=fake.email())
+        frappe.db.set_value(EVENT_TICKET, ticket.name, "owner", buyer_email)
+
+        frappe.set_user(buyer_email)
+        tickets = get_session_user_tickets()
+        frappe.set_user("Administrator")
+
+        self.assertEqual(len(tickets), 1)
+        self.assertFalse(tickets[0].is_attendee)
+
+    def test_transferred_ticket_no_longer_shows_for_original_buyer(self):
+        """Once a ticket moves on via transfer, the buyer's owner-match no
+        longer applies - only the new attendee's email match does."""
+        buyer_email = fake.email()
+        ticket = FOSSEventTicketFactory.create(event=self.event.name, email=fake.email())
+        frappe.db.set_value(EVENT_TICKET, ticket.name, "owner", buyer_email)
+        frappe.db.set_value(EVENT_TICKET, ticket.name, "is_transfer_ticket", 1)
+
+        frappe.set_user(buyer_email)
+        tickets = get_session_user_tickets()
+        frappe.set_user("Administrator")
+
+        self.assertEqual(tickets, [])
