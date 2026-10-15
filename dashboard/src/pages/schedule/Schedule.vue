@@ -1,5 +1,5 @@
 <template>
-  <Header :sticky="false" />
+  <Header :sticky="false" :event="event.data" active-tab="schedule" />
 
   <div
     v-if="event.data && schedule.data"
