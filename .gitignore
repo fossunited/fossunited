@@ -25,6 +25,3 @@ docs/styles/config/vocabularies/*
 bruno-collection/.env
 security-plan.md
 
-# Ignore frontend lockfiles
-dashboard/package-lock.json
-dashboard/yarn.lock
