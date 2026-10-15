@@ -65,7 +65,7 @@ nav = [
 
   {"Education" = [
   {"FOSS Clubs"=[
-    {"Overview" = "clubs/clubs.md"},
+    {"Overview" = "clubs/index.md"},
     {"Onboarding" = "clubs/clubs-onboarding.md"},
     {"Team Formation" = "clubs/clubs-team-formation.md"},
     {"Hosting an Event" = "clubs/clubs-hosting-events.md"},
@@ -76,11 +76,6 @@ nav = [
       {"Month 2" = "clubs/clubs-first-quarter-m2.md"},
       {"Month 3" = "clubs/clubs-first-quarter-m3.md"},
     ]},
-    {"Incidents Response" = "clubs/clubs-incidents-response-checklist.md"},
-    {"Stages and Incentives" = "clubs/clubs-stages-incentives.md"},
-    {"Contribution Ideas" = "clubs/clubs-contribution-ideas.md"},
-    {"Non-STEM Branches" = "clubs/clubs-non-stem-events.md"},
-    {"Financial Support" = "clubs/clubs-financial-support.md"},
     {"Incidents Response" = "clubs/clubs-incidents-response-checklist.md"},
     {"Stages and Incentives" = "clubs/clubs-stages-incentives.md"},
     {"Contribution Ideas" = "clubs/clubs-contribution-ideas.md"},
