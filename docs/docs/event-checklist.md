@@ -5,7 +5,7 @@ Make a note of the timeline we usually follow.
 
 ### 3 months
 - [ ] Communicate your interest in organising an event. Expect a reply within 3-5 days
-- [ ] [Schedule a call](https://cal.com/team/fossunited/community-events) to talk about draft budget, [discussion topics](https://docs.fossunited.org/clubs-contribution-ideas/), venue, and dates
+- [ ] [Schedule a call](https://cal.com/team/fossunited/community-events) to talk about draft budget, [discussion topics](/clubs/clubs-contribution-ideas/), venue, and dates
     - [ ] If the event plan is approved, bi-weekly check-ins begin
     - [ ] Request FOSS United swag during the call. Stickers will be provided, while T-Shirts and button badges depend on the stock availability
 - [ ] Form your team of core volunteers
@@ -72,7 +72,7 @@ Make a note of the timeline we usually follow.
     - [ ] Get speaker and attendee testimonials ([example](https://www.youtube.com/watch?v=u4sIVuETLQA))
 
 ### After the event
-- [ ] Post wrap-up report on the forum within 14 days (attendance, photos, feedback, highlights). Refer this [template](https://docs.fossunited.org/clubs-peq).
+- [ ] Post wrap-up report on the forum within 14 days (attendance, photos, feedback, highlights). Refer this [template](https://docs.fossunited.org/clubs/clubs-peq).
 - [ ] Clear payment with vendors, if any
 - [ ] Submit [reimbursement claims](https://account.fossunited.org/expense-reimbursement/new) with receipts within 7 days (settles in 15–20 days). Reimbursement will be settled only after the forum post is live.
 - [ ] [Book a meeting](https://cal.com/team/fossunited/community-events) with the FOSS United Events team to debrief within 7 days of the event
