@@ -66,6 +66,26 @@ def get_ograph_url():
     return frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
 
+# Set of forklore maintainer GitHub usernames, refreshed daily by
+# fossunited.scheduled_tasks.sync_forklore_maintainers.
+FORKLORE_MAINTAINERS_CACHE_KEY = "forklore_maintainer_usernames"
+
+
+def get_forklore_maintainers() -> set[str]:
+    """Return the cached set of forklore maintainer usernames (lowercased).
+
+    Empty until the daily sync has run at least once.
+    """
+    return {u.lower() for u in (frappe.cache().get_value(FORKLORE_MAINTAINERS_CACHE_KEY) or [])}
+
+
+def is_forklore_maintainer(username: str | None) -> bool:
+    """Whether `username` (a GitHub handle) is a forklore maintainer, per the daily cache."""
+    if not username:
+        return False
+    return username.lower() in get_forklore_maintainers()
+
+
 # Filter
 def make_badge(text="Default", size="sm"):
     # stored in the form of (background-color, text-color)
