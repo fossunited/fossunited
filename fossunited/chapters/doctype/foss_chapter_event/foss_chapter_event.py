@@ -25,7 +25,7 @@ from fossunited.doctype_ids import (
     SPEAKER,
     USER_PROFILE,
 )
-from fossunited.fossunited.utils import get_event_sponsors, get_youtube_id
+from fossunited.fossunited.utils import get_event_sponsors, get_ograph_url, get_youtube_id
 
 
 class FOSSChapterEvent(WebsiteGenerator):
@@ -271,38 +271,23 @@ class FOSSChapterEvent(WebsiteGenerator):
             start_date=self.event_start_date.strftime("%A, %-d %B %Y"),
         )
 
-        og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
-        chapter_params = urlencode(
-            {
-                "event_chapter": self.chapter_name,
-                "event_name": self.event_name,
-            }
-        )
-
-        request = getattr(frappe.local, "request", None)
-        path = request.path if request else ""
-
-        sub_route_templates = {
-            "/cfp": "cfp",
-            "/schedule": "schedule",
-            "/cfp/all": "proposals",
-        }
-
-        for suffix, template in sub_route_templates.items():
-            if path.endswith(suffix):
-                return pagetitle, description, f"{og_url}/gen/{template}?{chapter_params}"
-
-        event_params = urlencode(
-            {
-                "event_name": self.event_name,
-                "event_date": self.event_start_date.strftime("%-d %B %Y"),
-                "event_type": self.event_type,
-                "event_chapter": self.chapter_name,
-                "event_location": self.event_location,
-            }
-        )
-        og_image = f"{og_url}/gen/events_new?{event_params}"
-        image = frappe.utils.get_url(self.banner_image) or og_image
+        # Prefer the event's own banner; otherwise fall back to a generated OG image.
+        og_url = get_ograph_url()
+        if self.banner_image:
+            image = frappe.utils.get_url(self.banner_image)
+        elif og_url:
+            event_params = urlencode(
+                {
+                    "event_name": self.event_name,
+                    "event_date": self.event_start_date.strftime("%-d %B %Y"),
+                    "event_type": self.event_type,
+                    "event_chapter": self.chapter_name,
+                    "event_location": self.event_location,
+                }
+            )
+            image = f"{og_url}/gen/events_new?{event_params}"
+        else:
+            image = ""
 
         return pagetitle, description, image
 

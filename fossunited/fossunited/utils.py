@@ -55,6 +55,17 @@ def get_request_path():
     return request.path if request else ""
 
 
+def get_ograph_url():
+    """Return the configured ograph-gen base URL, or None.
+
+    Guards against the "Ograph Settings" DocType being absent (e.g. the
+    ograph-gen app isn't installed) so callers never hit a DoesNotExistError.
+    """
+    if not frappe.db.exists("DocType", "Ograph Settings"):
+        return None
+    return frappe.db.get_single_value("Ograph Settings", "ograph_url")
+
+
 # Filter
 def make_badge(text="Default", size="sm"):
     # stored in the form of (background-color, text-color)
