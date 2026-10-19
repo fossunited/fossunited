@@ -11,6 +11,9 @@ from fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_subm
     RSVP_ALLOWED_FIELDS,
 )
 from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
+from fossunited.fossunited.utils import get_ograph_url
+
+RSVP_FALLBACK_IMAGE = "https://fossunited.org/files/og-image.png"
 
 
 class FOSSEventRSVP(WebsiteGenerator):
@@ -45,8 +48,9 @@ class FOSSEventRSVP(WebsiteGenerator):
     def get_context(self, context):
         context.event = frappe.get_doc(EVENT, self.event)
         context.event_name = self.event_name
-        og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
-        context.image = ""
+        og_url = get_ograph_url()
+        # Fall back to the static OG image when ograph-gen isn't configured.
+        context.image = RSVP_FALLBACK_IMAGE
         if og_url:
             rsvp_params = urlencode(
                 {
@@ -106,9 +110,6 @@ class FOSSEventRSVP(WebsiteGenerator):
 
         context.event_concluded = context.event.status == "Concluded"
         context.rsvp_full = self.is_full()
-
-        if frappe.db.exists("DocType", "Ograph Settings"):
-            context.og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
         context.no_cache = 1
 

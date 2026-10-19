@@ -33,7 +33,7 @@ from fossunited.doctype_ids import (
     SPEAKER,
     USER_PROFILE,
 )
-from fossunited.fossunited.utils import sanitize_text_content
+from fossunited.fossunited.utils import get_ograph_url, sanitize_text_content
 
 
 class PrivateProfileError(PermissionError):
@@ -636,9 +636,7 @@ class FOSSUserProfile(WebsiteGenerator):
 
         description = f"{self.full_name} is a Community Member. {desc_short}"
 
-        og_url = None
-        if frappe.db.exists("DocType", "Ograph Settings"):
-            og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
+        og_url = get_ograph_url()
 
         if og_url:
             profile_image_params = {

@@ -22,7 +22,7 @@ from fossunited.doctype_ids import (
     SPEAKER,
     USER_PROFILE,
 )
-from fossunited.fossunited.utils import get_youtube_id, sanitize_text_content
+from fossunited.fossunited.utils import get_ograph_url, get_youtube_id, sanitize_text_content
 
 # session_type Select options, minus 'Invited Talk'.
 ALLOWED_SESSION_TYPES = {
@@ -409,20 +409,22 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             speaker.photo = ""
 
         chapter_name = frappe.db.get_value(CHAPTER, {"name": self.chapter}, "chapter_name")
-        og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
+        og_url = get_ograph_url()
 
-        submission_params = urlencode(
-            {
-                "talk_title": textwrap.shorten(self.talk_title, width=50),
-                "session_type": self.session_type,
-                "event_name": self.event_name,
-                "speaker_designation": speaker.designation,
-                "speaker_name": speaker.full_name,
-                "speaker_image": speaker.photo,
-                "event_chapter": chapter_name,
-            }
-        )
-        image = f"{og_url}/gen/submission?{submission_params}"
+        image = ""
+        if og_url:
+            submission_params = urlencode(
+                {
+                    "talk_title": textwrap.shorten(self.talk_title, width=50),
+                    "session_type": self.session_type,
+                    "event_name": self.event_name,
+                    "speaker_designation": speaker.designation,
+                    "speaker_name": speaker.full_name,
+                    "speaker_image": speaker.photo,
+                    "event_chapter": chapter_name,
+                }
+            )
+            image = f"{og_url}/gen/submission?{submission_params}"
 
         return pagetitle, description, image
 
