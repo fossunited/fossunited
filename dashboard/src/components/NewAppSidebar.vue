@@ -4,10 +4,12 @@
     class="flex md:hidden items-center gap-2 h-12 px-3 sticky top-0 z-40 bg-surface-menu-bar border-b border-outline-gray-1 w-full"
   >
     <button
+      type="button"
+      aria-label="Open navigation menu"
       class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-gray-2"
       @click="mobileOpen = true"
     >
-      <IconMenu class="w-4 h-4 text-ink-gray-6" />
+      <IconMenu class="w-4 h-4 text-ink-gray-6" aria-hidden="true" />
     </button>
     <img :src="logo" class="w-6 h-6 rounded object-cover" alt="Logo" />
     <span class="text-base font-medium text-ink-gray-8">FOSS United</span>
@@ -30,37 +32,76 @@
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
+    <!--
+      frappe-ui 1.0's Sidebar is a bare <nav> frame: the old `:header`,
+      `:sections` and `#footer-items` API is gone (silently ignored), so the
+      header, groups, footer and collapse toggle are composed here instead.
+      The old frame's border and padding are re-added by hand.
+    -->
     <Sidebar
       v-model:collapsed="resolvedCollapsed"
+      class="border-r border-outline-gray-1"
       :class="mobileOpen ? '!w-60' : ''"
-      :sections="navSections"
-      :header="sidebarHeader"
     >
-      <template #footer-items>
-        <p
-          v-if="!resolvedCollapsed"
-          class="text-sm leading-normal tracking-tight font-medium text-ink-gray-5"
+      <SidebarHeader
+        :title="sidebarHeader.title"
+        :subtitle="sidebarHeader.subtitle"
+        :logo="sidebarHeader.logo"
+        :menu-items="sidebarHeader.menuItems"
+      />
+      <div class="flex flex-1 flex-col overflow-y-auto overflow-x-hidden px-2 pb-2">
+        <SidebarSection
+          v-for="(section, sectionIndex) in navSections"
+          :key="section.label ?? `section-${sectionIndex}`"
+          :label="section.label"
         >
-          Need Help? Check out our
-          <a
-            class="underline flex gap-1 items-center"
-            href="https://docs.fossunited.org/"
-            target="_blank"
+          <SidebarItem
+            v-for="item in section.items"
+            :key="`${item.label}-${item.route}`"
+            :label="item.label"
+            :route="item.route"
+            :active="item.isActive"
+            :icon="item.icon"
+          />
+        </SidebarSection>
+
+        <div class="mt-auto flex flex-col gap-2 pt-2">
+          <p
+            v-if="!resolvedCollapsed"
+            class="text-sm leading-normal tracking-tight font-medium text-ink-gray-7 dark:text-ink-gray-8"
           >
-            documentation
-            <IconExternalLink class="w-4 h-4" />
-          </a>
-        </p>
-        <p v-if="!resolvedCollapsed" class="text-ink-gray-6 text-xs leading-snug">
-          FOSS United Foundation.<br />CC-BY-SA.
-        </p>
-      </template>
+            Need Help? Check out our
+            <a
+              class="underline flex gap-1 items-center"
+              href="https://docs.fossunited.org/"
+              target="_blank"
+            >
+              documentation
+              <IconExternalLink class="w-4 h-4" aria-hidden="true" />
+            </a>
+          </p>
+          <p
+            v-if="!resolvedCollapsed"
+            class="text-ink-gray-7 dark:text-ink-gray-8 text-xs leading-snug"
+          >
+            FOSS United Foundation.<br />CC-BY-SA.
+          </p>
+          <SidebarCollapseToggle />
+        </div>
+      </div>
     </Sidebar>
   </div>
 </template>
 
 <script setup>
-import { Sidebar, createResource, useColorScheme } from 'frappe-ui'
+import {
+  Sidebar,
+  SidebarCollapseToggle,
+  SidebarHeader,
+  SidebarItem,
+  SidebarSection,
+  useColorScheme,
+} from 'frappe-ui'
 import { computed, inject, ref, h, watch } from 'vue'
 import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
 import {
@@ -199,7 +240,7 @@ const navSections = computed(() =>
     label: group.parent_label || undefined,
     items: group.items.map((item, i) => ({
       label: item.label,
-      to: item.route,
+      route: item.route,
       isActive: isItemActive(item.route, i),
       icon: itemIcon(item.icon, item.label),
     })),
