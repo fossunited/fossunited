@@ -24,23 +24,6 @@ export default {
       //   border-outline-gray-1..5, border-outline-red/green/blue/amber etc.
       // All backed by CSS variables that flip on [data-theme="dark"].
       colors: {
-        // ── frappe-ui ink-gray remapping ──────────────────────────────────────
-        // frappe-ui's preset defines ink-gray-1 through ink-gray-9 as hardcoded
-        // hex values. We override them here to point at our CSS variables so they
-        // automatically flip in dark mode.
-        // ink-gray-9 is the darkest (near-black in light mode → near-white in dark)
-        'ink-gray': {
-          1: 'var(--color-ink-6)', // lightest  #9CA3AF → gray-400
-          2: 'var(--color-ink-6)',
-          3: 'var(--color-ink-5)', // #6B7280 → gray-500
-          4: 'var(--color-ink-5)',
-          5: 'var(--color-ink-4)', // #4B5563 → gray-600
-          6: 'var(--color-ink-4)',
-          7: 'var(--color-ink-3)', // #374151 → gray-700
-          8: 'var(--color-ink-2)', // #1F2937 → gray-800
-          9: 'var(--color-ink-1)', // darkest  #111827 → gray-900 (was invisible in dark mode)
-        },
-
         // ── Surfaces ──────────────────────────────────────────────────────────
         // bg-base          → page canvas
         // bg-surface       → cards, panels, inputs

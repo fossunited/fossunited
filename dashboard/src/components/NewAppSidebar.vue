@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { Sidebar, createResource, useTheme } from 'frappe-ui'
+import { Sidebar, createResource, useColorScheme } from 'frappe-ui'
 import { computed, inject, ref, h, watch } from 'vue'
 import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
 import {
@@ -120,7 +120,7 @@ const ICON_MAP = {
 
 const session = inject('$session')
 const route = useRoute()
-const { currentTheme, toggleTheme } = useTheme()
+const { colorScheme, toggleColorScheme } = useColorScheme()
 
 const props = defineProps({
   menuItems: { type: Array, default: () => [] },
@@ -213,9 +213,9 @@ const sidebarHeader = computed(() => ({
   logo: logo.value,
   menuItems: [
     {
-      label: currentTheme.value === 'dark' ? 'Switch to Light' : 'Switch to Dark',
-      onClick: toggleTheme,
-      icon: currentTheme.value === 'dark' ? IconSun : IconMoon,
+      label: colorScheme.value === 'dark' ? 'Switch to Light' : 'Switch to Dark',
+      onClick: toggleColorScheme,
+      icon: colorScheme.value === 'dark' ? IconSun : IconMoon,
     },
     {
       label: 'My Profile',

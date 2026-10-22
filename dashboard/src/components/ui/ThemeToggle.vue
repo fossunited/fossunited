@@ -1,5 +1,5 @@
 <script setup>
-import { useTheme } from 'frappe-ui'
+import { useColorScheme } from 'frappe-ui'
 import { IconSunHighFilled, IconMoonStars } from '@tabler/icons-vue'
 
 defineProps({
@@ -9,16 +9,16 @@ defineProps({
   },
 })
 
-const { currentTheme, toggleTheme } = useTheme()
+const { colorScheme, toggleColorScheme } = useColorScheme()
 </script>
 
 <template>
   <button
     class="p-1.5 rounded-md hover:bg-surface-gray-2 transition-colors"
-    :title="currentTheme === 'dark' ? 'Switch to light' : 'Switch to dark'"
-    @click="toggleTheme"
+    :title="colorScheme === 'dark' ? 'Switch to light' : 'Switch to dark'"
+    @click="toggleColorScheme"
   >
-    <IconSunHighFilled v-if="currentTheme === 'dark'" :size="size" :stroke="1.5" />
+    <IconSunHighFilled v-if="colorScheme === 'dark'" :size="size" :stroke="1.5" />
     <IconMoonStars v-else :size="size" :stroke="1.5" />
   </button>
 </template>

@@ -8,7 +8,6 @@ export default defineConfig({
   plugins: [
     frappeui({
       frappeProxy: true,
-      lucideIcons: true,
     }),
     vue(),
   ],
@@ -23,11 +22,6 @@ export default defineConfig({
     target: 'es2015',
   },
   optimizeDeps: {
-    include: [
-      'frappe-ui > feather-icons',
-      'showdown',
-      'engine.io-client',
-      'highlight.js/lib/core',
-    ],
+    include: ['showdown', 'engine.io-client', 'highlight.js/lib/core'],
   },
 })

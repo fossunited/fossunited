@@ -14,7 +14,7 @@ import {
   setConfig,
   frappeRequest,
   resourcesPlugin,
-  useTheme,
+  useColorScheme,
 } from 'frappe-ui'
 
 if (!localStorage.getItem('theme')) {
@@ -22,8 +22,7 @@ if (!localStorage.getItem('theme')) {
 }
 document.documentElement.setAttribute('data-theme', localStorage.getItem('theme'))
 
-const { initializeTheme } = useTheme()
-initializeTheme()
+useColorScheme()
 
 window.showError = showError
 const app = createApp(App)
