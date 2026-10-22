@@ -39,7 +39,12 @@ const hasScores = computed(() => {
 
 // frappe-ui v1's Popover only supports trigger="click" | "manual" — "hover" is
 // no longer a recognised value and silently falls through to click behavior.
-// Drive it manually to preserve the original hover-to-reveal UX.
+// Drive it manually to preserve the original hover-to-reveal UX. The #default
+// panel is teleported to <body> by PopoverPortal, so it is NOT a descendant of
+// the trigger wrapper below in the live DOM — mouseenter/mouseleave must be
+// wired on both the trigger wrapper and the panel itself, sharing this same
+// ref, so moving the pointer from the trigger into the panel keeps it open
+// (mirrors the old 0.1.x Popover's shared pointerOverTargetOrPopup flag).
 const isOpen = ref(false)
 </script>
 <template>
@@ -56,7 +61,11 @@ const isOpen = ref(false)
         <span v-else class="text-ink-gray-5 ml-2">Not yet reviewed</span>
       </template>
       <template #default>
-        <div class="p-4 bg-surface-white rounded flex flex-col gap-2">
+        <div
+          class="p-4 bg-surface-white rounded flex flex-col gap-2"
+          @mouseenter="isOpen = true"
+          @mouseleave="isOpen = false"
+        >
           <div
             v-for="scoreItem in scoreTableItems"
             :key="scoreItem.label"
