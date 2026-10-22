@@ -15,7 +15,7 @@
     </div>
     <div class="flex gap-2 items-start">
       <MultiSelect
-        v-model="selectedIds"
+        :model-value="selectedIds"
         :options="reviewerOptions"
         placeholder="Select reviewers..."
         class="flex-1"
@@ -64,13 +64,10 @@ const currentAssignments = createResource({
 })
 
 const selectedOptions = ref([])
-const selectedIds = computed({
-  get: () => selectedOptions.value.map((option) => option.value),
-  // selectedOptions (the full option objects) is kept in sync via
-  // @update:selected-options instead, since MultiSelect's own
-  // modelValue only carries ids.
-  set: () => {},
-})
+// selectedOptions (the full option objects) is the source of truth, kept
+// in sync via @update:selected-options; selectedIds is a derived,
+// read-only view for MultiSelect's modelValue.
+const selectedIds = computed(() => selectedOptions.value.map((option) => option.value))
 
 watch(
   [() => currentAssignments.data, () => reviewers.data],

@@ -10,7 +10,7 @@
           Enter the username of the new member you want to add to the team.
         </div>
         <MultiSelect
-          v-model="newMemberIds"
+          :model-value="newMemberIds"
           :options="memberOptions.data || []"
           placeholder="Search for a user"
           :loading="memberOptions.loading"
@@ -153,13 +153,10 @@ watch(
 )
 
 const newMembers = ref([])
-const newMemberIds = computed({
-  get: () => newMembers.value.map((member) => member.value),
-  // newMembers (the full option objects) is kept in sync via
-  // @update:selected-options instead, since MultiSelect's own
-  // modelValue only carries ids.
-  set: () => {},
-})
+// newMembers (the full option objects) is the source of truth, kept in
+// sync via @update:selected-options; newMemberIds is a derived, read-only
+// view for MultiSelect's modelValue.
+const newMemberIds = computed(() => newMembers.value.map((member) => member.value))
 const role = ref('Volunteer')
 
 onUnmounted(() => {

@@ -5,7 +5,7 @@
         <h5 class="text-base font-semibold mb-1">Email Group</h5>
         <label class="text-sm text-ink-gray-5">Audience&ast;</label>
         <MultiSelect
-          v-model="emailGroupIds"
+          :model-value="emailGroupIds"
           :disabled="data.status == 'Sent'"
           class="-mt-2"
           label="Recipients &ast;"
@@ -145,13 +145,10 @@ const data = defineModel({
   required: true,
 })
 
-const emailGroupIds = computed({
-  get: () => (data.value.email_group || []).map((group) => group.value),
-  // data.value.email_group (the full option objects) is kept in sync via
-  // @update:selected-options instead, since MultiSelect's own
-  // modelValue only carries ids.
-  set: () => {},
-})
+// data.value.email_group (the full option objects) is the source of
+// truth, kept in sync via @update:selected-options; emailGroupIds is a
+// derived, read-only view for MultiSelect's modelValue.
+const emailGroupIds = computed(() => (data.value.email_group || []).map((group) => group.value))
 
 const handleAttachment = (file) => {
   data.value.attachments.push(file)
