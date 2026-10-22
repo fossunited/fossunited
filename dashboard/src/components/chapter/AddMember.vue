@@ -1,63 +1,55 @@
 <template>
-  <Dialog
-    :options="{
-      title: 'Add New Member',
-    }"
-  >
-    <template #body-content>
-      <div class="flex flex-col gap-2">
-        <div class="text-p-base text-ink-gray-6">
-          Enter the username of the new member you want to add to the team.
-        </div>
-        <MultiSelect
-          :model-value="newMemberIds"
-          :options="memberOptions.data || []"
-          placeholder="Search for a user"
-          :loading="memberOptions.loading"
-          @update:query="handleSearchQuery"
-          @update:selected-options="(opts) => (newMembers = opts)"
-        >
-          <template #item-prefix="{ item }">
-            <Avatar shape="circle" :image="item.avatar" :label="item.label" size="lg" />
-          </template>
-        </MultiSelect>
-        <div v-if="memberOptions.error" class="text-sm text-ink-red-4">
-          Failed to load results. Please try again.
-        </div>
+  <Dialog title="Add New Member">
+    <div class="flex flex-col gap-2">
+      <div class="text-p-base text-ink-gray-6">
+        Enter the username of the new member you want to add to the team.
       </div>
-      <div class="flex flex-col gap-2">
-        <div class="text-p-base text-ink-gray-6">
-          Enter the role of the new members you just added
-        </div>
-        <Select
-          v-model="role"
-          :options="[
-            {
-              label: 'Core Team Member',
-              value: 'Core Team Member',
-            },
-            {
-              label: 'Volunteer',
-              value: 'Volunteer',
-            },
-            {
-              label: 'Graphic Designer',
-              value: 'Graphic Designer',
-            },
-            {
-              label: 'Content Writer',
-              value: 'Content Writer',
-            },
-            {
-              label: 'Marketing',
-              value: 'Marketing',
-            },
-          ]"
-          :multiple="false"
-        >
-        </Select>
+      <MultiSelect
+        :model-value="newMemberIds"
+        :options="memberOptions.data || []"
+        placeholder="Search for a user"
+        :loading="memberOptions.loading"
+        @update:query="handleSearchQuery"
+        @update:selected-options="(opts) => (newMembers = opts)"
+      >
+        <template #item-prefix="{ item }">
+          <Avatar shape="circle" :image="item.avatar" :label="item.label" size="lg" />
+        </template>
+      </MultiSelect>
+      <div v-if="memberOptions.error" class="text-sm text-ink-red-4">
+        Failed to load results. Please try again.
       </div>
-    </template>
+    </div>
+    <div class="flex flex-col gap-2">
+      <div class="text-p-base text-ink-gray-6">
+        Enter the role of the new members you just added
+      </div>
+      <Select
+        v-model="role"
+        :options="[
+          {
+            label: 'Core Team Member',
+            value: 'Core Team Member',
+          },
+          {
+            label: 'Volunteer',
+            value: 'Volunteer',
+          },
+          {
+            label: 'Graphic Designer',
+            value: 'Graphic Designer',
+          },
+          {
+            label: 'Content Writer',
+            value: 'Content Writer',
+          },
+          {
+            label: 'Marketing',
+            value: 'Marketing',
+          },
+        ]"
+      />
+    </div>
     <template #actions>
       <div class="grid grid-cols-2 gap-3">
         <Button label="Cancel" @click="$emit('close-dialog')" />

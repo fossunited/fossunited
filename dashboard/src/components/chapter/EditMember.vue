@@ -1,42 +1,34 @@
 <template>
-  <Dialog
-    :options="{
-      title: 'Edit Member',
-    }"
-  >
-    <template #body-content>
-      <div class="flex flex-col gap-2">
-        <div class="text-p-base text-ink-gray-6">Enter the new role of the member</div>
-        <Select
-          v-model="role"
-          :options="[
-            {
-              label: 'Core Team Member',
-              value: 'Core Team Member',
-              disabled: !isCoreTeam,
-            },
-            {
-              label: 'Volunteer',
-              value: 'Volunteer',
-            },
-            {
-              label: 'Graphic Designer',
-              value: 'Graphic Designer',
-            },
-            {
-              label: 'Content Writer',
-              value: 'Content Writer',
-            },
-            {
-              label: 'Marketing',
-              value: 'Marketing',
-            },
-          ]"
-          :multiple="false"
-        >
-        </Select>
-      </div>
-    </template>
+  <Dialog title="Edit Member">
+    <div class="flex flex-col gap-2">
+      <div class="text-p-base text-ink-gray-6">Enter the new role of the member</div>
+      <Select
+        v-model="role"
+        :options="[
+          {
+            label: 'Core Team Member',
+            value: 'Core Team Member',
+            disabled: !isCoreTeam,
+          },
+          {
+            label: 'Volunteer',
+            value: 'Volunteer',
+          },
+          {
+            label: 'Graphic Designer',
+            value: 'Graphic Designer',
+          },
+          {
+            label: 'Content Writer',
+            value: 'Content Writer',
+          },
+          {
+            label: 'Marketing',
+            value: 'Marketing',
+          },
+        ]"
+      />
+    </div>
     <template #actions>
       <div class="grid grid-cols-2 gap-3">
         <Button label="Cancel" @click="$emit('close-dialog')" />

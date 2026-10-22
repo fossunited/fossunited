@@ -12,62 +12,60 @@
       <span class="hidden sm:inline">Download</span>
     </button>
 
-    <Dialog v-model="showModal" :options="{ title: 'Download schedule', size: 'md' }">
-      <template #body-content>
-        <div class="flex flex-col gap-5">
-          <!-- Format names say what the file is for, not just its extension. -->
-          <FormControl
-            v-model="selectedFormat"
-            type="select"
-            label="Format"
-            size="sm"
-            variant="subtle"
-            :options="formatOptions"
-          />
+    <Dialog v-model:open="showModal" title="Download schedule" size="md">
+      <div class="flex flex-col gap-5">
+        <!-- Format names say what the file is for, not just its extension. -->
+        <FormControl
+          v-model="selectedFormat"
+          type="select"
+          label="Format"
+          size="sm"
+          variant="subtle"
+          :options="formatOptions"
+        />
 
-          <!-- A single day or a single hall is not a choice, so it is not offered. -->
-          <fieldset v-if="allDates.length > 1">
-            <legend class="text-sm font-medium text-ink-gray-7 dark:text-ink-gray-8 mb-2">
-              Days
-            </legend>
-            <div class="flex gap-2 flex-wrap">
-              <label
-                v-for="day in allDates"
-                :key="day.value"
-                :class="[pillBase, selectedDays.includes(day.value) ? pillOn : pillOff]"
-              >
-                <input v-model="selectedDays" type="checkbox" :value="day.value" class="sr-only" />
-                {{ day.display }}
-              </label>
-            </div>
-          </fieldset>
+        <!-- A single day or a single hall is not a choice, so it is not offered. -->
+        <fieldset v-if="allDates.length > 1">
+          <legend class="text-sm font-medium text-ink-gray-7 dark:text-ink-gray-8 mb-2">
+            Days
+          </legend>
+          <div class="flex gap-2 flex-wrap">
+            <label
+              v-for="day in allDates"
+              :key="day.value"
+              :class="[pillBase, selectedDays.includes(day.value) ? pillOn : pillOff]"
+            >
+              <input v-model="selectedDays" type="checkbox" :value="day.value" class="sr-only" />
+              {{ day.display }}
+            </label>
+          </div>
+        </fieldset>
 
-          <fieldset v-if="allHalls.length > 1">
-            <legend class="text-sm font-medium text-ink-gray-7 dark:text-ink-gray-8 mb-2">
-              Halls
-            </legend>
-            <div class="flex gap-2 flex-wrap">
-              <label
-                v-for="hall in allHalls"
-                :key="hall"
-                :class="[pillBase, selectedHalls.includes(hall) ? pillOn : pillOff]"
-              >
-                <input v-model="selectedHalls" type="checkbox" :value="hall" class="sr-only" />
-                {{ hall }}
-              </label>
-            </div>
-          </fieldset>
+        <fieldset v-if="allHalls.length > 1">
+          <legend class="text-sm font-medium text-ink-gray-7 dark:text-ink-gray-8 mb-2">
+            Halls
+          </legend>
+          <div class="flex gap-2 flex-wrap">
+            <label
+              v-for="hall in allHalls"
+              :key="hall"
+              :class="[pillBase, selectedHalls.includes(hall) ? pillOn : pillOff]"
+            >
+              <input v-model="selectedHalls" type="checkbox" :value="hall" class="sr-only" />
+              {{ hall }}
+            </label>
+          </div>
+        </fieldset>
 
-          <p
-            v-if="validationMessage"
-            id="schedule-download-error"
-            class="text-sm text-ink-red-4"
-            role="alert"
-          >
-            {{ validationMessage }}
-          </p>
-        </div>
-      </template>
+        <p
+          v-if="validationMessage"
+          id="schedule-download-error"
+          class="text-sm text-ink-red-4"
+          role="alert"
+        >
+          {{ validationMessage }}
+        </p>
+      </div>
 
       <template #actions="{ close }">
         <div class="flex justify-end gap-3">

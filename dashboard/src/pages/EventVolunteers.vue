@@ -69,7 +69,7 @@
     <!-- EDIT MEMBER ROLE -->
     <div v-if="selectedMember && showEditmodal">
       <EditMemberDialog
-        v-model="showEditmodal"
+        v-model:open="showEditmodal"
         class="z-50"
         :event="event"
         :member="selectedMember"
@@ -81,7 +81,7 @@
 
     <div v-if="showAddmodal">
       <AddMemberDialog
-        v-model="showAddmodal"
+        v-model:open="showAddmodal"
         class="z-50"
         :event="event"
         @update:add-member="addNewMember"
