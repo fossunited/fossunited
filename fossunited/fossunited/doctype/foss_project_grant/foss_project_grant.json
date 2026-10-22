@@ -95,7 +95,7 @@
   }
  ],
  "links": [],
- "modified": "2026-08-07 11:55:08.151388",
+ "modified": "2026-10-22 22:04:53.573007",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Project Grant",
@@ -118,5 +118,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "project_name"
+ "title_field": "project_name",
+ "track_changes": 1
 }
