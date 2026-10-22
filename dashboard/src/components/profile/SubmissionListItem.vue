@@ -42,7 +42,7 @@ const navigateToProposal = () => {
 }
 
 const getTheme = {
-  'Review Pending': 'orange',
+  'Review Pending': 'amber',
   Approved: 'green',
   Rejected: 'red',
   Withdrawn: 'red',

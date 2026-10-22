@@ -33,7 +33,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const badgeColors = {
-  Draft: 'orange',
+  Draft: 'amber',
   Approved: 'green',
   Live: 'green',
   Concluded: 'gray',

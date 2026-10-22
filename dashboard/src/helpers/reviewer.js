@@ -1,7 +1,7 @@
 const STATUS_THEMES = {
   Approved: 'green',
   Rejected: 'red',
-  'Review Pending': 'orange',
+  'Review Pending': 'amber',
   Screening: 'blue',
   Withdrawn: 'gray',
 }

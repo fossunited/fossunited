@@ -19,10 +19,10 @@ const formatTime = (time) => {
 const getTypeColor = (type) => {
   const colors = {
     Talk: 'blue',
-    'Lightning Talk': 'purple',
+    'Lightning Talk': 'violet',
     Workshop: 'green',
-    'Panel Discussion': 'orange',
-    'Opening Note': 'yellow',
+    'Panel Discussion': 'amber',
+    'Opening Note': 'amber',
     Break: 'gray',
     Other: 'gray',
   }

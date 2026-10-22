@@ -184,7 +184,7 @@ const getLabel = (status) => {
 const getTheme = (status) => {
   switch (status) {
     case 'Maybe':
-      return 'orange'
+      return 'amber'
     case 'Yes':
       return 'green'
     case 'No':

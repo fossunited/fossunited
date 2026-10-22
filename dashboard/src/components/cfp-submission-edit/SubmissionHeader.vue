@@ -36,7 +36,7 @@ defineProps({
 })
 
 const badgeTheme = {
-  Pending: 'yellow',
+  Pending: 'amber',
   Approved: 'green',
   Rejected: 'red',
   Withdrawn: 'red',

@@ -231,7 +231,7 @@ const exportColumns = [
 
 const getStatusTheme = (status) => {
   const themes = {
-    Pending: 'orange',
+    Pending: 'amber',
     'Pending Confirmation': 'blue',
     Accepted: 'green',
     Rejected: 'red',

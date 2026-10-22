@@ -99,7 +99,7 @@ function getBadgeTheme() {
     case 'Cancelled':
       return 'red'
     case 'Draft':
-      return 'orange'
+      return 'amber'
     default:
       return 'gray'
   }
