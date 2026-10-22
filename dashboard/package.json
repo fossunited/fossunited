@@ -15,7 +15,7 @@
     "dayjs": "^1.11.11",
     "dompurify": "^3.4.16",
     "feather-icons": "^4.29.2",
-    "frappe-ui": "^0.1.160",
+    "frappe-ui": "1.0.2",
     "ics": "^3.7.6",
     "lodash": "^4.18.1",
     "quill": "^2.0.0",
