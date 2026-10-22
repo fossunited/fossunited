@@ -50,7 +50,7 @@
             </div>
             <Badge
               :label="invite.status"
-              :theme="{ Pending: 'orange', Accepted: 'green', Rejected: 'red' }[invite.status]"
+              :theme="{ Pending: 'amber', Accepted: 'green', Rejected: 'red' }[invite.status]"
             />
           </div>
         </div>
