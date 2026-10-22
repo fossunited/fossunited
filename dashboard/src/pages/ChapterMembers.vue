@@ -100,6 +100,7 @@
   </div>
 </template>
 <script setup>
+import Card from '@/components/ui/Card.vue'
 import { useRoute } from 'vue-router'
 import { createDocumentResource, Badge, Dialog } from 'frappe-ui'
 import { ref, inject } from 'vue'

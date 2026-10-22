@@ -21,6 +21,7 @@
   </Card>
 </template>
 <script setup>
+import Card from '@/components/ui/Card.vue'
 import { useRouter } from 'vue-router'
 import FossClubLogo from '@/components/FossClubLogo.vue'
 import CityComunityBranding from '@/components/CityCommunityBranding.vue'

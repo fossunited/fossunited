@@ -34,8 +34,7 @@
   </div>
 </template>
 <script setup>
-import { createResource, FormControl } from 'frappe-ui'
-import LoadingText from 'frappe-ui/src/components/LoadingText.vue'
+import { createResource, FormControl, LoadingText } from 'frappe-ui'
 import { IconSearch } from '@tabler/icons-vue'
 import { computed, inject, ref } from 'vue'
 import SubmissionListItem from '@/components/profile/SubmissionListItem.vue'

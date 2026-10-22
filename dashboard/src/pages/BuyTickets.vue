@@ -525,7 +525,7 @@ import {
   Badge,
   Dialog,
 } from 'frappe-ui'
-import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
+import { markdownToHTML } from '@/helpers/markdown'
 import { toast } from 'vue-sonner'
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'

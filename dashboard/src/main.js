@@ -1,6 +1,6 @@
 import './index.css'
 
-import { createApp, h } from 'vue'
+import { createApp } from 'vue'
 import router from './router'
 import App from './App.vue'
 import { session } from './data/session'
@@ -9,8 +9,6 @@ import { showError } from '@/helpers/utils'
 
 import {
   Button,
-  Card as FrappeCard,
-  Input,
   setConfig,
   frappeRequest,
   resourcesPlugin,
@@ -36,22 +34,5 @@ app.provide('$session', session)
 app.provide('$dayjs', dayjs)
 
 app.component('Button', Button)
-app.component('Input', Input)
-
-app.component('Card', {
-  name: 'AppCard',
-  inheritAttrs: false,
-  setup(props, { attrs, slots }) {
-    return () =>
-      h(
-        FrappeCard,
-        {
-          ...attrs,
-          class: ['frappeui-card', attrs.class],
-        },
-        slots,
-      )
-  },
-})
 
 app.mount('#app')

@@ -27,6 +27,7 @@
   </Card>
 </template>
 <script setup>
+import Card from '@/components/ui/Card.vue'
 import { Badge } from 'frappe-ui'
 import { useRouter } from 'vue-router'
 

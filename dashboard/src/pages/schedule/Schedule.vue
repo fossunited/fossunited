@@ -207,7 +207,7 @@ import { createResource, LoadingText, usePageMeta } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { IconTimelineEventText, IconAlignLeft, IconSearch } from '@tabler/icons-vue'
 import DOMPurify from 'dompurify'
-import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
+import { markdownToHTML } from '@/helpers/markdown'
 import dayjs from 'dayjs'
 
 import Header from '@/components/Header.vue'

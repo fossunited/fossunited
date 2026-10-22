@@ -60,6 +60,7 @@
   </div>
 </template>
 <script setup>
+import Card from '@/components/ui/Card.vue'
 import { createResource } from 'frappe-ui'
 import { ref } from 'vue'
 

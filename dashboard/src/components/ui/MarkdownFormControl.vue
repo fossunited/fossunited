@@ -62,7 +62,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { FormLabel, Textarea } from 'frappe-ui'
-import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
+import { markdownToHTML } from '@/helpers/markdown'
 import DOMPurify from 'dompurify'
 
 defineProps({

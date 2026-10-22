@@ -91,6 +91,7 @@
   </div>
 </template>
 <script setup>
+import Card from '@/components/ui/Card.vue'
 import EventHeader from '@/components/EventHeader.vue'
 import AddMemberDialog from '@/components/chapter/AddMember.vue'
 import EditMemberDialog from '@/components/chapter/EditMember.vue'

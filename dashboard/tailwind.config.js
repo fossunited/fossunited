@@ -1,17 +1,13 @@
-import frappeUIPreset from 'frappe-ui/src/tailwind/preset'
-import forms from '@tailwindcss/forms'
-import typography from '@tailwindcss/typography'
+import frappeUIPreset, { content as frappeUIContent } from 'frappe-ui/tailwind'
 
 export default {
   // frappe-ui's preset selector
   darkMode: ['selector', '[data-theme="dark"]'],
 
   presets: [frappeUIPreset],
-  content: [
-    './index.html',
-    './src/**/*.{vue,js,ts,jsx,tsx}',
-    './node_modules/frappe-ui/src/components/**/*.{vue,js,ts,jsx,tsx}',
-  ],
+  // Tailwind v3 does not merge a preset's `content`, so frappe-ui exports its
+  // own source globs for us to spread in.
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}', ...frappeUIContent],
   theme: {
     extend: {
       fontFamily: {
@@ -101,5 +97,7 @@ export default {
       },
     },
   },
-  plugins: [forms, typography],
+  // @tailwindcss/forms and @tailwindcss/typography are registered by the
+  // frappe-ui preset itself (and are only transitive deps here), so they are
+  // not listed again.
 }

@@ -22,6 +22,6 @@ export default defineConfig({
     target: 'es2015',
   },
   optimizeDeps: {
-    include: ['showdown', 'engine.io-client', 'highlight.js/lib/core'],
+    include: ['engine.io-client', 'highlight.js/lib/core'],
   },
 })
