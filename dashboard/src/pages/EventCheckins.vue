@@ -120,8 +120,8 @@
                   :key="index"
                   class="flex items-center p-1 rounded-sm"
                 >
-                  <Tooltip arrow-class="fill-black" :placement="'top'" :hover-delay="0.5">
-                    <template #body>
+                  <Tooltip side="top" :hover-delay="500" bare>
+                    <template #content>
                       <span
                         class="text-xs bg-surface-gray-7 text-ink-white px-2 py-1 rounded-full"
                       >

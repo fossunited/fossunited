@@ -54,7 +54,7 @@ const getClasses = {
         :key="insight.name"
         :class="getClasses[insight.label]"
         :text="tooltipText(insight.label)"
-        placement="top"
+        side="top"
       >
         <InsightCard
           class="h-full"

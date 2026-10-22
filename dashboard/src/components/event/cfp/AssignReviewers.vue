@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-2">
     <div class="flex items-center gap-1">
       <span class="text-xs font-medium text-ink-gray-5 uppercase tracking-wide">Assign Reviewers</span>
-      <Tooltip text="Assigning a reviewer sends them an email notification. Use only to notify reviewers to review this proposal." placement="right">
+      <Tooltip text="Assigning a reviewer sends them an email notification. Use only to notify reviewers to review this proposal." side="right">
         <a
           href="https://docs.fossunited.org/event-cfp#assign-reviewers-to-a-proposal"
           target="_blank"
