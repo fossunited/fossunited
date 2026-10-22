@@ -1,6 +1,6 @@
 <script setup>
 import { Popover } from 'frappe-ui'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 
 const props = defineProps({
   submission: {
@@ -45,10 +45,41 @@ const hasScores = computed(() => {
 // wired on both the trigger wrapper and the panel itself, sharing this same
 // ref, so moving the pointer from the trigger into the panel keeps it open
 // (mirrors the old 0.1.x Popover's shared pointerOverTargetOrPopup flag).
+//
+// There's a real ~4px gap between the trigger and the panel (Popover's
+// default offset), and the panel unmounts instantly on close (no exit
+// animation to buy time). A pointer-movement sample that lands in that gap
+// fires mouseleave on the trigger with no panel to re-enter yet, so a plain
+// isOpen=false/true pair on each element's own enter/leave is not enough —
+// it can still close the panel out from under a normal mouse movement.
+// Debounce the close instead (hover-intent pattern): closing schedules
+// isOpen=false after a short delay, and either element's mouseenter cancels
+// that pending close before it fires.
 const isOpen = ref(false)
+let closeTimer = null
+
+function openNow() {
+  if (closeTimer !== null) {
+    clearTimeout(closeTimer)
+    closeTimer = null
+  }
+  isOpen.value = true
+}
+
+function closeSoon() {
+  if (closeTimer !== null) clearTimeout(closeTimer)
+  closeTimer = setTimeout(() => {
+    isOpen.value = false
+    closeTimer = null
+  }, 150)
+}
+
+onBeforeUnmount(() => {
+  if (closeTimer !== null) clearTimeout(closeTimer)
+})
 </script>
 <template>
-  <div class="inline-block" @mouseenter="isOpen = true" @mouseleave="isOpen = false">
+  <div class="inline-block" @mouseenter="openNow" @mouseleave="closeSoon">
     <Popover trigger="manual" v-model:open="isOpen">
       <template #trigger>
         <div v-if="hasScores" class="flex flex-col items-start gap-1 w-32 text-xs p-2">
@@ -63,8 +94,8 @@ const isOpen = ref(false)
       <template #default>
         <div
           class="p-4 bg-surface-white rounded flex flex-col gap-2"
-          @mouseenter="isOpen = true"
-          @mouseleave="isOpen = false"
+          @mouseenter="openNow"
+          @mouseleave="closeSoon"
         >
           <div
             v-for="scoreItem in scoreTableItems"
