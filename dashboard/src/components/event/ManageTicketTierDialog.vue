@@ -1,12 +1,9 @@
 <template>
   <Dialog
-    v-model="showDialog"
+    v-model:open="showDialog"
     class="z-50"
-    :options="{
-      title: inCreateMode ? 'Create Ticket Tier' : 'Manage Ticket Tier',
-    }"
+    :title="inCreateMode ? 'Create Ticket Tier' : 'Manage Ticket Tier'"
   >
-    <template #body-content>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           v-if="!inCreateMode"
@@ -78,7 +75,6 @@
         </div>
       </div>
       <ErrorMessage class="mt-2" :message="errorMessages" />
-    </template>
     <template #actions>
       <div class="grid grid-cols-2 gap-2">
         <Button label="Cancel" size="sm" @click="showDialog = false" />

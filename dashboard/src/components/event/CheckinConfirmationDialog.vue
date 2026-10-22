@@ -1,13 +1,11 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
   <Dialog
-    v-model="showDialog"
+    v-model:open="showDialog"
     class="z-50"
-    :options="{
-      title: 'Confirm Attendee Check In?',
-    }"
+    title="Confirm Attendee Check In?"
   >
-    <template v-if="selectedAttendee" #body-content>
+    <template v-if="selectedAttendee">
       <div class="flex flex-col py-2">
         <p class="text-base">
           Are you sure you want to check in

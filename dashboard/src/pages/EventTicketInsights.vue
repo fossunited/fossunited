@@ -1,13 +1,6 @@
 <template>
   <div>
-    <Dialog
-      v-model="showChartDialog"
-      :options="{
-        title: 'Tickets Purchased Over Time',
-        size: '6xl',
-      }"
-    >
-      <template #body-content>
+    <Dialog v-model:open="showChartDialog" title="Tickets Purchased Over Time" size="6xl">
         <div class="flex justify-end gap-2 mb-2">
           <Button label="Download CSV" variant="subtle" @click="downloadChartCsv">
             <template #prefix><IconDownload class="w-4 h-4" /></template>
@@ -19,7 +12,6 @@
         <div ref="expandedChart" class="h-[65vh] min-h-[420px]">
           <AxisChart :config="ticketsSoldChartConfig" />
         </div>
-      </template>
     </Dialog>
     <div v-if="ticket_insights.data" class="flex flex-col gap-6">
       <div class="flex flex-col gap-4">

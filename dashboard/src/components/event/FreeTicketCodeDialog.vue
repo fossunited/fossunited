@@ -1,13 +1,10 @@
 <template>
   <Dialog
-    v-model="showDialog"
-    :options="{
-      title: inCreateMode ? 'Create Free Code' : 'Edit Free Code',
-      width: 'md',
-    }"
+    v-model:open="showDialog"
+    :title="inCreateMode ? 'Create Free Code' : 'Edit Free Code'"
+    size="md"
   >
-    <template #body-content>
-      <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4">
         <FormControl
           v-if="!inCreateMode"
           v-model="code.name"
@@ -53,7 +50,6 @@
         />
       </div>
       <ErrorMessage :message="errorMessages" />
-    </template>
     <template #actions>
       <div class="grid grid-cols-3 gap-2 items-center">
         <Button

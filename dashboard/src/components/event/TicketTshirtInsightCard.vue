@@ -1,15 +1,12 @@
 <template>
   <Dialog
-    v-model="showDialog"
+    v-model:open="showDialog"
     class="z-50"
-    :options="{
-      title: 'Sold T-shirt Details',
-    }"
+    title="Sold T-shirt Details"
     role="dialog"
     aria-modal="true"
     aria-labelledby="dialog-title"
   >
-    <template #body-content>
       <div class="text-sm">
         <h2 id="dialog-title" class="sr-only">Sold T-shirt Details</h2>
         <p class="mb-2">T-shirts sold for this event.</p>
@@ -32,7 +29,6 @@
           </tr>
         </tbody>
       </table>
-    </template>
   </Dialog>
   <div class="flex flex-col w-full border rounded-sm p-4">
     <div class="text-sm flex gap-2 items-center uppercase font-semibold">

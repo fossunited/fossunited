@@ -1,12 +1,10 @@
 <template>
   <Dialog
-    v-model="showDialog"
+    v-model:open="showDialog"
     class="z-50"
-    :options="{
-      title: 'Manage Attendee',
-    }"
+    title="Manage Attendee"
   >
-    <template v-if="selectedAttendee" #body-content>
+    <template v-if="selectedAttendee">
       <div class="flex flex-col gap-4">
         <div class="space-y-2">
           <div class="text-sm uppercase font-medium">Details</div>

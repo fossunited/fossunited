@@ -2,9 +2,10 @@
   <RazorpayCheckout v-if="currentStep === 4" ref="rzpCheckout" @error="onPaymentError" />
   <Header />
   <Dialog
-    v-model="showDialog"
+    v-model:open="showDialog"
     class="z-50"
-    :options="{ title: 'Tickets are closed!', message: dialogError }"
+    title="Tickets are closed!"
+    :message="dialogError"
   />
 
   <div v-if="event.data" class="bg-surface-gray-1 min-h-screen">
@@ -156,7 +157,7 @@
                           v-else-if="isTierExpired(tier)"
                           class="w-fit"
                           variant="outline"
-                          theme="orange"
+                          theme="amber"
                           >Expired</Badge
                         >
                         <Badge
@@ -712,7 +713,7 @@ function tierRemainingTheme(tier) {
   if (r === null) return 'gray'
   const pct = r / tier.maximum_tickets
   if (r <= 5 || pct <= 0.1) return 'red'
-  if (r <= 15 || pct <= 0.25) return 'orange'
+  if (r <= 15 || pct <= 0.25) return 'amber'
   return 'green'
 }
 

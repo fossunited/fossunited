@@ -1,11 +1,8 @@
 <template>
   <Dialog
-    v-model="show"
-    :options="{
-      title: isNew ? 'Add Project Showcase' : 'Manage Project Showcases',
-    }"
+    v-model:open="show"
+    :title="isNew ? 'Add Project Showcase' : 'Manage Project Showcases'"
   >
-    <template #body-content>
       <div class="flex flex-col gap-3">
         <FormControl v-model="showcase.showcase_name" label="Showcase Name" required />
         <FormControl
@@ -27,7 +24,6 @@
         <FileUploaderArea v-model="showcase.image" label="Community Logo" />
         <ErrorMessage :message="errorMessages" class="text-sm -mb-4" />
       </div>
-    </template>
     <template #actions>
       <div class="grid grid-flow-col w-full">
         <Button v-if="isNew" label="Add" variant="solid" @click="addShowcase" />

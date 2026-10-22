@@ -153,27 +153,26 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
 
 <template>
   <Dialog
-    v-model="showDeleteConfirmation"
+    v-model:open="showDeleteConfirmation"
     class="z-50"
-    :options="{
-      title: 'Delete Schedule',
-      message: 'Are you sure you want to delete this schedule? This action cannot be undone.',
-      icon: { name: 'trash', appearance: 'danger' },
-      actions: [
-        {
-          label: 'Delete',
-          theme: 'red',
-          onClick: () => {
-            emit('delete:schedule', selectedScheduleItem)
-            showDeleteConfirmation = false
-          },
+    title="Delete Schedule"
+    message="Are you sure you want to delete this schedule? This action cannot be undone."
+    :icon="IconTrash"
+    theme="red"
+    :actions="[
+      {
+        label: 'Delete',
+        theme: 'red',
+        onClick: () => {
+          emit('delete:schedule', selectedScheduleItem)
+          showDeleteConfirmation = false
         },
-        {
-          label: 'Cancel',
-          onClick: () => (showDeleteConfirmation = false),
-        },
-      ],
-    }"
+      },
+      {
+        label: 'Cancel',
+        onClick: () => (showDeleteConfirmation = false),
+      },
+    ]"
   />
 
   <div class="flex flex-col gap-2 justify-between h-full">

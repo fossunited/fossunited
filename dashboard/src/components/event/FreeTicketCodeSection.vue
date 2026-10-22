@@ -116,8 +116,7 @@
         </SearchListView>
       </div>
     </div>
-    <Dialog v-model="showSpeakerDialog" :options="{ title: 'Speaker Coupons' }">
-      <template #body-content>
+    <Dialog v-model:open="showSpeakerDialog" title="Speaker Coupons">
         <div class="flex flex-col gap-4">
           <p v-if="speakerPreview.loading" class="text-sm text-ink-gray-5">Loading…</p>
           <div v-else-if="speakerPreview.data" class="text-sm text-ink-gray-7">
@@ -144,7 +143,6 @@
           />
           <p v-if="speakerPreviewErr" class="text-sm text-ink-red-3">{{ speakerPreviewErr }}</p>
         </div>
-      </template>
       <template #actions>
         <Button label="Cancel" @click="showSpeakerDialog = false" />
         <Button

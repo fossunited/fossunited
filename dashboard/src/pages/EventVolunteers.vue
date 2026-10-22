@@ -41,28 +41,26 @@
 
     <div v-if="selectedMember">
       <Dialog
-        v-model="showRemoveModal"
-        :options="{
-          title: 'Remove Team Member?',
-          message: `Are you sure you want to remove ${selectedMember.full_name} from the team?`,
-          actions: [
-            {
-              label: 'Cancel',
-              theme: 'gray',
-              onClick: () => {
-                showRemoveModal = false
-              },
+        v-model:open="showRemoveModal"
+        title="Remove Team Member?"
+        :message="`Are you sure you want to remove ${selectedMember.full_name} from the team?`"
+        :actions="[
+          {
+            label: 'Cancel',
+            theme: 'gray',
+            onClick: () => {
+              showRemoveModal = false
             },
-            {
-              label: 'Remove',
-              theme: 'red',
-              onClick: () => {
-                removeMember(selectedMember)
-                showRemoveModal = false
-              },
+          },
+          {
+            label: 'Remove',
+            theme: 'red',
+            onClick: () => {
+              removeMember(selectedMember)
+              showRemoveModal = false
             },
-          ],
-        }"
+          },
+        ]"
         class="z-50"
       >
       </Dialog>

@@ -1,11 +1,8 @@
 <template>
   <Dialog
-    v-model="show"
-    :options="{
-      title: isNew ? 'Add Sponsor' : 'Manage Sponsor',
-    }"
+    v-model:open="show"
+    :title="isNew ? 'Add Sponsor' : 'Manage Sponsor'"
   >
-    <template #body-content>
       <div class="flex flex-col gap-3">
         <FormControl
           v-model="sponsor.tier"
@@ -35,7 +32,6 @@
         <FileUploaderArea v-model="sponsor.image" label="Sponsor Image" />
         <ErrorMessage :message="errorMessages" class="text-sm -mb-4" />
       </div>
-    </template>
     <template #actions>
       <div class="grid grid-flow-col w-full">
         <Button v-if="isNew" label="Add" variant="solid" @click="addSponsor" />
