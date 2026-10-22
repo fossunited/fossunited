@@ -6,11 +6,12 @@
       </div>
       <MultiSelect
         :model-value="newMemberIds"
-        :options="memberOptions.data || []"
+        :options="pickerOptions"
+        :filterable="false"
         placeholder="Search for a user"
         :loading="memberOptions.loading"
         @update:query="handleSearchQuery"
-        @update:selected-options="(opts) => (newMembers = opts)"
+        @update:model-value="handleSelectionChange"
       >
         <template #item-prefix="{ item }">
           <Avatar shape="circle" :image="item.avatar" :label="item.label" size="lg" />
@@ -145,10 +146,34 @@ watch(
 )
 
 const newMembers = ref([])
-// newMembers (the full option objects) is the source of truth, kept in
-// sync via @update:selected-options; newMemberIds is a derived, read-only
-// view for MultiSelect's modelValue.
+// newMembers (the full option objects) is the source of truth; newMemberIds is
+// a derived, read-only view for MultiSelect's modelValue.
 const newMemberIds = computed(() => newMembers.value.map((member) => member.value))
+
+// The search is server-side, so each query replaces `memberOptions.data`.
+// MultiSelect only resolves ids against the options it is given (both for
+// `update:selectedOptions` and for its "N selected" summary), so picks from an
+// earlier search are kept in the list after the current results.
+const pickerOptions = computed(() => {
+  const results = memberOptions.data || []
+  const resultIds = new Set(results.map((option) => option.value))
+  const earlierPicks = newMembers.value.filter((member) => !resultIds.has(member.value))
+  return [...results, ...earlierPicks]
+})
+
+// Rebuild newMembers from the new id list, keeping the full objects of
+// members that were already picked and resolving only new ids against the
+// current options.
+const handleSelectionChange = (ids) => {
+  const selectedIds = Array.isArray(ids) ? ids : []
+  newMembers.value = selectedIds
+    .map(
+      (id) =>
+        newMembers.value.find((member) => member.value === id) ??
+        pickerOptions.value.find((option) => option.value === id),
+    )
+    .filter(Boolean)
+}
 const role = ref('Volunteer')
 
 onUnmounted(() => {
