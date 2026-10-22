@@ -1,13 +1,11 @@
 <template>
   <Header />
   <div v-if="hackathon.data && !team.loading" class="w-full p-4 flex justify-center items-center">
-    <Dialog v-model="inJoinTeam" class="z-50">
-      <template #body-title>
+    <Dialog v-model:open="inJoinTeam" class="z-50">
+      <template #title>
         <div class="text-xl font-semibold">Join Team</div>
       </template>
-      <template #body-content>
-        <JoinTeam :hackathon="hackathon" :invitations="team_invitations" />
-      </template>
+      <JoinTeam :hackathon="hackathon" :invitations="team_invitations" />
     </Dialog>
     <div class="w-full max-w-screen-xl">
       <div class="flex gap-2 my-6 items-center text-base uppercase">
@@ -60,7 +58,7 @@
               class="z-10 -mt-1"
             />
           </div>
-          <Badge v-if="team_invitations.data?.length > 0" size="lg" theme="orange">
+          <Badge v-if="team_invitations.data?.length > 0" size="lg" theme="amber">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"

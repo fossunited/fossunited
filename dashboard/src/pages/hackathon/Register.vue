@@ -1,12 +1,10 @@
 <template>
   <Header />
   <Dialog
-    v-model="show_dialog"
+    v-model:open="show_dialog"
     class="z-50"
-    :options="{
-      title: dialog_content.title,
-      message: dialog_content.message,
-    }"
+    :title="dialog_content.title"
+    :message="dialog_content.message"
   />
   <div class="w-full flex justify-center">
     <div v-if="hackathon.data" class="container p-8">

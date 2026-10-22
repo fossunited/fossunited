@@ -1,30 +1,28 @@
 <template>
   <Header />
   <Dialog
-    v-model="showConfirmationDialog"
+    v-model:open="showConfirmationDialog"
     class="z-50"
-    :options="{
-      title: 'Confirm Project Deletion',
-      message: 'Are you sure you want to delete this project?',
-      actions: [
-        {
-          label: 'Cancel',
-          theme: 'gray',
-          variant: 'subtle',
-          onClick: () => {
-            showConfirmationDialog = false
-          },
+    title="Confirm Project Deletion"
+    message="Are you sure you want to delete this project?"
+    :actions="[
+      {
+        label: 'Cancel',
+        theme: 'gray',
+        variant: 'subtle',
+        onClick: () => {
+          showConfirmationDialog = false
         },
-        {
-          label: 'Delete',
-          theme: 'red',
-          variant: 'solid',
-          onClick: () => {
-            deleteProject.fetch()
-          },
+      },
+      {
+        label: 'Delete',
+        theme: 'red',
+        variant: 'solid',
+        onClick: () => {
+          deleteProject.fetch()
         },
-      ],
-    }"
+      },
+    ]"
   />
   <div v-if="project.data" class="w-full p-4 flex items-center justify-center">
     <div class="max-w-screen-xl w-full">

@@ -1,11 +1,9 @@
 <template>
-  <Dialog v-model="inTeamManage" class="z-50">
-    <template #body-title>
+  <Dialog v-model:open="inTeamManage" class="z-50">
+    <template #title>
       <h3 class="text-xl font-semibold">Manage Team</h3>
     </template>
-    <template #body-content>
-      <HackathonTeamMember :team="team" :hackathon="hackathon.data" />
-    </template>
+    <HackathonTeamMember :team="team" :hackathon="hackathon.data" />
   </Dialog>
   <Header />
   <div v-if="hackathon.data" class="w-full p-4 flex items-center justify-center">
