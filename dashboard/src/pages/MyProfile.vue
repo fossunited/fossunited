@@ -19,6 +19,7 @@
             <div class="top-3 right-3 absolute flex gap-1">
               <FileUploader
                 :file-types="'image/*'"
+                :private="false"
                 :validate-file="validateFile"
                 @success="(file) => setBannerImage(file)"
               >
@@ -58,6 +59,7 @@
             <FileUploader
               class="top-3 right-3 absolute"
               :file-types="'image/*'"
+              :private="false"
               :validate-file="validateFile"
               @success="(file) => setProfileImage(file)"
             >

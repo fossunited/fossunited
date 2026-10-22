@@ -40,6 +40,7 @@
         <div class="flex gap-2 my-2">
           <FileUploader
             :file-types="'image/*'"
+            :private="false"
             :validate-file="validateFile"
             @success="(file) => setBannerImage(file)"
           >
@@ -161,6 +162,7 @@
           />
           <FileUploader
             :file-types="'application/pdf'"
+            :private="false"
             :validate-file="validateDeckFile"
             @success="(file) => setDeckLink(file.file_url)"
             @failure="

@@ -7,7 +7,8 @@
     </span>
     <FileUploader
       :file-types="fileTypes"
-      :upload-args="uploadArgs"
+      :private="false"
+      :optimize="true"
       :validate-file="validateFile"
       @success="handleSuccess"
       @failure="handleError"
@@ -101,7 +102,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { FileUploader } from 'frappe-ui'
 import { IconPhotoScan, IconTrash, IconEdit } from '@tabler/icons-vue'
 
@@ -111,8 +111,6 @@ const props = defineProps({
   label: { type: String, default: '' },
   fileTypes: { type: [String, Array], default: 'image/*' },
   maxFileSize: { type: Number, default: 1.5 },
-  maxWidth: { type: Number, default: null },
-  maxHeight: { type: Number, default: null },
   description: { type: String, default: '' },
   required: { type: Boolean, default: false },
 })
@@ -123,13 +121,6 @@ const emit = defineEmits(['update:modelValue', 'error', 'uploaded'])
 const uid = Math.random().toString(36).slice(2, 8)
 const labelId = `fua-label-${uid}`
 const descriptionId = `fua-desc-${uid}`
-
-const uploadArgs = computed(() => {
-  const args = { optimize: true, private: false }
-  if (props.maxWidth) args.max_width = props.maxWidth
-  if (props.maxHeight) args.max_height = props.maxHeight
-  return args
-})
 
 const validateFile = (file) => {
   if (!file.type.startsWith('image/')) {

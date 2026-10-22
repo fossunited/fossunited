@@ -34,7 +34,12 @@
           <img :src="getImage()" class="w-[200px] aspect-square object-cover border rounded-lg" />
 
           <div class="flex gap-2 mt-3">
-            <FileUploader file-types="image/*" :validate-file="validateImage" @success="setImage">
+            <FileUploader
+              file-types="image/*"
+              :private="false"
+              :validate-file="validateImage"
+              @success="setImage"
+            >
               <template #default="{ uploading, progress, openFileSelector }">
                 <Button
                   variant="subtle"

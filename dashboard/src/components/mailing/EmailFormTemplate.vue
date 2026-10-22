@@ -38,6 +38,7 @@
         <FileUploader
           v-if="data.status !== 'Sent'"
           :file-types="['image/*', '.pdf', '.doc', '.docx']"
+          :private="false"
           :validate-file="validateFile"
           @success="handleAttachment"
         >

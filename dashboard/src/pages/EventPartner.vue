@@ -15,6 +15,7 @@
         <Button label="Save" :loading="event.setValue.loading" @click="saveDeckLink" />
         <FileUploader
           :file-types="'application/pdf'"
+          :private="false"
           :validate-file="validateDeckFile"
           @success="(file) => setDeckLink(file.file_url)"
           @failure="

@@ -4,6 +4,7 @@
     editor-class="prose-sm max-w-none min-h-[6rem] max-h-[20rem] overflow-y-auto"
     :content="modelValue"
     placeholder="Write a comment…"
+    :upload-args="publicUploadArgs"
     @change="emit('update:modelValue', $event)"
   >
     <template #top>
@@ -45,6 +46,9 @@ const props = defineProps({
 })
 
 const editorRef = ref(null)
+// frappe-ui 1.0's editor uploads pasted images as private by default; keep
+// 0.1.x's public uploads so other reviewers can still see them.
+const publicUploadArgs = { private: false }
 const menuButtons = [
   'Bold',
   'Italic',

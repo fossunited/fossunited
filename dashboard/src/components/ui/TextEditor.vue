@@ -11,6 +11,7 @@
       :fixed-menu="menuButtons"
       :editable="!disabled"
       :editor-class="editorClass"
+      :upload-args="publicUploadArgs"
       @change="emit('update:modelValue', $event)"
     />
     <small v-if="description" class="text-sm text-ink-gray-5">{{ description }}</small>
@@ -41,6 +42,11 @@ const editorClass = computed(() => {
 })
 
 const emit = defineEmits(['update:modelValue'])
+
+// frappe-ui 1.0's editor uploads pasted/dropped images as private by default.
+// These editors feed public website pages (event/chapter descriptions etc.),
+// so keep 0.1.x's public uploads.
+const publicUploadArgs = { private: false }
 
 // Standard TipTap behavior: Enter = new paragraph, Shift+Enter = <br>
 const starterkitOptions = {}

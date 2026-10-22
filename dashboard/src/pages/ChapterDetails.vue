@@ -31,6 +31,7 @@
         <div class="flex my-2 gap-2">
           <FileUploader
             :file-types="'image/*'"
+            :private="false"
             :validate-file="validateFile"
             @success="(file) => setBannerImage(file)"
           >
@@ -72,6 +73,7 @@
         <div class="flex my-2 gap-2">
           <FileUploader
             :file-types="'image/*'"
+            :private="false"
             :validate-file="validateFile"
             @success="(file) => setChapterLogo(file)"
           >
