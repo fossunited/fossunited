@@ -32,7 +32,7 @@
       v-if="showCustomAnswers && submission.data.custom_answers?.length"
       :answers="submission.data.custom_answers"
     />
-    <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :buttons="tabs" />
+    <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :options="tabs" />
     <div v-if="activeTab === 0" class="flex flex-col gap-4">
       <ProseContainer label="Session Description" :value="submission.data.talk_description" />
       <ProseContainer label="Key Takeaways" :value="submission.data.key_takeaways" />

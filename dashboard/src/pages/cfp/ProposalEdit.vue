@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="px-6 w-fit">
-        <TabButtons v-model="selectedTab" :buttons="tabs" />
+        <TabButtons v-model="selectedTab" :options="tabs" />
       </div>
       <div
         :class="{ 'pointer-events-none opacity-60 select-none': !canEdit }"

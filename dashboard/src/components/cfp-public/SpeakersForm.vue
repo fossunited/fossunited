@@ -70,15 +70,13 @@
     </div>
 
     <Dialog
-      v-model="showProfilePhotoDialog"
-      :options="{ title: 'Update your profile picture too?' }"
+      v-model:open="showProfilePhotoDialog"
+      title="Update your profile picture too?"
     >
-      <template #body-content>
-        <p class="text-sm text-ink-gray-6">
-          You uploaded a new speaker photo. Do you also want to set it as your FOSS United account
-          profile picture?
-        </p>
-      </template>
+      <p class="text-sm text-ink-gray-6">
+        You uploaded a new speaker photo. Do you also want to set it as your FOSS United account
+        profile picture?
+      </p>
       <template #actions>
         <div class="grid grid-cols-2 gap-3">
           <Button label="Yes, update profile" variant="solid" @click="confirmProfilePhotoSync" />

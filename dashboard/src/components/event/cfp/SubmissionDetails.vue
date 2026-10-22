@@ -73,7 +73,7 @@ watch(
         v-if="submission.data.custom_answers?.length"
         :answers="submission.data.custom_answers"
       />
-      <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :buttons="tabs" />
+      <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :options="tabs" />
       <SubmissionOverview v-if="activeTab === 0" />
       <ProposalSpeakers v-else-if="activeTab === 1" :speakers="submission.data.speakers" />
       <SubmissionReviews v-else-if="activeTab === 2" :reviews="submission.data.reviews" />

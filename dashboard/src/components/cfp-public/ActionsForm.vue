@@ -1,26 +1,22 @@
 <template>
   <Dialog
-    v-model="showConfirmDialog"
+    v-model:open="showConfirmDialog"
     class="z-50"
-    :options="{
-      title: 'Confirm Action',
-      message: `Are you sure you want to ${submission.doc.is_withdrawn ? 'un-withdraw' : 'withdraw'} the CFP?`,
-      icon: {
-        name: 'alert-triangle',
-        appearance: 'warning',
+    title="Confirm Action"
+    :message="`Are you sure you want to ${submission.doc.is_withdrawn ? 'un-withdraw' : 'withdraw'} the CFP?`"
+    :icon="IconAlertTriangle"
+    theme="amber"
+    :actions="[
+      {
+        label: 'Confirm',
+        variant: 'solid',
+        onClick: () => toggleWithdrawCFP(),
       },
-      actions: [
-        {
-          label: 'Confirm',
-          variant: 'solid',
-          onClick: () => toggleWithdrawCFP(),
-        },
-        {
-          label: 'Cancel',
-          onClick: () => (showConfirmDialog = false),
-        },
-      ],
-    }"
+      {
+        label: 'Cancel',
+        onClick: ({ close }) => close(),
+      },
+    ]"
   />
   <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded bg-surface-white">
     <h4 class="flex gap-2 items-center font-semibold">
@@ -60,6 +56,7 @@
 import { toast } from 'vue-sonner'
 import { ref, inject } from 'vue'
 import { Button, Dialog, createDocumentResource } from 'frappe-ui'
+import { IconAlertTriangle } from '@tabler/icons-vue'
 
 const cfpid = defineModel('cfpid', {
   type: String,
