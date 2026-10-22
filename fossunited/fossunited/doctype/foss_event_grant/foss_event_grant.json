@@ -345,7 +345,7 @@
     }
   ],
   "links": [],
-  "modified": "2026-08-07 11:50:18.972766",
+  "modified": "2026-10-22 22:04:41.469423",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event Grant",
@@ -368,5 +368,6 @@
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": [],
-  "title_field": "event_name"
+  "title_field": "event_name",
+  "track_changes": 1
 }
