@@ -10,13 +10,18 @@
     "copy-html-entry": "cp ../fossunited/public/dashboard/index.html ../fossunited/www/dashboard.html"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.23",
+    "@popperjs/core": "^2.11.8",
     "@tabler/icons-vue": "^3.33.0",
+    "@vueuse/core": "^14.1.0",
     "dayjs": "^1.11.11",
     "dompurify": "^3.4.16",
     "frappe-ui": "1.0.2",
     "ics": "^3.7.6",
     "lodash": "^4.18.1",
+    "lodash-es": "^4.18.1",
     "marked": "^15.0.12",
+    "radix-vue": "^1.9.17",
     "vue": "^3.5.17",
     "vue-qrcode-reader": ">=5.7.3",
     "vue-router": "^4.5.1",
