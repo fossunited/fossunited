@@ -38,5 +38,9 @@
     "prettier": "3.2.5",
     "tailwindcss": "^3.2.7",
     "vite": "^6.4.3"
+  },
+  "resolutions": {
+    "prosemirror-model": "1.25.12",
+    "prosemirror-transform": "1.12.2"
   }
 }
