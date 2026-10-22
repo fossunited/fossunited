@@ -3,6 +3,7 @@
 
 import re
 import textwrap
+from urllib.parse import urlencode
 
 import frappe
 from frappe import _
@@ -29,9 +30,10 @@ from fossunited.doctype_ids import (
     LOCALHOST_ORGANIZER,
     PROPOSAL,
     RSVP_RESPONSE,
+    SPEAKER,
     USER_PROFILE,
 )
-from fossunited.fossunited.utils import sanitize_text_content
+from fossunited.fossunited.utils import get_ograph_url, sanitize_text_content
 
 
 class PrivateProfileError(PermissionError):
@@ -634,31 +636,61 @@ class FOSSUserProfile(WebsiteGenerator):
 
         description = f"{self.full_name} is a Community Member. {desc_short}"
 
-        og_url = None
-        if frappe.db.exists("DocType", "Ograph Settings"):
-            og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
+        og_url = get_ograph_url()
 
         if og_url:
-            image = (
-                "{og_url}/gen/profile?"
-                "username={username}&"
-                "full_name={full_name}&"
-                "designation={designation}&"
-                "image={image}"
-            ).format(
-                og_url=og_url,
-                username=self.username,
-                full_name=self.full_name,
-                designation=self.bio or "FOSS United User",
-                image=self.profile_photo
+            profile_image_params = {
+                "username": self.username,
+                "profile_name": self.full_name,
+                "designation": self.bio or "FOSS United User",
+                "profile_image": self.profile_photo
                 or "/assets/fossunited/images/defaults/user_profile_image.png",
-            )
+                **{key: str(value).lower() for key, value in self.get_profile_badges().items()},
+            }
+            image = f"{og_url}/gen/profile?{urlencode(profile_image_params)}"
         else:
             image = (
                 self.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png"
             )
 
         return pagetitle, description, image
+
+    def get_profile_badges(self):
+        """Return the badge flags used by the profile Open Graph image."""
+        is_volunteer = bool(
+            frappe.db.exists(CHAPTER_MEMBER, {"chapter_member": self.name})
+            or frappe.db.exists(EVENT_VOLUNTEER, {"member": self.name})
+        )
+
+        Proposal = DocType(PROPOSAL)
+        Speaker = DocType(SPEAKER)
+        approved_speaker = (
+            frappe.qb.from_(Proposal)
+            .left_join(Speaker)
+            .on((Speaker.parent == Proposal.name) & (Speaker.parenttype == PROPOSAL))
+            .select(Proposal.name)
+            .where(
+                (Proposal.status == "Approved")
+                & (
+                    (Proposal.email == self.email)
+                    | (Speaker.email == self.email)
+                    | (Speaker.linked_user == self.name)
+                )
+            )
+            .limit(1)
+            .run()
+        )
+
+        return {
+            "is_volunteer": is_volunteer,
+            "is_speaker": bool(approved_speaker),
+            "is_reviewer": bool(
+                frappe.db.exists(
+                    "Has Role",
+                    {"parent": self.user, "role": "CFP Reviewer"},
+                )
+            ),
+        }
 
     def on_trash(self):
         frappe.delete_doc("User", self.user, force=True)

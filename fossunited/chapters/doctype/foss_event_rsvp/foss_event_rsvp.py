@@ -1,6 +1,7 @@
 # Copyright (c) 2023, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 import json
+from urllib.parse import urlencode
 
 import frappe
 from frappe import _
@@ -10,6 +11,9 @@ from fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_subm
     RSVP_ALLOWED_FIELDS,
 )
 from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
+from fossunited.fossunited.utils import get_ograph_url
+
+RSVP_FALLBACK_IMAGE = "https://fossunited.org/files/og-image.png"
 
 
 class FOSSEventRSVP(WebsiteGenerator):
@@ -44,6 +48,17 @@ class FOSSEventRSVP(WebsiteGenerator):
     def get_context(self, context):
         context.event = frappe.get_doc(EVENT, self.event)
         context.event_name = self.event_name
+        og_url = get_ograph_url()
+        # Fall back to the static OG image when ograph-gen isn't configured.
+        context.image = RSVP_FALLBACK_IMAGE
+        if og_url:
+            rsvp_params = urlencode(
+                {
+                    "event_name": context.event.event_name,
+                    "event_chapter": context.event.chapter_name,
+                }
+            )
+            context.image = f"{og_url}/gen/rsvp?{rsvp_params}"
         is_guest = frappe.session.user in ("Guest", "Administrator")
 
         form_fields = [
@@ -95,6 +110,7 @@ class FOSSEventRSVP(WebsiteGenerator):
 
         context.event_concluded = context.event.status == "Concluded"
         context.rsvp_full = self.is_full()
+
         context.no_cache = 1
 
     def set_route(self):

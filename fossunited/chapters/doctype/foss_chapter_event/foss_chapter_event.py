@@ -4,6 +4,7 @@
 import re
 import textwrap
 from datetime import datetime, timedelta
+from urllib.parse import urlencode
 
 import frappe
 from frappe import _
@@ -24,7 +25,7 @@ from fossunited.doctype_ids import (
     SPEAKER,
     USER_PROFILE,
 )
-from fossunited.fossunited.utils import get_event_sponsors, get_youtube_id
+from fossunited.fossunited.utils import get_event_sponsors, get_ograph_url, get_youtube_id
 
 
 class FOSSChapterEvent(WebsiteGenerator):
@@ -270,14 +271,23 @@ class FOSSChapterEvent(WebsiteGenerator):
             start_date=self.event_start_date.strftime("%A, %-d %B %Y"),
         )
 
-        og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
-
-        og_image = "{og_url}/gen/events?event_name={self.event_name}&event_date={start_date}&event_type={self.event_type}&event_chapter={self.chapter_name}&event_location={self.event_location}".format(
-            self=self,
-            og_url=og_url,
-            start_date=self.event_start_date.strftime("%-d %B %Y"),
-        )
-        image = frappe.utils.get_url(self.banner_image) or og_image
+        # Prefer the event's own banner; otherwise fall back to a generated OG image.
+        og_url = get_ograph_url()
+        if self.banner_image:
+            image = frappe.utils.get_url(self.banner_image)
+        elif og_url:
+            event_params = urlencode(
+                {
+                    "event_name": self.event_name,
+                    "event_date": self.event_start_date.strftime("%-d %B %Y"),
+                    "event_type": self.event_type,
+                    "event_chapter": self.chapter_name,
+                    "event_location": self.event_location,
+                }
+            )
+            image = f"{og_url}/gen/events_new?{event_params}"
+        else:
+            image = ""
 
         return pagetitle, description, image
 

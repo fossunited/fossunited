@@ -1,12 +1,7 @@
 {% extends "templates/foss_base.html" %}
-{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
 {% from "fossunited/templates/macros/volunteers_card.html" import profile_headshot %}
 {% from "fossunited/templates/macros/video_embed.html" import video_embed %}
-
-{% block meta_block %}
-  {{ meta_tags(pagetitle, description, image) }}
-{% endblock %}
 
 {% block title %}{{ doc.talk_title }}{% endblock %}
 
