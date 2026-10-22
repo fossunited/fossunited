@@ -14,17 +14,17 @@
       </Tooltip>
     </div>
     <div class="flex gap-2 items-start">
-      <Autocomplete
-        v-model="selectedOptions"
+      <MultiSelect
+        v-model="selectedIds"
         :options="reviewerOptions"
-        :multiple="true"
         placeholder="Select reviewers..."
         class="flex-1"
+        @update:selected-options="(opts) => (selectedOptions = opts)"
       >
-        <template #item-prefix="{ option }">
-          <Avatar :image="option.user_image" :label="option.label" size="xs" class="mr-1.5" />
+        <template #item-prefix="{ item }">
+          <Avatar :image="item.user_image" :label="item.label" size="xs" class="mr-1.5" />
         </template>
-      </Autocomplete>
+      </MultiSelect>
       <Button
         label="Save"
         size="sm"
@@ -38,7 +38,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { createResource, Autocomplete, Avatar, Button, Tooltip } from 'frappe-ui'
+import { createResource, MultiSelect, Avatar, Button, Tooltip } from 'frappe-ui'
 import { IconHelpCircle } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 
@@ -64,6 +64,13 @@ const currentAssignments = createResource({
 })
 
 const selectedOptions = ref([])
+const selectedIds = computed({
+  get: () => selectedOptions.value.map((option) => option.value),
+  // selectedOptions (the full option objects) is kept in sync via
+  // @update:selected-options instead, since MultiSelect's own
+  // modelValue only carries ids.
+  set: () => {},
+})
 
 watch(
   [() => currentAssignments.data, () => reviewers.data],

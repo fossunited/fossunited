@@ -1,15 +1,15 @@
 <template>
-  <Autocomplete
+  <Combobox
     placeholder="Select an option"
     :options="options"
-    :value="selection"
+    :model-value="selection?.value ?? null"
     @update:query="(q) => onUpdateQuery(q)"
-    @change="(v) => (selection = v)"
+    @update:selected-option="(v) => (selection = v)"
   />
 </template>
 
 <script setup>
-import { Autocomplete, createListResource } from 'frappe-ui'
+import { Combobox, createListResource } from 'frappe-ui'
 import { computed, ref, watch } from 'vue'
 
 const props = defineProps({

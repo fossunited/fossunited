@@ -28,7 +28,8 @@
 <script setup>
 import { ref, inject } from 'vue'
 import { EditorContent } from '@tiptap/vue-3'
-import { Button, TextEditor, TextEditorFixedMenu, createResource } from 'frappe-ui'
+import { Button, createResource } from 'frappe-ui'
+import { TextEditor, TextEditorFixedMenu } from 'frappe-ui/experimental'
 import { toast } from 'vue-sonner'
 
 const session = inject('$session')

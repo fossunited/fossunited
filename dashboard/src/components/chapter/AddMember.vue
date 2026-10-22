@@ -9,18 +9,18 @@
         <div class="text-p-base text-ink-gray-6">
           Enter the username of the new member you want to add to the team.
         </div>
-        <Autocomplete
-          v-model="newMembers"
+        <MultiSelect
+          v-model="newMemberIds"
           :options="memberOptions.data || []"
           placeholder="Search for a user"
-          :multiple="true"
           :loading="memberOptions.loading"
           @update:query="handleSearchQuery"
+          @update:selected-options="(opts) => (newMembers = opts)"
         >
-          <template #item-prefix="{ option }">
-            <Avatar shape="circle" :image="option.avatar" :label="option.label" size="lg" />
+          <template #item-prefix="{ item }">
+            <Avatar shape="circle" :image="item.avatar" :label="item.label" size="lg" />
           </template>
-        </Autocomplete>
+        </MultiSelect>
         <div v-if="memberOptions.error" class="text-sm text-ink-red-4">
           Failed to load results. Please try again.
         </div>
@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import { Dialog, Autocomplete, Select, createResource, Avatar, Button } from 'frappe-ui'
+import { Dialog, MultiSelect, Select, createResource, Avatar, Button } from 'frappe-ui'
 import { ref, defineProps, defineEmits, computed, watch, onUnmounted } from 'vue'
 
 const props = defineProps({
@@ -153,6 +153,13 @@ watch(
 )
 
 const newMembers = ref([])
+const newMemberIds = computed({
+  get: () => newMembers.value.map((member) => member.value),
+  // newMembers (the full option objects) is kept in sync via
+  // @update:selected-options instead, since MultiSelect's own
+  // modelValue only carries ids.
+  set: () => {},
+})
 const role = ref('Volunteer')
 
 onUnmounted(() => {

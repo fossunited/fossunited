@@ -45,7 +45,8 @@
   </ListView>
 </template>
 <script setup>
-import { ListView, Badge } from 'frappe-ui'
+import { Badge } from 'frappe-ui'
+import { ListView } from 'frappe-ui/experimental'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 

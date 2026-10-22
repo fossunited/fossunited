@@ -211,10 +211,10 @@ import {
   createDocumentResource,
   createResource,
   FormControl,
-  ListView,
   Dialog,
   Switch,
 } from 'frappe-ui'
+import { ListView } from 'frappe-ui/experimental'
 import { reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'

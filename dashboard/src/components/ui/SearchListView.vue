@@ -103,7 +103,8 @@
 </template>
 
 <script setup>
-import { ListView, FormControl, Button, Dialog } from 'frappe-ui'
+import { FormControl, Button, Dialog } from 'frappe-ui'
+import { ListView } from 'frappe-ui/experimental'
 import { ref, computed, reactive, watch, onUnmounted } from 'vue'
 import { debounce } from 'lodash-es'
 import { matchesQuery, tokenizeQuery } from '@/helpers/search'

@@ -125,7 +125,8 @@
 </template>
 <script setup>
 import { computed, defineProps, reactive, ref } from 'vue'
-import { AxisChart, createResource, LoadingIndicator, Button, Dialog } from 'frappe-ui'
+import { createResource, LoadingIndicator, Button, Dialog } from 'frappe-ui'
+import { AxisChart } from 'frappe-ui/experimental'
 import { IconArrowsMaximize, IconDownload, IconRefresh } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import TicketTierInsightCard from '@/components/event/TicketTierInsightCard.vue'

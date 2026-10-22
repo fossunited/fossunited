@@ -76,7 +76,8 @@
 </template>
 <script setup>
 import { defineProps, ref } from 'vue'
-import { createResource, ListView, Checkbox } from 'frappe-ui'
+import { createResource, Checkbox } from 'frappe-ui'
+import { ListView } from 'frappe-ui/experimental'
 import { IconPlus } from '@tabler/icons-vue'
 import TicketCustomFieldDialog from '@/components/event/TicketCustomFieldDialog.vue'
 

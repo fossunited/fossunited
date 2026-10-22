@@ -67,7 +67,8 @@
 </template>
 <script setup>
 import { computed, ref, watch, defineProps, defineEmits, reactive } from 'vue'
-import { ErrorMessage, FormControl, ListView, Dialog, createDocumentResource } from 'frappe-ui'
+import { ErrorMessage, FormControl, Dialog, createDocumentResource } from 'frappe-ui'
+import { ListView } from 'frappe-ui/experimental'
 import { toast } from 'vue-sonner'
 import { IconArrowUpRight, IconPlus, IconEdit, IconTrash } from '@tabler/icons-vue'
 

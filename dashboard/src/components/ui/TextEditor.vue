@@ -19,7 +19,7 @@
 
 <script setup>
 import { computed, getCurrentInstance } from 'vue'
-import { TextEditor as FrappeTextEditor } from 'frappe-ui'
+import { TextEditor as FrappeTextEditor } from 'frappe-ui/experimental'
 
 const uid = getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2, 7)
 const labelId = `te-label-${uid}`

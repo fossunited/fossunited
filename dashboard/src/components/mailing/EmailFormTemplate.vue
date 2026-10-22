@@ -4,14 +4,14 @@
       <div class="space-y-3">
         <h5 class="text-base font-semibold mb-1">Email Group</h5>
         <label class="text-sm text-ink-gray-5">Audience&ast;</label>
-        <Autocomplete
-          v-model="data.email_group"
+        <MultiSelect
+          v-model="emailGroupIds"
           :disabled="data.status == 'Sent'"
           class="-mt-2"
           label="Recipients &ast;"
           :options="emailGroups.data"
-          :multiple="true"
           placeholder="Select Recipients"
+          @update:selected-options="(opts) => (data.email_group = opts)"
         />
       </div>
       <div class="space-y-3">
@@ -90,9 +90,9 @@
 </template>
 <script setup>
 import TextEditor from '@/components/ui/TextEditor.vue'
-import { FormControl, FileUploader, createResource, Autocomplete } from 'frappe-ui'
+import { FormControl, FileUploader, createResource, MultiSelect } from 'frappe-ui'
 import { IconPlus, IconFile } from '@tabler/icons-vue'
-import { reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 
 const props = defineProps({
@@ -143,6 +143,14 @@ const emailGroups = createResource({
 const data = defineModel({
   type: Object,
   required: true,
+})
+
+const emailGroupIds = computed({
+  get: () => (data.value.email_group || []).map((group) => group.value),
+  // data.value.email_group (the full option objects) is kept in sync via
+  // @update:selected-options instead, since MultiSelect's own
+  // modelValue only carries ids.
+  set: () => {},
 })
 
 const handleAttachment = (file) => {

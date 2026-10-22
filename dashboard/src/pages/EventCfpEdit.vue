@@ -278,7 +278,8 @@
   </div>
 </template>
 <script setup>
-import { createDocumentResource, createResource, FormControl, ListView, Dialog } from 'frappe-ui'
+import { createDocumentResource, createResource, FormControl, Dialog } from 'frappe-ui'
+import { ListView } from 'frappe-ui/experimental'
 import { reactive, ref, watch, defineEmits, computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
