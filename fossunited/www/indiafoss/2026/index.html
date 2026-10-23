@@ -12,7 +12,7 @@
   <div class="v3-page-wide">
 
     {% set ticket_btn = cta_buttons | selectattr('label', 'equalto', 'Get Tickets') | first %}
-    {{ if_header(years, current_year, ticket_url=(ticket_btn.url if ticket_btn else "")) }}
+    {{ if_header(years, current_year, ticket_url=(ticket_btn.url if ticket_btn else ""), active_tab="overview") }}
 
     <main id="main-content" role="main" class="d-flex flex-column gap-section mt-4 pb-section">
 
@@ -113,8 +113,10 @@
               {# Chips ABOVE the bar — desktop only #}
               <div class="pb-above" aria-hidden="true">
                 {% for marker in progress_markers if marker.above %}
-                  <div class="pb-chip-abs{% if marker.is_urgent %} urgent{% elif marker.is_past %} past{% endif %}"
-                       style="left: {{ marker.pct }}%"
+                  {% set marker_state = ' urgent' if marker.is_urgent else (' past' if marker.is_past else '') %}
+                  <div class="pb-chip-abs{{ marker_state }}"
+                       {{ ('style="left: ' ~ marker.pct ~ '%;"') | safe }}
+                       data-pct="{{ marker.pct }}"
                        data-toggle="tooltip"
                        data-placement="top"
                        data-container="body"
@@ -138,8 +140,10 @@
               {# Chips BELOW the bar — desktop only #}
               <div class="pb-below" aria-hidden="true">
                 {% for marker in progress_markers if not marker.above %}
-                  <div class="pb-chip-abs{% if marker.is_urgent %} urgent{% elif marker.is_past %} past{% endif %}"
-                       style="left: {{ marker.pct }}%"
+                  {% set marker_state = ' urgent' if marker.is_urgent else (' past' if marker.is_past else '') %}
+                  <div class="pb-chip-abs{{ marker_state }}"
+                       {{ ('style="left: ' ~ marker.pct ~ '%;"') | safe }}
+                       data-pct="{{ marker.pct }}"
                        data-toggle="tooltip"
                        data-placement="bottom"
                        data-container="body"
@@ -852,7 +856,7 @@ frappe.ready(function() { $('[data-toggle="tooltip"]').tooltip(); });
     area.querySelectorAll('.pb-chip-abs').forEach(function(el) {
       var chip = el.querySelector('.pb-chip');
       var chipW = chip ? chip.offsetWidth : 80;
-      var pctLeft = parseFloat(el.style.left) / 100 * areaW;
+      var pctLeft = parseFloat(el.dataset.pct || el.style.left) / 100 * areaW;
       var clamped = Math.max(chipW / 2, Math.min(areaW - chipW / 2, pctLeft));
       el.style.left = clamped + 'px';
     });
