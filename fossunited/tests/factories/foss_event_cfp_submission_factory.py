@@ -33,6 +33,21 @@ class FOSSEventCFPFactory(BaseFactory):
 class FOSSEventCFPSubmissionFactory(BaseFactory):
     doctype = PROPOSAL
 
+    @classmethod
+    def create(cls, *_factory_traits: str, **overrides: Any) -> Any:
+        # before_insert requires new submissions to start as "Review Pending";
+        # any other requested status (status=... override or with_approved_status/
+        # with_withdrawn trait) is applied afterward via save(), same as a real approve/reject.
+        doc = cls.build(*_factory_traits, **overrides)
+        target_status = doc.status
+        doc.status = "Review Pending"
+        doc.insert()
+        cls._attach_del(doc)
+        if target_status != "Review Pending":
+            doc.status = target_status
+            doc.save()
+        return doc
+
     @property
     def default_attributes(self) -> dict[str, Any]:
         cfp = (
