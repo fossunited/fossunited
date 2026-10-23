@@ -297,8 +297,14 @@ class FOSSChapterEvent(WebsiteGenerator):
             )
         }
 
+        seen = set()
         members = []
         for member in self.event_members:
+            # Rows with no linked profile can't be identified as duplicates, so this
+            # guard only ever skips a member we've already seen by profile id.
+            if member.member and member.member in seen:
+                continue
+            seen.add(member.member)
             profile = profiles.get(member.member, {})
             members.append(
                 {
@@ -462,7 +468,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.chapter = frappe.get_doc(CHAPTER, self.chapter)
         context.sponsors_dict = get_event_sponsors(self.sponsor_list)
         context.volunteers = self.get_volunteers()
-        context.speakers, context.submissions = self.get_speakers()
+        context.speakers = self.get_speakers()
         context.rsvp_status_block = self.get_rsvp_status_block()
         context.cfp_status_block = self.get_cfp_status_block()
         context.all_cfp_link = f"/dashboard/cfp/all/{self.route.split('c/')[1]}"
