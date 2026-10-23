@@ -297,8 +297,14 @@ class FOSSChapterEvent(WebsiteGenerator):
             )
         }
 
+        seen = set()
         members = []
         for member in self.event_members:
+            # Rows with no linked profile can't be identified as duplicates, so this
+            # guard only ever skips a member we've already seen by profile id.
+            if member.member and member.member in seen:
+                continue
+            seen.add(member.member)
             profile = profiles.get(member.member, {})
             members.append(
                 {
@@ -315,27 +321,54 @@ class FOSSChapterEvent(WebsiteGenerator):
         return sorted(members, key=lambda m: (m["full_name"] or "").lower())
 
     def get_speakers(self):
+        """Approved speakers for this event, one entry per PERSON.
+
+        A speaker can have more than one approved talk (multiple CFP
+        submissions), so the raw rows are grouped by identity (linked profile,
+        else email or name):
+        each entry has `talks` list ({route, title} per approved talk) that the
+        template renders as numbered links next to the single card.
+        """
         submissions = frappe.db.get_all(
             PROPOSAL,
             {"event": self.name, "status": "Approved"},
             ["name", "talk_title", "route"],
         )
         if not submissions:
-            return [], []
+            return []
 
-        speakers = frappe.db.get_all(
+        submission_by_name = {s.name: s for s in submissions}
+        rows = frappe.db.get_all(
             SPEAKER,
-            filters={"parent": ["in", [s.name for s in submissions]]},
-            fields=[
-                "photo",
-                "full_name",
-                "designation",
-                "organization",
-                "linked_user",
-                "parent",
-            ],
+            filters={"parent": ["in", list(submission_by_name)]},
+            fields=["photo", "full_name", "email", "linked_user", "parent"],
         )
-        return speakers, submissions
+
+        speakers, order = {}, []
+        for row in rows:
+            email = (row.email or "").strip().lower()
+            name = (row.full_name or "").strip().lower()
+            if row.linked_user:
+                key = ("profile", row.linked_user)
+            elif email:
+                # Email alone isn't enough it can be a shared/reused email
+                key = ("email", email, name)
+            else:
+                key = ("name", name)
+            if key not in speakers:
+                speakers[key] = {
+                    "full_name": row.full_name,
+                    "photo": row.photo,
+                    "talks": [],
+                }
+                order.append(key)
+            submission = submission_by_name.get(row.parent)
+            if submission:
+                speakers[key]["talks"].append(
+                    {"route": "/" + submission.route, "title": submission.talk_title}
+                )
+
+        return [speakers[key] for key in order]
 
     def get_rsvp_status_block(self):
         rsvp = frappe.db.get_value(
@@ -462,7 +495,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.chapter = frappe.get_doc(CHAPTER, self.chapter)
         context.sponsors_dict = get_event_sponsors(self.sponsor_list)
         context.volunteers = self.get_volunteers()
-        context.speakers, context.submissions = self.get_speakers()
+        context.speakers = self.get_speakers()
         context.rsvp_status_block = self.get_rsvp_status_block()
         context.cfp_status_block = self.get_cfp_status_block()
         context.all_cfp_link = f"/dashboard/cfp/all/{self.route.split('c/')[1]}"

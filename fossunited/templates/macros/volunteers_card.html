@@ -1,8 +1,9 @@
-{% macro profile_headshot(name, photo=None, url=None, info=None, badge=None) %}
-  {# Single avatar+name chip. Extracted from people_card. url optional — wraps in anchor if provided. #}
+{% macro profile_headshot(name, photo=None, url=None, info=None, badge=None, links=None) %}
+  {# Single avatar+name chip. `url` wraps the chip in one anchor; `links` (list of {route, title}) renders a numbered [n] link per destination instead. #}
   {% set default_photo = "/assets/fossunited/images/defaults/user_profile_image.png" %}
-  {% if url %}
-    <a class="v3-clickable v3-people-item" href="{{ url }}" aria-label="{{ name }}{{ ', ' + info if info else '' }}">
+  {% set single_url = links[0].route if (links and links | length == 1) else url %}
+  {% if single_url %}
+    <a class="v3-clickable v3-people-item" href="{{ single_url }}" aria-label="{{ name }}{{ ', ' + info if info else '' }}">
   {% else %}
     <div class="v3-people-item">
   {% endif %}
@@ -19,13 +20,22 @@
         {% if badge %}
           <span class="v3-tag mt-1" style="align-self:flex-start;">{{ badge }}</span>
         {% endif %}
+        {% if links and links | length > 1 %}
+          <div class="d-flex flex-wrap gap-1 mt-1">
+            {% for link in links %}
+              <a class="v3-tag v3-tag--category v3-tag--clickable" href="{{ link.route }}"
+                 aria-label="Watch '{{ link.title or ('talk ' ~ loop.index) }}'"
+                 title="{{ link.title }}">{{ loop.index }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
-  {% if url %}</a>{% else %}</div>{% endif %}
+  {% if single_url %}</a>{% else %}</div>{% endif %}
 {% endmacro %}
 
 
-{% macro people_card(items, type, submissions=None, icon="empathize", show_info=False) %}
-  {# type can be 'volunteers' or 'speakers' #}
+{% macro people_card(items, type, icon="empathize", show_info=False) %}
+  {# type can be 'volunteers' or 'speakers'; speaker items carry a `talks` list for numbered links. #}
   {% set show_view_all = items|length > 4 %}
   {% set unique_id = type + '_' + range(1000, 9999) | random | string %}
 
@@ -43,11 +53,7 @@
           {% endfor %}
         {% else %}
           {% for speaker in items %}
-            {% for submission in submissions %}
-              {% if submission.name == speaker.parent %}
-                {{ profile_headshot(speaker.full_name, speaker.photo, '/' + submission.route) }}
-              {% endif %}
-            {% endfor %}
+            {{ profile_headshot(speaker.full_name, speaker.photo, None, None, None, speaker.talks) }}
           {% endfor %}
         {% endif %}
       </div>
