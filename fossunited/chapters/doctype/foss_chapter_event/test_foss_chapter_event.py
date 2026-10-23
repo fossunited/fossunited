@@ -9,11 +9,18 @@ from fossunited.doctype_ids import (
     EMAIL_GROUP,
     EMAIL_MEMBER,
     EVENT,
+    EVENT_CFP,
     EVENT_VOLUNTEER,
+    PROPOSAL,
+    USER_PROFILE,
 )
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
     FOSSChapterFactory,
+    FOSSEventCFPFactory,
+    FOSSEventCFPSubmissionFactory,
+    UserFactory,
+    get_foss_profile_id,
 )
 from fossunited.utils.notifications import send_event_feedback_request
 
@@ -125,10 +132,64 @@ class TestFOSSChapterEvent(FrappeTestCase):
 
     def test_invalid_map_link_sets_none(self):
         event = FOSSChapterEventFactory.create(
-            "with_map_link", chapter=self.chapter.name, map_link="https://invalid-url.com"
+            "with_map_link",
+            chapter=self.chapter.name,
+            map_link="https://invalid-url.com",
         )
         self.assertIsNone(event.map_coordinate)
         frappe.delete_doc(EVENT, event.name, force=True)
+
+    def test_get_speakers_merges_by_identity_and_handles_edge_cases(self):
+        """One speaker can have 2+ approved talks for this event -- get_speakers() must
+        show one card per person: merge by linked profile first, else by email+name
+        together (a reused email alone must NOT merge two different people), and
+        drop speakers from non-approved submissions entirely."""
+        cfp = FOSSEventCFPFactory.create(event=self.event.name)
+        linked_user = UserFactory.create(first_name="Don", last_name="Quixote")
+        profile_id = get_foss_profile_id(linked_user.name)
+
+        def speaker(full_name, email, profile=None):
+            row = {"full_name": full_name, "email": email, "designation": "Speaker"}
+            if profile:
+                row["linked_user"] = profile
+            return row
+
+        def submit(speaker_row, status="Approved"):
+            return FOSSEventCFPSubmissionFactory.create(
+                linked_cfp=cfp.name,
+                event=self.event.name,
+                status=status,
+                speakers=[speaker_row],
+            )
+
+        submissions = [
+            # Same linked profile across two talks -> one card, two talks.
+            submit(speaker("Don Quixote", "don@test.com", profile_id)),
+            submit(speaker("Don Quixote", "don@test.com", profile_id)),
+            # No profile, but same email AND same name across two talks -> one card, two talks.
+            submit(speaker("Bob Volunteer", "shared@test.com")),
+            submit(speaker("Bob Volunteer", "shared@test.com")),
+            # Shared email, DIFFERENT name, no profile -> must stay its own card
+            # (regression guard: a reused email alone is not a safe identity key).
+            submit(speaker("Charlie Other", "shared@test.com")),
+            # Rejected submission -> must not appear at all.
+            submit(speaker("Dave Hidden", "dave@test.com"), status="Rejected"),
+        ]
+
+        try:
+            speakers = {s["full_name"]: s for s in self.event.get_speakers()}
+
+            self.assertEqual(len(speakers), 3)
+            self.assertEqual(len(speakers["Don Quixote"]["talks"]), 2)
+            self.assertEqual(len(speakers["Bob Volunteer"]["talks"]), 2)
+            self.assertEqual(len(speakers["Charlie Other"]["talks"]), 1)
+            self.assertNotIn("Dave Hidden", speakers)
+        finally:
+            for submission in submissions:
+                frappe.delete_doc(PROPOSAL, submission.name, force=True)
+            frappe.delete_doc(EVENT_CFP, cfp.name, force=True)
+            frappe.delete_doc(USER_PROFILE, profile_id, force=True)
+            frappe.delete_doc("User", linked_user.name, force=True)
 
 
 class TestFeedbackEmail(FrappeTestCase):
