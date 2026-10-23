@@ -321,27 +321,50 @@ class FOSSChapterEvent(WebsiteGenerator):
         return sorted(members, key=lambda m: (m["full_name"] or "").lower())
 
     def get_speakers(self):
+        """Approved speakers for this event, one entry per PERSON.
+
+        A speaker can have more than one approved talk (multiple CFP
+        submissions), so the raw rows are grouped by identity (linked profile,
+        else email or name):
+        each entry has `talks` list ({route, title} per approved talk) that the
+        template renders as numbered links next to the single card.
+        """
         submissions = frappe.db.get_all(
             PROPOSAL,
             {"event": self.name, "status": "Approved"},
             ["name", "talk_title", "route"],
         )
         if not submissions:
-            return [], []
+            return []
 
-        speakers = frappe.db.get_all(
+        submission_by_name = {s.name: s for s in submissions}
+        rows = frappe.db.get_all(
             SPEAKER,
-            filters={"parent": ["in", [s.name for s in submissions]]},
-            fields=[
-                "photo",
-                "full_name",
-                "designation",
-                "organization",
-                "linked_user",
-                "parent",
-            ],
+            filters={"parent": ["in", list(submission_by_name)]},
+            fields=["photo", "full_name", "email", "linked_user", "parent"],
         )
-        return speakers, submissions
+
+        speakers, order = {}, []
+        for row in rows:
+            key = (
+                row.linked_user
+                or (row.email or "").strip().lower()
+                or (row.full_name or "").strip().lower()
+            )
+            if key not in speakers:
+                speakers[key] = {
+                    "full_name": row.full_name,
+                    "photo": row.photo,
+                    "talks": [],
+                }
+                order.append(key)
+            submission = submission_by_name.get(row.parent)
+            if submission:
+                speakers[key]["talks"].append(
+                    {"route": "/" + submission.route, "title": submission.talk_title}
+                )
+
+        return [speakers[key] for key in order]
 
     def get_rsvp_status_block(self):
         rsvp = frappe.db.get_value(
