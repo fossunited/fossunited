@@ -346,11 +346,15 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         speakers, order = {}, []
         for row in rows:
-            key = (
-                row.linked_user
-                or (row.email or "").strip().lower()
-                or (row.full_name or "").strip().lower()
-            )
+            email = (row.email or "").strip().lower()
+            name = (row.full_name or "").strip().lower()
+            if row.linked_user:
+                key = ("profile", row.linked_user)
+            elif email:
+                # Email alone isn't enough it can be a shared/reused email
+                key = ("email", email, name)
+            else:
+                key = ("name", name)
             if key not in speakers:
                 speakers[key] = {
                     "full_name": row.full_name,
