@@ -53,6 +53,7 @@ Here's a checklist for you to follow throughout the event:
 - [ ] Test all morning speakers' presentations before 9am
 - [ ] Test all afternoon speakers' presentations during lunch break
 - [ ] Check laptop connections, slide transitions, embedded videos/audio, and clicker/remote
+- [ ] For a streamed or recorded talk, check that a detail indicated by the speaker is visible in the room, on the shared screen and in a permitted test recording. The optional [Hybrid-room pointing rehearsal record](https://light-tracer.com/wp-content/uploads/2026/10/hybrid-pointing-rehearsal-record-open-v1.pdf) (Light Tracer, CC BY 4.0) is a two-page blank worksheet for a presenter and observer to record those views, one change and a recheck.
 - [ ] Flag any file or format issues to the speaker immediately, while there's still time to fix them
 
 ### Speaker readiness (ongoing, before each talk)
