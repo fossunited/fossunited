@@ -47,7 +47,11 @@
   {{ render_session_categories() }}
   {{ render_talk_license() }}
   {% if has_public_custom_responses %}{{ render_custom_responses() }}{% endif %}
-  {% if not anonymous_cfps %}{{ render_speakers() }}{% endif %}
+  {% if not anonymous_cfps %}
+    {{ render_speakers() }}
+  {% else %}
+    <div class="text-sm v3-text-tertiary">Speakers are hidden and anonymized for this event.</div>
+  {% endif %}
   {{ render_reviews() }}
 
 </div></div>
