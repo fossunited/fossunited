@@ -3,11 +3,19 @@ import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import frappeui from 'frappe-ui/vite'
 
+const appName = path.basename(path.resolve('..'))
+const outDir = `../${appName}/public/dashboard`
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     frappeui({
       frappeProxy: true,
+      // frappe-ui's buildConfig plugin requires indexHtmlPath in production
+      buildConfig: {
+        outDir,
+        indexHtmlPath: `../${appName}/www/dashboard.html`,
+      },
     }),
     vue(),
   ],
@@ -17,7 +25,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: `../${path.basename(path.resolve('..'))}/public/dashboard`,
+    outDir,
     emptyOutDir: true,
     target: 'es2015',
   },
