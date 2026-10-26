@@ -142,8 +142,9 @@ class TestFOSSChapterEvent(FrappeTestCase):
     def test_get_speakers_merges_by_identity_and_handles_edge_cases(self):
         """One speaker can have 2+ approved talks for this event -- get_speakers() must
         show one card per person: merge by linked profile first, else by email+name
-        together (a reused email alone must NOT merge two different people), and
-        drop speakers from non-approved submissions entirely."""
+        together (a reused email alone must NOT merge two different people), drop
+        speakers from non-approved submissions entirely, and hide the whole list
+        when the CFP form has anonymise_proposals."""
         cfp = FOSSEventCFPFactory.create(event=self.event.name)
         linked_user = UserFactory.create(first_name="Don", last_name="Quixote")
         profile_id = get_foss_profile_id(linked_user.name)
@@ -184,6 +185,9 @@ class TestFOSSChapterEvent(FrappeTestCase):
             self.assertEqual(len(speakers["Bob Volunteer"]["talks"]), 2)
             self.assertEqual(len(speakers["Charlie Other"]["talks"]), 1)
             self.assertNotIn("Dave Hidden", speakers)
+
+            frappe.db.set_value(EVENT_CFP, cfp.name, "anonymise_proposals", 1)
+            self.assertEqual(self.event.get_speakers(), [])
         finally:
             for submission in submissions:
                 frappe.delete_doc(PROPOSAL, submission.name, force=True)

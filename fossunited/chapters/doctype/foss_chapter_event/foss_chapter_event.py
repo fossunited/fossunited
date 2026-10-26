@@ -328,7 +328,12 @@ class FOSSChapterEvent(WebsiteGenerator):
         else email or name):
         each entry has `talks` list ({route, title} per approved talk) that the
         template renders as numbered links next to the single card.
+
+        Hidden entirely when the event's CFP form has anonymise_proposals
         """
+        if frappe.db.get_value(EVENT_CFP, {"event": self.name}, "anonymise_proposals"):
+            return []
+
         submissions = frappe.db.get_all(
             PROPOSAL,
             {"event": self.name, "status": "Approved"},
