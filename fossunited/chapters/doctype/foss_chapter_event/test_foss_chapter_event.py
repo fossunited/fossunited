@@ -145,7 +145,7 @@ class TestFOSSChapterEvent(FrappeTestCase):
         together (a reused email alone must NOT merge two different people), drop
         speakers from non-approved submissions entirely, and hide the whole list
         when the CFP form has anonymise_proposals."""
-        cfp = FOSSEventCFPFactory.create(event=self.event.name)
+        cfp = FOSSEventCFPFactory.create(event=self.event.name, anonymise_proposals=0)
         linked_user = UserFactory.create(first_name="Don", last_name="Quixote")
         profile_id = get_foss_profile_id(linked_user.name)
 
