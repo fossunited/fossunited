@@ -460,7 +460,7 @@ def get_session_user_localhosts():
                 profile,
             ]
         ],
-        fields=["name", "localhost_name", "hackathon", "city", "state", "status"],
+        fields=["name", "localhost_name", "parent_hackathon"],
         page_length=100,
     )
 
