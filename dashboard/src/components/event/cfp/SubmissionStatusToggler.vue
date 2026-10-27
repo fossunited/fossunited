@@ -122,12 +122,9 @@ const dialogActions = computed(() => [
     </Button>
   </div>
 
-  <Dialog
-    v-model:open="showDialog"
-    title="Change status"
-    :message="submission.data?.talk_title"
-    :actions="dialogActions"
-  >
+  <Dialog v-model:open="showDialog" title="Change status" :actions="dialogActions">
+    <!-- Dialog's `message` prop only renders when the default slot is empty -->
+    <p class="mb-4 text-base font-medium text-ink-gray-9">{{ submission.data?.talk_title }}</p>
     <fieldset class="flex flex-col gap-2">
       <legend class="mb-3 text-base text-ink-gray-7 dark:text-ink-gray-8">
         Currently
