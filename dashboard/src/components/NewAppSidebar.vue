@@ -26,8 +26,8 @@
   <div
     :class="
       mobileOpen
-        ? 'fixed top-0 left-0 h-screen z-50'
-        : 'h-screen hidden md:block md:sticky md:top-0'
+        ? 'fixed top-0 left-0 h-screen z-50 bg-surface-base'
+        : 'h-screen hidden md:block md:sticky md:top-0 bg-surface-base'
     "
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
