@@ -31,12 +31,12 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.4",
+    "@vitejs/plugin-vue": "^6",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.5.10",
     "prettier": "3.2.5",
     "tailwindcss": "^3.4.2",
-    "vite": "^6.4.3"
+    "vite": "^8"
   },
   "resolutions": {
     "prosemirror-model": "1.25.12",
