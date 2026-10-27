@@ -349,6 +349,60 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
                 self._email_group_has(self.event.name, speaker.email, "Rejected Proposers")
             )
 
+    def _set_status(self, proposal, *statuses):
+        frappe.set_user(CoreTeam)
+        for status in statuses:
+            proposal.status = status
+            proposal.save()
+
+    def _status_groups(self, email):
+        groups = ("Accepted Proposers", "Rejected Proposers")
+        return {g for g in groups if self._email_group_has(self.event.name, email, g)}
+
+    def _proposal_sharing_speaker(self):
+        speaker = self.submission.speakers[0]
+        return FOSSEventCFPSubmissionFactory.create(
+            linked_cfp=self.cfp.name,
+            event=self.event.name,
+            submitted_by=CoreTeam,
+            speakers=[
+                {
+                    "full_name": speaker.full_name,
+                    "email": speaker.email,
+                    "designation": speaker.designation,
+                }
+            ],
+        )
+
+    def test_approved_to_rejected_moves_email_group(self):
+        self._set_status(self.submission, "Approved", "Rejected")
+        email = self.submission.speakers[0].email
+        self.assertEqual(self._status_groups(email), {"Rejected Proposers"})
+
+    def test_approved_to_screening_leaves_accepted_group(self):
+        self._set_status(self.submission, "Approved", "Screening")
+        self.assertEqual(self._status_groups(self.submission.speakers[0].email), set())
+
+    def test_withdrawing_approved_leaves_accepted_group(self):
+        self._set_status(self.submission, "Approved")
+        self.submission.is_withdrawn = 1
+        self.submission.save()
+        self.assertEqual(self._status_groups(self.submission.speakers[0].email), set())
+
+    def test_accepted_wins_when_other_proposal_rejected(self):
+        other = self._proposal_sharing_speaker()
+        self._set_status(other, "Approved")
+        self._set_status(self.submission, "Rejected")
+        email = self.submission.speakers[0].email
+        self.assertEqual(self._status_groups(email), {"Accepted Proposers"})
+
+    def test_approving_moves_speaker_out_of_rejected(self):
+        other = self._proposal_sharing_speaker()
+        self._set_status(other, "Rejected")
+        self._set_status(self.submission, "Approved")
+        email = self.submission.speakers[0].email
+        self.assertEqual(self._status_groups(email), {"Accepted Proposers"})
+
     def test_withdrawal_of_approved_sends_email(self):
         frappe.set_user(CoreTeam)
         self.submission.status = "Approved"
