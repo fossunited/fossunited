@@ -1,49 +1,77 @@
 <script setup>
 import { toast } from 'vue-sonner'
 import { getStatusBadgeTheme } from '@/helpers/reviewer'
-import { Badge, Dialog, createResource } from 'frappe-ui'
+import { Badge, Button, Dialog, createResource } from 'frappe-ui'
 import { computed, inject, ref, watch } from 'vue'
-import {
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectItemText,
-  SelectLabel,
-  SelectPortal,
-  SelectRoot,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
-  SelectViewport,
-} from 'reka-ui'
-import { IconAlertTriangle, IconChevronDown } from '@tabler/icons-vue'
+import { IconCircleCheck, IconCircleX, IconHourglass } from '@tabler/icons-vue'
 
 const submission = inject('curr_submission')
-const newStatus = ref(submission.data?.status)
-const options = ['Approved', 'Rejected', 'Screening']
-const showDialog = ref(false)
-const emit = defineEmits(['status-change'])
 const refreshSubmissions = inject('refreshSubmissions')
+
+// "Review Pending" is the start state only, and "Withdrawn" is set by the proposer.
+// Mirrors STATUS_EMAIL_GROUPS in foss_event_cfp_submission.py.
+const emailGroups = {
+  Approved: 'Accepted Proposers',
+  Rejected: 'Rejected Proposers',
+}
+// Full class strings so Tailwind's content scan picks them up.
+const options = [
+  {
+    value: 'Screening',
+    icon: IconHourglass,
+    iconClass: 'text-ink-blue-7',
+    selectedClass: 'has-[:checked]:bg-surface-blue-2 has-[:checked]:border-outline-blue-5',
+    buttonClass:
+      '!text-white !bg-surface-blue-8 hover:!bg-surface-blue-9 dark:!bg-surface-blue-6 dark:hover:!bg-surface-blue-5',
+  },
+  {
+    value: 'Approved',
+    icon: IconCircleCheck,
+    iconClass: 'text-ink-green-7',
+    selectedClass: 'has-[:checked]:bg-surface-green-2 has-[:checked]:border-outline-green-5',
+    buttonClass:
+      '!text-white !bg-surface-green-8 hover:!bg-surface-green-9 dark:!bg-surface-green-6 dark:hover:!bg-surface-green-5',
+  },
+  {
+    value: 'Rejected',
+    icon: IconCircleX,
+    iconClass: 'text-ink-red-7',
+    selectedClass: 'has-[:checked]:bg-surface-red-2 has-[:checked]:border-outline-red-5',
+    buttonClass:
+      '!text-white !bg-surface-red-7 hover:!bg-surface-red-8 dark:!bg-surface-red-6 dark:hover:!bg-surface-red-5',
+  },
+]
+const selectedOption = computed(() => options.find((o) => o.value === newStatus.value))
+const hasChange = computed(() => !!newStatus.value && newStatus.value !== currentStatus.value)
+
+function optionHint(status) {
+  if (status === currentStatus.value) return 'No change.'
+  const notes = []
+  if (emailGroups[currentStatus.value]) {
+    notes.push(`All Speakers get an email & leave the ${emailGroups[currentStatus.value]} email group.`)
+  }
+  if (emailGroups[status]) {
+    notes.push(`All Speakers get confirmation email & join the ${emailGroups[status]} email group.`)
+  }
+  return notes.length ? notes.join(' ') : 'No email group change.'
+}
+
+const showDialog = ref(false)
+const newStatus = ref(null)
+
+const currentStatus = computed(() => submission.data?.status)
+const canChange = computed(() => currentStatus.value !== 'Withdrawn')
 
 watch(
   () => submission.data?.name,
   () => {
-    if (!submission.data) return
-    newStatus.value = submission.data.status
     showDialog.value = false
   },
 )
 
-function onSelectStatusUpdate(value) {
-  const current = submission.data?.status
-  if (current == null || value === current) return
+function openDialog() {
+  newStatus.value = currentStatus.value
   showDialog.value = true
-}
-
-function revertSelectToServer() {
-  if (submission.data) {
-    newStatus.value = submission.data.status
-  }
 }
 
 const changeStatus = createResource({
@@ -56,96 +84,85 @@ const changeStatus = createResource({
       value: newStatus.value,
     }
   },
-
-  onSuccess(data) {
-    emit('status-change', newStatus.value)
+  onSuccess() {
     showDialog.value = false
     submission.fetch()
     refreshSubmissions?.()
-    toast.success('Status updated successfully')
+    toast.success(`Marked as ${newStatus.value}`)
   },
   onError(error) {
-    toast.error('Failed to update status', error.message)
+    toast.error('Failed to update status', { description: error.messages?.[0] ?? error.message })
   },
 })
 
-const confirmDialogActions = computed(() => [
-  {
-    label: 'Confirm',
-    variant: 'solid',
-    onClick: ({ close }) => {
-      if (newStatus.value === submission.data?.status) {
-        close()
-        return
-      }
-      changeStatus.fetch()
-    },
-    loading: changeStatus.loading,
-  },
+const dialogActions = computed(() => [
   {
     label: 'Cancel',
-    onClick: ({ close }) => {
-      revertSelectToServer()
-      close()
-    },
+    onClick: ({ close }) => close(),
+  },
+  {
+    label: hasChange.value ? `Mark as ${newStatus.value}` : 'Choose a new status',
+    variant: 'solid',
+    iconLeft: hasChange.value ? selectedOption.value?.icon : undefined,
+    class: hasChange.value ? selectedOption.value?.buttonClass : undefined,
+    disabled: !hasChange.value,
+    onClick: () => changeStatus.submit(),
   },
 ])
 </script>
 <template>
-  <Dialog
-    v-model:open="showDialog"
-    class="z-50"
-    title="Confirm"
-    :icon="IconAlertTriangle"
-    theme="amber"
-    :actions="confirmDialogActions"
-  >
-    <div>
-      <p class="text-base leading-6">
-        Are you sure you want to change the status of this submission from
-        <Badge :theme="getStatusBadgeTheme(submission.data.status)">
-          {{ submission.data.status }}
-        </Badge>
-        to
-        <Badge :theme="getStatusBadgeTheme(newStatus)">{{ newStatus }}</Badge> ?
-      </p>
-    </div>
-  </Dialog>
-  <br />
-  <SelectRoot v-model="newStatus" @update:model-value="onSelectStatusUpdate">
-    <SelectTrigger
-      class="inline-flex min-w-32 items-center rounded-4 text-sm leading-none h-8 gap-2 bg-surface-base"
-      aria-label="Customise options"
-    >
-      <SelectValue>
-        <Badge :theme="getStatusBadgeTheme(submission.data.status)">
-          {{ submission.data.status }}
-        </Badge>
-      </SelectValue>
-      <IconChevronDown class="w-4 h-4 text-ink-gray-5" />
-    </SelectTrigger>
+  <div class="flex items-center gap-2">
+    <Badge :theme="getStatusBadgeTheme(currentStatus)">{{ currentStatus }}</Badge>
+    <Button v-if="canChange" variant="subtle" size="sm" aria-haspopup="dialog" @click="openDialog">
+      Change
+    </Button>
+  </div>
 
-    <SelectPortal>
-      <SelectContent class="bg-surface-base border shadow-xl rounded-4 p-4 px-2 z-[100]">
-        <SelectViewport>
-          <SelectGroup>
-            <SelectLabel class="text-ink-gray-6 text-sm">Options</SelectLabel>
-            <SelectSeparator class="h-px bg-surface-gray-4 my-2" />
-            <div class="flex flex-col gap-2">
-              <SelectItem
-                v-for="option in options"
-                :key="option"
-                :value="option"
-                class="flex items-center gap-2 p-1 text-sm cursor-pointer hover:bg-surface-gray-2 rounded-4"
-              >
-                <SelectItemText>
-                  <Badge :theme="getStatusBadgeTheme(option)">{{ option }}</Badge>
-                </SelectItemText>
-              </SelectItem>
-            </div>
-          </SelectGroup>
-        </SelectViewport>
-      </SelectContent>
-    </SelectPortal>
-  </SelectRoot>
+  <Dialog v-model:open="showDialog" title="Change status" :actions="dialogActions">
+    <fieldset class="flex flex-col gap-2">
+      <legend class="mb-3 text-base text-ink-gray-7 dark:text-ink-gray-8">
+        Currently
+        <Badge :theme="getStatusBadgeTheme(currentStatus)">{{ currentStatus }}</Badge
+        >. Choose a new status.
+      </legend>
+      <label
+        v-for="option in options"
+        :key="option.value"
+        class="flex cursor-pointer items-start gap-3 rounded-lg border border-outline-gray-3 p-3 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-outline-gray-5"
+        :class="option.selectedClass"
+      >
+        <input
+          v-model="newStatus"
+          type="radio"
+          name="submission-status"
+          :value="option.value"
+          :aria-describedby="`status-hint-${option.value}`"
+          class="mt-1 focus:outline-none focus:ring-0 focus:ring-offset-0"
+        />
+        <span class="flex flex-col gap-1">
+          <span class="flex items-center gap-2 text-base font-medium text-ink-gray-9">
+            <component
+              :is="option.icon"
+              class="size-4 shrink-0"
+              :class="option.iconClass"
+              aria-hidden="true"
+            />
+            {{ option.value }}
+            <span
+              v-if="option.value === currentStatus"
+              class="text-sm font-normal text-ink-gray-7 dark:text-ink-gray-8"
+            >
+              (current)
+            </span>
+          </span>
+          <span
+            :id="`status-hint-${option.value}`"
+            class="text-sm text-ink-gray-7 dark:text-ink-gray-8"
+          >
+            {{ optionHint(option.value) }}
+          </span>
+        </span>
+      </label>
+    </fieldset>
+  </Dialog>
 </template>
