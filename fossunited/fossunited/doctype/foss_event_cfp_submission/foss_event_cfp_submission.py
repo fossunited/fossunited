@@ -18,6 +18,7 @@ from fossunited.doctype_ids import (
     EVENT_MEDIA,
     EVENT_SCHEDULE,
     PROPOSAL,
+    SPEAKER,
     USER_PROFILE,
 )
 from fossunited.fossunited.utils import get_youtube_id, sanitize_text_content
@@ -29,6 +30,14 @@ ALLOWED_SESSION_TYPES = {
     "Panel Discussion",
     "Birds of Feather(BoF)",
     "Workshop",
+}
+
+# Proposal status -> event email group its speakers belong to.
+# Order is priority: a speaker with both an Approved and a Rejected proposal
+# get into Accepted as first priority.
+STATUS_EMAIL_GROUPS = {
+    "Approved": "Accepted Proposers",
+    "Rejected": "Rejected Proposers",
 }
 
 # Proposer-editable content fields. A change to any of these after the CFP
@@ -433,7 +442,9 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             if not values:
                 return {}
             rows = frappe.db.get_all(
-                USER_PROFILE, {field: ["in", values], **visible_filters}, [field, "username"]
+                USER_PROFILE,
+                {field: ["in", values], **visible_filters},
+                [field, "username"],
             )
             return {row[field]: row.username for row in rows if row.username}
 
@@ -481,15 +492,41 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def handle_status_change(self) -> None:
         if not self.has_value_changed("status"):
             return
-
-        if self.status == "Approved":
-            self.handle_email_group("Accepted Proposers")
-
-        if self.status == "Rejected":
-            self.handle_email_group("Rejected Proposers")
-
-    def handle_email_group(self, email_group_type) -> None:
         emails = [s.email for s in self.speakers if s.email]
+        if not emails:
+            return
+
+        # One status group per speaker per event, across all their proposals.
+        statuses = {email: {self.status} for email in emails}
+        proposal, speaker = frappe.qb.DocType(PROPOSAL), frappe.qb.DocType(SPEAKER)
+        other_proposals = (
+            frappe.qb.from_(speaker)
+            .join(proposal)
+            .on(speaker.parent == proposal.name)
+            .select(speaker.email, proposal.status)
+            .where(
+                (proposal.event == self.event)
+                & (proposal.name != self.name)
+                & proposal.status.isin(list(STATUS_EMAIL_GROUPS))
+                & speaker.email.isin(emails)
+            )
+            .run(as_dict=True)
+        )
+        for row in other_proposals:
+            statuses.setdefault(row.email, set()).add(row.status)
+
+        target = {
+            e: next((s for s in STATUS_EMAIL_GROUPS if s in statuses[e]), None) for e in emails
+        }
+        for status, group in STATUS_EMAIL_GROUPS.items():
+            self.handle_email_group(group, [e for e in emails if target[e] == status])
+            self.handle_email_group(
+                group, [e for e in emails if target[e] != status], subscribe=False
+            )
+
+    def handle_email_group(self, email_group_type, emails=None, subscribe=True) -> None:
+        if emails is None:
+            emails = [s.email for s in self.speakers if s.email]
 
         handle_email_group_subscription(
             emails=emails,
@@ -501,7 +538,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             # ideally CFPs would require some communication to occur by team
             # Again, event is temporary for event_duration. Hope logic sounds intentional?
             # if not, please do raise an issue!
-            subscribe_to_event=True,
+            # subscribe=False is only for leaving an old status group.
+            subscribe_to_event=subscribe,
             subscribe_to_chapter=self.subscribe_chapter_mailing,
             document_type_event=EVENT,
         )
