@@ -29,7 +29,6 @@ export default defineConfig({
   build: {
     outDir,
     emptyOutDir: true,
-    target: 'es2015',
   },
   optimizeDeps: {
     include: ['engine.io-client', 'highlight.js/lib/core'],
