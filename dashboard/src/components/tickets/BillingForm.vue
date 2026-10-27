@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 md:p-8 flex flex-col gap-6"
+    class="bg-surface-white border border-outline-gray-2 rounded-6 p-6 md:p-8 flex flex-col gap-6"
     role="form"
     aria-label="Billing details"
   >
@@ -43,7 +43,7 @@
           id="gst-toggle"
           v-model="billing.hasGST"
           type="checkbox"
-          class="rounded-sm"
+          class="rounded-1"
           :aria-expanded="billing.hasGST"
           aria-controls="gst-fields"
         />
@@ -91,7 +91,7 @@
         id="refund-policy"
         v-model="billing.readRefundPolicy"
         type="checkbox"
-        class="mt-0.5 rounded-sm"
+        class="mt-0.5 rounded-1"
         required
         aria-required="true"
       />
@@ -111,7 +111,7 @@
         id="coc-agreement"
         v-model="billing.acceptCoC"
         type="checkbox"
-        class="mt-0.5 rounded-sm"
+        class="mt-0.5 rounded-1"
         required
         aria-required="true"
       />
@@ -134,7 +134,7 @@
         id="subscribe-newsletter"
         v-model="billing.subscribeNewsletter"
         type="checkbox"
-        class="mt-0.5 rounded-sm"
+        class="mt-0.5 rounded-1"
       />
       <label
         for="subscribe-newsletter"

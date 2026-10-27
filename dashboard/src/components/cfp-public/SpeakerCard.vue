@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-col gap-2 p-4 border border-outline-gray-2 rounded">
+  <div class="flex flex-col gap-2 p-4 border border-outline-gray-2 rounded-4">
     <div class="flex gap-6 justify-between">
       <div class="flex flex-col gap-2 justify-between">
         <div class="flex flex-col gap-1">
-          <h5 class="text-lg font-medium">{{ getValue('full_name') }}</h5>
+          <h5 class="text-md font-medium">{{ getValue('full_name') }}</h5>
           <a
             :href="
               /^https?:\/\//.test(getValue('social_link'))
@@ -30,7 +30,7 @@
           <span>{{ getValue('organization') }}</span>
         </div>
       </div>
-      <img class="w-24 h-24 border rounded" :src="getValue('photo')" alt="Speaker Image" />
+      <img class="w-24 h-24 border rounded-4" :src="getValue('photo')" alt="Speaker Image" />
     </div>
     <div class="space-y-1 p-2">
       <label class="text-base font-medium text-ink-gray-5">Bio</label>

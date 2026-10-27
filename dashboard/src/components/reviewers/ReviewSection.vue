@@ -33,7 +33,7 @@
         :key="review.name"
         class="flex flex-col gap-1 my-2"
       >
-        <div v-if="isReviewOwner(review)" class="p-4 border rounded flex flex-col gap-2">
+        <div v-if="isReviewOwner(review)" class="p-4 border rounded-4 flex flex-col gap-2">
           <div class="flex items-center gap-2">
             <h5 class="text-base font-semibold">Your Review</h5>
             <IconStar
@@ -68,7 +68,7 @@
         </div>
         <div
           v-else-if="review.private_comment"
-          class="p-4 border rounded flex flex-col gap-2 bg-surface-gray-1"
+          class="p-4 border rounded-4 flex flex-col gap-2 bg-surface-gray-1"
         >
           <div class="flex items-center gap-2">
             <span class="text-sm font-medium text-ink-gray-8">Reviewer {{ review.idx }}</span>

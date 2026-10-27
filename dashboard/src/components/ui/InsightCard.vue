@@ -24,7 +24,7 @@ defineProps({
 </script>
 <template>
   <div
-    class="bg-surface-white flex flex-col gap-4 justify-between border rounded p-4 cursor-pointer hover:bg-surface-gray-1 transition-colors"
+    class="bg-surface-white flex flex-col gap-4 justify-between border rounded-4 p-4 cursor-pointer hover:bg-surface-gray-1 transition-colors"
     :class="{ 'ring-2 ring-inset ring-outline-gray-3 bg-surface-gray-1': isActive }"
   >
     <div class="flex flex-col gap-4">
@@ -33,7 +33,7 @@ defineProps({
       </slot>
       <slot name="value">
         <div class="flex gap-2 items-end">
-          <span class="text-2xl font-semibold">{{ value }}</span>
+          <span class="text-xl font-semibold">{{ value }}</span>
           <slot name="post-value"></slot>
         </div>
       </slot>

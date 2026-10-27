@@ -56,7 +56,7 @@
         <div class="mb-4">
           <button
             type="button"
-            class="w-[150px] btn btn-primary bg-surface-gray-6 text-ink-white rounded py-1"
+            class="w-[150px] btn btn-primary bg-surface-gray-6 text-ink-white rounded-4 py-1"
             :aria-expanded="!!showScanner"
             aria-controls="qr-ticket-scanner"
             @click="showScanner = !showScanner"
@@ -118,7 +118,7 @@
                 <span
                   v-for="(data, index) in row.checkin_data"
                   :key="index"
-                  class="flex items-center p-1 rounded-sm"
+                  class="flex items-center p-1 rounded-1"
                 >
                   <Tooltip side="top" :hover-delay="500" bare>
                     <template #content>

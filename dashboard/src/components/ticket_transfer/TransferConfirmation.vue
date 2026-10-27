@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 md:p-8 flex flex-col gap-5 max-w-md w-full"
+    class="bg-surface-white border border-outline-gray-2 rounded-6 p-6 md:p-8 flex flex-col gap-5 max-w-md w-full"
   >
     <div class="prose">
       <h2 class="my-0">

@@ -44,7 +44,7 @@
         </div>
         <div
           v-if="ticket_sales_trend.loading || ticket_sales_trend.data?.data?.length"
-          class="w-full max-w-3xl rounded border border-outline-gray-2 bg-surface-white"
+          class="w-full max-w-3xl rounded-4 border border-outline-gray-2 bg-surface-white"
         >
           <div class="flex flex-wrap items-center justify-between gap-2 px-4 pt-3">
             <div>

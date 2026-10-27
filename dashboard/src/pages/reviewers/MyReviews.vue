@@ -9,7 +9,7 @@
     <div v-if="events.data.length > 0" class="mt-5 flex flex-col">
       <ReviewListItem v-for="event in events.data" :key="event.name" :event="event" />
     </div>
-    <div v-else class="flex flex-col gap-2 rounded-sm p-4 border bg-surface-gray-1">
+    <div v-else class="flex flex-col gap-2 rounded-1 p-4 border bg-surface-gray-1">
       <div class="text-sm font-medium uppercase text-ink-gray-8">No Call For Proposals</div>
       <div class="text-xs text-ink-gray-5">
         There are no CFPs open right now. There are no talks to review.

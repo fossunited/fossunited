@@ -1,5 +1,5 @@
 <template>
-  <div class="p-8 border border-outline-gray-2 rounded bg-surface-gray-2">
+  <div class="p-8 border border-outline-gray-2 rounded-4 bg-surface-gray-2">
     <h3 class="font-semibold">Important Guidelines</h3>
     <div class="prose max-w-full" v-html="_guidelines"></div>
   </div>

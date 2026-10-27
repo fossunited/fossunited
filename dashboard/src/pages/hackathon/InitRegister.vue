@@ -3,7 +3,7 @@
   <div v-if="hackathon.data && !team.loading" class="w-full p-4 flex justify-center items-center">
     <Dialog v-model:open="inJoinTeam" class="z-50">
       <template #title>
-        <div class="text-xl font-semibold">Join Team</div>
+        <div class="text-lg font-semibold">Join Team</div>
       </template>
       <JoinTeam :hackathon="hackathon" :invitations="team_invitations" />
     </Dialog>

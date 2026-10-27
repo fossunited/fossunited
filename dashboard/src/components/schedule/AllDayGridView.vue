@@ -26,7 +26,7 @@
               style="min-width: 200px; width: 200px"
             >
               <div
-                class="bg-surface-gray-3 dark:bg-surface-gray-4 text-ink-gray-9 text-xs font-semibold uppercase leading-tight px-3 py-2 rounded-lg border border-outline-gray-3 w-full text-center"
+                class="bg-surface-gray-3 dark:bg-surface-gray-4 text-ink-gray-9 text-xs font-semibold uppercase leading-tight px-3 py-2 rounded-6 border border-outline-gray-3 w-full text-center"
               >
                 {{ hall }}
               </div>

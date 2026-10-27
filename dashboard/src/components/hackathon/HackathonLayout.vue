@@ -12,7 +12,7 @@
           </div>
         </div>
         <div>
-          <h2 class="text-2xl font-semibold text-ink-gray-7">Access Denied</h2>
+          <h2 class="text-xl font-semibold text-ink-gray-7">Access Denied</h2>
           <p class="mt-2 text-ink-gray-5">
             You have been disqualified from {{ hackathonName }}. You won't be able to participate
             anymore.
@@ -22,7 +22,7 @@
 
       <div
         v-if="rules"
-        class="border border-outline-gray-3 rounded-lg p-6 space-y-3 bg-surface-white"
+        class="border border-outline-gray-3 rounded-6 p-6 space-y-3 bg-surface-white"
       >
         <h4 class="font-semibold flex items-center gap-2 text-ink-gray-7">
           <IconFileInvoice class="w-5 h-5 text-ink-gray-5" />
@@ -31,7 +31,7 @@
         <div class="prose prose-sm max-w-none text-ink-gray-6" v-html="rules"></div>
       </div>
 
-      <div class="border border-outline-gray-3 rounded-lg p-4 bg-surface-white">
+      <div class="border border-outline-gray-3 rounded-6 p-4 bg-surface-white">
         <p class="text-sm flex items-start gap-2 text-ink-gray-6">
           <IconInfoCircle class="w-5 h-5 flex-shrink-0 mt-0.5 text-surface-blue-3" />
           <span>
@@ -44,7 +44,7 @@
         <!-- an easter egg awaits.. -->
         <button
           @click="redirectToExternalUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ')"
-          class="px-6 py-2.5 bg-surface-gray-7 text-ink-white rounded-lg font-medium hover:bg-surface-gray-6 transition-colors"
+          class="px-6 py-2.5 bg-surface-gray-7 text-ink-white rounded-6 font-medium hover:bg-surface-gray-6 transition-colors"
         >
           Better Luck Next Time!
         </button>

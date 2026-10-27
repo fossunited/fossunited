@@ -12,7 +12,7 @@
           <span class="font-semibold">{{ selectedAttendee.full_name }}</span
           >?
         </p>
-        <div class="bg-surface-gray-1 text-base p-2 my-2 rounded-sm font-mono">
+        <div class="bg-surface-gray-1 text-base p-2 my-2 rounded-1 font-mono">
           <p class="leading-6 text-base text-ink-gray-9 font-medium">
             <strong>Name:</strong> {{ selectedAttendee.full_name }}<br />
             <strong>Ticket ID:</strong> {{ selectedAttendee.name }}<br />
@@ -29,7 +29,7 @@
               v-else-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered"
             >
               <strong>Has T-shirt Add-on:</strong>
-              <span class="bg-surface-amber-2 text-ink-amber-3 font-semibold px-2 py-0.5 rounded">
+              <span class="bg-surface-amber-2 text-ink-amber-3 font-semibold px-2 py-0.5 rounded-4">
                 YES </span
               ><br />
               <strong>T-shirt Size:</strong>
@@ -38,7 +38,7 @@
 
             <template v-else>
               <strong>Has T-shirt Add-on:</strong>
-              <span class="bg-surface-red-2 text-ink-red-4 font-semibold px-2 py-0.5 rounded"> NO </span
+              <span class="bg-surface-red-2 text-ink-red-4 font-semibold px-2 py-0.5 rounded-4"> NO </span
               ><br />
             </template>
 
@@ -53,7 +53,7 @@
               v-for="(log, index) in selectedAttendee.checkin_data"
               :key="log.name || log.id || log.check_in_time || index"
               :class="{
-                'text-ink-red-4 font-semibold text-2xl uppercase': isToday(log.check_in_time),
+                'text-ink-red-4 font-semibold text-xl uppercase': isToday(log.check_in_time),
               }"
             >
               {{ formatCheckinLog(log.check_in_time) }}

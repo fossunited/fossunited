@@ -36,7 +36,7 @@
 
       <div
         v-if="totals.codes"
-        class="mt-4 border border-outline-gray-2 rounded-lg overflow-hidden"
+        class="mt-4 border border-outline-gray-2 rounded-6 overflow-hidden"
       >
         <div
           class="flex flex-wrap items-center gap-2 px-4 py-2 bg-surface-gray-1 border-b border-outline-gray-2 text-sm"
@@ -49,7 +49,7 @@
           <span
             v-for="t in tierTotals"
             :key="t.tier"
-            class="text-xs px-2 py-1 rounded bg-surface-gray-2 text-ink-gray-7"
+            class="text-xs px-2 py-1 rounded-4 bg-surface-gray-2 text-ink-gray-7"
           >
             {{ t.tier }}: {{ t.codes }} · {{ t.maxCount }} max
           </span>
@@ -95,7 +95,7 @@
           <template #cell="{ item, row, column }">
             <div v-if="column.key === 'usage'">
               <span
-                class="px-2 py-1 rounded text-sm font-medium"
+                class="px-2 py-1 rounded-4 text-sm font-medium"
                 :class="
                   row.used_count >= row.max_count
                     ? 'bg-surface-red-2 text-ink-red-3'

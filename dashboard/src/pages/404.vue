@@ -4,7 +4,7 @@
       :is="getIcon()"
       class="m-2 w-12 h-12 bg-surface-gray-3 text-ink-gray-8 p-2 rounded-full"
     ></component>
-    <h1 class="text-2xl font-bold">{{ getTitle() }}</h1>
+    <h1 class="text-xl font-bold">{{ getTitle() }}</h1>
     <p class="mb-2">{{ getMessage() }}</p>
     <Button label="Go Home" link="/" />
   </div>

@@ -49,7 +49,7 @@
           </div>
           <div class="z-10 w-fit relative -mt-12 mx-6">
             <img
-              class="aspect-square border-4 border-white rounded w-28"
+              class="aspect-square border-4 border-white rounded-4 w-28"
               :src="
                 profileDoc.doc.profile_photo ||
                 '/assets/fossunited/images/defaults/user_profile_image.png'
@@ -222,7 +222,7 @@
             <div
               v-for="project in (profileDoc?.doc?.projects ?? [])"
               :key="project.name"
-              class="col-span-2 border rounded-lg p-4 flex flex-col gap-3"
+              class="col-span-2 border rounded-6 p-4 flex flex-col gap-3"
             >
               <div v-if="editingProject?.name !== project.name" class="flex justify-between items-start gap-2">
                 <div class="flex-1 min-w-0">
@@ -298,7 +298,7 @@
             </div>
 
             <!-- add new project form -->
-            <div v-if="showAddProject" class="col-span-2 border rounded-lg p-4 flex flex-col gap-3">
+            <div v-if="showAddProject" class="col-span-2 border rounded-6 p-4 flex flex-col gap-3">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <FormControl
                   v-model="newProject.project_name"

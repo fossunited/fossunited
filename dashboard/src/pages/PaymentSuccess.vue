@@ -7,14 +7,14 @@
       <EventHeader v-if="event.data" :event="event.data" />
 
       <div
-        class="bg-surface-white border border-outline-gray-2 rounded-2xl p-8 flex flex-col gap-6 items-center text-center"
+        class="bg-surface-white border border-outline-gray-2 rounded-8 p-8 flex flex-col gap-6 items-center text-center"
       >
         <div class="w-20 h-20 bg-surface-green-2 rounded-full flex items-center justify-center">
           <IconCircleCheck class="w-12 h-12 text-ink-green-3" />
         </div>
 
         <div class="flex flex-col gap-2">
-          <h1 class="text-2xl font-bold text-ink-gray-9">Payment Successful!</h1>
+          <h1 class="text-xl font-bold text-ink-gray-9">Payment Successful!</h1>
           <p class="text-sm text-ink-gray-5">
             Your tickets are confirmed. Check your email for the confirmation.
           </p>
@@ -26,7 +26,7 @@
         </div>
 
         <!-- Order summary -->
-        <div class="bg-surface-gray-1 rounded-lg px-5 py-4 w-full flex flex-col gap-2 text-left">
+        <div class="bg-surface-gray-1 rounded-6 px-5 py-4 w-full flex flex-col gap-2 text-left">
           <div class="flex justify-between text-sm">
             <span class="text-ink-gray-5">Order ID</span>
             <span class="font-mono text-ink-gray-8 text-xs">{{ orderId }}</span>
@@ -69,7 +69,7 @@
         <!-- Inline PDF preview -->
         <div
           v-if="pdfPreviewUrl"
-          class="w-full rounded-xl overflow-hidden border border-outline-gray-2"
+          class="w-full rounded-7 overflow-hidden border border-outline-gray-2"
         >
           <iframe
             :src="pdfPreviewUrl"

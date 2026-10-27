@@ -30,7 +30,7 @@ const accessibleLabel = computed(() => {
     target="_blank"
     rel="noopener noreferrer"
     :aria-label="accessibleLabel"
-    class="p-2 md:p-6 bg-surface-white rounded border flex gap-3 h-fit hover:border-outline-gray-4 transition-colors ease-in-out duration-200"
+    class="p-2 md:p-6 bg-surface-white rounded-4 border flex gap-3 h-fit hover:border-outline-gray-4 transition-colors ease-in-out duration-200"
   >
     <!-- Status colour bar -->
     <div
@@ -44,7 +44,7 @@ const accessibleLabel = computed(() => {
       <div class="flex items-center justify-between gap-2">
         <Badge
           :label="submission.session_type"
-          class="w-fit rounded-sm uppercase font-medium shrink-0"
+          class="w-fit rounded-1 uppercase font-medium shrink-0"
         />
         <Badge size="sm" variant="ghost" class="gap-1 shrink-0 ml-auto">
           <IconHeart
@@ -56,7 +56,7 @@ const accessibleLabel = computed(() => {
         </Badge>
       </div>
 
-      <h4 class="text-base md:text-lg font-medium leading-snug">{{ submission.talk_title }}</h4>
+      <h4 class="text-base md:text-md font-medium leading-snug">{{ submission.talk_title }}</h4>
 
       <div v-if="submission._speaker" class="flex flex-wrap gap-x-4 gap-y-2 mt-1">
         <div
@@ -71,7 +71,7 @@ const accessibleLabel = computed(() => {
 
       <div class="flex items-center justify-end mt-1">
         <Badge
-          class="rounded-sm uppercase font-medium"
+          class="rounded-1 uppercase font-medium"
           :label="submission.status"
           :theme="getStatusBadgeTheme(submission.status)"
         />

@@ -25,7 +25,7 @@
         "
         class="h-12 mb-4"
       />
-      <h1 class="text-3xl font-medium">
+      <h1 class="text-2xl font-medium">
         Register For
         <span class="font-bold">{{ hackathon.data.hackathon_name }}</span>
       </h1>
@@ -34,7 +34,7 @@
 
       <!-- DETAILS -->
       <div class="w-full">
-        <h3 class="text-lg font-semibold">Details</h3>
+        <h3 class="text-md font-semibold">Details</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
           <FormControl
             v-model="participant.full_name"
@@ -84,7 +84,7 @@
             >
               <div
                 :class="[checked ? 'bg-surface-gray-1 border-gray-700' : 'bg-surface-white ']"
-                class="relative flex cursor-pointer rounded-sm px-5 py-3 border focus:outline-none hover:border-outline-gray-4 transition-[border]"
+                class="relative flex cursor-pointer rounded-1 px-5 py-3 border focus:outline-none hover:border-outline-gray-4 transition-[border]"
               >
                 <div class="flex w-full items-center justify-center">
                   <div class="flex flex-col gap-2 items-center">
@@ -116,7 +116,7 @@
           </div>
 
           <div
-            class="flex flex-col items-center sm:flex-row gap-3 bg-surface-amber-1 w-full p-4 text-sm rounded-sm my-4 text-ink-amber-3 outline-2 outline-dashed"
+            class="flex flex-col items-center sm:flex-row gap-3 bg-surface-amber-1 w-full p-4 text-sm rounded-1 my-4 text-ink-amber-3 outline-2 outline-dashed"
           >
             <IconAlertCircle class="w-6 h-6 shrink-0 stroke-yellow-700" />
             <p class="leading-normal text-center sm:text-left">

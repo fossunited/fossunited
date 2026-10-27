@@ -30,14 +30,14 @@
         </tbody>
       </table>
   </Dialog>
-  <div class="flex flex-col w-full border rounded-sm p-4">
+  <div class="flex flex-col w-full border rounded-1 p-4">
     <div class="text-sm flex gap-2 items-center uppercase font-semibold">
       <IconShirtFilled class="w-5 h-5" aria-hidden="true" />
       <span> T-shirts Sold </span>
     </div>
     <div class="flex gap-2 items-end justify-between mt-6">
       <div class="prose">
-        <h2 id="total-tshirts" class="text-lg font-bold">{{ insight.tshirts_sold }}</h2>
+        <h2 id="total-tshirts" class="text-md font-bold">{{ insight.tshirts_sold }}</h2>
       </div>
       <Button
         class="w-fit"

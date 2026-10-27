@@ -18,12 +18,12 @@
         <div v-if="modelValue" class="mb-2">
           <img
             :src="modelValue"
-            class="w-full h-40 object-contain rounded border bg-surface-gray-1"
+            class="w-full h-40 object-contain rounded-4 border bg-surface-gray-1"
             :alt="label ? `${label} preview` : 'Image preview'"
           />
           <div class="flex gap-2 mt-1.5">
             <button
-              class="flex items-center gap-1 px-2 py-1 text-xs rounded bg-surface-gray-2 text-ink-gray-7 hover:bg-surface-gray-3 transition-colors"
+              class="flex items-center gap-1 px-2 py-1 text-xs rounded-4 bg-surface-gray-2 text-ink-gray-7 hover:bg-surface-gray-3 transition-colors"
               :aria-label="`Change ${label || 'image'}`"
               @click="openFileSelector"
             >
@@ -31,7 +31,7 @@
               Change
             </button>
             <button
-              class="flex items-center gap-1 px-2 py-1 text-xs rounded bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+              class="flex items-center gap-1 px-2 py-1 text-xs rounded-4 bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
               :aria-label="`Remove ${label || 'image'}`"
               @click="removeImage"
             >
@@ -44,7 +44,7 @@
         <!-- Upload Area -->
         <div
           v-else
-          class="border-2 border-dashed rounded-lg p-8 transition-all duration-200"
+          class="border-2 border-dashed rounded-6 p-8 transition-all duration-200"
           :class="uploading ? 'cursor-default' : 'hover:cursor-pointer focus:outline-2 focus:outline-offset-2'"
           role="button"
           tabindex="0"

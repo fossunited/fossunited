@@ -18,14 +18,14 @@
       },
     ]"
   />
-  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded bg-surface-white">
+  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded-4 bg-surface-white">
     <h4 class="flex gap-2 items-center font-semibold">
       <span>Actions</span>
     </h4>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div
         v-if="!submission.doc.is_withdrawn"
-        class="flex justify-between gap-4 border rounded p-4 border-red-400"
+        class="flex justify-between gap-4 border rounded-4 p-4 border-red-400"
       >
         <div class="flex flex-col gap-2">
           <h5 class="font-semibold">Withdraw Proposal</h5>
@@ -37,7 +37,7 @@
         <Button label="Withdraw" size="md" theme="red" @click="showConfirmDialog = true" />
       </div>
       <div v-else>
-        <div class="flex justify-between gap-4 border rounded p-4">
+        <div class="flex justify-between gap-4 border rounded-4 p-4">
           <div class="flex flex-col gap-2">
             <h5 class="font-semibold">
               The proposal is currently <span class="text-red-500">withdrawn</span>

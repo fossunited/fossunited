@@ -12,7 +12,7 @@
       <!-- Organiser note, rendered from the event's Markdown Editor field. -->
       <div
         v-if="sanitizedDesc"
-        class="schedule-note mt-3 rounded-lg border border-outline-gray-3 bg-surface-gray-1 dark:bg-surface-gray-2 px-4 py-3 text-sm text-ink-gray-7 dark:text-ink-gray-8 leading-relaxed"
+        class="schedule-note mt-3 rounded-6 border border-outline-gray-3 bg-surface-gray-1 dark:bg-surface-gray-2 px-4 py-3 text-sm text-ink-gray-7 dark:text-ink-gray-8 leading-relaxed"
         v-html="sanitizedDesc"
       />
     </div>
@@ -26,12 +26,12 @@
     >
       <div class="max-w-[840px] mx-auto px-3 sm:px-4 pt-2 sm:pt-3">
         <div
-          class="bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-xl p-2 flex flex-col gap-2 shadow-sm"
+          class="bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-7 p-2 flex flex-col gap-2 shadow-sm"
         >
           <!-- Row 1: Day selector + View switch -->
           <div class="flex items-center gap-2">
             <div
-              class="flex border border-outline-gray-3 rounded-lg overflow-hidden overflow-x-auto scrollbar-none flex-1 min-w-0"
+              class="flex border border-outline-gray-3 rounded-6 overflow-hidden overflow-x-auto scrollbar-none flex-1 min-w-0"
               role="group"
               aria-label="Select event day"
             >
@@ -57,7 +57,7 @@
             </div>
             <!-- Toggle buttons -->
             <div
-              class="shrink-0 flex border border-outline-gray-3 rounded-lg overflow-hidden"
+              class="shrink-0 flex border border-outline-gray-3 rounded-6 overflow-hidden"
               role="group"
               aria-label="Schedule view"
             >
@@ -91,7 +91,7 @@
                 autocomplete="off"
                 autocapitalize="off"
                 spellcheck="false"
-                class="w-full h-8 pl-8 pr-3 border border-outline-gray-3 rounded-lg text-xs bg-surface-gray-1 dark:bg-surface-gray-3 text-ink-gray-9 placeholder:text-ink-gray-7 dark:placeholder:text-ink-gray-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5 focus:border-outline-gray-4 transition-colors"
+                class="w-full h-8 pl-8 pr-3 border border-outline-gray-3 rounded-6 text-xs bg-surface-gray-1 dark:bg-surface-gray-3 text-ink-gray-9 placeholder:text-ink-gray-7 dark:placeholder:text-ink-gray-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5 focus:border-outline-gray-4 transition-colors"
               />
             </div>
             <ScheduleDownload
@@ -103,7 +103,7 @@
           <!-- All | Live | Mine. Only rendered once there is something to switch to -->
           <div
             v-if="modes.length > 1 && !isSearching"
-            class="flex border border-outline-gray-3 rounded-lg overflow-hidden"
+            class="flex border border-outline-gray-3 rounded-6 overflow-hidden"
             role="group"
             aria-label="Filter sessions"
           >
@@ -137,7 +137,7 @@
           -->
           <div
             v-if="view === 'list' && !isSearching && !narrowed && halls.length > 0"
-            class="flex flex-wrap gap-px bg-surface-gray-4 border border-outline-gray-3 rounded-lg overflow-hidden"
+            class="flex flex-wrap gap-px bg-surface-gray-4 border border-outline-gray-3 rounded-6 overflow-hidden"
             role="group"
             aria-label="Select hall"
           >

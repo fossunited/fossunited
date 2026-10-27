@@ -8,7 +8,7 @@
       <div class="flex flex-col gap-4">
         <div class="space-y-2">
           <div class="text-sm uppercase font-medium">Details</div>
-          <div class="bg-surface-gray-1 text-sm p-2 rounded-sm font-mono">
+          <div class="bg-surface-gray-1 text-sm p-2 rounded-1 font-mono">
             <p class="leading-5">
               Name: {{ selectedAttendee.full_name }}
               <br />

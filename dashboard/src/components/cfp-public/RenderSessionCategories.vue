@@ -5,7 +5,7 @@
       <div
         v-for="(category, index) in categories"
         :key="index"
-        class="p-2 flex gap-2 items-center text-sm rounded border border-outline-gray-4 text-ink-gray-6 bg-surface-gray-1"
+        class="p-2 flex gap-2 items-center text-sm rounded-4 border border-outline-gray-4 text-ink-gray-6 bg-surface-gray-1"
       >
         {{ category }}
       </div>

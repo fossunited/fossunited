@@ -60,6 +60,6 @@ const sizeClasses = computed(() => {
 })
 
 const containerClasses = computed(() => {
-  return `w-full flex gap-2 items-center border rounded ${themeClasses.value} ${sizeClasses.value}`
+  return `w-full flex gap-2 items-center border rounded-4 ${themeClasses.value} ${sizeClasses.value}`
 })
 </script>

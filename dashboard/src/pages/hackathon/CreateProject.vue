@@ -130,7 +130,7 @@
         >
           <div
             v-if="hackathon.data.contribution_project_guidelines"
-            class="w-full bg-surface-gray-1 text-ink-gray-8 rounded p-4"
+            class="w-full bg-surface-gray-1 text-ink-gray-8 rounded-4 p-4"
           >
             <h3 class="text-md font-semibold">Contribution Guidelines</h3>
             <div
@@ -140,7 +140,7 @@
           </div>
           <div
             v-if="hackathon.data.partner_project_guidelines && hackathon.data.has_partner_projects"
-            class="w-full bg-surface-blue-1 text-ink-blue-3 rounded p-4"
+            class="w-full bg-surface-blue-1 text-ink-blue-3 rounded-4 p-4"
           >
             <h3 class="text-md font-semibold">Partner Project Guidelines</h3>
             <div
@@ -186,7 +186,7 @@
               >
                 <div
                   :class="[checked ? 'bg-surface-gray-1 border-gray-700' : 'bg-surface-white ']"
-                  class="relative flex cursor-pointer rounded-sm p-4 border focus:outline-none transition-[border]"
+                  class="relative flex cursor-pointer rounded-1 p-4 border focus:outline-none transition-[border]"
                 >
                   <div class="flex w-full items-center justify-between">
                     <div class="flex flex-col gap-2 items-start">

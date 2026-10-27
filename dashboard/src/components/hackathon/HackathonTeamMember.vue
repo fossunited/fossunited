@@ -43,7 +43,7 @@
           <div
             v-for="invite in outgoingInvites.data"
             :key="invite.name"
-            class="flex items-center flex-wrap w-full gap-2 justify-between p-2 rounded-sm even:bg-surface-gray-1"
+            class="flex items-center flex-wrap w-full gap-2 justify-between p-2 rounded-1 even:bg-surface-gray-1"
           >
             <div class="text-sm text-ink-gray-5">
               {{ invite.reciever_email }}

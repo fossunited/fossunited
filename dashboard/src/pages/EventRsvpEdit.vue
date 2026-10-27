@@ -16,7 +16,7 @@
     <div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <div class="flex flex-col gap-3">
-          <div class="text-lg font-semibold">
+          <div class="text-md font-semibold">
             <span>RSVP Form is </span>
             <span v-if="rsvp.doc.is_published" class="text-ink-green-3">Live</span>
             <span v-else class="text-red-500">Unpublished</span>

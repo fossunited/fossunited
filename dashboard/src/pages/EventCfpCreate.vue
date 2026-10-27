@@ -1,7 +1,7 @@
 <template>
   <div v-if="event.doc" class="px-4 py-8 md:p-8 flex flex-col gap-8">
     <div class="flex flex-col md:flex-row justify-between gap-2">
-      <div class="text-xl font-medium">Create CFP</div>
+      <div class="text-lg font-medium">Create CFP</div>
       <Button size="md" label="Create" variant="solid" @click="createCfpForm" />
     </div>
     <div>

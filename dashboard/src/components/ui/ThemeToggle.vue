@@ -14,7 +14,7 @@ const { colorScheme, toggleColorScheme } = useColorScheme()
 
 <template>
   <button
-    class="p-1.5 rounded-md hover:bg-surface-gray-2 transition-colors"
+    class="p-1.5 rounded-5 hover:bg-surface-gray-2 transition-colors"
     :title="colorScheme === 'dark' ? 'Switch to light' : 'Switch to dark'"
     @click="toggleColorScheme"
   >

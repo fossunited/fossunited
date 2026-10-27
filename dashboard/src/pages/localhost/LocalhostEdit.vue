@@ -25,13 +25,13 @@
     <!-- Localhost Header -->
     <LocalhostHeader :localhost="localhost.doc" />
 
-    <div class="rounded-sm border p-4 my-6">
+    <div class="rounded-1 border p-4 my-6">
       <div class="text-sm uppercase font-medium mb-3">Localhost Overview</div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Left: Image -->
         <div>
-          <img :src="getImage()" class="w-[200px] aspect-square object-cover border rounded-lg" />
+          <img :src="getImage()" class="w-[200px] aspect-square object-cover border rounded-6" />
 
           <div class="flex gap-2 mt-3">
             <FileUploader
@@ -66,7 +66,7 @@
         <div class="flex flex-col gap-4">
           <!-- Accepting Attendees -->
           <div class="md:col-span-2">
-            <div class="flex items-center justify-between p-3 border rounded-md">
+            <div class="flex items-center justify-between p-3 border rounded-5">
               <div class="flex flex-col">
                 <span class="font-medium text-ink-gray-8"> Accepting Attendees </span>
                 <span class="text-sm text-ink-gray-5">
@@ -79,14 +79,14 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-1">
               <label class="text-sm font-medium text-ink-gray-6">State</label>
-              <div class="px-3 py-2 border rounded-md bg-surface-gray-1">
+              <div class="px-3 py-2 border rounded-5 bg-surface-gray-1">
                 {{ localhost.doc.state || '—' }}
               </div>
             </div>
 
             <div class="flex flex-col gap-1">
               <label class="text-sm font-medium text-ink-gray-6">City</label>
-              <div class="px-3 py-2 border rounded-md bg-surface-gray-1">
+              <div class="px-3 py-2 border rounded-5 bg-surface-gray-1">
                 {{ localhost.doc.city || '—' }}
               </div>
             </div>
@@ -101,7 +101,7 @@
     </div>
 
     <!-- Details -->
-    <div class="rounded-sm border p-4 my-6">
+    <div class="rounded-1 border p-4 my-6">
       <div class="text-sm uppercase font-medium mb-3">Localhost Details</div>
 
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
@@ -125,7 +125,7 @@
       </div>
     </div>
     <!-- Description -->
-    <div class="rounded-sm border p-4 my-6">
+    <div class="rounded-1 border p-4 my-6">
       <TextEditor
         label="Localhost Description"
         :model-value="localhost.doc.description"

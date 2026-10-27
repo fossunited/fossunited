@@ -6,13 +6,13 @@
       <div v-if="canEditProposal.data !== undefined" class="px-6 pt-4 pb-4">
         <div
           v-if="canEdit"
-          class="rounded border border-outline-gray-2 bg-surface-gray-1 px-4 py-3 text-base text-ink-gray-7"
+          class="rounded-4 border border-outline-gray-2 bg-surface-gray-1 px-4 py-3 text-base text-ink-gray-7"
         >
           You can edit your proposal while the CFP is open.
         </div>
         <div
           v-else
-          class="rounded border border-outline-red-2 bg-surface-red-1 px-4 py-3 text-base text-ink-red-6"
+          class="rounded-4 border border-outline-red-2 bg-surface-red-1 px-4 py-3 text-base text-ink-red-6"
         >
           The CFP is closed. This proposal is now read-only.
         </div>

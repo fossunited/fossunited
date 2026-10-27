@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full mt-3 bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-xl overflow-hidden"
+    class="w-full mt-3 bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-7 overflow-hidden"
   >
     <div class="p-3">
       <div v-if="sessions.length === 0" class="py-16 text-center text-ink-gray-7 dark:text-ink-gray-8 text-sm">

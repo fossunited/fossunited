@@ -26,7 +26,7 @@
         <img
           :src="getBannerImage()"
           alt="Banner Image"
-          class="object-cover rounded-lg w-full aspect-[4.96/1]"
+          class="object-cover rounded-6 w-full aspect-[4.96/1]"
         />
         <div class="flex my-2 gap-2">
           <FileUploader
@@ -68,7 +68,7 @@
         <img
           :src="getChapterLogo()"
           alt="Chapter Logo"
-          class="object-cover rounded-lg aspect-[1/1]"
+          class="object-cover rounded-6 aspect-[1/1]"
         />
         <div class="flex my-2 gap-2">
           <FileUploader

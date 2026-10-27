@@ -38,7 +38,7 @@ const props = defineProps({
 
 const editorClass = computed(() => {
   const height = props.large ? 'min-h-[24rem]' : 'min-h-[12rem]'
-  return `w-full max-w-none ${height} max-h-[48rem] overflow-y-auto border border-t-0 rounded-b-lg p-3`
+  return `w-full max-w-none ${height} max-h-[48rem] overflow-y-auto border border-t-0 rounded-b-6 p-3`
 })
 
 const emit = defineEmits(['update:modelValue'])

@@ -9,7 +9,7 @@
         <span class="text-xs font-medium text-ink-gray-5">{{ item.question }}</span>
 
         <!-- Response is the highlight: very subtle box -->
-        <div class="w-fit max-w-full rounded-md border border-outline-gray-1 bg-surface-gray-1 px-3 py-2">
+        <div class="w-fit max-w-full rounded-5 border border-outline-gray-1 bg-surface-gray-1 px-3 py-2">
           <!-- Rich HTML (Text Editor) -->
           <div
             v-if="isRich(item.type)"

@@ -18,9 +18,9 @@
     </div>
 
     <div class="flex items-center gap-2">
-      <div class="flex items-center gap-1 bg-surface-gray-2 rounded-lg p-1">
+      <div class="flex items-center gap-1 bg-surface-gray-2 rounded-6 p-1">
         <button
-          class="px-3 py-1.5 text-sm rounded-md transition-colors"
+          class="px-3 py-1.5 text-sm rounded-5 transition-colors"
           :class="
             currentView === 'requests'
               ? 'bg-surface-white text-ink-gray-9 font-medium shadow-sm'
@@ -31,7 +31,7 @@
           Requests
         </button>
         <button
-          class="px-3 py-1.5 text-sm rounded-md transition-colors"
+          class="px-3 py-1.5 text-sm rounded-5 transition-colors"
           :class="
             currentView === 'checkins'
               ? 'bg-surface-white text-ink-gray-9 font-medium shadow-sm'
@@ -175,7 +175,7 @@
     </SearchListView>
 
     <div v-else class="text-center py-12 text-ink-gray-4">
-      <p class="text-lg font-medium">No Requests</p>
+      <p class="text-md font-medium">No Requests</p>
       <p class="text-sm mt-1">There are no localhost requests yet.</p>
     </div>
   </div>

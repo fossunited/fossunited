@@ -1,12 +1,12 @@
 <template>
   <div class="flex flex-col gap-4">
     <div class="space-y-2">
-      <h3 class="text-2xl font-semibold">Preview Submission</h3>
+      <h3 class="text-xl font-semibold">Preview Submission</h3>
       <p class="text-sm text-ink-gray-5">Review the details of your proposal before submitting.</p>
     </div>
-    <div class="border p-4 md:p-8 bg-surface-white rounded">
+    <div class="border p-4 md:p-8 bg-surface-white rounded-4">
       <div class="flex flex-col gap-3">
-        <h4 class="text-xl font-medium">
+        <h4 class="text-lg font-medium">
           {{ getValueFromProposal('talk_title') }}
         </h4>
         <div class="text-sm flex gap-2 items-center">
@@ -58,12 +58,12 @@
     <div class="flex flex-col gap-2">
       <div v-for="(field, index) in confirmationFields" :key="index">
         <template v-if="field.fieldname === 'accept_coc'">
-          <div class="inline-flex space-x-2 rounded transition">
+          <div class="inline-flex space-x-2 rounded-4 transition">
             <input
               id="coc-cfp"
               v-model="field.value"
               type="checkbox"
-              class="rounded-sm mt-[1px] bg-surface-white border-outline-gray-4 text-ink-gray-9 hover:border-outline-gray-5 focus:ring-offset-0 focus:border-outline-gray-8 active:border-outline-gray-6 transition hover:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 active:bg-surface-gray-2 w-3.5 h-3.5 shrink-0"
+              class="rounded-1 mt-[1px] bg-surface-white border-outline-gray-4 text-ink-gray-9 hover:border-outline-gray-5 focus:ring-offset-0 focus:border-outline-gray-8 active:border-outline-gray-6 transition hover:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 active:bg-surface-gray-2 w-3.5 h-3.5 shrink-0"
             />
             <label
               for="coc-cfp"

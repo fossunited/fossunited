@@ -36,7 +36,7 @@
         </div>
       </div>
     </div>
-    <div v-else class="flex flex-col gap-2 rounded-sm p-4 border bg-surface-gray-1">
+    <div v-else class="flex flex-col gap-2 rounded-1 p-4 border bg-surface-gray-1">
       <div class="text-sm font-medium uppercase text-ink-gray-8">No Tickets</div>
       <div class="text-xs text-ink-gray-5">You haven't booked any event tickets yet.</div>
     </div>
@@ -54,7 +54,7 @@
         <img
           :src="getTicketQrUrl(selectedTicket.name)"
           :alt="`QR code for ticket ${selectedTicket.name}`"
-          class="w-48 h-48 object-contain rounded-md bg-surface-gray-1 p-3"
+          class="w-48 h-48 object-contain rounded-5 bg-surface-gray-1 p-3"
         />
         <p class="text-xs text-ink-gray-5 font-mono">{{ selectedTicket.name }}</p>
         <div class="flex items-center gap-1.5">
@@ -68,14 +68,14 @@
 
       <div
         v-if="selectedTicket.is_transfer_ticket"
-        class="text-xs text-ink-blue-4 bg-surface-blue-1 rounded-md px-3 py-2"
+        class="text-xs text-ink-blue-4 bg-surface-blue-1 rounded-5 px-3 py-2"
       >
         This is a transferred ticket from another person.
       </div>
 
       <div
         v-if="selectedTicket.is_concluded"
-        class="text-xs text-ink-gray-6 bg-surface-gray-2 rounded-md px-3 py-2"
+        class="text-xs text-ink-gray-6 bg-surface-gray-2 rounded-5 px-3 py-2"
       >
         This event has concluded. Check the event page for photos, recordings, and more.
       </div>
@@ -166,7 +166,7 @@
         <div v-if="selectedTicket.wants_tshirt" class="col-span-2">
           <p class="text-xs text-ink-gray-5">T-shirt</p>
           <span
-            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border w-fit"
+            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-5 border w-fit"
             :class="selectedTshirtState.class"
             :title="selectedTshirtState.tooltip"
           >

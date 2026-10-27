@@ -8,7 +8,7 @@
         <span>{{ event.chapter_name }}</span>
         <span> - {{ dayjs(event.start_date).format('D MMM YYYY') }}</span>
       </div>
-      <h4 class="text-lg font-semibold">{{ event.event_name }}</h4>
+      <h4 class="text-md font-semibold">{{ event.event_name }}</h4>
     </div>
     <div class="flex flex-col md:flex-row gap-2 justify-between">
       <div class="flex flex-col md:flex-row gap-2 font-medium md:divide-x-2 divide-gray-300">

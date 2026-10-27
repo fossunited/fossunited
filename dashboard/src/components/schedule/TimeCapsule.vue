@@ -13,7 +13,7 @@
       @mouseenter="openExpanded"
     >
       <div
-        class="shrink-0 h-11 px-2.5 rounded-lg bg-surface-gray-7 text-ink-white text-xs font-semibold uppercase flex items-center whitespace-nowrap"
+        class="shrink-0 h-11 px-2.5 rounded-6 bg-surface-gray-7 text-ink-white text-xs font-semibold uppercase flex items-center whitespace-nowrap"
       >
         {{ formatTime(session.start_time) }}
       </div>

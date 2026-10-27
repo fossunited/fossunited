@@ -18,9 +18,9 @@
 
       <div class="flex items-center gap-2">
         <!-- View Toggle - Only show when check-ins are available -->
-        <div class="flex items-center gap-1 bg-surface-gray-2 rounded-lg p-1">
+        <div class="flex items-center gap-1 bg-surface-gray-2 rounded-6 p-1">
           <button
-            class="px-3 py-1.5 text-sm rounded-md transition-colors"
+            class="px-3 py-1.5 text-sm rounded-5 transition-colors"
             :class="
               currentView === 'attendees'
                 ? 'bg-surface-white text-ink-gray-9 font-medium shadow-sm'
@@ -31,7 +31,7 @@
             Attendees
           </button>
           <button
-            class="px-3 py-1.5 text-sm rounded-md transition-colors"
+            class="px-3 py-1.5 text-sm rounded-5 transition-colors"
             :class="
               currentView === 'checkins'
                 ? 'bg-surface-white text-ink-gray-9 font-medium shadow-sm'
@@ -91,7 +91,7 @@
       <template #cell="{ item, row, column }">
         <span
           v-if="column.key === 'confirm_attendance'"
-          class="px-2 py-1 rounded text-sm font-medium"
+          class="px-2 py-1 rounded-4 text-sm font-medium"
           :class="item ? 'bg-surface-green-2 text-ink-green-3' : 'bg-surface-red-2 text-ink-red-3'"
         >
           {{ item ? 'Yes' : 'No' }}
@@ -113,7 +113,7 @@
             />
             <div
               v-if="checkinAction(row).tooltip"
-              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-7 text-ink-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-7 text-ink-white text-xs rounded-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
             >
               {{ checkinAction(row).tooltip }}
             </div>
@@ -155,7 +155,7 @@
         <!-- confirm_attendance badge -->
         <span
           v-if="column.key === 'confirm_attendance'"
-          class="px-2 py-0.5 rounded text-sm font-medium w-fit"
+          class="px-2 py-0.5 rounded-4 text-sm font-medium w-fit"
           :class="item ? 'bg-surface-green-2 text-ink-green-3' : 'bg-surface-red-2 text-ink-red-3'"
         >
           {{ item ? 'Yes' : 'No' }}
@@ -192,7 +192,7 @@
           />
           <div
             v-if="checkinAction(row).tooltip"
-            class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-7 text-ink-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+            class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-7 text-ink-white text-xs rounded-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
           >
             {{ checkinAction(row).tooltip }}
           </div>

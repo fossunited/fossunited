@@ -1,17 +1,17 @@
 <template>
   <!-- Mobile: top bar -->
   <header
-    class="flex md:hidden items-center gap-2 h-12 px-3 sticky top-0 z-40 bg-surface-menu-bar border-b border-outline-gray-1 w-full"
+    class="flex md:hidden items-center gap-2 h-12 px-3 sticky top-0 z-40 bg-surface-base border-b border-outline-gray-1 w-full"
   >
     <button
       type="button"
       aria-label="Open navigation menu"
-      class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-gray-2"
+      class="w-8 h-8 flex items-center justify-center rounded-5 hover:bg-surface-gray-2"
       @click="mobileOpen = true"
     >
       <IconMenu class="w-4 h-4 text-ink-gray-6" aria-hidden="true" />
     </button>
-    <img :src="logo" class="w-6 h-6 rounded object-cover" alt="Logo" />
+    <img :src="logo" class="w-6 h-6 rounded-4 object-cover" alt="Logo" />
     <span class="text-base font-medium text-ink-gray-8">FOSS United</span>
   </header>
 
@@ -230,7 +230,7 @@ const itemIcon = (icon, label) =>
           'span',
           {
             class:
-              'w-4 h-4 rounded text-[10px] font-semibold flex items-center justify-center bg-surface-gray-3 text-ink-gray-6 uppercase flex-shrink-0',
+              'w-4 h-4 rounded-4 text-[10px] font-semibold flex items-center justify-center bg-surface-gray-3 text-ink-gray-6 uppercase flex-shrink-0',
           },
           label?.[0] ?? '?',
         )

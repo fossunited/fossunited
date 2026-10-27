@@ -33,7 +33,7 @@
         >
           <div class="flex flex-col gap-1">
             <div
-              class="text-lg font-medium hover:underline hover:cursor-pointer"
+              class="text-md font-medium hover:underline hover:cursor-pointer"
               @click="redirectRoute(invite.project_link.data.route)"
             >
               {{ invite.team_name }}

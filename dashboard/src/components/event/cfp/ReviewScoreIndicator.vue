@@ -83,7 +83,7 @@ onBeforeUnmount(() => {
     <Popover trigger="manual" v-model:open="isOpen">
       <template #trigger>
         <div v-if="hasScores" class="flex flex-col items-start gap-1 w-32 text-xs p-2">
-          <div class="w-full h-1 flex *:rounded">
+          <div class="w-full h-1 flex *:rounded-4">
             <div :style="{ width: `${submission.approved_percent}%` }" class="bg-green-400"></div>
             <div :style="{ width: `${submission.rejected_percent}%` }" class="bg-red-400"></div>
             <div :style="{ width: `${submission.unsure_percent}%` }" class="bg-orange-400"></div>
@@ -93,7 +93,7 @@ onBeforeUnmount(() => {
       </template>
       <template #default>
         <div
-          class="p-4 bg-surface-white rounded flex flex-col gap-2"
+          class="p-4 bg-surface-white rounded-4 flex flex-col gap-2"
           @mouseenter="openNow"
           @mouseleave="closeSoon"
         >

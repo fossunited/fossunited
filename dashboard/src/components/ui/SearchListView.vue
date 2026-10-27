@@ -23,7 +23,7 @@
         <!-- Group by pill selector — only when multiple options provided -->
         <div v-if="groupByOptions && groupByOptions.length > 1" class="flex items-center gap-2">
           <span class="text-sm text-ink-gray-5">Group by:</span>
-          <div class="flex border border-outline-gray-2 rounded-lg overflow-hidden">
+          <div class="flex border border-outline-gray-2 rounded-6 overflow-hidden">
             <button
               v-for="(opt, i) in groupByOptions"
               :key="opt.value"

@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-col gap-2 p-4 border border-outline-gray-2 rounded">
+  <div class="flex flex-col gap-2 p-4 border border-outline-gray-2 rounded-4">
     <div class="flex gap-6 justify-between">
       <div class="flex flex-col gap-2 justify-between">
         <div class="flex flex-col gap-1">
-          <h5 class="text-lg font-semibold text-ink-gray-9">{{ speaker.full_name }}</h5>
+          <h5 class="text-md font-semibold text-ink-gray-9">{{ speaker.full_name }}</h5>
           <div class="flex flex-col text-sm text-ink-gray-5">
             <span>{{ speaker.designation }}</span>
             <span class="font-semibold">{{ speaker.organization }}</span>
@@ -17,12 +17,12 @@
           </Badge>
         </a>
       </div>
-      <img class="w-24 h-24 border rounded" :src="speaker.photo" alt="Speaker Image" />
+      <img class="w-24 h-24 border rounded-4" :src="speaker.photo" alt="Speaker Image" />
     </div>
     <Button v-if="speaker.bio" :label="showBio ? 'Hide Bio' : 'Show Bio'" class="w-fit" @click="showBio = !showBio" />
     <div
       v-show="showBio"
-      class="prose prose-sm prose-h1:text-xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-semibold prose-h4:font-medium prose-h5:font-medium max-w-full"
+      class="prose prose-sm prose-h1:text-lg prose-h2:text-lg prose-h3:text-md prose-h4:text-base prose-h5:text-sm prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-semibold prose-h4:font-medium prose-h5:font-medium max-w-full"
       v-html="cleanedHTML(speaker.bio)"
     ></div>
   </div>

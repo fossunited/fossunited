@@ -35,7 +35,7 @@
         <img
           :src="getBannerImage()"
           alt="Banner Image"
-          class="object-cover w-[280px] border rounded-lg aspect-[1/1]"
+          class="object-cover w-[280px] border rounded-6 aspect-[1/1]"
         />
         <div class="flex gap-2 my-2">
           <FileUploader

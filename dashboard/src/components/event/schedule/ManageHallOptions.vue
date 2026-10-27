@@ -51,7 +51,7 @@ const addHallOption = () => {
       <IconHomeFilled class="w-4 h-4" />
       <span class="text-sm font-semibold">Hall Options</span>
     </div>
-    <div class="flex flex-col gap-2 p-2 bg-surface-white border rounded-sm">
+    <div class="flex flex-col gap-2 p-2 bg-surface-white border rounded-1">
       <div class="flex gap-2 flex-wrap">
         <div
           v-for="option in hall_options_list"

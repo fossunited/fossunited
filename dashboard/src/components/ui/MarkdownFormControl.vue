@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between gap-2">
       <FormLabel v-if="label" :label="label" />
       <div
-        class="flex rounded-md border border-outline-gray-2 overflow-hidden shrink-0"
+        class="flex rounded-5 border border-outline-gray-2 overflow-hidden shrink-0"
         role="tablist"
         :aria-label="label ? `${label} view` : 'Editor view'"
       >
@@ -48,7 +48,7 @@
     />
     <div
       v-else
-      class="prose prose-sm max-w-full p-2.5 border rounded border-outline-gray-2 bg-surface-gray-1 dark:bg-surface-gray-2 dark:prose-invert overflow-auto"
+      class="prose prose-sm max-w-full p-2.5 border rounded-4 border-outline-gray-2 bg-surface-gray-1 dark:bg-surface-gray-2 dark:prose-invert overflow-auto"
       :style="{ minHeight: `${rows * 1.5}rem` }"
     >
       <div v-if="renderedHtml" v-html="renderedHtml" />

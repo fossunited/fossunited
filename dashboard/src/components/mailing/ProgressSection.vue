@@ -12,7 +12,7 @@
   >
     <Progress
       :value="interpolatedProgress"
-      class="border rounded p-4"
+      class="border rounded-4 p-4"
       label="Sending Progress"
       :hint="true"
     />

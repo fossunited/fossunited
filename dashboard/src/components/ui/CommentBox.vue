@@ -13,7 +13,7 @@
 
     <template #editor="{ editor }">
       <EditorContent
-        class="border rounded-lg p-3 focus-within:ring-1 focus-within:ring-outline-gray-3"
+        class="border rounded-6 p-3 focus-within:ring-1 focus-within:ring-outline-gray-3"
         :editor="editor"
       />
     </template>

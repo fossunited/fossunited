@@ -69,7 +69,7 @@
       </div>
       <div
         v-if="data.schedule_sending"
-        class="space-y-3 bg-surface-blue-1 border border-outline-blue-1 border-dashed p-4 rounded"
+        class="space-y-3 bg-surface-blue-1 border border-outline-blue-1 border-dashed p-4 rounded-4"
       >
         <h5 class="text-base font-semibold mb-1">Scheduled Sending</h5>
         <FormControl

@@ -13,7 +13,7 @@
     </h4>
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
       <div class="flex flex-wrap gap-2 items-center divide-x-2 text-ink-gray-8">
-        <Badge class="!rounded-sm" :theme="getTheme[proposal.status]">{{ proposal.status }}</Badge>
+        <Badge class="!rounded-1" :theme="getTheme[proposal.status]">{{ proposal.status }}</Badge>
         <span class="text-sm uppercase pl-2">{{ proposal.event_name }}</span>
         <span class="text-sm uppercase pl-2">{{ proposal.chapter }}</span>
       </div>

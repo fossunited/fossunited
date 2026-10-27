@@ -12,7 +12,7 @@
     </template>
     <template #body>
       <div
-        class="my-2 rounded-lg border border-outline-gray-1 bg-surface-white shadow-xl max-w-[calc(100vw-1.5rem)]"
+        class="my-2 rounded-6 border border-outline-gray-1 bg-surface-white shadow-xl max-w-[calc(100vw-1.5rem)]"
       >
         <div class="w-[min(260px,calc(100vw-2rem))] p-2 text-sm">
           <div v-if="filters.length">

@@ -1,7 +1,7 @@
 <template>
   <section
     aria-label="Speaker Information"
-    class="flex flex-col gap-6 w-full p-4 md:p-8 border rounded bg-surface-white"
+    class="flex flex-col gap-6 w-full p-4 md:p-8 border rounded-4 bg-surface-white"
   >
     <h4 v-if="showTitle" class="flex gap-2 items-center font-semibold">
       <IconUserCircle aria-hidden="true" />
@@ -13,7 +13,7 @@
         :key="index"
         role="group"
         :aria-label="`Speaker ${index + 1}`"
-        class="flex flex-col gap-4 p-6 border rounded border-outline-gray-2"
+        class="flex flex-col gap-4 p-6 border rounded-4 border-outline-gray-2"
       >
         <div
           v-if="speakers.length > 1"

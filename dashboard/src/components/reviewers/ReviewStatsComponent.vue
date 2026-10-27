@@ -1,13 +1,13 @@
 <template>
   <div
-    class="grid grid-cols-3 gap-4 md:gap-2 items-center justify-between px-6 py-4 border rounded md:divide-x-2 *:px-6"
+    class="grid grid-cols-3 gap-4 md:gap-2 items-center justify-between px-6 py-4 border rounded-4 md:divide-x-2 *:px-6"
   >
     <div
       v-for="(value, key) in stats"
       :key="key"
       class="flex flex-col justify-center md:justify-normal items-center md:items-start"
     >
-      <div class="flex gap-1 items-center text-xl font-medium first:px-0" :class="getColor(key)">
+      <div class="flex gap-1 items-center text-lg font-medium first:px-0" :class="getColor(key)">
         {{ value }}
       </div>
       <span class="text-sm text-ink-gray-4">{{ key }}</span>

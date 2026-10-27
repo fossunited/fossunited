@@ -11,7 +11,7 @@
       { label: 'Remove', theme: 'red', onClick: handleDelete },
     ]"
   />
-  <div class="border p-4 flex flex-col gap-2 rounded items-center">
+  <div class="border p-4 flex flex-col gap-2 rounded-4 items-center">
     <div class="relative w-full">
       <div v-if="editable" class="top-0 right-0 absolute flex flex-row-reverse gap-2 z-10">
         <Button :icon="IconTrash" theme="red" @click="showConfirmation = true" />

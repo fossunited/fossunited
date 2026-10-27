@@ -7,7 +7,7 @@
         v-if="transfer_settings.doc?.banner_image"
         :src="transfer_settings.doc.banner_image"
         alt="Ticket Transfers banner"
-        class="object-cover hidden md:block w-full border rounded-lg aspect-[4.96/1]"
+        class="object-cover hidden md:block w-full border rounded-6 aspect-[4.96/1]"
       />
       <div class="mt-8">
         <div class="prose min-w-full">
@@ -19,7 +19,7 @@
           ></div>
         </div>
       </div>
-      <div class="bg-surface-white p-6 rounded border w-full">
+      <div class="bg-surface-white p-6 rounded-4 border w-full">
         <div class="flex flex-col md:grid md:grid-cols-2 gap-4">
           <div class="col-span-2 flex flex-col gap-2">
             <div class="prose">
