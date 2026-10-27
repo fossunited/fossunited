@@ -3,7 +3,7 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row justify-between gap-2 mt-4">
       <div>
-        <div class="text-base font-medium">Edit Localhost</div>
+        <div class="text-base-medium">Edit Localhost</div>
         <div class="text-sm text-ink-gray-5">Update venue details and visibility</div>
       </div>
 
@@ -26,7 +26,7 @@
     <LocalhostHeader :localhost="localhost.doc" />
 
     <div class="rounded-1 border p-4 my-6">
-      <div class="text-sm uppercase font-medium mb-3">Localhost Overview</div>
+      <div class="text-sm-medium uppercase mb-3">Localhost Overview</div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Left: Image -->
@@ -78,14 +78,14 @@
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-1">
-              <label class="text-sm font-medium text-ink-gray-6">State</label>
+              <label class="text-sm-medium text-ink-gray-6">State</label>
               <div class="px-3 py-2 border rounded-5 bg-surface-gray-1">
                 {{ localhost.doc.state || '—' }}
               </div>
             </div>
 
             <div class="flex flex-col gap-1">
-              <label class="text-sm font-medium text-ink-gray-6">City</label>
+              <label class="text-sm-medium text-ink-gray-6">City</label>
               <div class="px-3 py-2 border rounded-5 bg-surface-gray-1">
                 {{ localhost.doc.city || '—' }}
               </div>
@@ -93,7 +93,7 @@
           </div>
 
           <div>
-            <label class="text-sm font-medium text-ink-gray-6 mb-1 block"> Public Route </label>
+            <label class="text-sm-medium text-ink-gray-6 mb-1 block"> Public Route </label>
             <CopyToClipboardComponent :route="wholeRoute" />
           </div>
         </div>
@@ -102,7 +102,7 @@
 
     <!-- Details -->
     <div class="rounded-1 border p-4 my-6">
-      <div class="text-sm uppercase font-medium mb-3">Localhost Details</div>
+      <div class="text-sm-medium uppercase mb-3">Localhost Details</div>
 
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
         <FormControl

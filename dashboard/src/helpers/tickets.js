@@ -37,19 +37,19 @@ export const getTshirtState = (ticket) => {
     return {
       tooltip: 'Collected',
       icon: IconShirt,
-      class: 'bg-surface-green-2 text-ink-green-4 border-transparent',
+      class: 'bg-surface-green-2 text-ink-green-8 border-transparent',
     }
   }
   if (ticket.is_concluded) {
     return {
       tooltip: 'Not collected, event has ended',
       icon: IconAlertTriangle,
-      class: 'bg-transparent text-ink-red-4 border-outline-red-3',
+      class: 'bg-transparent text-ink-red-8 border-outline-red-4',
     }
   }
   return {
     tooltip: 'Not collected yet',
     icon: IconShirt,
-    class: 'bg-transparent text-ink-green-4 border-outline-green-3',
+    class: 'bg-transparent text-ink-green-8 border-outline-green-4',
   }
 }

@@ -85,7 +85,7 @@
           :key="col.key"
           class="flex flex-col gap-1 py-3 first:pt-0"
         >
-          <span class="text-xs font-medium text-ink-gray-4 uppercase tracking-wide">{{ col.label }}</span>
+          <span class="text-xs-medium text-ink-gray-4 uppercase tracking-wide">{{ col.label }}</span>
           <slot name="drawer-cell" :column="col" :item="selectedRow[col.key]" :row="selectedRow">
             <span class="text-sm text-ink-gray-7 break-words whitespace-pre-wrap">
               {{ selectedRow[col.key] ?? '—' }}

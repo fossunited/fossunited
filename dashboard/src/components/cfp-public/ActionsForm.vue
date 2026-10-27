@@ -18,7 +18,7 @@
       },
     ]"
   />
-  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded-4 bg-surface-white">
+  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded-4 bg-surface-base">
     <h4 class="flex gap-2 items-center font-semibold">
       <span>Actions</span>
     </h4>

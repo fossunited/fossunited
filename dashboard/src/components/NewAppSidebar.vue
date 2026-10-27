@@ -12,7 +12,7 @@
       <IconMenu class="w-4 h-4 text-ink-gray-6" aria-hidden="true" />
     </button>
     <img :src="logo" class="w-6 h-6 rounded-4 object-cover" alt="Logo" />
-    <span class="text-base font-medium text-ink-gray-8">FOSS United</span>
+    <span class="text-base-medium text-ink-gray-8">FOSS United</span>
   </header>
 
   <!-- Mobile: backdrop -->
@@ -68,7 +68,7 @@
         <div class="mt-auto flex flex-col gap-2 pt-2">
           <p
             v-if="!resolvedCollapsed"
-            class="text-sm leading-normal tracking-tight font-medium text-ink-gray-7 dark:text-ink-gray-8"
+            class="text-sm-medium leading-normal tracking-tight text-ink-gray-7 dark:text-ink-gray-8"
           >
             Need Help? Check out our
             <a

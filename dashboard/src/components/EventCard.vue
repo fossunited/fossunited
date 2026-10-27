@@ -10,12 +10,12 @@
     @keydown.space.prevent="goToDashboard"
   >
     <div class="flex justify-between">
-      <div class="text-sm font-medium">
+      <div class="text-sm-medium">
         {{ event.chapter_name }}
       </div>
       <Badge :variant="'subtle'" :theme="badgeColors[event.status]" :label="event.status"></Badge>
     </div>
-    <div class="text-sm font-medium">
+    <div class="text-sm-medium">
       {{
         new Date(event.event_start_date).toLocaleDateString('en-IN', {
           day: 'numeric',

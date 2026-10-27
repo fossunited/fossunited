@@ -4,7 +4,7 @@
       chapter.doc.chapter_type
     }}</FossClubBranding>
     <CityCommunityBranding v-else>{{ chapter.doc.chapter_type }}</CityCommunityBranding>
-    <div class="text-2xl font-semibold">{{ chapter.doc.chapter_name }}</div>
+    <div class="text-3xl-semibold">{{ chapter.doc.chapter_name }}</div>
   </div>
 </template>
 <script setup>

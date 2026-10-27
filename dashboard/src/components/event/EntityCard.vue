@@ -23,7 +23,7 @@
         :alt="item[nameKey] || 'Image preview'"
       />
     </div>
-    <h4 class="text-md font-medium">{{ item[nameKey] }}</h4>
+    <h4 class="text-md-medium">{{ item[nameKey] }}</h4>
     <slot />
   </div>
 </template>

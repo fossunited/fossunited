@@ -12,8 +12,8 @@
           <div class="flex flex-col gap-2">
             <div class="text-sm text-ink-gray-5">Status</div>
             <div
-              class="font-medium text-sm flex items-center gap-2"
-              :class="tier.enabled ? 'text-ink-green-3' : ''"
+              class=" text-sm-medium flex items-center gap-2"
+              :class="tier.enabled ? 'text-ink-green-6' : ''"
             >
               <LivePing v-if="tier.enabled" />
               <span>
@@ -46,7 +46,7 @@
           <DatePicker
             v-model="modifyTier.valid_till"
             variant="subtle"
-            input-class="bg-surface-white border-none hover:bg-surface-white px-0"
+            input-class="bg-surface-base border-none hover:bg-surface-base px-0"
           />
         </div>
         <Input

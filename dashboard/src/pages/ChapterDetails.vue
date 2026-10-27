@@ -11,7 +11,7 @@
           @click="updateDetails()"
         ></Button>
         <Button
-          class="w-fit bg-green-600 text-ink-gray-9 hover:bg-green-700 disabled:opacity-80 disabled:text-ink-white disabled:cursor-not-allowed"
+          class="w-fit bg-green-600 text-ink-gray-9 hover:bg-green-700 disabled:opacity-80 disabled:text-ink-base disabled:cursor-not-allowed"
           size="md"
           label="See on website"
           :icon-left="IconExternalLink"

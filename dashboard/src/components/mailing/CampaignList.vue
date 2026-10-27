@@ -39,7 +39,7 @@
         </span>
       </template>
       <template v-else>
-        <span class="text-base font-medium">{{ item }}</span>
+        <span class="text-base-medium">{{ item }}</span>
       </template>
     </template>
   </ListView>

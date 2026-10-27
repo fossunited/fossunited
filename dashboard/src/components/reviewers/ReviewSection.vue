@@ -35,7 +35,7 @@
       >
         <div v-if="isReviewOwner(review)" class="p-4 border rounded-4 flex flex-col gap-2">
           <div class="flex items-center gap-2">
-            <h5 class="text-base font-semibold">Your Review</h5>
+            <h5 class="text-base-semibold">Your Review</h5>
             <IconStar
               v-if="review.must_have"
               class="w-4 h-4 text-yellow-500"
@@ -71,7 +71,7 @@
           class="p-4 border rounded-4 flex flex-col gap-2 bg-surface-gray-1"
         >
           <div class="flex items-center gap-2">
-            <span class="text-sm font-medium text-ink-gray-8">Reviewer {{ review.idx }}</span>
+            <span class="text-sm-medium text-ink-gray-8">Reviewer {{ review.idx }}</span>
             <IconStar
               v-if="review.must_have"
               class="w-4 h-4 text-yellow-500"

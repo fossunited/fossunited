@@ -6,9 +6,9 @@
     </div>
     <div class="w-full md:w-1/3 mt-4 flex gap-2 flex-col rounded-4 border p-4">
       <div class="flex justify-between items-center">
-        <div class="text-base font-semibold mb-1">
+        <div class="text-base-semibold mb-1">
           T-Shirts add-on is
-          <span :class="event.data.paid_tshirts_available ? 'text-ink-green-3' : 'text-ink-gray-5'">{{
+          <span :class="event.data.paid_tshirts_available ? 'text-ink-green-6' : 'text-ink-gray-5'">{{
             event.data.paid_tshirts_available ? 'Available' : 'Unavailable'
           }}</span>
         </div>
@@ -26,7 +26,7 @@
           <Input
             v-model="newTshirtPrice"
             class="w-1/3"
-            input-classes="text-xl"
+            input-classes="text-2xl"
             placeholder="0.00"
           >
           </Input>

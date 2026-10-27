@@ -95,18 +95,18 @@
           <template #cell="{ item, row, column }">
             <div v-if="column.key === 'usage'">
               <span
-                class="px-2 py-1 rounded-4 text-sm font-medium"
+                class="px-2 py-1 rounded-4 text-sm-medium"
                 :class="
                   row.used_count >= row.max_count
-                    ? 'bg-surface-red-2 text-ink-red-3'
-                    : 'bg-surface-green-2 text-ink-green-3'
+                    ? 'bg-surface-red-2 text-ink-red-6'
+                    : 'bg-surface-green-2 text-ink-green-6'
                 "
               >
                 {{ row.used_count }} / {{ row.max_count }}
               </span>
             </div>
             <div v-else-if="column.key === 'tshirt_included'">
-              <IconShirt v-if="row.tshirt_included" class="w-4 h-4 text-ink-green-3" />
+              <IconShirt v-if="row.tshirt_included" class="w-4 h-4 text-ink-green-6" />
               <span v-else class="text-ink-gray-4">—</span>
             </div>
             <div v-else>
@@ -124,7 +124,7 @@
             approved proposals ·
             <span class="font-medium">{{ speakerPreview.data.already_has }}</span> already have
             coupons ·
-            <span class="font-medium text-ink-green-3">{{ speakerPreview.data.will_create }}</span>
+            <span class="font-medium text-ink-green-6">{{ speakerPreview.data.will_create }}</span>
             will be created
           </div>
           <FormControl
@@ -141,7 +141,7 @@
             label="T-shirt included"
             description="Speakers will be asked for a t-shirt size when claiming"
           />
-          <p v-if="speakerPreviewErr" class="text-sm text-ink-red-3">{{ speakerPreviewErr }}</p>
+          <p v-if="speakerPreviewErr" class="text-sm text-ink-red-6">{{ speakerPreviewErr }}</p>
         </div>
       <template #actions>
         <Button label="Cancel" @click="showSpeakerDialog = false" />

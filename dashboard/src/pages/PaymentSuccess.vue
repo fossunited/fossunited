@@ -7,18 +7,18 @@
       <EventHeader v-if="event.data" :event="event.data" />
 
       <div
-        class="bg-surface-white border border-outline-gray-2 rounded-8 p-8 flex flex-col gap-6 items-center text-center"
+        class="bg-surface-base border border-outline-gray-2 rounded-8 p-8 flex flex-col gap-6 items-center text-center"
       >
         <div class="w-20 h-20 bg-surface-green-2 rounded-full flex items-center justify-center">
-          <IconCircleCheck class="w-12 h-12 text-ink-green-3" />
+          <IconCircleCheck class="w-12 h-12 text-ink-green-6" />
         </div>
 
         <div class="flex flex-col gap-2">
-          <h1 class="text-xl font-bold text-ink-gray-9">Payment Successful!</h1>
+          <h1 class="text-2xl-bold text-ink-gray-9">Payment Successful!</h1>
           <p class="text-sm text-ink-gray-5">
             Your tickets are confirmed. Check your email for the confirmation.
           </p>
-          <p v-if="event.data" class="text-sm font-medium text-ink-gray-7 mt-1">
+          <p v-if="event.data" class="text-sm-medium text-ink-gray-7 mt-1">
             We are eagerly looking forward to seeing you at
             <span class="text-ink-gray-9 font-semibold">{{ event.data.event_name }}</span
             >!

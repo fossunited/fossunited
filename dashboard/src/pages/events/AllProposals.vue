@@ -61,7 +61,7 @@ usePageMeta(() => {
     </div>
 
     <div class="w-full space-y-4">
-      <h1 class="text-2xl font-bold">Talk Proposals</h1>
+      <h1 class="text-3xl-bold">Talk Proposals</h1>
       <EventHeader :event="cfpData.data.event">
         <template #logo>
           <ProposalLogo></ProposalLogo>

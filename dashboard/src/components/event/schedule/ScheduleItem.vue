@@ -61,7 +61,7 @@ const isIncomplete = computed(() => {
 
 <template>
   <div
-    class="p-4 rounded-6 border bg-surface-white hover:border-outline-gray-3 hover:shadow-sm transition-all cursor-pointer relative overflow-hidden"
+    class="p-4 rounded-6 border bg-surface-base hover:border-outline-gray-3 hover:shadow-sm transition-all cursor-pointer relative overflow-hidden"
     :class="{
       stripes: schedule_item.is_new,
       'border-outline-amber-1 bg-surface-amber-1/30': isIncomplete && !schedule_item.is_new,
@@ -80,7 +80,7 @@ const isIncomplete = computed(() => {
     <div class="pl-3 flex flex-col gap-2">
       <!-- Title and Category -->
       <div class="flex items-start justify-between gap-2">
-        <h5 class="text-base font-semibold flex-1 leading-snug">
+        <h5 class="text-base-semibold flex-1 leading-snug">
           {{ schedule_item.title || 'Untitled Schedule Item' }}
         </h5>
         <Badge
@@ -113,7 +113,7 @@ const isIncomplete = computed(() => {
       <!-- Warnings for incomplete items -->
       <div
         v-if="isIncomplete"
-        class="flex items-center gap-1.5 text-xs text-ink-amber-3 bg-surface-amber-1 px-2 py-1 rounded-4"
+        class="flex items-center gap-1.5 text-xs text-ink-amber-6 bg-surface-amber-1 px-2 py-1 rounded-4"
       >
         <IconAlertTriangleFilled class="h-6 w-6" />
         <span>Incomplete information</span>

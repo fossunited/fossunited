@@ -30,7 +30,7 @@
         <Button variant="solid" label="Send" class="w-full" />
       </template>
       <template #default="{ close }">
-        <div class="p-2 text-ink-white rounded-1 flex flex-col gap-2 items-center">
+        <div class="p-2 text-ink-base rounded-1 flex flex-col gap-2 items-center">
           <Button
             v-for="(option, key) in sendOptions"
             :key="key"

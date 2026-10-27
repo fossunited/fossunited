@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-2">
-    <label class="text-base font-medium text-ink-gray-5">Session Categories</label>
+    <label class="text-base-medium text-ink-gray-5">Session Categories</label>
     <div v-if="categories.length > 0" class="flex flex-wrap gap-2">
       <div
         v-for="(category, index) in categories"

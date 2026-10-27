@@ -6,7 +6,7 @@
       class="p-1 cursor-pointer transition-colors text-base"
       :class="
         inInvite == section.value
-          ? 'text-ink-gray-9 border-b-2 border-outline-gray-5 font-medium'
+          ? 'text-ink-gray-9 border-b-2 border-outline-gray-7 font-medium'
           : ' text-ink-gray-5'
       "
       @click="inInvite = section.value"
@@ -32,7 +32,7 @@
             @click="createJoinRequest"
           />
         </div>
-        <div class="w-full text-sm font-medium uppercase my-3 text-center">Or</div>
+        <div class="w-full text-sm-medium uppercase my-3 text-center">Or</div>
         <div class="flex gap-2 items-center text-base flex-wrap">
           <div class="">Invite via team code:</div>
           <CopyToClipboard :route="teamCode" />
@@ -55,7 +55,7 @@
           </div>
         </div>
       </div>
-      <div v-else class="text-sm text-ink-red-4">
+      <div v-else class="text-sm text-ink-red-8">
         Reached maximum count of {{ teamMemberCount.max_team_size }} members in team
       </div>
     </div>
@@ -73,7 +73,7 @@
               class="w-8 h-8 rounded-full"
             />
             <div>
-              <div class="text-base font-medium">{{ member.full_name }}</div>
+              <div class="text-base-medium">{{ member.full_name }}</div>
               <div class="text-sm text-ink-gray-5">{{ member.email }}</div>
             </div>
           </div>

@@ -93,7 +93,7 @@ onBeforeUnmount(() => {
       </template>
       <template #default>
         <div
-          class="p-4 bg-surface-white rounded-4 flex flex-col gap-2"
+          class="p-4 bg-surface-base rounded-4 flex flex-col gap-2"
           @mouseenter="openNow"
           @mouseleave="closeSoon"
         >
@@ -103,8 +103,8 @@ onBeforeUnmount(() => {
             class="flex gap-2 last:border-t last:pt-2"
           >
             <div class="h-4 w-4" :class="scoreItem.color"></div>
-            <span class="text-sm font-medium">{{ scoreItem.label }}</span>
-            <span class="text-sm font-medium">{{ scoreItem.value }}%</span>
+            <span class="text-sm-medium">{{ scoreItem.label }}</span>
+            <span class="text-sm-medium">{{ scoreItem.value }}%</span>
           </div>
         </div>
       </template>

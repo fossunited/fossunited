@@ -11,7 +11,7 @@
       :export-columns="exportColumns"
     >
       <template #group-header="{ group }">
-        <span class="text-base font-medium leading-6 text-ink-gray-9">
+        <span class="text-base-medium leading-6 text-ink-gray-9">
           {{ formatFullDate(group.group) }} - {{ group.rows.length }} check-ins
         </span>
       </template>

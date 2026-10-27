@@ -96,7 +96,7 @@
               @update:model-value="toggleShowActivity"
             />
             <div class="col-span-2 py-1 border-b">
-              <h4 class="text-md font-medium uppercase">Basic Details</h4>
+              <h4 class="text-md-medium uppercase">Basic Details</h4>
             </div>
             <FormControl
               v-model="profileDoc.doc.full_name"
@@ -130,10 +130,10 @@
                   "
                   class="flex"
                 >
-                  <span class="text-sm text-ink-green-2 mr-1 font-semibold">
+                  <span class="text-sm-semibold text-ink-green-5 mr-1">
                     Username is available
                   </span>
-                  <IconCheck class="h-4 w-4 text-ink-green-2" />
+                  <IconCheck class="h-4 w-4 text-ink-green-5" />
                 </div>
               </div>
               <ErrorMessage :message="usernameValidateErrors" class="mt-2" />
@@ -172,7 +172,7 @@
               @update:model-value="profileDoc.doc.about = $event"
             />
             <div class="col-span-2 py-1 border-b">
-              <h4 class="text-md font-medium uppercase">SOCIAL Links</h4>
+              <h4 class="text-md-medium uppercase">SOCIAL Links</h4>
             </div>
             <div class="col-span-2 text-sm text-ink-gray-5">
               Enter the complete links to your social, including
@@ -204,7 +204,7 @@
 
             <!-- Projects -->
             <div class="col-span-2 py-1 border-b mt-2 flex items-center justify-between">
-              <h4 class="text-md font-medium uppercase">Projects</h4>
+              <h4 class="text-md-medium uppercase">Projects</h4>
               <Button
                 v-if="!showAddProject"
                 variant="outline"
@@ -232,7 +232,7 @@
                     :href="project.project_link"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-sm text-ink-blue-3 hover:underline break-all"
+                    class="text-sm text-ink-blue-6 hover:underline break-all"
                   >{{ project.project_link }}</a>
                 </div>
                 <div class="flex gap-1 shrink-0">

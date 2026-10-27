@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col w-full border rounded-1 p-4">
-    <div class="text-sm font-semibold">{{ tier.title }}</div>
+    <div class="text-sm-semibold">{{ tier.title }}</div>
     <div class="flex gap-2 items-end justify-between mt-6">
       <div>
         <div class="prose">
@@ -12,11 +12,11 @@
       </div>
       <div
         v-if="tier.tickets_sold_today !== undefined && tier.tickets_sold_today !== null"
-        class="flex items-center gap-1 text-sm mt-1 font-medium p-1 w-fit rounded-1 px-2"
+        class="flex items-center gap-1 text-sm-medium mt-1 p-1 w-fit rounded-1 px-2"
         :class="
           tier.tickets_sold_today === 0
             ? 'bg-surface-gray-2 text-ink-gray-5'
-            : 'bg-surface-green-2 text-ink-green-3'
+            : 'bg-surface-green-2 text-ink-green-6'
         "
       >
         <IconArrowNarrowUp v-if="tier.tickets_sold_today" class="w-4 h-4 -mx-1" />

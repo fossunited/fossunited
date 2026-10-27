@@ -15,8 +15,8 @@ import ChevronDown from '@/components/icons/ChevronDown.vue'
 const selectClasses = `
   w-50 h-10 !p-2 !pr-10 !px-3
   rounded-1
-  border border-outline-gray-5 bg-surface-gray-7 text-gray-100
-  hover:bg-surface-gray-6 hover:border-outline-gray-5
+  border border-outline-gray-7 bg-surface-gray-10 text-gray-100
+  hover:bg-surface-gray-9 hover:border-outline-gray-7
   focus:outline-none focus-visible:ring-1 focus-visible:ring-gray-400
   transition-colors
 `

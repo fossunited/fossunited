@@ -16,9 +16,9 @@
     <div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <div class="flex flex-col gap-3">
-          <div class="text-md font-semibold">
+          <div class="text-md-semibold">
             <span>RSVP Form is </span>
-            <span v-if="rsvp.doc.is_published" class="text-ink-green-3">Live</span>
+            <span v-if="rsvp.doc.is_published" class="text-ink-green-6">Live</span>
             <span v-else class="text-red-500">Unpublished</span>
           </div>
           <span v-if="rsvp.doc.is_published" class="text-sm text-ink-gray-5">
@@ -57,7 +57,7 @@
         <div class="flex flex-col gap-1.5">
           <div class="flex items-center gap-2">
             <Switch v-model="rsvp.doc.requires_host_approval" />
-            <span class="text-sm font-medium text-ink-gray-8">Requires organizer approval</span>
+            <span class="text-sm-medium text-ink-gray-8">Requires organizer approval</span>
           </div>
           <p class="text-xs text-ink-gray-5 leading-relaxed">
             When enabled, attendees must be accepted or denied via the

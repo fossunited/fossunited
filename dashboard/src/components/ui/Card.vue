@@ -6,13 +6,13 @@
     Token names are the pre-tokens-v2 spellings used everywhere else in the
     app, so the `tokens-v2` codemod renames them along with the rest.
   -->
-  <div class="flex flex-col rounded-6 border bg-surface-cards px-6 py-5 shadow">
+  <div class="flex flex-col rounded-6 border bg-surface-elevation-1 px-6 py-5 shadow">
     <div class="flex items-baseline justify-between">
       <div class="flex items-baseline space-x-2">
         <div v-if="$slots['actions-left']" class="flex items-center space-x-2">
           <slot name="actions-left" />
         </div>
-        <h2 v-if="title" class="text-lg font-semibold text-ink-gray-9">{{ title }}</h2>
+        <h2 v-if="title" class="text-lg-semibold text-ink-gray-9">{{ title }}</h2>
       </div>
       <div v-if="$slots['actions']" class="flex items-center space-x-2">
         <slot name="actions" />

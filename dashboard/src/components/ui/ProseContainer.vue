@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col my-1">
-    <label class="text-base font-medium text-ink-gray-5 -mb-3 px-2 bg-surface-white z-10 w-fit ml-2">
+    <label class="text-base-medium text-ink-gray-5 -mb-3 px-2 bg-surface-base z-10 w-fit ml-2">
       {{ label }}
     </label>
     <div

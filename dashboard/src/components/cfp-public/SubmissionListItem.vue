@@ -30,7 +30,7 @@ const accessibleLabel = computed(() => {
     target="_blank"
     rel="noopener noreferrer"
     :aria-label="accessibleLabel"
-    class="p-2 md:p-6 bg-surface-white rounded-4 border flex gap-3 h-fit hover:border-outline-gray-4 transition-colors ease-in-out duration-200"
+    class="p-2 md:p-6 bg-surface-base rounded-4 border flex gap-3 h-fit hover:border-outline-gray-4 transition-colors ease-in-out duration-200"
   >
     <!-- Status colour bar -->
     <div
@@ -56,7 +56,7 @@ const accessibleLabel = computed(() => {
         </Badge>
       </div>
 
-      <h4 class="text-base md:text-md font-medium leading-snug">{{ submission.talk_title }}</h4>
+      <h4 class="text-base-medium md:text-md leading-snug">{{ submission.talk_title }}</h4>
 
       <div v-if="submission._speaker" class="flex flex-wrap gap-x-4 gap-y-2 mt-1">
         <div

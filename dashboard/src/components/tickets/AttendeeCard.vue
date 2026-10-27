@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-surface-white border border-outline-gray-2 rounded-6 p-6 md:p-8 flex flex-col gap-6"
+    class="bg-surface-base border border-outline-gray-2 rounded-6 p-6 md:p-8 flex flex-col gap-6"
   >
     <div class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-1.5 min-w-0">
@@ -91,7 +91,7 @@
 
       <!-- T-shirt -->
       <div v-if="tshirtIncluded || showTshirt" class="flex flex-col gap-3">
-        <div v-if="tshirtIncluded" class="flex items-center gap-2 text-sm text-ink-green-3">
+        <div v-if="tshirtIncluded" class="flex items-center gap-2 text-sm text-ink-green-6">
           <IconShirt class="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>T-shirt included with this tier</span>
         </div>

@@ -7,17 +7,17 @@
   >
     <!-- Compact 60px card: hover expands, click navigates to CFP -->
     <div
-      class="h-[60px] bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-[16px] flex items-center gap-2 px-2 cursor-pointer select-none overflow-hidden"
+      class="h-[60px] bg-surface-base dark:bg-surface-gray-2 border border-outline-gray-3 rounded-[16px] flex items-center gap-2 px-2 cursor-pointer select-none overflow-hidden"
       :title="session.title"
       @click="handleClick($event)"
       @mouseenter="openExpanded"
     >
       <div
-        class="shrink-0 h-11 px-2.5 rounded-6 bg-surface-gray-7 text-ink-white text-xs font-semibold uppercase flex items-center whitespace-nowrap"
+        class="shrink-0 h-11 px-2.5 rounded-6 bg-surface-gray-10 text-ink-base text-xs-semibold uppercase flex items-center whitespace-nowrap"
       >
         {{ formatTime(session.start_time) }}
       </div>
-      <p class="text-xs text-ink-gray-9 font-normal leading-snug line-clamp-2 flex-1 min-w-0">
+      <p class="text-xs text-ink-gray-9 leading-snug line-clamp-2 flex-1 min-w-0">
         {{ session.title }}
       </p>
     </div>
@@ -26,7 +26,7 @@
     <Transition name="fade-up">
       <div
         v-if="isExpanded"
-        class="absolute left-0 top-full z-30 w-[300px] shadow-xl bg-surface-white dark:bg-surface-gray-2 rounded-[16px] px-2 md:px-4"
+        class="absolute left-0 top-full z-30 w-[300px] shadow-xl bg-surface-base dark:bg-surface-gray-2 rounded-[16px] px-2 md:px-4"
         @click.stop
       >
         <SessionCard :session="session" preview />

@@ -77,7 +77,7 @@
           </div>
           <div v-else class="flex flex-col items-center gap-3">
             <IconPhotoScan aria-hidden="true" class="w-8 h-8 text-ink-gray-3" />
-            <p class="text-sm font-medium text-ink-gray-6">Click to browse files</p>
+            <p class="text-sm-medium text-ink-gray-6">Click to browse files</p>
           </div>
         </div>
 
@@ -85,7 +85,7 @@
           v-if="error"
           role="alert"
           aria-live="assertive"
-          class="mt-2 text-sm text-ink-red-4"
+          class="mt-2 text-sm text-ink-red-8"
         >
           {{ error }}
         </p>

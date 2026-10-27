@@ -17,7 +17,7 @@
           <Avatar shape="circle" :image="item.avatar" :label="item.label" size="lg" />
         </template>
       </MultiSelect>
-      <div v-if="memberOptions.error" class="text-sm text-ink-red-4">
+      <div v-if="memberOptions.error" class="text-sm text-ink-red-8">
         Failed to load results. Please try again.
       </div>
     </div>

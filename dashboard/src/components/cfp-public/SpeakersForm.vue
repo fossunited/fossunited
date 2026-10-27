@@ -1,7 +1,7 @@
 <template>
   <section
     aria-label="Speaker Information"
-    class="flex flex-col gap-6 w-full p-4 md:p-8 border rounded-4 bg-surface-white"
+    class="flex flex-col gap-6 w-full p-4 md:p-8 border rounded-4 bg-surface-base"
   >
     <h4 v-if="showTitle" class="flex gap-2 items-center font-semibold">
       <IconUserCircle aria-hidden="true" />
@@ -19,7 +19,7 @@
           v-if="speakers.length > 1"
           class="border-b border-outline-gray-4 pb-2 flex justify-between"
         >
-          <h5 class="font-medium text-base">Speaker #{{ index + 1 }}</h5>
+          <h5 class=" text-base-medium">Speaker #{{ index + 1 }}</h5>
           <Button
             :icon="IconTrash"
             theme="red"

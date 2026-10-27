@@ -1,6 +1,6 @@
 <template>
   <div
-    class="border-b pb-1 flex flex-col gap-1 group focus-within:border-outline-gray-5 transition-colors"
+    class="border-b pb-1 flex flex-col gap-1 group focus-within:border-outline-gray-7 transition-colors"
   >
     <div class="flex gap-1">
       <slot name="label-prefix"></slot>

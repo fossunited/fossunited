@@ -2,7 +2,7 @@
   <div class="prose mt-4">
     <h2>{{ localhost.localhost_name }}</h2>
   </div>
-  <div class="flex gap-2 my-2 text-base font-medium items-center">
+  <div class="flex gap-2 my-2 text-base-medium items-center">
     <div class="flex gap-1 items-center">
       <IconMapPin class="w-5 h-5" />
       <span>

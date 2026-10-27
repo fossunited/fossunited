@@ -1,5 +1,5 @@
 <template>
-  <section aria-label="Session Details" class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded-4 bg-surface-white">
+  <section aria-label="Session Details" class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded-4 bg-surface-base">
     <h4 v-if="showTitle" class="flex gap-2 items-center font-semibold">
       <IconClipboardText aria-hidden="true" />
       <span>Submission Form</span>

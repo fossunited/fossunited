@@ -47,7 +47,7 @@ const getClasses = {
 
 <template>
   <div class="flex flex-col gap-4 my-2 w-full">
-    <h4 class="text-lg font-medium">Insights</h4>
+    <h4 class="text-lg-medium">Insights</h4>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
       <Tooltip
         v-for="insight in insights.data"

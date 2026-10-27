@@ -1,7 +1,7 @@
 <template>
   <div v-if="event.doc" class="px-4 py-8 md:p-8 flex flex-col gap-4">
     <div class="flex flex-col md:flex-row justify-between gap-2">
-      <div class="text-lg font-medium">Create RSVP Form</div>
+      <div class="text-lg-medium">Create RSVP Form</div>
       <Button size="md" label="Create" variant="solid" @click="createRsvpForm" />
     </div>
     <div>
@@ -25,7 +25,7 @@
         <div class="flex flex-col gap-1.5">
           <div class="flex items-center gap-2">
             <Switch v-model="rsvp_doc.requires_host_approval" />
-            <span class="text-sm font-medium text-ink-gray-8">Requires organizer approval</span>
+            <span class="text-sm-medium text-ink-gray-8">Requires organizer approval</span>
           </div>
           <p class="text-xs text-ink-gray-5 leading-relaxed">
             When enabled, attendees must be accepted or denied via the insights tab to confirm

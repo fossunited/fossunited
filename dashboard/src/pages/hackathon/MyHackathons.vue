@@ -54,7 +54,7 @@
       </div>
     </div>
     <div v-else class="flex flex-col gap-2 rounded-1 p-4 border bg-surface-gray-1">
-      <div class="text-sm font-medium uppercase text-ink-gray-8">No Hackathons</div>
+      <div class="text-sm-medium uppercase text-ink-gray-8">No Hackathons</div>
       <div class="text-xs text-ink-gray-5">You have not participated in any hackathons yet.</div>
     </div>
   </div>

@@ -23,11 +23,11 @@ const getBadgeTheme = computed(() => {
 </script>
 <template>
   <div
-    class="p-6 flex justify-between items-center gap-4 bg-surface-white rounded-4 w-full border border-outline-gray-2"
+    class="p-6 flex justify-between items-center gap-4 bg-surface-base rounded-4 w-full border border-outline-gray-2"
   >
     <div class="flex flex-col gap-2">
       <div class="flex gap-2 items-center">
-        <h4 class="text-md font-medium">Call For Proposals</h4>
+        <h4 class="text-md-medium">Call For Proposals</h4>
         <Badge size="lg" class="!rounded-4" :theme="getBadgeTheme" :label="cfp.status">
           <template v-if="cfp.status == 'Live'" #prefix>
             <LivePing />
@@ -44,7 +44,7 @@ const getBadgeTheme = computed(() => {
       v-if="cfp.status == 'Live'"
       :to="'/cfp/apply/' + $route.params.route"
       variant="solid"
-      class="py-3 px-5 bg-surface-gray-7 hover:bg-surface-gray-6 transition-colors duration-200 text-ink-white rounded-4 text-center uppercase text-sm font-semibold tracking-wider"
+      class="py-3 px-5 bg-surface-gray-10 hover:bg-surface-gray-9 transition-colors duration-200 text-ink-base rounded-4 text-center uppercase text-sm-semibold tracking-wider"
     >
       Submit a Proposal
     </router-link>

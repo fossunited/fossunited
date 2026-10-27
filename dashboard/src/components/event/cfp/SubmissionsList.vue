@@ -12,7 +12,7 @@
       <button
         v-for="s in statusOptions"
         :key="s.value"
-        class="px-2.5 py-1 rounded-full text-xs font-medium transition-colors"
+        class="px-2.5 py-1 rounded-full text-xs-medium transition-colors"
         :class="
           selectedStatus === s.value
             ? s.activeClass
@@ -215,7 +215,7 @@ const SORT_OPTIONS = computed(() => {
 })
 
 const STATUS_OPTIONS = [
-  { value: '', label: 'All', activeClass: 'bg-surface-gray-7 text-ink-white' },
+  { value: '', label: 'All', activeClass: 'bg-surface-gray-10 text-ink-base' },
   {
     value: 'Review Pending',
     label: 'Review Pending',

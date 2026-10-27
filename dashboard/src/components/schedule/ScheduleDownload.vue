@@ -2,7 +2,7 @@
   <div>
     <button
       type="button"
-      class="h-8 sm:h-10 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 rounded-6 bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-xs sm:text-sm font-semibold uppercase hover:bg-surface-white dark:hover:bg-surface-gray-1 transition-colors shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
+      class="h-8 sm:h-10 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 rounded-6 bg-surface-gray-2 dark:bg-surface-gray-3 text-ink-gray-7 dark:text-ink-gray-8 text-xs-semibold sm:text-sm uppercase hover:bg-surface-base dark:hover:bg-surface-gray-1 transition-colors shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-7"
       aria-label="Download schedule"
       aria-haspopup="dialog"
       :aria-expanded="showModal"
@@ -26,7 +26,7 @@
 
         <!-- A single day or a single hall is not a choice, so it is not offered. -->
         <fieldset v-if="allDates.length > 1">
-          <legend class="text-sm font-medium text-ink-gray-7 dark:text-ink-gray-8 mb-2">
+          <legend class="text-sm-medium text-ink-gray-7 dark:text-ink-gray-8 mb-2">
             Days
           </legend>
           <div class="flex gap-2 flex-wrap">
@@ -42,7 +42,7 @@
         </fieldset>
 
         <fieldset v-if="allHalls.length > 1">
-          <legend class="text-sm font-medium text-ink-gray-7 dark:text-ink-gray-8 mb-2">
+          <legend class="text-sm-medium text-ink-gray-7 dark:text-ink-gray-8 mb-2">
             Halls
           </legend>
           <div class="flex gap-2 flex-wrap">
@@ -60,7 +60,7 @@
         <p
           v-if="validationMessage"
           id="schedule-download-error"
-          class="text-sm text-ink-red-4"
+          class="text-sm text-ink-red-8"
           role="alert"
         >
           {{ validationMessage }}
@@ -71,16 +71,16 @@
         <div class="flex justify-end gap-3">
           <button
             type="button"
-            class="text-sm text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-gray-9 transition-colors px-4 py-2 rounded-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
+            class="text-sm text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-gray-9 transition-colors px-4 py-2 rounded-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-7"
             @click="close"
           >
             Cancel
           </button>
           <button
             type="button"
-            class="px-5 py-2 rounded-6 bg-surface-gray-7 text-ink-white text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
+            class="px-5 py-2 rounded-6 bg-surface-gray-10 text-ink-base text-sm-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-7"
             :class="
-              validationMessage ? 'opacity-50 cursor-not-allowed' : 'hover:bg-surface-gray-6'
+              validationMessage ? 'opacity-50 cursor-not-allowed' : 'hover:bg-surface-gray-9'
             "
             :aria-disabled="Boolean(validationMessage)"
             :aria-describedby="validationMessage ? 'schedule-download-error' : undefined"
@@ -126,10 +126,10 @@ const formatOptions = [
 ]
 
 const pillBase =
-  'cursor-pointer px-3 py-1.5 rounded-6 border text-sm select-none transition-colors focus-within:ring-2 focus-within:ring-outline-gray-5'
-const pillOn = 'bg-surface-gray-7 text-ink-white border-transparent'
+  'cursor-pointer px-3 py-1.5 rounded-6 border text-sm select-none transition-colors focus-within:ring-2 focus-within:ring-outline-gray-7'
+const pillOn = 'bg-surface-gray-10 text-ink-base border-transparent'
 const pillOff =
-  'bg-surface-white dark:bg-surface-gray-2 text-ink-gray-7 dark:text-ink-gray-8 border-outline-gray-3 hover:bg-surface-gray-2 dark:hover:bg-surface-gray-3'
+  'bg-surface-base dark:bg-surface-gray-2 text-ink-gray-7 dark:text-ink-gray-8 border-outline-gray-3 hover:bg-surface-gray-2 dark:hover:bg-surface-gray-3'
 
 const showModal = ref(false)
 const selectedFormat = ref('ics')

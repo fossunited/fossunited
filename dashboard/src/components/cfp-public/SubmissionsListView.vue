@@ -278,7 +278,7 @@ watch(filteredSubmissions, (val) => {
           <span>Clear filters</span>
         </button>
         <button
-          class="flex items-center ml-auto bg-surface-gray-7 text-ink-white px-3 py-2 rounded-4 text-sm hover:bg-surface-gray-6 shrink-0"
+          class="flex items-center ml-auto bg-surface-gray-10 text-ink-base px-3 py-2 rounded-4 text-sm hover:bg-surface-gray-9 shrink-0"
           aria-label="Download list as CSV"
           @click="downloadCSV"
         >

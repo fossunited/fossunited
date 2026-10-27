@@ -25,7 +25,7 @@
           "
         >
           <button
-            class="px-4 py-2 w-3/4 text-center uppercase border-2 border-outline-gray-5 md:w-fit font-semibold bg-surface-white hover:bg-surface-gray-7 hover:text-ink-white transition-colors cursor-pointer"
+            class="px-4 py-2 w-3/4 text-center uppercase border-2 border-outline-gray-7 md:w-fit font-semibold bg-surface-base hover:bg-surface-gray-10 hover:text-ink-base transition-colors cursor-pointer"
             @click="
               () => {
                 inSelectProjectType = false
@@ -54,10 +54,10 @@
             theme="gray"
           />
           <button
-            class="px-4 py-2 uppercase w-3/4 text-center border-2 border-outline-gray-5 md:w-fit font-semibold bg-surface-white hover:bg-surface-gray-7 hover:text-ink-white transition-colors cursor-pointer"
+            class="px-4 py-2 uppercase w-3/4 text-center border-2 border-outline-gray-7 md:w-fit font-semibold bg-surface-base hover:bg-surface-gray-10 hover:text-ink-base transition-colors cursor-pointer"
             :class="
               hackathon.data.is_contribution_project_coming_soon
-                ? 'text-ink-gray-4 border-outline-gray-4 hover:bg-surface-white hover:text-ink-gray-4 hover:cursor-not-allowed'
+                ? 'text-ink-gray-4 border-outline-gray-4 hover:bg-surface-base hover:text-ink-gray-4 hover:cursor-not-allowed'
                 : ''
             "
             :disabled="hackathon.data.is_contribution_project_coming_soon"
@@ -132,7 +132,7 @@
             v-if="hackathon.data.contribution_project_guidelines"
             class="w-full bg-surface-gray-1 text-ink-gray-8 rounded-4 p-4"
           >
-            <h3 class="text-md font-semibold">Contribution Guidelines</h3>
+            <h3 class="text-md-semibold">Contribution Guidelines</h3>
             <div
               class="prose leading-normal"
               v-html="markdownToHTML(hackathon.data.contribution_project_guidelines || '')"
@@ -140,11 +140,11 @@
           </div>
           <div
             v-if="hackathon.data.partner_project_guidelines && hackathon.data.has_partner_projects"
-            class="w-full bg-surface-blue-1 text-ink-blue-3 rounded-4 p-4"
+            class="w-full bg-surface-blue-1 text-ink-blue-6 rounded-4 p-4"
           >
-            <h3 class="text-md font-semibold">Partner Project Guidelines</h3>
+            <h3 class="text-md-semibold">Partner Project Guidelines</h3>
             <div
-              class="prose leading-normal text-ink-blue-3"
+              class="prose leading-normal text-ink-blue-6"
               v-html="markdownToHTML(hackathon.data.partner_project_guidelines || '')"
             ></div>
           </div>
@@ -185,7 +185,7 @@
                 "
               >
                 <div
-                  :class="[checked ? 'bg-surface-gray-1 border-gray-700' : 'bg-surface-white ']"
+                  :class="[checked ? 'bg-surface-gray-1 border-gray-700' : 'bg-surface-base ']"
                   class="relative flex cursor-pointer rounded-1 p-4 border focus:outline-none transition-[border]"
                 >
                   <div class="flex w-full items-center justify-between">
@@ -199,7 +199,7 @@
                         "
                         class="h-8"
                       />
-                      <RadioGroupLabel as="p" class="text-base font-medium">
+                      <RadioGroupLabel as="p" class="text-base-medium">
                         {{ partner_project.project_name }}
                       </RadioGroupLabel>
                       <div class="text-sm">

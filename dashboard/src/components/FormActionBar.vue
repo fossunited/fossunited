@@ -2,7 +2,7 @@
   <Transition name="slide-up">
     <div
       v-if="hasChanges"
-      class="fixed bottom-0 left-0 right-0 bg-surface-white border-t border-outline-gray-1 shadow-lg p-4 z-50"
+      class="fixed bottom-0 left-0 right-0 bg-surface-base border-t border-outline-gray-1 shadow-lg p-4 z-50"
       style="height: 56px"
     >
       <div

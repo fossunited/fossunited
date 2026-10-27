@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-surface-white border border-outline-gray-2 rounded-6 p-6 md:p-8 flex flex-col gap-6"
+    class="bg-surface-base border border-outline-gray-2 rounded-6 p-6 md:p-8 flex flex-col gap-6"
     role="form"
     aria-label="Billing details"
   >
@@ -103,7 +103,7 @@
           rel="noopener noreferrer"
           class="font-semibold underline"
           >Refund Policy</a
-        ><span class="text-ink-red-3 ml-0.5" aria-label="required">*</span>
+        ><span class="text-ink-red-6 ml-0.5" aria-label="required">*</span>
       </label>
     </div>
     <div class="flex items-start gap-2">
@@ -126,7 +126,7 @@
         >. The code of conduct and anti-harassment policies apply to everyone participating in the
         event including sponsors, judges, mentors, volunteers, organisers and the FOSS United
         staff.
-        <span class="text-ink-red-3 ml-0.5" aria-label="required">*</span>
+        <span class="text-ink-red-6 ml-0.5" aria-label="required">*</span>
       </label>
     </div>
     <div class="flex items-start gap-2">

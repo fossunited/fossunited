@@ -11,7 +11,7 @@
           type="button"
           role="tab"
           :aria-selected="mode === 'write'"
-          class="px-2.5 py-1 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
+          class="px-2.5 py-1 text-xs-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-7"
           :class="
             mode === 'write'
               ? 'bg-surface-gray-3 text-ink-gray-9'
@@ -25,7 +25,7 @@
           type="button"
           role="tab"
           :aria-selected="mode === 'preview'"
-          class="px-2.5 py-1 text-xs font-medium border-l border-outline-gray-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5"
+          class="px-2.5 py-1 text-xs-medium border-l border-outline-gray-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-7"
           :class="
             mode === 'preview'
               ? 'bg-surface-gray-3 text-ink-gray-9'

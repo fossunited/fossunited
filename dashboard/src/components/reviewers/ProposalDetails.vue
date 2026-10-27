@@ -39,7 +39,7 @@
       <RenderReferences :references="submission.data.references" />
       <RenderSessionCategories :categories="submission.data.session_categories" />
       <div v-if="submission.data.talk_license" class="flex flex-col gap-1">
-        <span class="text-xs font-medium text-ink-gray-5 uppercase">License</span>
+        <span class="text-xs-medium text-ink-gray-5 uppercase">License</span>
         <div class="flex items-center gap-1.5 text-sm text-ink-gray-7">
           <IconScale class="w-4 h-4 text-ink-gray-4 flex-shrink-0" />
           <span>{{ submission.data.talk_license }}</span>

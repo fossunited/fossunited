@@ -13,7 +13,7 @@
           >?
         </p>
         <div class="bg-surface-gray-1 text-base p-2 my-2 rounded-1 font-mono">
-          <p class="leading-6 text-base text-ink-gray-9 font-medium">
+          <p class="leading-6 text-base-medium text-ink-gray-9">
             <strong>Name:</strong> {{ selectedAttendee.full_name }}<br />
             <strong>Ticket ID:</strong> {{ selectedAttendee.name }}<br />
             <strong>Tier:</strong> {{ selectedAttendee.tier }}<br />
@@ -22,14 +22,14 @@
             <!-- Tshirt section starts -->
             <template v-if="selectedAttendee.wants_tshirt && selectedAttendee.tshirt_delivered">
               <strong>Has T-shirt Add-on:</strong>
-              <span class="text-ink-green-3 font-semibold">Delivered already!</span><br />
+              <span class="text-ink-green-6 font-semibold">Delivered already!</span><br />
             </template>
 
             <template
               v-else-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered"
             >
               <strong>Has T-shirt Add-on:</strong>
-              <span class="bg-surface-amber-2 text-ink-amber-3 font-semibold px-2 py-0.5 rounded-4">
+              <span class="bg-surface-amber-2 text-ink-amber-6 font-semibold px-2 py-0.5 rounded-4">
                 YES </span
               ><br />
               <strong>T-shirt Size:</strong>
@@ -38,7 +38,7 @@
 
             <template v-else>
               <strong>Has T-shirt Add-on:</strong>
-              <span class="bg-surface-red-2 text-ink-red-4 font-semibold px-2 py-0.5 rounded-4"> NO </span
+              <span class="bg-surface-red-2 text-ink-red-8 font-semibold px-2 py-0.5 rounded-4"> NO </span
               ><br />
             </template>
 
@@ -53,7 +53,7 @@
               v-for="(log, index) in selectedAttendee.checkin_data"
               :key="log.name || log.id || log.check_in_time || index"
               :class="{
-                'text-ink-red-4 font-semibold text-xl uppercase': isToday(log.check_in_time),
+                'text-ink-red-8 font-semibold text-2xl uppercase': isToday(log.check_in_time),
               }"
             >
               {{ formatCheckinLog(log.check_in_time) }}
@@ -63,7 +63,7 @@
 
         <div v-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered">
           <hr class="my-4" />
-          <div class="text-sm uppercase font-medium mb-2">Assign T‑shirt</div>
+          <div class="text-sm-medium uppercase mb-2">Assign T‑shirt</div>
           <Checkbox v-model="assignTshirt" label="Confirm T‑shirt Assignment" />
           <p class="text-sm leading-5 mt-1 text-ink-gray-5">
             Only check this if you are providing the T-shirt to the attendee at the time of

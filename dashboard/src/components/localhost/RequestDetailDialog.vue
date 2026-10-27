@@ -5,15 +5,15 @@
     @update:open="updateShowDialog"
   >
     <div class="grid grid-cols-2 gap-4 text-base">
-      <div class="col-span-2 text-base font-medium">
+      <div class="col-span-2 text-base-medium">
         <span>Status: </span
         ><span
           :class="
             {
-              Pending: 'text-ink-amber-3',
-              Accepted: 'text-ink-green-3',
-              Rejected: 'text-ink-red-4',
-              'Pending Confirmation': 'text-ink-blue-2',
+              Pending: 'text-ink-amber-6',
+              Accepted: 'text-ink-green-6',
+              Rejected: 'text-ink-red-8',
+              'Pending Confirmation': 'text-ink-blue-5',
             }[participant.localhost_request_status]
           "
           >{{ participant.localhost_request_status }}</span
@@ -26,10 +26,10 @@
           class="rounded-full h-8 w-8"
         />
         <div class="flex flex-col gap-1">
-          <div class="text-base font-medium">{{ participant.full_name }}</div>
+          <div class="text-base-medium">{{ participant.full_name }}</div>
           <div
             v-if="participant.profile_username"
-            class="text-sm text-ink-green-3 hover:underline hover:cursor-pointer"
+            class="text-sm text-ink-green-6 hover:underline hover:cursor-pointer"
             @click="redirectRoute(participant.profile_route)"
           >
             {{ participant.profile_username }}
@@ -47,7 +47,7 @@
         </a>
       </div>
       <div class="flex flex-col gap-1">
-        <div class="text-base font-medium">Team</div>
+        <div class="text-base-medium">Team</div>
         <div>{{ participant.team_name }}</div>
       </div>
       <div class="flex flex-col gap-1">

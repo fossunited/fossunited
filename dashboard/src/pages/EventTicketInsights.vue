@@ -44,11 +44,11 @@
         </div>
         <div
           v-if="ticket_sales_trend.loading || ticket_sales_trend.data?.data?.length"
-          class="w-full max-w-3xl rounded-4 border border-outline-gray-2 bg-surface-white"
+          class="w-full max-w-3xl rounded-4 border border-outline-gray-2 bg-surface-base"
         >
           <div class="flex flex-wrap items-center justify-between gap-2 px-4 pt-3">
             <div>
-              <h3 class="text-sm font-medium text-ink-gray-9">Tickets Purchased Over Time</h3>
+              <h3 class="text-sm-medium text-ink-gray-9">Tickets Purchased Over Time</h3>
               <p class="text-xs text-ink-gray-5">Cumulative purchases by ticket type</p>
             </div>
             <div v-if="!ticket_sales_trend.loading" class="flex items-center gap-1">

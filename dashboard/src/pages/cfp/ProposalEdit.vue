@@ -12,7 +12,7 @@
         </div>
         <div
           v-else
-          class="rounded-4 border border-outline-red-2 bg-surface-red-1 px-4 py-3 text-base text-ink-red-6"
+          class="rounded-4 border border-outline-red-3 bg-surface-red-1 px-4 py-3 text-base text-ink-red-6"
         >
           The CFP is closed. This proposal is now read-only.
         </div>
@@ -41,7 +41,7 @@
       <ActionsForm v-show="selectedTab === 2" v-model:cfpid="route.params.id" />
       <div
         v-if="selectedTab !== 2"
-        class="sticky bottom-0 w-full flex flex-col-reverse md:flex-row-reverse justify-between items-end gap-2 p-4 border-t bg-surface-white"
+        class="sticky bottom-0 w-full flex flex-col-reverse md:flex-row-reverse justify-between items-end gap-2 p-4 border-t bg-surface-base"
       >
         <Button
           v-if="canEdit"

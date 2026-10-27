@@ -44,9 +44,9 @@
         </div>
       </div>
       <div
-        class="flex flex-col p-4 w-full rounded-1 my-4 border-2 bg-surface-gray-2 border-outline-gray-5 border-dashed text-ink-gray-8"
+        class="flex flex-col p-4 w-full rounded-1 my-4 border-2 bg-surface-gray-2 border-outline-gray-7 border-dashed text-ink-gray-8"
       >
-        <div class="text-base font-semibold mb-2">Team Members</div>
+        <div class="text-base-semibold mb-2">Team Members</div>
         <p class="text-sm">You can add members after team creation</p>
       </div>
       <ErrorMessage v-if="errorMessage" :message="errorMessage" />

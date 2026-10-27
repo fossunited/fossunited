@@ -9,7 +9,7 @@
       <div v-if="upcomingTickets.length" class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <LivePing />
-          <h3 class="text-sm font-medium text-ink-gray-8">Upcoming</h3>
+          <h3 class="text-sm-medium text-ink-gray-8">Upcoming</h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <TicketCard
@@ -24,7 +24,7 @@
       <div v-if="concludedTickets.length" class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-surface-gray-4" aria-hidden="true" />
-          <h3 class="text-sm font-medium text-ink-gray-8">Concluded</h3>
+          <h3 class="text-sm-medium text-ink-gray-8">Concluded</h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <TicketCard
@@ -37,7 +37,7 @@
       </div>
     </div>
     <div v-else class="flex flex-col gap-2 rounded-1 p-4 border bg-surface-gray-1">
-      <div class="text-sm font-medium uppercase text-ink-gray-8">No Tickets</div>
+      <div class="text-sm-medium uppercase text-ink-gray-8">No Tickets</div>
       <div class="text-xs text-ink-gray-5">You haven't booked any event tickets yet.</div>
     </div>
   </div>
@@ -68,7 +68,7 @@
 
       <div
         v-if="selectedTicket.is_transfer_ticket"
-        class="text-xs text-ink-blue-4 bg-surface-blue-1 rounded-5 px-3 py-2"
+        class="text-xs text-ink-blue-8 bg-surface-blue-1 rounded-5 px-3 py-2"
       >
         This is a transferred ticket from another person.
       </div>

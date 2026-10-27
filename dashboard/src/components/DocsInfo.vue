@@ -12,13 +12,13 @@
       {{ message }}
     </slot>
 
-    <span class="text-ink-blue-2 ml-1">
+    <span class="text-ink-blue-5 ml-1">
       {{ docsLabel }}
     </span>
 
     <button
       type="button"
-      class="absolute top-1 right-1 text-ink-blue-2 hover:text-ink-blue-3"
+      class="absolute top-1 right-1 text-ink-blue-5 hover:text-ink-blue-6"
       aria-label="Close"
       @click.stop.prevent="visible = false"
     >

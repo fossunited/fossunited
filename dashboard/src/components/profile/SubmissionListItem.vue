@@ -8,7 +8,7 @@
     role="link"
     :aria-labelledby="`proposal-title-${proposal.name}`"
   >
-    <h4 :id="`proposal-title-${proposal.name}`" class="text-base font-medium">
+    <h4 :id="`proposal-title-${proposal.name}`" class="text-base-medium">
       {{ proposal.talk_title }}
     </h4>
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">

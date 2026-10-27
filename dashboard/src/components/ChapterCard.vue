@@ -16,7 +16,7 @@
     </template>
 
     <div class="flex justify-between items-baseline">
-      <div class="text-md font-medium">{{ props.chapter.chapter_name }}</div>
+      <div class="text-md-medium">{{ props.chapter.chapter_name }}</div>
     </div>
   </Card>
 </template>

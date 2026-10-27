@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-surface-white border border-outline-gray-2 rounded-6 flex items-start hover:border-outline-gray-4 hover:bg-surface-gray-1 transition-colors"
+    class="bg-surface-base border border-outline-gray-2 rounded-6 flex items-start hover:border-outline-gray-4 hover:bg-surface-gray-1 transition-colors"
   >
     <button
       type="button"
@@ -24,7 +24,7 @@
           <span class="sr-only">{{
             ticket.is_concluded ? 'Concluded event.' : 'Upcoming event.'
           }}</span>
-          <p class="text-base font-medium text-ink-gray-9 truncate">{{ ticket.event_name }}</p>
+          <p class="text-base-medium text-ink-gray-9 truncate">{{ ticket.event_name }}</p>
         </div>
 
         <div class="flex items-center gap-1.5 text-sm text-ink-gray-5 truncate">
