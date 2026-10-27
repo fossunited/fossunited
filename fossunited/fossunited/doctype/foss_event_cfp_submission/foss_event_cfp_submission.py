@@ -18,6 +18,7 @@ from fossunited.doctype_ids import (
     EVENT_MEDIA,
     EVENT_SCHEDULE,
     PROPOSAL,
+    SPEAKER,
     USER_PROFILE,
 )
 from fossunited.fossunited.utils import get_youtube_id, sanitize_text_content
@@ -29,6 +30,12 @@ ALLOWED_SESSION_TYPES = {
     "Panel Discussion",
     "Birds of Feather(BoF)",
     "Workshop",
+}
+
+# Proposal status -> event email group its speakers belong to.
+STATUS_EMAIL_GROUPS = {
+    "Approved": "Accepted Proposers",
+    "Rejected": "Rejected Proposers",
 }
 
 # Proposer-editable content fields. A change to any of these after the CFP
@@ -433,7 +440,9 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             if not values:
                 return {}
             rows = frappe.db.get_all(
-                USER_PROFILE, {field: ["in", values], **visible_filters}, [field, "username"]
+                USER_PROFILE,
+                {field: ["in", values], **visible_filters},
+                [field, "username"],
             )
             return {row[field]: row.username for row in rows if row.username}
 
@@ -481,15 +490,45 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def handle_status_change(self) -> None:
         if not self.has_value_changed("status"):
             return
+        # leave the old group, then join the new one.
+        before = self.get_doc_before_save()
+        old_status = before.status if before else None
+        if old_status in STATUS_EMAIL_GROUPS:
+            emails = self.get_speakers_without_other_proposal(old_status)
+            self.handle_email_group(STATUS_EMAIL_GROUPS[old_status], emails, subscribe=False)
 
-        if self.status == "Approved":
-            self.handle_email_group("Accepted Proposers")
+        if self.status in STATUS_EMAIL_GROUPS:
+            self.handle_email_group(STATUS_EMAIL_GROUPS[self.status])
 
-        if self.status == "Rejected":
-            self.handle_email_group("Rejected Proposers")
+    def get_speakers_without_other_proposal(self, status) -> list[str]:
+        """Speaker emails not on another proposal for this event with the same status.
 
-    def handle_email_group(self, email_group_type) -> None:
+        A speaker with a second Approved proposal must stay in Accepted Proposers
+        when only one of their proposals changes status.
+        """
         emails = [s.email for s in self.speakers if s.email]
+        other_proposals = frappe.get_all(
+            PROPOSAL,
+            filters={"event": self.event, "status": status, "name": ["!=", self.name]},
+            pluck="name",
+        )
+        if not emails or not other_proposals:
+            return emails
+
+        still_listed = frappe.get_all(
+            SPEAKER,
+            filters={
+                "parenttype": PROPOSAL,
+                "parent": ["in", other_proposals],
+                "email": ["in", emails],
+            },
+            pluck="email",
+        )
+        return [email for email in emails if email not in still_listed]
+
+    def handle_email_group(self, email_group_type, emails=None, subscribe=True) -> None:
+        if emails is None:
+            emails = [s.email for s in self.speakers if s.email]
 
         handle_email_group_subscription(
             emails=emails,
@@ -501,7 +540,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             # ideally CFPs would require some communication to occur by team
             # Again, event is temporary for event_duration. Hope logic sounds intentional?
             # if not, please do raise an issue!
-            subscribe_to_event=True,
+            # subscribe=False is only for leaving an old status group.
+            subscribe_to_event=subscribe,
             subscribe_to_chapter=self.subscribe_chapter_mailing,
             document_type_event=EVENT,
         )
