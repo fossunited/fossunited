@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
   SelectViewport,
-} from 'radix-vue'
+} from 'reka-ui'
 import { IconAlertTriangle, IconChevronDown } from '@tabler/icons-vue'
 
 const submission = inject('curr_submission')

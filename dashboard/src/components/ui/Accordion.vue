@@ -27,7 +27,7 @@ import {
   AccordionItem,
   AccordionRoot,
   AccordionTrigger,
-} from 'radix-vue'
+} from 'reka-ui'
 
 defineProps({
   accordianItems: {

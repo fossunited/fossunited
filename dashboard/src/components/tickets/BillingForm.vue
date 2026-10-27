@@ -20,7 +20,7 @@
     />
     <FormControl
       v-model="billing.state"
-      type="select"
+      type="combobox"
       label="State"
       size="sm"
       variant="subtle"

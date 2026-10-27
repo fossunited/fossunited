@@ -160,7 +160,7 @@ import { createResource, LoadingIndicator, Dialog, ErrorMessage } from 'frappe-u
 import { inject, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
-import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from 'radix-vue'
+import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import { IconArrowLeft, IconEdit } from '@tabler/icons-vue'
 
 const route = useRoute()
