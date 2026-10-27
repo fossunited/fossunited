@@ -5,6 +5,7 @@
         Enter the username of the new member you want to add to the team.
       </div>
       <MultiSelect
+        class="w-full"
         :model-value="newMemberIds"
         :options="pickerOptions"
         :filterable="false"
@@ -146,14 +147,10 @@ watch(
 )
 
 const newMembers = ref([])
-// newMembers (the full option objects) is the source of truth; newMemberIds is
-// a derived, read-only view for MultiSelect's modelValue.
+// Source of truth; newMemberIds is a derived read-only view for MultiSelect's modelValue.
 const newMemberIds = computed(() => newMembers.value.map((member) => member.value))
 
-// The search is server-side, so each query replaces `memberOptions.data`.
-// MultiSelect only resolves ids against the options it is given (both for
-// `update:selectedOptions` and for its "N selected" summary), so picks from an
-// earlier search are kept in the list after the current results.
+// Server-side search replaces `memberOptions.data` each query, so earlier picks are appended here since MultiSelect only resolves ids against current options.
 const pickerOptions = computed(() => {
   const results = memberOptions.data || []
   const resultIds = new Set(results.map((option) => option.value))
@@ -161,9 +158,7 @@ const pickerOptions = computed(() => {
   return [...results, ...earlierPicks]
 })
 
-// Rebuild newMembers from the new id list, keeping the full objects of
-// members that were already picked and resolving only new ids against the
-// current options.
+// Rebuilds newMembers from the id list, keeping already-picked objects and resolving new ids against current options.
 const handleSelectionChange = (ids) => {
   const selectedIds = Array.isArray(ids) ? ids : []
   newMembers.value = selectedIds

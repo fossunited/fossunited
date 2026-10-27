@@ -37,24 +37,7 @@ const hasScores = computed(() => {
   )
 })
 
-// frappe-ui v1's Popover only supports trigger="click" | "manual" — "hover" is
-// no longer a recognised value and silently falls through to click behavior.
-// Drive it manually to preserve the original hover-to-reveal UX. The #default
-// panel is teleported to <body> by PopoverPortal, so it is NOT a descendant of
-// the trigger wrapper below in the live DOM — mouseenter/mouseleave must be
-// wired on both the trigger wrapper and the panel itself, sharing this same
-// ref, so moving the pointer from the trigger into the panel keeps it open
-// (mirrors the old 0.1.x Popover's shared pointerOverTargetOrPopup flag).
-//
-// There's a real ~4px gap between the trigger and the panel (Popover's
-// default offset), and the panel unmounts instantly on close (no exit
-// animation to buy time). A pointer-movement sample that lands in that gap
-// fires mouseleave on the trigger with no panel to re-enter yet, so a plain
-// isOpen=false/true pair on each element's own enter/leave is not enough —
-// it can still close the panel out from under a normal mouse movement.
-// Debounce the close instead (hover-intent pattern): closing schedules
-// isOpen=false after a short delay, and either element's mouseenter cancels
-// that pending close before it fires.
+// frappe-ui v1 dropped Popover's trigger="hover", so this drives open/close manually, shared across the trigger and its teleported panel with a close-delay to survive the gap between them.
 const isOpen = ref(false)
 let closeTimer = null
 

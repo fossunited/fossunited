@@ -20,7 +20,8 @@ export default {
       // nothing in src/ used the resulting classes. frappe-ui v1's preset now
       // ships the real thing (ink-gray-*, surface-gray-*, outline-gray-* etc,
       // all flipping on [data-theme="dark"]), so it was removed rather than
-      // TODO: replace espresso with jeswin's v3 color palette in stage 2
+      // carried forward.
+      // TODO: replace espresso with jeswin's v3 color palette in stage 2.
     },
   },
   // @tailwindcss/forms and @tailwindcss/typography are registered by the
