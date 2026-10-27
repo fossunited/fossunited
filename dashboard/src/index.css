@@ -25,15 +25,6 @@
   z-index: 9999;
 }
 
-/* for sendtestdialog.vue to appear over email drawer*/
-.dialog-overlay {
-  z-index: 999 !important;
-}
-
-.dialog-content {
-  z-index: 999 !important;
-}
-
 [data-theme="dark"] body,
 [data-theme="dark"] #app {
   background-color: var(--surface-base);
