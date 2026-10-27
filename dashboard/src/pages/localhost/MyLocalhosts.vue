@@ -15,13 +15,14 @@
         @click="$router.push('/localhost/' + localhost.name)"
       />
     </div>
-    <div v-else class="flex flex-col gap-2 rounded-sm p-4 border bg-surface-gray-1">
-      <div class="text-sm font-medium uppercase text-ink-gray-8">No LocalHosts</div>
+    <div v-else class="flex flex-col gap-2 rounded-1 p-4 border bg-surface-gray-1">
+      <div class="text-sm-medium uppercase text-ink-gray-8">No LocalHosts</div>
       <div class="text-xs text-ink-gray-5">You have not organized any localhosts yet.</div>
     </div>
   </div>
 </template>
 <script setup>
+import Card from '@/components/ui/Card.vue'
 import { createResource } from 'frappe-ui'
 
 const localhosts = createResource({

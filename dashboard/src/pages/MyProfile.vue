@@ -19,6 +19,7 @@
             <div class="top-3 right-3 absolute flex gap-1">
               <FileUploader
                 :file-types="'image/*'"
+                :private="false"
                 :validate-file="validateFile"
                 @success="(file) => setBannerImage(file)"
               >
@@ -48,7 +49,7 @@
           </div>
           <div class="z-10 w-fit relative -mt-12 mx-6">
             <img
-              class="aspect-square border-4 border-white rounded w-28"
+              class="aspect-square border-4 border-white rounded-4 w-28"
               :src="
                 profileDoc.doc.profile_photo ||
                 '/assets/fossunited/images/defaults/user_profile_image.png'
@@ -58,6 +59,7 @@
             <FileUploader
               class="top-3 right-3 absolute"
               :file-types="'image/*'"
+              :private="false"
               :validate-file="validateFile"
               @success="(file) => setProfileImage(file)"
             >
@@ -94,7 +96,7 @@
               @update:model-value="toggleShowActivity"
             />
             <div class="col-span-2 py-1 border-b">
-              <h4 class="text-md font-medium uppercase">Basic Details</h4>
+              <h4 class="text-md-medium uppercase">Basic Details</h4>
             </div>
             <FormControl
               v-model="profileDoc.doc.full_name"
@@ -128,10 +130,10 @@
                   "
                   class="flex"
                 >
-                  <span class="text-sm text-ink-green-2 mr-1 font-semibold">
+                  <span class="text-sm-semibold text-ink-green-5 mr-1">
                     Username is available
                   </span>
-                  <IconCheck class="h-4 w-4 text-ink-green-2" />
+                  <IconCheck class="h-4 w-4 text-ink-green-5" />
                 </div>
               </div>
               <ErrorMessage :message="usernameValidateErrors" class="mt-2" />
@@ -170,7 +172,7 @@
               @update:model-value="profileDoc.doc.about = $event"
             />
             <div class="col-span-2 py-1 border-b">
-              <h4 class="text-md font-medium uppercase">SOCIAL Links</h4>
+              <h4 class="text-md-medium uppercase">SOCIAL Links</h4>
             </div>
             <div class="col-span-2 text-sm text-ink-gray-5">
               Enter the complete links to your social, including
@@ -202,7 +204,7 @@
 
             <!-- Projects -->
             <div class="col-span-2 py-1 border-b mt-2 flex items-center justify-between">
-              <h4 class="text-md font-medium uppercase">Projects</h4>
+              <h4 class="text-md-medium uppercase">Projects</h4>
               <Button
                 v-if="!showAddProject"
                 variant="outline"
@@ -220,7 +222,7 @@
             <div
               v-for="project in (profileDoc?.doc?.projects ?? [])"
               :key="project.name"
-              class="col-span-2 border rounded-lg p-4 flex flex-col gap-3"
+              class="col-span-2 border rounded-6 p-4 flex flex-col gap-3"
             >
               <div v-if="editingProject?.name !== project.name" class="flex justify-between items-start gap-2">
                 <div class="flex-1 min-w-0">
@@ -230,7 +232,7 @@
                     :href="project.project_link"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-sm text-ink-blue-3 hover:underline break-all"
+                    class="text-sm text-ink-blue-6 hover:underline break-all"
                   >{{ project.project_link }}</a>
                 </div>
                 <div class="flex gap-1 shrink-0">
@@ -296,7 +298,7 @@
             </div>
 
             <!-- add new project form -->
-            <div v-if="showAddProject" class="col-span-2 border rounded-lg p-4 flex flex-col gap-3">
+            <div v-if="showAddProject" class="col-span-2 border rounded-6 p-4 flex flex-col gap-3">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <FormControl
                   v-model="newProject.project_name"

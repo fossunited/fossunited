@@ -68,11 +68,11 @@ export function useSession(session) {
 
   const categoryStyle = computed(() => {
     const cat = (sessionCategory.value || '').toLowerCase()
-    if (cat.includes('workshop')) return 'bg-surface-green-2 text-ink-green-3'
+    if (cat.includes('workshop')) return 'bg-surface-green-2 text-ink-green-6'
     if (cat.includes('keynote')) return 'bg-surface-violet-1 text-ink-violet-1'
-    if (cat.includes('panel')) return 'bg-surface-blue-2 text-ink-blue-3'
-    if (cat.includes('lightning')) return 'bg-surface-amber-2 text-ink-amber-3'
-    return 'bg-surface-green-2 text-ink-green-3'
+    if (cat.includes('panel')) return 'bg-surface-blue-2 text-ink-blue-6'
+    if (cat.includes('lightning')) return 'bg-surface-amber-2 text-ink-amber-6'
+    return 'bg-surface-green-2 text-ink-green-6'
   })
 
   const cfpHref = computed(() => {

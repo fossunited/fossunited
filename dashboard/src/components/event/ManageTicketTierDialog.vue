@@ -1,22 +1,19 @@
 <template>
   <Dialog
-    v-model="showDialog"
+    v-model:open="showDialog"
     class="z-50"
-    :options="{
-      title: inCreateMode ? 'Create Ticket Tier' : 'Manage Ticket Tier',
-    }"
+    :title="inCreateMode ? 'Create Ticket Tier' : 'Manage Ticket Tier'"
   >
-    <template #body-content>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           v-if="!inCreateMode"
-          class="col-span-2 flex items-end justify-between border border-gray-600 p-3 border-dashed rounded-sm"
+          class="col-span-2 flex items-end justify-between border border-gray-600 p-3 border-dashed rounded-1"
         >
           <div class="flex flex-col gap-2">
             <div class="text-sm text-ink-gray-5">Status</div>
             <div
-              class="font-medium text-sm flex items-center gap-2"
-              :class="tier.enabled ? 'text-ink-green-3' : ''"
+              class=" text-sm-medium flex items-center gap-2"
+              :class="tier.enabled ? 'text-ink-green-6' : ''"
             >
               <LivePing v-if="tier.enabled" />
               <span>
@@ -49,7 +46,7 @@
           <DatePicker
             v-model="modifyTier.valid_till"
             variant="subtle"
-            input-class="bg-surface-white border-none hover:bg-surface-white px-0"
+            input-class="bg-surface-base border-none hover:bg-surface-base px-0"
           />
         </div>
         <Input
@@ -70,7 +67,7 @@
           <div class="text-sm text-ink-gray-5 mb-1">Description</div>
           <textarea
             v-model="modifyTier.description"
-            class="w-full border border-outline-gray-2 rounded p-2 text-base bg-surface-gray-2"
+            class="w-full border border-outline-gray-2 rounded-4 p-2 text-base bg-surface-gray-2"
             rows="4"
             placeholder="Add a description"
           ></textarea>
@@ -78,7 +75,6 @@
         </div>
       </div>
       <ErrorMessage class="mt-2" :message="errorMessages" />
-    </template>
     <template #actions>
       <div class="grid grid-cols-2 gap-2">
         <Button label="Cancel" size="sm" @click="showDialog = false" />

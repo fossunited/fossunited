@@ -7,22 +7,23 @@
     </span>
     <FileUploader
       :file-types="fileTypes"
-      :upload-args="uploadArgs"
+      :private="false"
+      :optimize="true"
       :validate-file="validateFile"
       @success="handleSuccess"
       @failure="handleError"
     >
       <template #default="{ uploading, progress, openFileSelector, error }">
         <!-- Image Preview -->
-        <div v-if="modelValue" class="mb-2">
+        <div v-if="previewUrl" class="mb-2">
           <img
-            :src="modelValue"
-            class="w-full h-40 object-contain rounded border bg-surface-gray-1"
+            :src="previewUrl"
+            class="w-full h-40 object-contain rounded-4 border bg-surface-gray-1"
             :alt="label ? `${label} preview` : 'Image preview'"
           />
           <div class="flex gap-2 mt-1.5">
             <button
-              class="flex items-center gap-1 px-2 py-1 text-xs rounded bg-surface-gray-2 text-ink-gray-7 hover:bg-surface-gray-3 transition-colors"
+              class="flex items-center gap-1 px-2 py-1 text-xs rounded-4 bg-surface-gray-2 text-ink-gray-7 hover:bg-surface-gray-3 transition-colors"
               :aria-label="`Change ${label || 'image'}`"
               @click="openFileSelector"
             >
@@ -30,7 +31,7 @@
               Change
             </button>
             <button
-              class="flex items-center gap-1 px-2 py-1 text-xs rounded bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+              class="flex items-center gap-1 px-2 py-1 text-xs rounded-4 bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
               :aria-label="`Remove ${label || 'image'}`"
               @click="removeImage"
             >
@@ -43,7 +44,7 @@
         <!-- Upload Area -->
         <div
           v-else
-          class="border-2 border-dashed rounded-lg p-8 transition-all duration-200"
+          class="border-2 border-dashed rounded-6 p-8 transition-all duration-200"
           :class="uploading ? 'cursor-default' : 'hover:cursor-pointer focus:outline-2 focus:outline-offset-2'"
           role="button"
           tabindex="0"
@@ -76,7 +77,7 @@
           </div>
           <div v-else class="flex flex-col items-center gap-3">
             <IconPhotoScan aria-hidden="true" class="w-8 h-8 text-ink-gray-3" />
-            <p class="text-sm font-medium text-ink-gray-6">Click to browse files</p>
+            <p class="text-sm-medium text-ink-gray-6">Click to browse files</p>
           </div>
         </div>
 
@@ -84,7 +85,7 @@
           v-if="error"
           role="alert"
           aria-live="assertive"
-          class="mt-2 text-sm text-ink-red-4"
+          class="mt-2 text-sm text-ink-red-8"
         >
           {{ error }}
         </p>
@@ -101,18 +102,27 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { FileUploader } from 'frappe-ui'
 import { IconPhotoScan, IconTrash, IconEdit } from '@tabler/icons-vue'
 
 const model = defineModel({ type: String, default: '' })
 
+// Mirrors the upload result locally rather than reading `modelValue`
+const justUploaded = ref('')
+const previewUrl = computed(() => justUploaded.value || model.value)
+
+// A dialog reused across entities clears
+// `modelValue` from outside this component - follow it back to empty so a
+// stale local preview doesn't survive into the next, unrelated use.
+watch(model, (val) => {
+  if (!val) justUploaded.value = ''
+})
+
 const props = defineProps({
   label: { type: String, default: '' },
   fileTypes: { type: [String, Array], default: 'image/*' },
   maxFileSize: { type: Number, default: 1.5 },
-  maxWidth: { type: Number, default: null },
-  maxHeight: { type: Number, default: null },
   description: { type: String, default: '' },
   required: { type: Boolean, default: false },
 })
@@ -123,13 +133,6 @@ const emit = defineEmits(['update:modelValue', 'error', 'uploaded'])
 const uid = Math.random().toString(36).slice(2, 8)
 const labelId = `fua-label-${uid}`
 const descriptionId = `fua-desc-${uid}`
-
-const uploadArgs = computed(() => {
-  const args = { optimize: true, private: false }
-  if (props.maxWidth) args.max_width = props.maxWidth
-  if (props.maxHeight) args.max_height = props.maxHeight
-  return args
-})
 
 const validateFile = (file) => {
   if (!file.type.startsWith('image/')) {
@@ -142,6 +145,7 @@ const validateFile = (file) => {
 }
 
 const handleSuccess = (response) => {
+  justUploaded.value = response.file_url
   model.value = response.file_url
   emit('uploaded', response.file_url)
 }
@@ -151,6 +155,7 @@ const handleError = (error) => {
 }
 
 const removeImage = () => {
+  justUploaded.value = ''
   model.value = ''
 }
 </script>

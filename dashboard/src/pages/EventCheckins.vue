@@ -56,7 +56,7 @@
         <div class="mb-4">
           <button
             type="button"
-            class="w-[150px] btn btn-primary bg-surface-gray-6 text-ink-white rounded py-1"
+            class="w-[150px] btn btn-primary bg-surface-gray-9 text-ink-base rounded-4 py-1"
             :aria-expanded="!!showScanner"
             aria-controls="qr-ticket-scanner"
             @click="showScanner = !showScanner"
@@ -87,7 +87,7 @@
           }"
         >
           <template #group-header="{ group }">
-            <span class="text-base font-medium leading-6 text-ink-gray-9">
+            <span class="text-base-medium leading-6 text-ink-gray-9">
               {{ group.group }} ({{ group.rows.length }})
             </span>
           </template>
@@ -109,7 +109,7 @@
               <Checkbox :model-value="Boolean(item)" :disabled="true" class="w-4 h-4" />
             </template>
             <template v-else-if="column.key === 'name'">
-              <span class="font-mono text-sm font-semibold text-ink-gray-8 truncate text-wrap">{{
+              <span class="font-mono text-sm-semibold text-ink-gray-8 truncate text-wrap">{{
                 item
               }}</span>
             </template>
@@ -118,12 +118,12 @@
                 <span
                   v-for="(data, index) in row.checkin_data"
                   :key="index"
-                  class="flex items-center p-1 rounded-sm"
+                  class="flex items-center p-1 rounded-1"
                 >
-                  <Tooltip arrow-class="fill-black" :placement="'top'" :hover-delay="0.5">
-                    <template #body>
+                  <Tooltip side="top" :hover-delay="500" bare>
+                    <template #content>
                       <span
-                        class="text-xs bg-surface-gray-7 text-ink-white px-2 py-1 rounded-full"
+                        class="text-xs bg-surface-gray-10 text-ink-base px-2 py-1 rounded-full"
                       >
                         {{ formatCheckinDateTime(data.check_in_time) }}
                       </span>

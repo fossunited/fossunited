@@ -63,20 +63,20 @@ const eventDetailItems = computed(() => [
         <div class="flex items-stretch gap-2">
           <a
             :href="'/' + event.route"
-            class="flex flex-row p-3 rounded border gap-3 bg-surface-gray-2 flex-1 h-fit items-center no-underline text-inherit hover:bg-surface-gray-3 transition-colors"
+            class="flex flex-row p-3 rounded-4 border gap-3 bg-surface-gray-2 flex-1 h-fit items-center no-underline text-inherit hover:bg-surface-gray-3 transition-colors"
           >
             <!-- Small logo: mobile only, inline with event name -->
             <img
               v-if="event.banner_image || event.event_logo"
               :src="event.banner_image || event.event_logo"
               alt="Event logo"
-              class="md:hidden h-7 w-7 object-contain rounded shrink-0"
+              class="md:hidden h-7 w-7 object-contain rounded-4 shrink-0"
             />
             <h2 class="font-semibold flex-grow">{{ event.event_name }}</h2>
             <IconArrowUpRight class="w-4 h-4 text-ink-gray-7 dark:text-ink-gray-8 shrink-0" />
           </a>
           <button
-            class="shrink-0 px-2 rounded border bg-surface-gray-2 hover:bg-surface-gray-3 transition-colors text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-gray-9"
+            class="shrink-0 px-2 rounded-4 border bg-surface-gray-2 hover:bg-surface-gray-3 transition-colors text-ink-gray-7 dark:text-ink-gray-8 hover:text-ink-gray-9"
             :aria-label="collapsed ? 'Expand event details' : 'Collapse event details'"
             @click="collapsed = !collapsed"
           >

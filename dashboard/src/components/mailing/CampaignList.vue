@@ -39,13 +39,14 @@
         </span>
       </template>
       <template v-else>
-        <span class="text-base font-medium">{{ item }}</span>
+        <span class="text-base-medium">{{ item }}</span>
       </template>
     </template>
   </ListView>
 </template>
 <script setup>
-import { ListView, Badge } from 'frappe-ui'
+import { Badge } from 'frappe-ui'
+import { ListView } from 'frappe-ui/experimental'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 

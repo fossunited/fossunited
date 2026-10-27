@@ -41,28 +41,26 @@
 
     <div v-if="selectedMember">
       <Dialog
-        v-model="showRemoveModal"
-        :options="{
-          title: 'Remove Team Member?',
-          message: `Are you sure you want to remove ${selectedMember.full_name} from the team?`,
-          actions: [
-            {
-              label: 'Cancel',
-              theme: 'gray',
-              onClick: () => {
-                showRemoveModal = false
-              },
+        v-model:open="showRemoveModal"
+        title="Remove Team Member?"
+        :message="`Are you sure you want to remove ${selectedMember.full_name} from the team?`"
+        :actions="[
+          {
+            label: 'Cancel',
+            theme: 'gray',
+            onClick: () => {
+              showRemoveModal = false
             },
-            {
-              label: 'Remove',
-              theme: 'red',
-              onClick: () => {
-                removeMember(selectedMember)
-                showRemoveModal = false
-              },
+          },
+          {
+            label: 'Remove',
+            theme: 'red',
+            onClick: () => {
+              removeMember(selectedMember)
+              showRemoveModal = false
             },
-          ],
-        }"
+          },
+        ]"
         class="z-50"
       >
       </Dialog>
@@ -71,7 +69,7 @@
     <!-- EDIT MEMBER ROLE -->
     <div v-if="selectedMember && showEditmodal">
       <EditMemberDialog
-        v-model="showEditmodal"
+        v-model:open="showEditmodal"
         class="z-50"
         :event="event"
         :member="selectedMember"
@@ -83,7 +81,7 @@
 
     <div v-if="showAddmodal">
       <AddMemberDialog
-        v-model="showAddmodal"
+        v-model:open="showAddmodal"
         class="z-50"
         :event="event"
         @update:add-member="addNewMember"
@@ -93,6 +91,7 @@
   </div>
 </template>
 <script setup>
+import Card from '@/components/ui/Card.vue'
 import EventHeader from '@/components/EventHeader.vue'
 import AddMemberDialog from '@/components/chapter/AddMember.vue'
 import EditMemberDialog from '@/components/chapter/EditMember.vue'

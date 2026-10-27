@@ -12,7 +12,7 @@
       <!-- Organiser note, rendered from the event's Markdown Editor field. -->
       <div
         v-if="sanitizedDesc"
-        class="schedule-note mt-3 rounded-lg border border-outline-gray-3 bg-surface-gray-1 dark:bg-surface-gray-2 px-4 py-3 text-sm text-ink-gray-7 dark:text-ink-gray-8 leading-relaxed"
+        class="schedule-note mt-3 rounded-6 border border-outline-gray-3 bg-surface-gray-1 dark:bg-surface-gray-2 px-4 py-3 text-sm text-ink-gray-7 dark:text-ink-gray-8 leading-relaxed"
         v-html="sanitizedDesc"
       />
     </div>
@@ -26,12 +26,12 @@
     >
       <div class="max-w-[840px] mx-auto px-3 sm:px-4 pt-2 sm:pt-3">
         <div
-          class="bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-3 rounded-xl p-2 flex flex-col gap-2 shadow-sm"
+          class="bg-surface-base dark:bg-surface-gray-2 border border-outline-gray-3 rounded-7 p-2 flex flex-col gap-2 shadow-sm"
         >
           <!-- Row 1: Day selector + View switch -->
           <div class="flex items-center gap-2">
             <div
-              class="flex border border-outline-gray-3 rounded-lg overflow-hidden overflow-x-auto scrollbar-none flex-1 min-w-0"
+              class="flex border border-outline-gray-3 rounded-6 overflow-hidden overflow-x-auto scrollbar-none flex-1 min-w-0"
               role="group"
               aria-label="Select event day"
             >
@@ -41,7 +41,7 @@
                 type="button"
                 :aria-pressed="selectedDay === date"
                 :aria-label="`Day ${index + 1}, ${formatFullDate(date)}`"
-                class="flex-1 flex flex-col items-center justify-center min-w-[64px] sm:min-w-[72px] h-[44px] sm:h-[48px] border-r border-outline-gray-3 last:border-r-0 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline-gray-5"
+                class="flex-1 flex flex-col items-center justify-center min-w-[64px] sm:min-w-[72px] h-[44px] sm:h-[48px] border-r border-outline-gray-3 last:border-r-0 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline-gray-7"
                 :class="selectedDay === date ? SEG_ON : SEG_OFF"
                 @click="selectedDay = date"
               >
@@ -57,7 +57,7 @@
             </div>
             <!-- Toggle buttons -->
             <div
-              class="shrink-0 flex border border-outline-gray-3 rounded-lg overflow-hidden"
+              class="shrink-0 flex border border-outline-gray-3 rounded-6 overflow-hidden"
               role="group"
               aria-label="Schedule view"
             >
@@ -67,7 +67,7 @@
                 type="button"
                 :aria-pressed="view === option.value"
                 :aria-label="option.label + ' view'"
-                class="h-8 flex items-center gap-1.5 px-2.5 text-xs font-semibold uppercase tracking-wide transition-colors border-r border-outline-gray-3 last:border-r-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline-gray-5"
+                class="h-8 flex items-center gap-1.5 px-2.5 text-xs-semibold uppercase tracking-wide transition-colors border-r border-outline-gray-3 last:border-r-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline-gray-7"
                 :class="view === option.value ? SEG_ON : SEG_OFF"
                 @click="view = option.value"
               >
@@ -91,7 +91,7 @@
                 autocomplete="off"
                 autocapitalize="off"
                 spellcheck="false"
-                class="w-full h-8 pl-8 pr-3 border border-outline-gray-3 rounded-lg text-xs bg-surface-gray-1 dark:bg-surface-gray-3 text-ink-gray-9 placeholder:text-ink-gray-7 dark:placeholder:text-ink-gray-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-5 focus:border-outline-gray-4 transition-colors"
+                class="w-full h-8 pl-8 pr-3 border border-outline-gray-3 rounded-6 text-xs bg-surface-gray-1 dark:bg-surface-gray-3 text-ink-gray-9 placeholder:text-ink-gray-7 dark:placeholder:text-ink-gray-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-7 focus:border-outline-gray-4 transition-colors"
               />
             </div>
             <ScheduleDownload
@@ -103,7 +103,7 @@
           <!-- All | Live | Mine. Only rendered once there is something to switch to -->
           <div
             v-if="modes.length > 1 && !isSearching"
-            class="flex border border-outline-gray-3 rounded-lg overflow-hidden"
+            class="flex border border-outline-gray-3 rounded-6 overflow-hidden"
             role="group"
             aria-label="Filter sessions"
           >
@@ -112,7 +112,7 @@
               :key="m.id"
               type="button"
               :aria-pressed="mode === m.id"
-              class="flex-1 h-8 flex items-center justify-center gap-1.5 border-r border-outline-gray-3 last:border-r-0 text-[10px] font-semibold uppercase tracking-wide transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline-gray-5"
+              class="flex-1 h-8 flex items-center justify-center gap-1.5 border-r border-outline-gray-3 last:border-r-0 text-[10px] font-semibold uppercase tracking-wide transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline-gray-7"
               :class="mode === m.id ? SEG_ON : SEG_OFF"
               @click="mode = m.id"
             >
@@ -137,7 +137,7 @@
           -->
           <div
             v-if="view === 'list' && !isSearching && !narrowed && halls.length > 0"
-            class="flex flex-wrap gap-px bg-surface-gray-4 border border-outline-gray-3 rounded-lg overflow-hidden"
+            class="flex flex-wrap gap-px bg-surface-gray-4 border border-outline-gray-3 rounded-6 overflow-hidden"
             role="group"
             aria-label="Select hall"
           >
@@ -146,11 +146,11 @@
               :key="hall"
               type="button"
               :aria-pressed="selectedHall === hall"
-              class="flex-1 min-h-[44px] flex items-center justify-center px-4 py-1.5 text-xs font-semibold uppercase tracking-wide leading-tight text-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline-gray-5"
+              class="flex-1 min-h-[44px] flex items-center justify-center px-4 py-1.5 text-xs-semibold uppercase tracking-wide leading-tight text-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline-gray-7"
               :class="
                 selectedHall === hall
                   ? SEG_ON
-                  : `bg-surface-white dark:bg-surface-gray-2 ${SEG_OFF}`
+                  : `bg-surface-base dark:bg-surface-gray-2 ${SEG_OFF}`
               "
               @click="selectedHall = hall"
             >
@@ -207,7 +207,7 @@ import { createResource, LoadingText, usePageMeta } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { IconTimelineEventText, IconAlignLeft, IconSearch } from '@tabler/icons-vue'
 import DOMPurify from 'dompurify'
-import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
+import { markdownToHTML } from '@/helpers/markdown'
 import dayjs from 'dayjs'
 
 import Header from '@/components/Header.vue'
@@ -259,7 +259,7 @@ const narrowed = computed(() => modes.value.find((m) => m.id === mode.value && m
 
 // Days, view switch and All/Live/Mine are the same segmented control, so they
 // share one pair of state classes rather than three copies of each.
-const SEG_ON = 'bg-surface-gray-7 text-ink-white'
+const SEG_ON = 'bg-surface-gray-10 text-ink-base'
 const SEG_OFF =
   'text-ink-gray-7 dark:text-ink-gray-8 hover:bg-surface-gray-2 dark:hover:bg-surface-gray-3'
 

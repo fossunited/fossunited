@@ -9,21 +9,21 @@
   />
 
   <div class="flex items-center justify-between mb-4">
-    <div class="text-base font-medium">
+    <div class="text-base-medium">
       {{ currentView === 'checkins' ? 'Check-ins' : 'Requests' }}
-      <span v-if="currentView === 'checkins'" class="ml-2 text-sm font-normal text-ink-gray-5">
+      <span v-if="currentView === 'checkins'" class="ml-2 text-sm text-ink-gray-5">
         ({{ checkins.data?.length || 0 }} checked-in out of {{ totalAccepted }} accepted
         participants)
       </span>
     </div>
 
     <div class="flex items-center gap-2">
-      <div class="flex items-center gap-1 bg-surface-gray-2 rounded-lg p-1">
+      <div class="flex items-center gap-1 bg-surface-gray-2 rounded-6 p-1">
         <button
-          class="px-3 py-1.5 text-sm rounded-md transition-colors"
+          class="px-3 py-1.5 text-sm rounded-5 transition-colors"
           :class="
             currentView === 'requests'
-              ? 'bg-surface-white text-ink-gray-9 font-medium shadow-sm'
+              ? 'bg-surface-base text-ink-gray-9 font-medium shadow-sm'
               : 'text-ink-gray-5 hover:text-ink-gray-9'
           "
           @click="currentView = 'requests'"
@@ -31,10 +31,10 @@
           Requests
         </button>
         <button
-          class="px-3 py-1.5 text-sm rounded-md transition-colors"
+          class="px-3 py-1.5 text-sm rounded-5 transition-colors"
           :class="
             currentView === 'checkins'
-              ? 'bg-surface-white text-ink-gray-9 font-medium shadow-sm'
+              ? 'bg-surface-base text-ink-gray-9 font-medium shadow-sm'
               : 'text-ink-gray-5 hover:text-ink-gray-9'
           "
           @click="currentView = 'checkins'"
@@ -54,7 +54,7 @@
     </div>
   </div>
 
-  <span v-if="currentView === 'requests'" class="ml-2 text-sm font-normal text-ink-gray-5">
+  <span v-if="currentView === 'requests'" class="ml-2 text-sm text-ink-gray-5">
     Note: Grouped by teamID (more than one team can share same name)
   </span>
 
@@ -112,7 +112,7 @@
             v-if="row.git_profile"
             :href="row.git_profile"
             target="_blank"
-            class="text-sm flex items-center font-semibold hover:underline"
+            class="text-sm-semibold flex items-center hover:underline"
           >
             <span>Open</span>
             <IconArrowUpRight class="w-4 h-4" />
@@ -143,7 +143,7 @@
         <div v-else-if="column.key === 'project_title'">
           <a
             v-if="row.project_route"
-            class="text-sm flex items-center font-semibold hover:underline cursor-pointer"
+            class="text-sm-semibold flex items-center hover:underline cursor-pointer"
             @click="redirectRoute(row.project_route)"
           >
             <span class="truncate">{{ row.project_title }}</span>
@@ -175,7 +175,7 @@
     </SearchListView>
 
     <div v-else class="text-center py-12 text-ink-gray-4">
-      <p class="text-lg font-medium">No Requests</p>
+      <p class="text-md-medium">No Requests</p>
       <p class="text-sm mt-1">There are no localhost requests yet.</p>
     </div>
   </div>
@@ -231,7 +231,7 @@ const exportColumns = [
 
 const getStatusTheme = (status) => {
   const themes = {
-    Pending: 'orange',
+    Pending: 'amber',
     'Pending Confirmation': 'blue',
     Accepted: 'green',
     Rejected: 'red',

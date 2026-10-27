@@ -1,13 +1,10 @@
 <template>
   <Dialog
-    v-model="showDialog"
+    v-model:open="showDialog"
     class="z-50"
-    :options="{
-      title: inCreateMode ? 'Create Custom Field' : 'Edit Custom Field',
-      width: 'md',
-    }"
+    :title="inCreateMode ? 'Create Custom Field' : 'Edit Custom Field'"
+    size="md"
   >
-    <template #body-content>
       <div class="flex flex-col gap-4">
         <FormControl v-model="question.label" label="Question &ast;" />
         <FormControl
@@ -38,7 +35,6 @@
         />
       </div>
       <ErrorMessage :message="errorMessages" />
-    </template>
     <template #actions>
       <div class="grid grid-cols-3 gap-2 items-center">
         <Button

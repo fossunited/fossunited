@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-col gap-2 p-4 border border-outline-gray-2 rounded">
+  <div class="flex flex-col gap-2 p-4 border border-outline-gray-2 rounded-4">
     <div class="flex gap-6 justify-between">
       <div class="flex flex-col gap-2 justify-between">
         <div class="flex flex-col gap-1">
-          <h5 class="text-lg font-medium">{{ getValue('full_name') }}</h5>
+          <h5 class="text-md-medium">{{ getValue('full_name') }}</h5>
           <a
             :href="
               /^https?:\/\//.test(getValue('social_link'))
@@ -25,15 +25,15 @@
             </Badge>
           </a>
         </div>
-        <div class="flex flex-col gap-1 text-sm font-medium">
+        <div class="flex flex-col gap-1 text-sm-medium">
           <span>{{ getValue('designation') }}</span>
           <span>{{ getValue('organization') }}</span>
         </div>
       </div>
-      <img class="w-24 h-24 border rounded" :src="getValue('photo')" alt="Speaker Image" />
+      <img class="w-24 h-24 border rounded-4" :src="getValue('photo')" alt="Speaker Image" />
     </div>
     <div class="space-y-1 p-2">
-      <label class="text-base font-medium text-ink-gray-5">Bio</label>
+      <label class="text-base-medium text-ink-gray-5">Bio</label>
       <div
         class="prose prose-sm border-l pl-2 border-outline-gray-3"
         v-html="cleanedHTML(getValue('bio'))"

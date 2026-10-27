@@ -1,6 +1,6 @@
 <template>
   <ManageTicketTierDialog v-model="showDialog" :tier="tier" @update-tier="updateTier" />
-  <div class="rounded border p-4">
+  <div class="rounded-4 border p-4">
     <div class="flex w-full justify-between items-center">
       <div class="flex flex-wrap items-center">
         <div class="prose">
@@ -15,7 +15,7 @@
     <div class="mt-6 flex flex-col gap-1">
       <div class="prose">
         <h3 class="font-medium">
-          {{ tier.price }} <span class="text-lg">{{ tier.currency }}</span>
+          {{ tier.price }} <span class="text-md">{{ tier.currency }}</span>
         </h3>
       </div>
       <div v-if="tier.valid_till" class="text-xs text-ink-gray-5">

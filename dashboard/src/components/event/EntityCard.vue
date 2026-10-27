@@ -1,18 +1,17 @@
 <template>
   <Dialog
-    v-model="showConfirmation"
+    v-model:open="showConfirmation"
     class="z-50"
-    :options="{
-      title: `Remove ${label}?`,
-      message: `Are you sure you want to remove ${label.toLowerCase()} - ${item[nameKey]}?`,
-      icon: { name: 'alert-triangle', appearance: 'warning' },
-      actions: [
-        { label: 'Cancel', onClick: () => (showConfirmation = false) },
-        { label: 'Remove', theme: 'red', onClick: handleDelete },
-      ],
-    }"
+    :title="`Remove ${label}?`"
+    :message="`Are you sure you want to remove ${label.toLowerCase()} - ${item[nameKey]}?`"
+    :icon="IconAlertTriangle"
+    theme="amber"
+    :actions="[
+      { label: 'Cancel', onClick: () => (showConfirmation = false) },
+      { label: 'Remove', theme: 'red', onClick: handleDelete },
+    ]"
   />
-  <div class="border p-4 flex flex-col gap-2 rounded items-center">
+  <div class="border p-4 flex flex-col gap-2 rounded-4 items-center">
     <div class="relative w-full">
       <div v-if="editable" class="top-0 right-0 absolute flex flex-row-reverse gap-2 z-10">
         <Button :icon="IconTrash" theme="red" @click="showConfirmation = true" />
@@ -24,7 +23,7 @@
         :alt="item[nameKey] || 'Image preview'"
       />
     </div>
-    <h4 class="text-md font-medium">{{ item[nameKey] }}</h4>
+    <h4 class="text-md-medium">{{ item[nameKey] }}</h4>
     <slot />
   </div>
 </template>
@@ -33,7 +32,7 @@
 import { inject, ref } from 'vue'
 import { toast } from 'vue-sonner'
 import { Dialog } from 'frappe-ui'
-import { IconTrash, IconEdit } from '@tabler/icons-vue'
+import { IconTrash, IconEdit, IconAlertTriangle } from '@tabler/icons-vue'
 
 const props = defineProps({
   item: { type: Object, required: true },

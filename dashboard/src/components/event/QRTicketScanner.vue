@@ -3,7 +3,7 @@
     v-if="modelValue"
     :class="[
       isFullscreen
-        ? 'fixed inset-0 z-50 bg-surface-gray-7/90 flex items-center justify-center overflow-hidden p-4 md:p-8'
+        ? 'fixed inset-0 z-50 bg-surface-gray-10/90 flex items-center justify-center overflow-hidden p-4 md:p-8'
         : 'relative my-4 mx-auto border border-outline-gray-2 w-full max-w-md',
     ]"
   >
@@ -13,7 +13,7 @@
       aria-label="Close scanner"
       title="Close"
       @click="emit('update:modelValue', false)"
-      class="absolute top-3 right-3 z-50 grid place-items-center w-10 h-10 rounded-full bg-red-600/60 text-ink-white text-xl hover:bg-surface-gray-7/70 focus:outline-none focus:ring-2 focus:ring-white/70"
+      class="absolute top-3 right-3 z-50 grid place-items-center w-10 h-10 rounded-full bg-red-600/60 text-ink-base text-lg hover:bg-surface-gray-10/70 focus:outline-none focus:ring-2 focus:ring-white/70"
     >
       <span aria-hidden="true">✕</span>
     </button>
@@ -22,10 +22,10 @@
     <div
       :class="[
         isFullscreen
-          ? 'w-[80vw] h-[80vh] max-w-[864px] aspect-video rounded-2xl'
-          : 'w-full aspect-video rounded-xl',
+          ? 'w-[80vw] h-[80vh] max-w-[864px] aspect-video rounded-8'
+          : 'w-full aspect-video rounded-7',
       ]"
-      class="relative bg-surface-gray-7"
+      class="relative bg-surface-gray-10"
     >
       <qrcode-stream
         :constraints="{ facingMode: 'environment' }"
@@ -43,16 +43,16 @@
       >
         <div class="relative w-3/4 max-w-xs h-40">
           <div
-            class="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-green-400 rounded-tl-md"
+            class="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-green-400 rounded-tl-5"
           ></div>
           <div
-            class="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-green-400 rounded-tr-md"
+            class="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-green-400 rounded-tr-5"
           ></div>
           <div
-            class="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-green-400 rounded-bl-md"
+            class="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-green-400 rounded-bl-5"
           ></div>
           <div
-            class="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-green-400 rounded-br-md"
+            class="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-green-400 rounded-br-5"
           ></div>
         </div>
       </div>

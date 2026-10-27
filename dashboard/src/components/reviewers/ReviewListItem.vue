@@ -8,12 +8,12 @@
         <span>{{ event.chapter_name }}</span>
         <span> - {{ dayjs(event.start_date).format('D MMM YYYY') }}</span>
       </div>
-      <h4 class="text-lg font-semibold">{{ event.event_name }}</h4>
+      <h4 class="text-md-semibold">{{ event.event_name }}</h4>
     </div>
     <div class="flex flex-col md:flex-row gap-2 justify-between">
       <div class="flex flex-col md:flex-row gap-2 font-medium md:divide-x-2 divide-gray-300">
         <span class="text-sm text-ink-gray-8">Submissions: {{ event.submission_count }}</span>
-        <span class="text-sm md:pl-2 text-ink-green-3">Reviewed: {{ event.reviewed_count }}</span>
+        <span class="text-sm md:pl-2 text-ink-green-6">Reviewed: {{ event.reviewed_count }}</span>
         <span class="text-sm md:pl-2 text-orange-800"
           >Pending Review: {{ event.not_reviewed_count }}</span
         >

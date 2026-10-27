@@ -1,11 +1,11 @@
 <template>
   <div class="mt-4">
     <div class="flex items-center gap-2 mb-4">
-      <span class="text-sm font-semibold text-ink-gray-7 dark:text-ink-gray-8 uppercase tracking-wide">
+      <span class="text-sm-semibold text-ink-gray-7 dark:text-ink-gray-8 uppercase tracking-wide">
         {{ label }}
       </span>
       <span
-        class="px-2 py-0.5 rounded-full bg-surface-gray-2 text-ink-gray-7 dark:text-ink-gray-8 text-xs font-semibold"
+        class="px-2 py-0.5 rounded-full bg-surface-gray-2 text-ink-gray-7 dark:text-ink-gray-8 text-xs-semibold"
       >
         {{ filteredSessions.length }}
       </span>

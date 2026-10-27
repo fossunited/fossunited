@@ -1,13 +1,13 @@
 <template>
   <div
-    class="grid grid-cols-3 gap-4 md:gap-2 items-center justify-between px-6 py-4 border rounded md:divide-x-2 *:px-6"
+    class="grid grid-cols-3 gap-4 md:gap-2 items-center justify-between px-6 py-4 border rounded-4 md:divide-x-2 *:px-6"
   >
     <div
       v-for="(value, key) in stats"
       :key="key"
       class="flex flex-col justify-center md:justify-normal items-center md:items-start"
     >
-      <div class="flex gap-1 items-center text-xl font-medium first:px-0" :class="getColor(key)">
+      <div class="flex gap-1 items-center text-lg-medium first:px-0" :class="getColor(key)">
         {{ value }}
       </div>
       <span class="text-sm text-ink-gray-4">{{ key }}</span>
@@ -47,11 +47,11 @@ const stats = computed(() => {
 const getColor = (key) => {
   switch (key) {
     case 'Approvals':
-      return 'text-ink-green-3'
+      return 'text-ink-green-6'
     case 'Rejections':
-      return 'text-ink-red-4'
+      return 'text-ink-red-8'
     case 'Not Sure':
-      return 'text-ink-amber-3'
+      return 'text-ink-amber-6'
     default:
       return 'text-ink-gray-5'
   }

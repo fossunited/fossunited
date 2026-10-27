@@ -1,16 +1,9 @@
 <template>
-  <Dialog
-    v-model="showDialog"
-    class="z-50"
-    :options="{
-      title: 'Error',
-      message: dialogMessage,
-    }"
-  />
+  <Dialog v-model:open="showDialog" class="z-50" title="Error" :message="dialogMessage" />
   <div v-if="chapter.data" class="flex flex-col md:flex-row">
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-surface-white focus:text-ink-gray-9 focus:px-3 focus:py-2 focus:rounded focus:shadow-lg"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-surface-base focus:text-ink-gray-9 focus:px-3 focus:py-2 focus:rounded-4 focus:shadow-lg"
     >
       Skip to main content
     </a>

@@ -1,25 +1,21 @@
 <template>
   <!-- Add/Edit PR/Issue Dialog -->
   <Dialog
-    v-model="showAddDialog"
+    v-model:open="showAddDialog"
     class="z-50"
-    :options="{
-      title: editingRow ? 'Edit Issue / PR / Discussion' : 'Add Issue / PR / Discussion',
-    }"
+    :title="editingRow ? 'Edit Issue / PR / Discussion' : 'Add Issue / PR / Discussion'"
   >
-    <template #body-content>
-      <div class="flex flex-col gap-4">
-        <FormControl v-model="newIssuePr.link" type="url" label="Link &ast;" />
-        <FormControl v-model="newIssuePr.title" label="Title &ast;" />
-        <FormControl
-          v-model="newIssuePr.type"
-          type="select"
-          :options="issueTypes"
-          label="Type &ast;"
-        />
-        <ErrorMessage :message="addIssueErrors" />
-      </div>
-    </template>
+    <div class="flex flex-col gap-4">
+      <FormControl v-model="newIssuePr.link" type="url" label="Link &ast;" />
+      <FormControl v-model="newIssuePr.title" label="Title &ast;" />
+      <FormControl
+        v-model="newIssuePr.type"
+        type="select"
+        :options="issueTypes"
+        label="Type &ast;"
+      />
+      <ErrorMessage :message="addIssueErrors" />
+    </div>
     <template #actions>
       <div class="grid w-full grid-cols-2 gap-4">
         <Button
@@ -67,7 +63,8 @@
 </template>
 <script setup>
 import { computed, ref, watch, defineProps, defineEmits, reactive } from 'vue'
-import { ErrorMessage, FormControl, ListView, Dialog, createDocumentResource } from 'frappe-ui'
+import { ErrorMessage, FormControl, Dialog, createDocumentResource } from 'frappe-ui'
+import { ListView } from 'frappe-ui/experimental'
 import { toast } from 'vue-sonner'
 import { IconArrowUpRight, IconPlus, IconEdit, IconTrash } from '@tabler/icons-vue'
 

@@ -1,5 +1,5 @@
 <template>
-  <Tooltip class="w-fit" :text="tooltip_label" :placement="'top'">
+  <Tooltip class="w-fit" :text="tooltip_label" side="top">
     <Button
       class="w-fit my-2 font-mono text-left"
       size="md"

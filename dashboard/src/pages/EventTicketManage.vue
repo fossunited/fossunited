@@ -7,14 +7,14 @@
         <p class="text-sm">You can manage the tickets for this event here.</p>
       </div>
       <div
-        class="w-full md:w-1/3 mt-4 flex gap-2 flex-col p-4 border rounded-sm border-outline-gray-4 border-dashed"
+        class="w-full md:w-1/3 mt-4 flex gap-2 flex-col p-4 border rounded-1 border-outline-gray-4 border-dashed"
       >
         <div>
-          <div class="text-base font-semibold mb-1">
+          <div class="text-base-semibold mb-1">
             Tickets are
             <span
               :class="
-                { Live: 'text-ink-green-3', Closed: 'text-ink-red-4' }[event.data.tickets_status]
+                { Live: 'text-ink-green-6', Closed: 'text-ink-red-8' }[event.data.tickets_status]
               "
               >{{ event.data.tickets_status }}</span
             >

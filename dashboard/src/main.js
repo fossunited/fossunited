@@ -1,6 +1,6 @@
 import './index.css'
 
-import { createApp, h } from 'vue'
+import { createApp } from 'vue'
 import router from './router'
 import App from './App.vue'
 import { session } from './data/session'
@@ -9,21 +9,13 @@ import { showError } from '@/helpers/utils'
 
 import {
   Button,
-  Card as FrappeCard,
-  Input,
   setConfig,
   frappeRequest,
   resourcesPlugin,
-  useTheme,
+  useColorScheme,
 } from 'frappe-ui'
 
-if (!localStorage.getItem('theme')) {
-  localStorage.setItem('theme', 'light')
-}
-document.documentElement.setAttribute('data-theme', localStorage.getItem('theme'))
-
-const { initializeTheme } = useTheme()
-initializeTheme()
+useColorScheme()
 
 window.showError = showError
 const app = createApp(App)
@@ -37,22 +29,5 @@ app.provide('$session', session)
 app.provide('$dayjs', dayjs)
 
 app.component('Button', Button)
-app.component('Input', Input)
-
-app.component('Card', {
-  name: 'AppCard',
-  inheritAttrs: false,
-  setup(props, { attrs, slots }) {
-    return () =>
-      h(
-        FrappeCard,
-        {
-          ...attrs,
-          class: ['frappeui-card', attrs.class],
-        },
-        slots,
-      )
-  },
-})
 
 app.mount('#app')

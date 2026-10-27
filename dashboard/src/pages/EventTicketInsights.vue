@@ -1,13 +1,6 @@
 <template>
   <div>
-    <Dialog
-      v-model="showChartDialog"
-      :options="{
-        title: 'Tickets Purchased Over Time',
-        size: '6xl',
-      }"
-    >
-      <template #body-content>
+    <Dialog v-model:open="showChartDialog" title="Tickets Purchased Over Time" size="6xl">
         <div class="flex justify-end gap-2 mb-2">
           <Button label="Download CSV" variant="subtle" @click="downloadChartCsv">
             <template #prefix><IconDownload class="w-4 h-4" /></template>
@@ -19,7 +12,6 @@
         <div ref="expandedChart" class="h-[65vh] min-h-[420px]">
           <AxisChart :config="ticketsSoldChartConfig" />
         </div>
-      </template>
     </Dialog>
     <div v-if="ticket_insights.data" class="flex flex-col gap-6">
       <div class="flex flex-col gap-4">
@@ -52,11 +44,11 @@
         </div>
         <div
           v-if="ticket_sales_trend.loading || ticket_sales_trend.data?.data?.length"
-          class="w-full max-w-3xl rounded border border-outline-gray-2 bg-surface-white"
+          class="w-full max-w-3xl rounded-4 border border-outline-gray-2 bg-surface-base"
         >
           <div class="flex flex-wrap items-center justify-between gap-2 px-4 pt-3">
             <div>
-              <h3 class="text-sm font-medium text-ink-gray-9">Tickets Purchased Over Time</h3>
+              <h3 class="text-sm-medium text-ink-gray-9">Tickets Purchased Over Time</h3>
               <p class="text-xs text-ink-gray-5">Cumulative purchases by ticket type</p>
             </div>
             <div v-if="!ticket_sales_trend.loading" class="flex items-center gap-1">
@@ -125,7 +117,8 @@
 </template>
 <script setup>
 import { computed, defineProps, reactive, ref } from 'vue'
-import { AxisChart, createResource, LoadingIndicator, Button, Dialog } from 'frappe-ui'
+import { createResource, LoadingIndicator, Button, Dialog } from 'frappe-ui'
+import { AxisChart } from 'frappe-ui/experimental'
 import { IconArrowsMaximize, IconDownload, IconRefresh } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import TicketTierInsightCard from '@/components/event/TicketTierInsightCard.vue'

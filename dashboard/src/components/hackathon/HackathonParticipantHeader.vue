@@ -3,17 +3,17 @@
     v-if="hackathon.data.hackathon_banner && showBanner"
     :src="hackathon.data.hackathon_banner"
     alt="Hackathon banner"
-    class="w-full h-32 md:h-full md:max-h-72 object-cover rounded-sm"
+    class="w-full h-32 md:h-full md:max-h-72 object-cover rounded-1"
   />
   <a :href="hackathon.data.external_website_url" target="_blank" rel="noopener noreferrer">
     <img
       :src="hackathon.data.hackathon_logo"
       alt="Logo"
-      class="h-10 md:h-14 mt-6 mb-4 dark:bg-white dark:p-2 dark:rounded"
+      class="h-10 md:h-14 mt-6 mb-4 dark:bg-white dark:p-2 dark:rounded-4"
     />
   </a>
   <div
-    class="flex gap-4 items-center rounded-sm w-fit py-2 mt-4 font-medium text-base text-ink-gray-9 stroke-gray-900"
+    class="flex gap-4 items-center rounded-1 w-fit py-2 mt-4 text-base-medium text-ink-gray-9 stroke-gray-900"
   >
     <div class="flex gap-1 justify-center items-center">
       <IconMapPinCode v-if="hackathon.data.hackathon_type == 'In-Person'" />

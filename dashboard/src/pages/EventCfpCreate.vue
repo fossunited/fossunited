@@ -1,7 +1,7 @@
 <template>
   <div v-if="event.doc" class="px-4 py-8 md:p-8 flex flex-col gap-8">
     <div class="flex flex-col md:flex-row justify-between gap-2">
-      <div class="text-xl font-medium">Create CFP</div>
+      <div class="text-lg-medium">Create CFP</div>
       <Button size="md" label="Create" variant="solid" @click="createCfpForm" />
     </div>
     <div>
@@ -178,15 +178,7 @@
         }"
       />
     </div>
-    <Dialog
-      v-model="show_dialog"
-      title="Add Custom Field"
-      size="md"
-      :options="{
-        title: 'Add Custom Field',
-      }"
-    >
-      <template #body-content>
+    <Dialog v-model:open="show_dialog" title="Add Custom Field" size="md">
         <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
           <FormControl
             v-model="custom_field.question"
@@ -239,7 +231,6 @@
             description="Description for the question."
           />
         </div>
-      </template>
       <template #actions>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Button v-if="inCustomEdit" label="Save" variant="solid" @click="updateCustomField" />
@@ -251,7 +242,8 @@
   </div>
 </template>
 <script setup>
-import { createDocumentResource, FormControl, ListView, Dialog, createResource } from 'frappe-ui'
+import { createDocumentResource, FormControl, Dialog, createResource } from 'frappe-ui'
+import { ListView } from 'frappe-ui/experimental'
 import { reactive, ref, defineEmits } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'

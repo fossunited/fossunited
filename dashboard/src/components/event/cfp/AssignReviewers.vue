@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col gap-2">
     <div class="flex items-center gap-1">
-      <span class="text-xs font-medium text-ink-gray-5 uppercase tracking-wide">Assign Reviewers</span>
-      <Tooltip text="Assigning a reviewer sends them an email notification. Use only to notify reviewers to review this proposal." placement="right">
+      <span class="text-xs-medium text-ink-gray-5 uppercase tracking-wide">Assign Reviewers</span>
+      <Tooltip text="Assigning a reviewer sends them an email notification. Use only to notify reviewers to review this proposal." side="right">
         <a
           href="https://docs.fossunited.org/event-cfp#assign-reviewers-to-a-proposal"
           target="_blank"
@@ -14,17 +14,17 @@
       </Tooltip>
     </div>
     <div class="flex gap-2 items-start">
-      <Autocomplete
-        v-model="selectedOptions"
+      <MultiSelect
+        :model-value="selectedIds"
         :options="reviewerOptions"
-        :multiple="true"
         placeholder="Select reviewers..."
         class="flex-1"
+        @update:selected-options="(opts) => (selectedOptions = opts)"
       >
-        <template #item-prefix="{ option }">
-          <Avatar :image="option.user_image" :label="option.label" size="xs" class="mr-1.5" />
+        <template #item-prefix="{ item }">
+          <Avatar :image="item.user_image" :label="item.label" size="xs" class="mr-1.5" />
         </template>
-      </Autocomplete>
+      </MultiSelect>
       <Button
         label="Save"
         size="sm"
@@ -38,7 +38,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { createResource, Autocomplete, Avatar, Button, Tooltip } from 'frappe-ui'
+import { createResource, MultiSelect, Avatar, Button, Tooltip } from 'frappe-ui'
 import { IconHelpCircle } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 
@@ -64,6 +64,10 @@ const currentAssignments = createResource({
 })
 
 const selectedOptions = ref([])
+// selectedOptions (the full option objects) is the source of truth, kept
+// in sync via @update:selected-options; selectedIds is a derived,
+// read-only view for MultiSelect's modelValue.
+const selectedIds = computed(() => selectedOptions.value.map((option) => option.value))
 
 watch(
   [() => currentAssignments.data, () => reviewers.data],

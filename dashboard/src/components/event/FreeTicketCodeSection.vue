@@ -36,7 +36,7 @@
 
       <div
         v-if="totals.codes"
-        class="mt-4 border border-outline-gray-2 rounded-lg overflow-hidden"
+        class="mt-4 border border-outline-gray-2 rounded-6 overflow-hidden"
       >
         <div
           class="flex flex-wrap items-center gap-2 px-4 py-2 bg-surface-gray-1 border-b border-outline-gray-2 text-sm"
@@ -49,7 +49,7 @@
           <span
             v-for="t in tierTotals"
             :key="t.tier"
-            class="text-xs px-2 py-1 rounded bg-surface-gray-2 text-ink-gray-7"
+            class="text-xs px-2 py-1 rounded-4 bg-surface-gray-2 text-ink-gray-7"
           >
             {{ t.tier }}: {{ t.codes }} · {{ t.maxCount }} max
           </span>
@@ -95,18 +95,18 @@
           <template #cell="{ item, row, column }">
             <div v-if="column.key === 'usage'">
               <span
-                class="px-2 py-1 rounded text-sm font-medium"
+                class="px-2 py-1 rounded-4 text-sm-medium"
                 :class="
                   row.used_count >= row.max_count
-                    ? 'bg-surface-red-2 text-ink-red-3'
-                    : 'bg-surface-green-2 text-ink-green-3'
+                    ? 'bg-surface-red-2 text-ink-red-6'
+                    : 'bg-surface-green-2 text-ink-green-6'
                 "
               >
                 {{ row.used_count }} / {{ row.max_count }}
               </span>
             </div>
             <div v-else-if="column.key === 'tshirt_included'">
-              <IconShirt v-if="row.tshirt_included" class="w-4 h-4 text-ink-green-3" />
+              <IconShirt v-if="row.tshirt_included" class="w-4 h-4 text-ink-green-6" />
               <span v-else class="text-ink-gray-4">—</span>
             </div>
             <div v-else>
@@ -116,8 +116,7 @@
         </SearchListView>
       </div>
     </div>
-    <Dialog v-model="showSpeakerDialog" :options="{ title: 'Speaker Coupons' }">
-      <template #body-content>
+    <Dialog v-model:open="showSpeakerDialog" title="Speaker Coupons">
         <div class="flex flex-col gap-4">
           <p v-if="speakerPreview.loading" class="text-sm text-ink-gray-5">Loading…</p>
           <div v-else-if="speakerPreview.data" class="text-sm text-ink-gray-7">
@@ -125,7 +124,7 @@
             approved proposals ·
             <span class="font-medium">{{ speakerPreview.data.already_has }}</span> already have
             coupons ·
-            <span class="font-medium text-ink-green-3">{{ speakerPreview.data.will_create }}</span>
+            <span class="font-medium text-ink-green-6">{{ speakerPreview.data.will_create }}</span>
             will be created
           </div>
           <FormControl
@@ -142,9 +141,8 @@
             label="T-shirt included"
             description="Speakers will be asked for a t-shirt size when claiming"
           />
-          <p v-if="speakerPreviewErr" class="text-sm text-ink-red-3">{{ speakerPreviewErr }}</p>
+          <p v-if="speakerPreviewErr" class="text-sm text-ink-red-6">{{ speakerPreviewErr }}</p>
         </div>
-      </template>
       <template #actions>
         <Button label="Cancel" @click="showSpeakerDialog = false" />
         <Button

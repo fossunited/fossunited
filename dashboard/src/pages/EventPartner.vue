@@ -15,6 +15,7 @@
         <Button label="Save" :loading="event.setValue.loading" @click="saveDeckLink" />
         <FileUploader
           :file-types="'application/pdf'"
+          :private="false"
           :validate-file="validateDeckFile"
           @success="(file) => setDeckLink(file.file_url)"
           @failure="
@@ -28,7 +29,7 @@
                 :label="uploading ? `Uploading ${progress}` : 'Or upload a PDF'"
                 @click="openFileSelector"
               />
-              <div v-if="error" class="text-sm text-ink-red-4">{{ error }}</div>
+              <div v-if="error" class="text-sm text-ink-red-8">{{ error }}</div>
             </div>
           </template>
         </FileUploader>

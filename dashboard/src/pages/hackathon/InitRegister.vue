@@ -1,13 +1,11 @@
 <template>
   <Header />
   <div v-if="hackathon.data && !team.loading" class="w-full p-4 flex justify-center items-center">
-    <Dialog v-model="inJoinTeam" class="z-50">
-      <template #body-title>
-        <div class="text-xl font-semibold">Join Team</div>
+    <Dialog v-model:open="inJoinTeam" class="z-50">
+      <template #title>
+        <div class="text-lg-semibold">Join Team</div>
       </template>
-      <template #body-content>
-        <JoinTeam :hackathon="hackathon" :invitations="team_invitations" />
-      </template>
+      <JoinTeam :hackathon="hackathon" :invitations="team_invitations" />
     </Dialog>
     <div class="w-full max-w-screen-xl">
       <div class="flex gap-2 my-6 items-center text-base uppercase">
@@ -34,7 +32,7 @@
           class="w-full md:h-40 flex flex-col gap-4 items-center justify-start md:border-r-2 md:pt-4"
         >
           <div
-            class="px-4 py-2 w-3/4 text-center uppercase border-2 border-outline-gray-5 md:w-fit font-semibold bg-surface-white hover:bg-surface-gray-7 hover:text-ink-white transition-colors cursor-pointer"
+            class="px-4 py-2 w-3/4 text-center uppercase border-2 border-outline-gray-7 md:w-fit font-semibold bg-surface-base hover:bg-surface-gray-10 hover:text-ink-base transition-colors cursor-pointer"
             @click="$router.push(`/hack/${hackathonPermalink}/create-team`)"
           >
             Create team
@@ -47,7 +45,7 @@
         <div class="md:hidden w-full text-center font-medium">OR</div>
         <div class="w-full md:h-40 flex flex-col gap-4 items-center justify-start md:pt-4">
           <div
-            class="px-4 py-2 uppercase w-3/4 flex items-start justify-center -space-x-1 text-center border-2 border-outline-gray-5 md:w-fit font-semibold bg-surface-white hover:bg-surface-gray-7 hover:text-ink-white transition-colors cursor-pointer"
+            class="px-4 py-2 uppercase w-3/4 flex items-start justify-center -space-x-1 text-center border-2 border-outline-gray-7 md:w-fit font-semibold bg-surface-base hover:bg-surface-gray-10 hover:text-ink-base transition-colors cursor-pointer"
             @click="inJoinTeam = true"
           >
             <span> Join team </span>
@@ -60,7 +58,7 @@
               class="z-10 -mt-1"
             />
           </div>
-          <Badge v-if="team_invitations.data?.length > 0" size="lg" theme="orange">
+          <Badge v-if="team_invitations.data?.length > 0" size="lg" theme="amber">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"

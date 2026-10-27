@@ -2,9 +2,10 @@
   <RazorpayCheckout v-if="currentStep === 4" ref="rzpCheckout" @error="onPaymentError" />
   <Header />
   <Dialog
-    v-model="showDialog"
+    v-model:open="showDialog"
     class="z-50"
-    :options="{ title: 'Tickets are closed!', message: dialogError }"
+    title="Tickets are closed!"
+    :message="dialogError"
   />
 
   <div v-if="event.data" class="bg-surface-gray-1 min-h-screen">
@@ -18,14 +19,14 @@
 
         <!-- Page Header -->
         <div class="flex flex-col gap-1">
-          <h1 class="text-2xl font-bold tracking-tight text-ink-gray-9">Registration</h1>
+          <h1 class="text-3xl-bold tracking-tight text-ink-gray-9">Registration</h1>
         </div>
 
         <EventHeader :event="event.data" />
 
         <div
           role="note"
-          class="flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-amber-2 bg-surface-amber-1 text-ink-amber-3 text-sm self-center"
+          class="flex items-center gap-2 px-3 py-2 rounded-6 border border-outline-amber-3 bg-surface-amber-1 text-ink-amber-6 text-sm self-center"
         >
           <IconInfoCircle class="w-5 h-5 shrink-0" aria-hidden="true" />
           <span
@@ -41,7 +42,7 @@
         <!-- Form description -->
         <div
           v-if="event.data?.ticket_form_description"
-          class="my-2 prose prose-sm max-w-none bg-surface-gray-2 rounded-lg px-4 py-3"
+          class="my-2 prose prose-sm max-w-none bg-surface-gray-2 rounded-6 px-4 py-3"
           v-html="markdownToHTML(event.data.ticket_form_description)"
         ></div>
 
@@ -52,10 +53,10 @@
             <nav aria-label="Registration steps">
               <div class="w-full space-y-[10px]">
                 <div class="flex items-baseline justify-between">
-                  <span id="ticket-reg-progress-label" class="text-base font-medium text-ink-gray-8">{{
+                  <span id="ticket-reg-progress-label" class="text-base-medium text-ink-gray-8">{{
                     stepTitle
                   }}</span>
-                  <span class="text-sm font-medium text-ink-gray-4" aria-live="polite"
+                  <span class="text-sm-medium text-ink-gray-4" aria-live="polite"
                     >{{ currentStep }} / 4</span
                   >
                 </div>
@@ -66,13 +67,13 @@
                   aria-valuemin="1"
                   aria-valuemax="4"
                   :aria-valuetext="`Registration progress: ${stepTitle}, step ${currentStep} of 4`"
-                  class="flex h-2 space-x-1 overflow-hidden rounded-lg"
+                  class="flex h-2 space-x-1 overflow-hidden rounded-6"
                 >
                   <div
                     v-for="n in 4"
                     :key="n"
                     class="h-full w-full"
-                    :class="n <= currentStep ? 'bg-surface-gray-7' : 'bg-surface-gray-3'"
+                    :class="n <= currentStep ? 'bg-surface-gray-10' : 'bg-surface-gray-3'"
                   />
                 </div>
               </div>
@@ -100,7 +101,7 @@
                     v-for="tier in sortedTiers"
                     :key="tier.name"
                     role="listitem"
-                    class="bg-surface-white border border-outline-gray-2 rounded-2xl flex flex-wrap items-stretch gap-3 p-4 w-full"
+                    class="bg-surface-base border border-outline-gray-2 rounded-8 flex flex-wrap items-stretch gap-3 p-4 w-full"
                     :class="
                       !isTierActive(tier)
                         ? isTierComingSoon(tier)
@@ -113,7 +114,7 @@
                   >
                     <!-- Image -->
                     <div
-                      class="bg-surface-gray-1 border border-outline-gray-2 rounded-lg overflow-hidden w-[58px] h-20 md:w-[78px] md:h-[108px]"
+                      class="bg-surface-gray-1 border border-outline-gray-2 rounded-6 overflow-hidden w-[58px] h-20 md:w-[78px] md:h-[108px]"
                       aria-hidden="true"
                     >
                       <img
@@ -124,8 +125,8 @@
                     </div>
 
                     <div class="flex-1 min-w-0 flex flex-col justify-evenly">
-                      <p class="font-semibold text-base text-ink-gray-9">{{ tier.title }}</p>
-                      <p class="font-semibold text-xl text-ink-gray-9">₹{{ tier.price }}</p>
+                      <p class=" text-base-semibold text-ink-gray-9">{{ tier.title }}</p>
+                      <p class=" text-lg-semibold text-ink-gray-9">₹{{ tier.price }}</p>
                       <div class="flex flex-wrap gap-1">
                         <Badge
                           v-if="tier.tshirt_included"
@@ -156,7 +157,7 @@
                           v-else-if="isTierExpired(tier)"
                           class="w-fit"
                           variant="outline"
-                          theme="orange"
+                          theme="amber"
                           >Expired</Badge
                         >
                         <Badge
@@ -186,11 +187,11 @@
                       <button
                         :disabled="!isTierActive(tier) || (tierCounts[tier.name] || 0) <= 0"
                         :aria-label="`Remove one ${tier.title} ticket`"
-                        class="w-10 h-10 rounded-lg border flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        class="w-10 h-10 rounded-6 border flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         :class="
                           (tierCounts[tier.name] || 0) > 0
                             ? 'border-ink-gray-9 bg-ink-gray-9'
-                            : 'border-ink-gray-9 bg-surface-white'
+                            : 'border-ink-gray-9 bg-surface-base'
                         "
                         @click="decrementTier(tier.name)"
                       >
@@ -209,11 +210,11 @@
                       <button
                         :disabled="!isTierActive(tier) || totalTickets >= MAX_SEATS"
                         :aria-label="`Add one ${tier.title} ticket`"
-                        class="w-10 h-10 rounded-lg border flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        class="w-10 h-10 rounded-6 border flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         :class="
                           isTierActive(tier)
                             ? 'border-ink-gray-9 bg-ink-gray-9'
-                            : 'border-ink-gray-9 bg-surface-white'
+                            : 'border-ink-gray-9 bg-surface-base'
                         "
                         @click="incrementTier(tier.name)"
                       >
@@ -261,7 +262,7 @@
                     />
                     <div
                       v-if="customFieldsApplyToAll"
-                      class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-6"
+                      class="bg-surface-base border border-outline-gray-2 rounded-6 p-6 grid grid-cols-1 md:grid-cols-2 gap-6"
                     >
                       <FormControl
                         v-for="field in event.data.custom_fields"
@@ -280,7 +281,7 @@
                   <div class="flex justify-center">
                     <button
                       :disabled="totalTickets >= MAX_SEATS"
-                      class="flex items-center gap-2 bg-outline-gray-1 hover:bg-outline-gray-2 border border-outline-gray-2 rounded-lg px-5 py-2.5 font-semibold text-sm uppercase tracking-wider text-ink-gray-9 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      class="flex items-center gap-2 bg-outline-gray-1 hover:bg-outline-gray-2 border border-outline-gray-2 rounded-6 px-5 py-2.5 text-sm-semibold uppercase tracking-wider text-ink-gray-9 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                       @click="addAttendee"
                     >
                       <IconPlus class="w-5 h-5" /> Add Another Ticket
@@ -293,14 +294,14 @@
                   <div
                     v-for="(attendee, idx) in attendees"
                     :key="idx"
-                    class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 flex flex-col gap-5 w-full max-w-[375px]"
+                    class="bg-surface-base border border-outline-gray-2 rounded-6 p-6 flex flex-col gap-5 w-full max-w-[375px]"
                   >
                     <div class="flex items-center justify-between">
-                      <span class="font-semibold text-2xl text-ink-gray-9 tracking-tight"
+                      <span class=" text-3xl-semibold text-ink-gray-9 tracking-tight"
                         >#{{ idx + 1 }}</span
                       >
                       <span
-                        class="bg-surface-green-1 text-ink-green-3 text-xs font-semibold tracking-wider uppercase px-3 py-1.5 rounded-lg"
+                        class="bg-surface-green-1 text-ink-green-6 text-xs-semibold tracking-wider uppercase px-3 py-1.5 rounded-6"
                         >{{ getTierTitle(attendee.ticket_type) }}</span
                       >
                     </div>
@@ -330,7 +331,7 @@
                         class="flex items-center gap-1.5 text-sm"
                         :class="
                           isTierTshirtIncluded(attendee.ticket_type)
-                            ? 'text-ink-green-3'
+                            ? 'text-ink-green-6'
                             : 'text-ink-gray-7'
                         "
                       >
@@ -417,12 +418,12 @@
               v-if="errorMessages.length"
               role="alert"
               aria-live="assertive"
-              class="flex flex-col gap-1 p-3 rounded-lg bg-surface-red-1 border border-outline-red-2"
+              class="flex flex-col gap-1 p-3 rounded-6 bg-surface-red-1 border border-outline-red-3"
             >
               <li
                 v-for="msg in errorMessages"
                 :key="msg"
-                class="text-sm text-ink-red-3 flex items-start gap-1.5"
+                class="text-sm text-ink-red-6 flex items-start gap-1.5"
               >
                 <span class="mt-0.5 shrink-0">•</span>
                 <span>{{ msg }}</span>
@@ -448,7 +449,7 @@
 
     <!-- Mobile order summary drawer -->
     <div
-      class="fixed bottom-0 inset-x-0 z-40 md:hidden bg-surface-white border-t border-outline-gray-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
+      class="fixed bottom-0 inset-x-0 z-40 md:hidden bg-surface-base border-t border-outline-gray-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
       role="region"
       aria-label="Order summary"
     >
@@ -474,9 +475,9 @@
         @click="mobileBarExpanded = !mobileBarExpanded"
       >
         <div class="text-left">
-          <p class="text-xs font-semibold text-ink-gray-5 uppercase tracking-wider">Total</p>
+          <p class="text-xs-semibold text-ink-gray-5 uppercase tracking-wider">Total</p>
           <p
-            class="text-lg font-bold text-ink-gray-9 leading-none"
+            class="text-md-bold text-ink-gray-9 leading-none"
             aria-live="polite"
             :aria-label="`Total amount: ₹${summaryTotal}`"
           >
@@ -524,7 +525,7 @@ import {
   Badge,
   Dialog,
 } from 'frappe-ui'
-import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
+import { markdownToHTML } from '@/helpers/markdown'
 import { toast } from 'vue-sonner'
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
@@ -712,7 +713,7 @@ function tierRemainingTheme(tier) {
   if (r === null) return 'gray'
   const pct = r / tier.maximum_tickets
   if (r <= 5 || pct <= 0.1) return 'red'
-  if (r <= 15 || pct <= 0.25) return 'orange'
+  if (r <= 15 || pct <= 0.25) return 'amber'
   return 'green'
 }
 

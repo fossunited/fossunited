@@ -12,10 +12,10 @@
         v-slot="{ active, checked }"
         tabindex="0"
         :value="option.value"
-        class="flex p-4 gap-2 items-center rounded border border-outline-gray-1 text-ink-gray-5 cursor-pointer hover:border-outline-gray-3 transition-all focus:outline-none focus:ring-2 focus:ring-gray-500"
+        class="flex p-4 gap-2 items-center rounded-4 border border-outline-gray-1 text-ink-gray-5 cursor-pointer hover:border-outline-gray-3 transition-all focus:outline-none focus:ring-2 focus:ring-gray-500"
         :class="{
           'bg-surface-gray-2': active,
-          'bg-surface-gray-1 border-outline-gray-5 text-ink-gray-9': checked,
+          'bg-surface-gray-1 border-outline-gray-7 text-ink-gray-9': checked,
         }"
       >
         <component

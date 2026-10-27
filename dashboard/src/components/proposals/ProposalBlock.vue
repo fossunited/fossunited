@@ -1,22 +1,22 @@
 <template>
   <div v-if="proposal" class="flex justify-between">
     <div class="flex flex-col gap-3 justify-between">
-      <h3 class="text-xl font-semibold">
+      <h3 class="text-lg-semibold">
         <a
           :href="createAbsoluteUrlFromRoute(proposal.route)"
-          class="hover:text-ink-green-2 transition-colors duration-300 cursor-pointer"
+          class="hover:text-ink-green-5 transition-colors duration-300 cursor-pointer"
         >
           {{ proposal.talk_title }}
         </a>
       </h3>
       <div class="flex flex-col gap-3 items-start mt-1 md:flex-row md:items-center">
-        <div class="flex items-center text-xs font-semibold">
-          <span class="bg-surface-gray-3 px-2 py-1 text-ink-gray-5 rounded-sm mr-2">{{
+        <div class="flex items-center text-xs-semibold">
+          <span class="bg-surface-gray-3 px-2 py-1 text-ink-gray-5 rounded-1 mr-2">{{
             proposal.session_type.toUpperCase()
           }}</span>
           <div>
             <span
-              class="px-2 py-1 rounded-sm md:hidden"
+              class="px-2 py-1 rounded-1 md:hidden"
               :class="getStatusClass(proposal.status)"
               >{{ proposal.status.toUpperCase() }}</span
             >
@@ -31,13 +31,13 @@
       </div>
     </div>
     <div class="flex flex-col gap-3 items-end">
-      <div class="flex items-center gap-1 bg-surface-gray-3 px-1.5 py-1 rounded-sm">
+      <div class="flex items-center gap-1 bg-surface-gray-3 px-1.5 py-1 rounded-1">
         <LikesIcon />
-        <span class="text-xs font-semibold">{{ proposal.likes }}</span>
+        <span class="text-xs-semibold">{{ proposal.likes }}</span>
       </div>
       <div class="mt-2">
         <span
-          class="px-2 py-1 rounded-sm text-xs font-semibold hidden md:block"
+          class="px-2 py-1 rounded-1 text-xs-semibold hidden md:block"
           :class="getStatusClass(proposal.status)"
           >{{ proposal.status.toUpperCase() }}</span
         >
@@ -62,15 +62,15 @@ const props = defineProps({
 const getStatusClass = (status) => {
   switch (status) {
     case 'Approved':
-      return 'bg-surface-green-2 text-ink-green-3'
+      return 'bg-surface-green-2 text-ink-green-6'
     case 'Rejected':
-      return 'bg-surface-red-2 text-ink-red-4'
+      return 'bg-surface-red-2 text-ink-red-8'
     case 'Withdrawn':
-      return 'bg-surface-red-2 text-ink-red-4'
+      return 'bg-surface-red-2 text-ink-red-8'
     case 'Screening':
-      return 'bg-surface-blue-2 text-ink-blue-3'
+      return 'bg-surface-blue-2 text-ink-blue-6'
     default:
-      return 'bg-surface-amber-2 text-ink-amber-3'
+      return 'bg-surface-amber-2 text-ink-amber-6'
   }
 }
 </script>

@@ -1,11 +1,8 @@
 <template>
   <Dialog
-    v-model="show"
-    :options="{
-      title: isNew ? 'Add Community Partner' : 'Manage Community Partner',
-    }"
+    v-model:open="show"
+    :title="isNew ? 'Add Community Partner' : 'Manage Community Partner'"
   >
-    <template #body-content>
       <div class="flex flex-col gap-3">
         <FormControl v-model="partner.org_name" label="Community Name" required />
         <FormControl
@@ -22,7 +19,6 @@
         <FileUploaderArea v-model="partner.logo" label="Community Logo" />
         <ErrorMessage :message="errorMessages" class="text-sm -mb-4" />
       </div>
-    </template>
     <template #actions>
       <div class="grid grid-flow-col w-full">
         <Button v-if="isNew" label="Add" variant="solid" @click="addPartner" />

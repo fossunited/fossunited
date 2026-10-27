@@ -1,15 +1,12 @@
 <template>
   <Dialog
-    v-model="showDialog"
+    v-model:open="showDialog"
     class="z-50"
-    :options="{
-      title: 'Sold T-shirt Details',
-    }"
+    title="Sold T-shirt Details"
     role="dialog"
     aria-modal="true"
     aria-labelledby="dialog-title"
   >
-    <template #body-content>
       <div class="text-sm">
         <h2 id="dialog-title" class="sr-only">Sold T-shirt Details</h2>
         <p class="mb-2">T-shirts sold for this event.</p>
@@ -27,21 +24,20 @@
             <td class="p-2 text-base border" role="cell">{{ quantity }}</td>
           </tr>
           <tr role="row">
-            <td class="p-2 text-base font-semibold" role="rowheader">Total</td>
-            <td class="p-2 text-base font-semibold" role="cell">{{ insight.tshirts_sold }}</td>
+            <td class="p-2 text-base-semibold" role="rowheader">Total</td>
+            <td class="p-2 text-base-semibold" role="cell">{{ insight.tshirts_sold }}</td>
           </tr>
         </tbody>
       </table>
-    </template>
   </Dialog>
-  <div class="flex flex-col w-full border rounded-sm p-4">
-    <div class="text-sm flex gap-2 items-center uppercase font-semibold">
+  <div class="flex flex-col w-full border rounded-1 p-4">
+    <div class="text-sm-semibold flex gap-2 items-center uppercase">
       <IconShirtFilled class="w-5 h-5" aria-hidden="true" />
       <span> T-shirts Sold </span>
     </div>
     <div class="flex gap-2 items-end justify-between mt-6">
       <div class="prose">
-        <h2 id="total-tshirts" class="text-lg font-bold">{{ insight.tshirts_sold }}</h2>
+        <h2 id="total-tshirts" class="text-md-bold">{{ insight.tshirts_sold }}</h2>
       </div>
       <Button
         class="w-fit"

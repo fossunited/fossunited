@@ -41,7 +41,7 @@ import { computed, watch } from 'vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import RadioGroup from '@/components/ui/RadioGroup.vue'
 import MultiselectInput from '@/components/ui/MultiselectInput.vue'
-import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
+import { markdownToHTML } from '@/helpers/markdown'
 import { ensureHttpsPrefix } from '@/helpers/utils'
 
 const props = defineProps({

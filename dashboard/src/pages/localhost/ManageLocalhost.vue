@@ -1,7 +1,7 @@
 <template>
   <div v-if="localhost.data && requests.data">
     <div class="flex items-center justify-between mt-4">
-      <div class="text-base font-medium">Manage Localhost</div>
+      <div class="text-base-medium">Manage Localhost</div>
 
       <RouterLink :to="{ name: 'LocalhostEdit', params: { id: route.params.id } }">
         <Button label="Edit Details" :icon-left="IconEdit" />
@@ -11,12 +11,12 @@
     <LocalhostHeader :localhost="localhost.data" />
 
     <div class="grid grid-cols-1 md:grid-cols-2">
-      <div class="rounded-sm border-2 border-dashed border-outline-gray-3 p-4 my-2">
-        <div class="text-sm uppercase font-medium">Current Status</div>
+      <div class="rounded-1 border-2 border-dashed border-outline-gray-3 p-4 my-2">
+        <div class="text-sm-medium uppercase">Current Status</div>
         <div class="flex items-center justify-between w-full">
           <div
-            class="flex items-center gap-2 text-lg font-medium pt-4"
-            :class="localhost.data.is_accepting_attendees ? 'text-ink-green-3' : ''"
+            class="flex items-center gap-2 text-md-medium pt-4"
+            :class="localhost.data.is_accepting_attendees ? 'text-ink-green-6' : ''"
           >
             <span v-if="localhost.data.is_accepting_attendees" class="relative flex h-3 w-3">
               <span
@@ -41,33 +41,33 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-5 mt-6 mb-4 gap-4">
-      <div class="flex flex-col gap-2 bg-surface-gray-1 w-full p-4 rounded border">
-        <div class="text-base font-medium">Total Requests</div>
-        <div class="text-2xl">
+      <div class="flex flex-col gap-2 bg-surface-gray-1 w-full p-4 rounded-4 border">
+        <div class="text-base-medium">Total Requests</div>
+        <div class="text-3xl">
           {{ requests.originalData.length }}
         </div>
       </div>
-      <div class="flex flex-col gap-2 w-full p-4 rounded border">
-        <div class="text-base font-medium">Pending Requests</div>
-        <div class="text-2xl text-ink-amber-3">
+      <div class="flex flex-col gap-2 w-full p-4 rounded-4 border">
+        <div class="text-base-medium">Pending Requests</div>
+        <div class="text-3xl text-ink-amber-6">
           {{ requests.data['Pending'].length }}
         </div>
       </div>
-      <div class="flex flex-col gap-2 w-full p-4 rounded border">
-        <div class="text-base font-medium">Pending Confirmation</div>
-        <div class="text-2xl text-ink-blue-2">
+      <div class="flex flex-col gap-2 w-full p-4 rounded-4 border">
+        <div class="text-base-medium">Pending Confirmation</div>
+        <div class="text-3xl text-ink-blue-5">
           {{ requests.data['Pending Confirmation'].length }}
         </div>
       </div>
-      <div class="flex flex-col gap-2 w-full p-4 rounded border">
-        <div class="text-base font-medium">Accepted Participants</div>
-        <div class="text-2xl text-ink-green-3">
+      <div class="flex flex-col gap-2 w-full p-4 rounded-4 border">
+        <div class="text-base-medium">Accepted Participants</div>
+        <div class="text-3xl text-ink-green-6">
           {{ requests.data['Accepted'].length }}
         </div>
       </div>
-      <div class="flex flex-col gap-2 w-full p-4 rounded border">
-        <div class="text-base font-medium">Rejected Participants</div>
-        <div class="text-2xl text-ink-red-4">
+      <div class="flex flex-col gap-2 w-full p-4 rounded-4 border">
+        <div class="text-base-medium">Rejected Participants</div>
+        <div class="text-3xl text-ink-red-8">
           {{ requests.data['Rejected'].length }}
         </div>
       </div>

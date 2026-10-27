@@ -1,7 +1,7 @@
 <template>
   <section
     aria-label="Speaker Information"
-    class="flex flex-col gap-6 w-full p-4 md:p-8 border rounded bg-surface-white"
+    class="flex flex-col gap-6 w-full p-4 md:p-8 border rounded-4 bg-surface-base"
   >
     <h4 v-if="showTitle" class="flex gap-2 items-center font-semibold">
       <IconUserCircle aria-hidden="true" />
@@ -13,13 +13,13 @@
         :key="index"
         role="group"
         :aria-label="`Speaker ${index + 1}`"
-        class="flex flex-col gap-4 p-6 border rounded border-outline-gray-2"
+        class="flex flex-col gap-4 p-6 border rounded-4 border-outline-gray-2"
       >
         <div
           v-if="speakers.length > 1"
           class="border-b border-outline-gray-4 pb-2 flex justify-between"
         >
-          <h5 class="font-medium text-base">Speaker #{{ index + 1 }}</h5>
+          <h5 class=" text-base-medium">Speaker #{{ index + 1 }}</h5>
           <Button
             :icon="IconTrash"
             theme="red"
@@ -70,15 +70,13 @@
     </div>
 
     <Dialog
-      v-model="showProfilePhotoDialog"
-      :options="{ title: 'Update your profile picture too?' }"
+      v-model:open="showProfilePhotoDialog"
+      title="Update your profile picture too?"
     >
-      <template #body-content>
-        <p class="text-sm text-ink-gray-6">
-          You uploaded a new speaker photo. Do you also want to set it as your FOSS United account
-          profile picture?
-        </p>
-      </template>
+      <p class="text-sm text-ink-gray-6">
+        You uploaded a new speaker photo. Do you also want to set it as your FOSS United account
+        profile picture?
+      </p>
       <template #actions>
         <div class="grid grid-cols-2 gap-3">
           <Button label="Yes, update profile" variant="solid" @click="confirmProfilePhotoSync" />

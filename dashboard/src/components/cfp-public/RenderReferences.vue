@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-2">
-    <label class="text-base font-medium text-ink-gray-5">References</label>
+    <label class="text-base-medium text-ink-gray-5">References</label>
     <div
       v-for="(reference, index) in references"
       :key="index"

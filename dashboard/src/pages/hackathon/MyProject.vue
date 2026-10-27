@@ -1,30 +1,28 @@
 <template>
   <Header />
   <Dialog
-    v-model="showConfirmationDialog"
+    v-model:open="showConfirmationDialog"
     class="z-50"
-    :options="{
-      title: 'Confirm Project Deletion',
-      message: 'Are you sure you want to delete this project?',
-      actions: [
-        {
-          label: 'Cancel',
-          theme: 'gray',
-          variant: 'subtle',
-          onClick: () => {
-            showConfirmationDialog = false
-          },
+    title="Confirm Project Deletion"
+    message="Are you sure you want to delete this project?"
+    :actions="[
+      {
+        label: 'Cancel',
+        theme: 'gray',
+        variant: 'subtle',
+        onClick: () => {
+          showConfirmationDialog = false
         },
-        {
-          label: 'Delete',
-          theme: 'red',
-          variant: 'solid',
-          onClick: () => {
-            deleteProject.fetch()
-          },
+      },
+      {
+        label: 'Delete',
+        theme: 'red',
+        variant: 'solid',
+        onClick: () => {
+          deleteProject.fetch()
         },
-      ],
-    }"
+      },
+    ]"
   />
   <div v-if="project.data" class="w-full p-4 flex items-center justify-center">
     <div class="max-w-screen-xl w-full">
@@ -72,7 +70,7 @@
       <!-- Hackathon ended read-only notice -->
       <div
         v-if="isHackathonEnded"
-        class="my-4 px-4 py-3 bg-surface-amber-1 border border-outline-amber-2 rounded-md text-ink-gray-7 text-sm"
+        class="my-4 px-4 py-3 bg-surface-amber-1 border border-outline-amber-3 rounded-5 text-ink-gray-7 text-sm"
       >
         This hackathon has ended. The project is now read-only. You may await for resuls:
         <a href="https://fossunited.org/fosshack/results">fosshack/results</a>
@@ -84,7 +82,7 @@
           <input
             v-model="newProjectName"
             type="text"
-            class="bg-surface-gray-2 border border-outline-gray-2 rounded-md px-3 py-2 font-bold text-3xl text-ink-gray-9 placeholder-ink-gray-4 active:outline-none focus:outline-none focus:border-outline-gray-4 transition-colors"
+            class="bg-surface-gray-2 border border-outline-gray-2 rounded-5 px-3 py-2 text-4xl-bold text-ink-gray-9 placeholder-ink-gray-4 active:outline-none focus:outline-none focus:border-outline-gray-4 transition-colors"
           />
           <div class="grid grid-cols-2 gap-2 w-full md:w-auto">
             <Button
@@ -113,15 +111,15 @@
           <TabsIndicator
             class="absolute px-8 left-0 h-[2px] bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded-full transition-[width,transform] duration-300"
           >
-            <div class="bg-surface-gray-7 w-full h-full" />
+            <div class="bg-surface-gray-10 w-full h-full" />
           </TabsIndicator>
           <TabsTrigger
             v-for="tab in visibleTabs"
             :key="tab.value"
             :value="tab.value"
-            class="px-4 pb-2 mx-2 leading-none bg-surface-white flex items-center justify-center text-base select-none rounded-tl-md outline-none cursor-pointer transition-colors duration-200"
+            class="px-4 pb-2 mx-2 leading-none bg-surface-base flex items-center justify-center text-base select-none rounded-tl-5 outline-none cursor-pointer transition-colors duration-200"
             :class="{
-              'text-ink-gray-8 border-b border-outline-gray-5 font-medium':
+              'text-ink-gray-8 border-b border-outline-gray-7 font-medium':
                 activeTab === tab.value,
               'text-ink-gray-5 hover:text-ink-gray-8 hover:border-b hover:border-outline-gray-3':
                 activeTab !== tab.value,

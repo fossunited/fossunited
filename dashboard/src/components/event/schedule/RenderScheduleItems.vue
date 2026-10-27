@@ -112,7 +112,7 @@ const newItemsCount = computed(() => schedule_items.value.filter((item) => item.
 <template>
   <div class="flex flex-col gap-4">
     <!-- Filters and Controls -->
-    <div class="bg-surface-gray-1 p-4 rounded-lg border">
+    <div class="bg-surface-gray-1 p-4 rounded-6 border">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <FormControl
           v-model="groupBy"
@@ -156,7 +156,7 @@ const newItemsCount = computed(() => schedule_items.value.filter((item) => item.
       <div v-for="group in groupedItems" :key="group.key" class="flex flex-col gap-3">
         <!-- Group Header -->
         <div v-if="group.label" class="flex items-center gap-2 pb-2 border-b">
-          <h4 class="text-sm font-semibold text-ink-gray-6 uppercase tracking-wide">
+          <h4 class="text-sm-semibold text-ink-gray-6 uppercase tracking-wide">
             {{ group.label }}
           </h4>
           <span class="text-xs text-ink-gray-4 bg-surface-gray-2 px-2 py-1 rounded-full">

@@ -11,7 +11,7 @@
           @click="updateDetails()"
         ></Button>
         <Button
-          class="w-fit bg-green-600 text-ink-gray-9 hover:bg-green-700 disabled:opacity-80 disabled:text-ink-white disabled:cursor-not-allowed"
+          class="w-fit bg-green-600 text-ink-gray-9 hover:bg-green-700 disabled:opacity-80 disabled:text-ink-base disabled:cursor-not-allowed"
           size="md"
           label="See on website"
           :icon-left="IconExternalLink"
@@ -26,11 +26,12 @@
         <img
           :src="getBannerImage()"
           alt="Banner Image"
-          class="object-cover rounded-lg w-full aspect-[4.96/1]"
+          class="object-cover rounded-6 w-full aspect-[4.96/1]"
         />
         <div class="flex my-2 gap-2">
           <FileUploader
             :file-types="'image/*'"
+            :private="false"
             :validate-file="validateFile"
             @success="(file) => setBannerImage(file)"
           >
@@ -67,11 +68,12 @@
         <img
           :src="getChapterLogo()"
           alt="Chapter Logo"
-          class="object-cover rounded-lg aspect-[1/1]"
+          class="object-cover rounded-6 aspect-[1/1]"
         />
         <div class="flex my-2 gap-2">
           <FileUploader
             :file-types="'image/*'"
+            :private="false"
             :validate-file="validateFile"
             @success="(file) => setChapterLogo(file)"
           >

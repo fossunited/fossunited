@@ -1,17 +1,15 @@
 <template>
   <Header />
   <Dialog
-    v-model="show_dialog"
+    v-model:open="show_dialog"
     class="z-50"
-    :options="{
-      title: dialog_content.title,
-      message: dialog_content.message,
-    }"
+    :title="dialog_content.title"
+    :message="dialog_content.message"
   />
   <div class="w-full flex justify-center">
     <div v-if="hackathon.data" class="container p-8">
       <div class="flex gap-2 mb-10 items-center">
-        <a :href="redirectToHackathon" class="font-semibold text-base hover:underline">{{
+        <a :href="redirectToHackathon" class=" text-base-semibold hover:underline">{{
           hackathon.data.hackathon_name
         }}</a>
         <IconChevronRight class="w-5" />
@@ -27,7 +25,7 @@
         "
         class="h-12 mb-4"
       />
-      <h1 class="text-3xl font-medium">
+      <h1 class="text-4xl-medium">
         Register For
         <span class="font-bold">{{ hackathon.data.hackathon_name }}</span>
       </h1>
@@ -36,7 +34,7 @@
 
       <!-- DETAILS -->
       <div class="w-full">
-        <h3 class="text-lg font-semibold">Details</h3>
+        <h3 class="text-md-semibold">Details</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
           <FormControl
             v-model="participant.full_name"
@@ -60,7 +58,7 @@
           />
         </div>
         <div class="mt-6">
-          <h5 class="text-base font-medium text-ink-gray-8">Link your Git Profile &ast;</h5>
+          <h5 class="text-base-medium text-ink-gray-8">Link your Git Profile &ast;</h5>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2">
           <FormControl
@@ -72,7 +70,7 @@
           </FormControl>
         </div>
         <div v-if="localhost.data" class="mt-6">
-          <h5 class="text-base font-medium text-ink-gray-8">How will you participate?</h5>
+          <h5 class="text-base-medium text-ink-gray-8">How will you participate?</h5>
           <RadioGroup
             v-model="selected_attendance"
             class="grid sm:grid-cols-3 lg:grid-cols-5 gap-2 my-3"
@@ -85,8 +83,8 @@
               :value="option"
             >
               <div
-                :class="[checked ? 'bg-surface-gray-1 border-gray-700' : 'bg-surface-white ']"
-                class="relative flex cursor-pointer rounded-sm px-5 py-3 border focus:outline-none hover:border-outline-gray-4 transition-[border]"
+                :class="[checked ? 'bg-surface-gray-1 border-gray-700' : 'bg-surface-base ']"
+                class="relative flex cursor-pointer rounded-1 px-5 py-3 border focus:outline-none hover:border-outline-gray-4 transition-[border]"
               >
                 <div class="flex w-full items-center justify-center">
                   <div class="flex flex-col gap-2 items-center">
@@ -118,7 +116,7 @@
           </div>
 
           <div
-            class="flex flex-col items-center sm:flex-row gap-3 bg-surface-amber-1 w-full p-4 text-sm rounded-sm my-4 text-ink-amber-3 outline-2 outline-dashed"
+            class="flex flex-col items-center sm:flex-row gap-3 bg-surface-amber-1 w-full p-4 text-sm rounded-1 my-4 text-ink-amber-6 outline-2 outline-dashed"
           >
             <IconAlertCircle class="w-6 h-6 shrink-0 stroke-yellow-700" />
             <p class="leading-normal text-center sm:text-left">

@@ -197,15 +197,7 @@
         }"
       />
     </div>
-    <Dialog
-      v-model="show_dialog"
-      title="Add Custom Field"
-      size="md"
-      :options="{
-        title: 'Add Custom Field',
-      }"
-    >
-      <template #body-content>
+    <Dialog v-model:open="show_dialog" title="Add Custom Field" size="md">
         <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
           <FormControl
             v-model="custom_field.question"
@@ -258,7 +250,6 @@
             description="Description for the question."
           />
         </div>
-      </template>
       <template #actions>
         <div
           class="grid grid-cols-1 gap-4"
@@ -278,7 +269,8 @@
   </div>
 </template>
 <script setup>
-import { createDocumentResource, createResource, FormControl, ListView, Dialog } from 'frappe-ui'
+import { createDocumentResource, createResource, FormControl, Dialog } from 'frappe-ui'
+import { ListView } from 'frappe-ui/experimental'
 import { reactive, ref, watch, defineEmits, computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'

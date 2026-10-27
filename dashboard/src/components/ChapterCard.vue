@@ -16,11 +16,12 @@
     </template>
 
     <div class="flex justify-between items-baseline">
-      <div class="text-lg font-medium">{{ props.chapter.chapter_name }}</div>
+      <div class="text-md-medium">{{ props.chapter.chapter_name }}</div>
     </div>
   </Card>
 </template>
 <script setup>
+import Card from '@/components/ui/Card.vue'
 import { useRouter } from 'vue-router'
 import FossClubLogo from '@/components/FossClubLogo.vue'
 import CityComunityBranding from '@/components/CityCommunityBranding.vue'

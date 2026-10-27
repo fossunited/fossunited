@@ -32,17 +32,17 @@ const props = defineProps({
 const themeClasses = computed(() => {
   switch (props.variant) {
     case 'info':
-      return 'border-outline-blue-1 bg-surface-blue-1 text-ink-blue-2'
+      return 'border-outline-blue-1 bg-surface-blue-1 text-ink-blue-5'
     case 'success':
-      return 'border-outline-green-1 bg-surface-green-1 text-ink-green-3'
+      return 'border-outline-green-1 bg-surface-green-1 text-ink-green-6'
     case 'warning':
       return 'border-outline-amber-1 bg-surface-amber-1 text-yellow-600'
     case 'error':
-      return 'border-outline-red-1 bg-surface-red-1 text-ink-red-4'
+      return 'border-outline-red-1 bg-surface-red-1 text-ink-red-8'
     case 'simple':
       return 'border-outline-gray-2 bg-surface-gray-1 text-ink-gray-5'
     case 'dark':
-      return 'border-outline-gray-5 bg-surface-gray-6 text-ink-white'
+      return 'border-outline-gray-7 bg-surface-gray-9 text-ink-base'
     default:
       return ''
   }
@@ -60,6 +60,6 @@ const sizeClasses = computed(() => {
 })
 
 const containerClasses = computed(() => {
-  return `w-full flex gap-2 items-center border rounded ${themeClasses.value} ${sizeClasses.value}`
+  return `w-full flex gap-2 items-center border rounded-4 ${themeClasses.value} ${sizeClasses.value}`
 })
 </script>

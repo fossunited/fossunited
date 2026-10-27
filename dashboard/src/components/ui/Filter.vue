@@ -12,7 +12,7 @@
     </template>
     <template #body>
       <div
-        class="my-2 rounded-lg border border-outline-gray-1 bg-surface-white shadow-xl max-w-[calc(100vw-1.5rem)]"
+        class="my-2 rounded-6 border border-outline-gray-1 bg-surface-base shadow-xl max-w-[calc(100vw-1.5rem)]"
       >
         <div class="w-[min(260px,calc(100vw-2rem))] p-2 text-sm">
           <div v-if="filters.length">
@@ -36,12 +36,12 @@
                   @click="removeFilter(i)"
                 />
               </div>
-              <Autocomplete
-                v-model="filters[i].field"
+              <Combobox
+                :model-value="filter.field && filter.field.value"
                 :options="fields"
-                @update:model-value="editFilter(filter, i, $event)"
+                @update:selected-option="(field) => field && editFilter(filter, i, field)"
               >
-              </Autocomplete>
+              </Combobox>
               <FormControl
                 v-model="model[filter.fieldname][0]"
                 type="select"
@@ -72,24 +72,19 @@
             Empty - Choose a field to filter by
           </div>
           <div class="flex items-center justify-between gap-2">
-            <Autocomplete
+            <Combobox
               :options="fields"
               placeholder="Filter by..."
-              @update:model-value="(option) => option && addFilter(option.value)"
+              @update:model-value="(value) => value && addFilter(value)"
             >
-              <template #target="{ togglePopover }">
-                <Button
-                  class="!text-ink-gray-5"
-                  variant="ghost"
-                  label="Add filter"
-                  @click="togglePopover()"
-                >
+              <template #trigger>
+                <Button class="!text-ink-gray-5" variant="ghost" label="Add filter">
                   <template #prefix>
                     <IconPlus class="h-4" />
                   </template>
                 </Button>
               </template>
-            </Autocomplete>
+            </Combobox>
             <Button
               v-if="filters.length"
               class="!text-ink-gray-5"
@@ -105,7 +100,7 @@
 </template>
 
 <script setup>
-import { Autocomplete, Badge, FormControl } from 'frappe-ui'
+import { Combobox, Badge, FormControl } from 'frappe-ui'
 import { IconPlus, IconFilter2 } from '@tabler/icons-vue'
 import { computed, h } from 'vue'
 import NestedPopover from './NestedPopover.vue'

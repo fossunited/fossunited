@@ -2,20 +2,20 @@
   <div class="flex flex-col h-full justify-between relative gap-4 pb-4">
     <div class="flex flex-col gap-4">
       <div class="space-y-3">
-        <h5 class="text-base font-semibold mb-1">Email Group</h5>
+        <h5 class="text-base-semibold mb-1">Email Group</h5>
         <label class="text-sm text-ink-gray-5">Audience&ast;</label>
-        <Autocomplete
-          v-model="data.email_group"
+        <MultiSelect
+          :model-value="emailGroupIds"
           :disabled="data.status == 'Sent'"
           class="-mt-2"
           label="Recipients &ast;"
-          :options="emailGroups.data"
-          :multiple="true"
+          :options="emailGroups.data || []"
           placeholder="Select Recipients"
+          @update:selected-options="(opts) => (data.email_group = opts)"
         />
       </div>
       <div class="space-y-3">
-        <h5 class="text-base font-semibold mb-1">Subject</h5>
+        <h5 class="text-base-semibold mb-1">Subject</h5>
         <FormControl
           v-model="data.subject"
           :disabled="data.status == 'Sent'"
@@ -24,7 +24,7 @@
         />
       </div>
       <div class="space-y-3">
-        <h5 class="text-base font-semibold mb-1">Content</h5>
+        <h5 class="text-base-semibold mb-1">Content</h5>
         <TextEditor
           :disabled="data.status == 'Sent'"
           class="col-span-2 mt-2"
@@ -34,10 +34,11 @@
         />
       </div>
       <div class="space-y-3">
-        <h5 class="text-base font-semibold mb-1">Attachments</h5>
+        <h5 class="text-base-semibold mb-1">Attachments</h5>
         <FileUploader
           v-if="data.status !== 'Sent'"
           :file-types="['image/*', '.pdf', '.doc', '.docx']"
+          :private="false"
           :validate-file="validateFile"
           @success="handleAttachment"
         >
@@ -50,7 +51,7 @@
             />
             <div v-if="uploading" class="text-sm">Uploading {{ progress }}%</div>
             <div v-if="message" class="text-sm">{{ message }}</div>
-            <div v-if="error" class="text-ink-red-4 text-sm">{{ error }}</div>
+            <div v-if="error" class="text-ink-red-8 text-sm">{{ error }}</div>
           </template>
         </FileUploader>
         <div v-if="data.attachments" class="flex flex-col gap-2 py-1">
@@ -68,9 +69,9 @@
       </div>
       <div
         v-if="data.schedule_sending"
-        class="space-y-3 bg-surface-blue-1 border border-outline-blue-1 border-dashed p-4 rounded"
+        class="space-y-3 bg-surface-blue-1 border border-outline-blue-1 border-dashed p-4 rounded-4"
       >
-        <h5 class="text-base font-semibold mb-1">Scheduled Sending</h5>
+        <h5 class="text-base-semibold mb-1">Scheduled Sending</h5>
         <FormControl
           v-model="data.schedule_sending"
           type="checkbox"
@@ -90,9 +91,9 @@
 </template>
 <script setup>
 import TextEditor from '@/components/ui/TextEditor.vue'
-import { FormControl, FileUploader, createResource, Autocomplete } from 'frappe-ui'
+import { FormControl, FileUploader, createResource, MultiSelect } from 'frappe-ui'
 import { IconPlus, IconFile } from '@tabler/icons-vue'
-import { reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 
 const props = defineProps({
@@ -122,7 +123,7 @@ const emailGroups = createResource({
   auto: true,
   transform(data) {
     let d = []
-    data.forEach((item) => {
+    ;(data || []).forEach((item) => {
       let label = item.group_type
 
       // For localhost groups, extract status from title
@@ -144,6 +145,11 @@ const data = defineModel({
   type: Object,
   required: true,
 })
+
+// data.value.email_group (the full option objects) is the source of
+// truth, kept in sync via @update:selected-options; emailGroupIds is a
+// derived, read-only view for MultiSelect's modelValue.
+const emailGroupIds = computed(() => (data.value.email_group || []).map((group) => group.value))
 
 const handleAttachment = (file) => {
   data.value.attachments.push(file)

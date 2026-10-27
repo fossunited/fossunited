@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 flex flex-col gap-6 w-full"
+    class="bg-surface-base border border-outline-gray-2 rounded-6 p-6 flex flex-col gap-6 w-full"
   >
     <div>
       <p class="font-semibold text-ink-gray-9">Ticket Summary</p>
@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <div class="flex justify-between font-semibold text-ink-gray-9 border-t pt-4 text-base">
+    <div class="flex justify-between text-ink-gray-9 border-t pt-4 text-base-semibold">
       <span>Total Amount</span>
       <span>₹{{ subTotal }}</span>
     </div>

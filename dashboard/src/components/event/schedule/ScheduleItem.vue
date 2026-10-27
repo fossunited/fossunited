@@ -19,10 +19,10 @@ const formatTime = (time) => {
 const getTypeColor = (type) => {
   const colors = {
     Talk: 'blue',
-    'Lightning Talk': 'purple',
+    'Lightning Talk': 'violet',
     Workshop: 'green',
-    'Panel Discussion': 'orange',
-    'Opening Note': 'yellow',
+    'Panel Discussion': 'amber',
+    'Opening Note': 'amber',
     Break: 'gray',
     Other: 'gray',
   }
@@ -61,7 +61,7 @@ const isIncomplete = computed(() => {
 
 <template>
   <div
-    class="p-4 rounded-lg border bg-surface-white hover:border-outline-gray-3 hover:shadow-sm transition-all cursor-pointer relative overflow-hidden"
+    class="p-4 rounded-6 border bg-surface-base hover:border-outline-gray-3 hover:shadow-sm transition-all cursor-pointer relative overflow-hidden"
     :class="{
       stripes: schedule_item.is_new,
       'border-outline-amber-1 bg-surface-amber-1/30': isIncomplete && !schedule_item.is_new,
@@ -69,7 +69,7 @@ const isIncomplete = computed(() => {
   >
     <!-- Status Indicator -->
     <div
-      class="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg"
+      class="absolute left-0 top-0 bottom-0 w-1 rounded-l-6"
       :class="{
         'bg-surface-gray-4': schedule_item.is_new,
         'bg-surface-amber-3': isIncomplete && !schedule_item.is_new,
@@ -80,7 +80,7 @@ const isIncomplete = computed(() => {
     <div class="pl-3 flex flex-col gap-2">
       <!-- Title and Category -->
       <div class="flex items-start justify-between gap-2">
-        <h5 class="text-base font-semibold flex-1 leading-snug">
+        <h5 class="text-base-semibold flex-1 leading-snug">
           {{ schedule_item.title || 'Untitled Schedule Item' }}
         </h5>
         <Badge
@@ -113,7 +113,7 @@ const isIncomplete = computed(() => {
       <!-- Warnings for incomplete items -->
       <div
         v-if="isIncomplete"
-        class="flex items-center gap-1.5 text-xs text-ink-amber-3 bg-surface-amber-1 px-2 py-1 rounded"
+        class="flex items-center gap-1.5 text-xs text-ink-amber-6 bg-surface-amber-1 px-2 py-1 rounded-4"
       >
         <IconAlertTriangleFilled class="h-6 w-6" />
         <span>Incomplete information</span>
@@ -122,7 +122,7 @@ const isIncomplete = computed(() => {
       <!-- New item indicator -->
       <div
         v-if="schedule_item.is_new"
-        class="flex items-center gap-1.5 text-xs text-ink-gray-5 bg-surface-gray-1 px-2 py-1 rounded"
+        class="flex items-center gap-1.5 text-xs text-ink-gray-5 bg-surface-gray-1 px-2 py-1 rounded-4"
       >
         <IconInfoCircleFilled class="h-4 w-4" />
         <span>New item - click to complete</span>

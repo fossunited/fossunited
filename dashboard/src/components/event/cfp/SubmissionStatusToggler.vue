@@ -16,7 +16,7 @@ import {
   SelectValue,
   SelectViewport,
 } from 'radix-vue'
-import { IconChevronDown } from '@tabler/icons-vue'
+import { IconAlertTriangle, IconChevronDown } from '@tabler/icons-vue'
 
 const submission = inject('curr_submission')
 const newStatus = ref(submission.data?.status)
@@ -69,54 +69,52 @@ const changeStatus = createResource({
   },
 })
 
-const confirmDialogOptions = computed(() => ({
-  title: 'Confirm',
-  icon: {
-    name: 'alert-triangle',
-    appearance: 'warning',
+const confirmDialogActions = computed(() => [
+  {
+    label: 'Confirm',
+    variant: 'solid',
+    onClick: ({ close }) => {
+      if (newStatus.value === submission.data?.status) {
+        close()
+        return
+      }
+      changeStatus.fetch()
+    },
+    loading: changeStatus.loading,
   },
-  actions: [
-    {
-      label: 'Confirm',
-      variant: 'solid',
-      onClick: (ctx) => {
-        if (newStatus.value === submission.data?.status) {
-          ctx.close()
-          return
-        }
-        changeStatus.fetch()
-      },
-      loading: changeStatus.loading,
+  {
+    label: 'Cancel',
+    onClick: ({ close }) => {
+      revertSelectToServer()
+      close()
     },
-    {
-      label: 'Cancel',
-      onClick: (ctx) => {
-        revertSelectToServer()
-        ctx.close()
-      },
-    },
-  ],
-}))
+  },
+])
 </script>
 <template>
-  <Dialog v-model="showDialog" class="z-50" :options="confirmDialogOptions">
-    <template #body-content>
-      <div>
-        <p class="text-base leading-6">
-          Are you sure you want to change the status of this submission from
-          <Badge :theme="getStatusBadgeTheme(submission.data.status)">
-            {{ submission.data.status }}
-          </Badge>
-          to
-          <Badge :theme="getStatusBadgeTheme(newStatus)">{{ newStatus }}</Badge> ?
-        </p>
-      </div>
-    </template>
+  <Dialog
+    v-model:open="showDialog"
+    class="z-50"
+    title="Confirm"
+    :icon="IconAlertTriangle"
+    theme="amber"
+    :actions="confirmDialogActions"
+  >
+    <div>
+      <p class="text-base leading-6">
+        Are you sure you want to change the status of this submission from
+        <Badge :theme="getStatusBadgeTheme(submission.data.status)">
+          {{ submission.data.status }}
+        </Badge>
+        to
+        <Badge :theme="getStatusBadgeTheme(newStatus)">{{ newStatus }}</Badge> ?
+      </p>
+    </div>
   </Dialog>
   <br />
   <SelectRoot v-model="newStatus" @update:model-value="onSelectStatusUpdate">
     <SelectTrigger
-      class="inline-flex min-w-32 items-center rounded text-sm leading-none h-8 gap-2 bg-surface-white"
+      class="inline-flex min-w-32 items-center rounded-4 text-sm leading-none h-8 gap-2 bg-surface-base"
       aria-label="Customise options"
     >
       <SelectValue>
@@ -128,7 +126,7 @@ const confirmDialogOptions = computed(() => ({
     </SelectTrigger>
 
     <SelectPortal>
-      <SelectContent class="bg-surface-white border shadow-xl rounded p-4 px-2 z-[100]">
+      <SelectContent class="bg-surface-base border shadow-xl rounded-4 p-4 px-2 z-[100]">
         <SelectViewport>
           <SelectGroup>
             <SelectLabel class="text-ink-gray-6 text-sm">Options</SelectLabel>
@@ -138,7 +136,7 @@ const confirmDialogOptions = computed(() => ({
                 v-for="option in options"
                 :key="option"
                 :value="option"
-                class="flex items-center gap-2 p-1 text-sm cursor-pointer hover:bg-surface-gray-2 rounded"
+                class="flex items-center gap-2 p-1 text-sm cursor-pointer hover:bg-surface-gray-2 rounded-4"
               >
                 <SelectItemText>
                   <Badge :theme="getStatusBadgeTheme(option)">{{ option }}</Badge>

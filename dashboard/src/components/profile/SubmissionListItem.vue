@@ -8,12 +8,12 @@
     role="link"
     :aria-labelledby="`proposal-title-${proposal.name}`"
   >
-    <h4 :id="`proposal-title-${proposal.name}`" class="text-base font-medium">
+    <h4 :id="`proposal-title-${proposal.name}`" class="text-base-medium">
       {{ proposal.talk_title }}
     </h4>
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
       <div class="flex flex-wrap gap-2 items-center divide-x-2 text-ink-gray-8">
-        <Badge class="!rounded-sm" :theme="getTheme[proposal.status]">{{ proposal.status }}</Badge>
+        <Badge class="!rounded-1" :theme="getTheme[proposal.status]">{{ proposal.status }}</Badge>
         <span class="text-sm uppercase pl-2">{{ proposal.event_name }}</span>
         <span class="text-sm uppercase pl-2">{{ proposal.chapter }}</span>
       </div>
@@ -42,7 +42,7 @@ const navigateToProposal = () => {
 }
 
 const getTheme = {
-  'Review Pending': 'orange',
+  'Review Pending': 'amber',
   Approved: 'green',
   Rejected: 'red',
   Withdrawn: 'red',

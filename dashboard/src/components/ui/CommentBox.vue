@@ -4,6 +4,7 @@
     editor-class="prose-sm max-w-none min-h-[6rem] max-h-[20rem] overflow-y-auto"
     :content="modelValue"
     placeholder="Write a comment…"
+    :upload-args="publicUploadArgs"
     @change="emit('update:modelValue', $event)"
   >
     <template #top>
@@ -12,7 +13,7 @@
 
     <template #editor="{ editor }">
       <EditorContent
-        class="border rounded-lg p-3 focus-within:ring-1 focus-within:ring-outline-gray-3"
+        class="border rounded-6 p-3 focus-within:ring-1 focus-within:ring-outline-gray-3"
         :editor="editor"
       />
     </template>
@@ -28,7 +29,8 @@
 <script setup>
 import { ref, inject } from 'vue'
 import { EditorContent } from '@tiptap/vue-3'
-import { Button, TextEditor, TextEditorFixedMenu, createResource } from 'frappe-ui'
+import { Button, createResource } from 'frappe-ui'
+import { TextEditor, TextEditorFixedMenu } from 'frappe-ui/experimental'
 import { toast } from 'vue-sonner'
 
 const session = inject('$session')
@@ -44,6 +46,9 @@ const props = defineProps({
 })
 
 const editorRef = ref(null)
+// frappe-ui 1.0's editor uploads pasted images as private by default; keep
+// 0.1.x's public uploads so other reviewers can still see them.
+const publicUploadArgs = { private: false }
 const menuButtons = [
   'Bold',
   'Italic',

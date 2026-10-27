@@ -1,7 +1,7 @@
 <template>
   <div class="flex gap-2 items-center">
     <FossClubIcon />
-    <span class="text-base font-medium">{{ name }}</span>
+    <span class="text-base-medium">{{ name }}</span>
   </div>
 </template>
 <script setup>

@@ -153,27 +153,26 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
 
 <template>
   <Dialog
-    v-model="showDeleteConfirmation"
+    v-model:open="showDeleteConfirmation"
     class="z-50"
-    :options="{
-      title: 'Delete Schedule',
-      message: 'Are you sure you want to delete this schedule? This action cannot be undone.',
-      icon: { name: 'trash', appearance: 'danger' },
-      actions: [
-        {
-          label: 'Delete',
-          theme: 'red',
-          onClick: () => {
-            emit('delete:schedule', selectedScheduleItem)
-            showDeleteConfirmation = false
-          },
+    title="Delete Schedule"
+    message="Are you sure you want to delete this schedule? This action cannot be undone."
+    :icon="IconTrash"
+    theme="red"
+    :actions="[
+      {
+        label: 'Delete',
+        theme: 'red',
+        onClick: () => {
+          emit('delete:schedule', selectedScheduleItem)
+          showDeleteConfirmation = false
         },
-        {
-          label: 'Cancel',
-          onClick: () => (showDeleteConfirmation = false),
-        },
-      ],
-    }"
+      },
+      {
+        label: 'Cancel',
+        onClick: () => (showDeleteConfirmation = false),
+      },
+    ]"
   />
 
   <div class="flex flex-col gap-2 justify-between h-full">
@@ -188,7 +187,7 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
           v-if="showCfpField"
           :model-value="selectedScheduleItem.linked_cfp"
           label="Linked Proposal"
-          type="autocomplete"
+          type="combobox"
           variant="outline"
           description="Choose a proposal from approved submissions"
           :options="getLinkedCfpOptions"
@@ -280,7 +279,7 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
     <div class="flex flex-col gap-4">
       <ErrorMessage v-if="errorMessages" class="mt-2" :message="errorMessages" />
 
-      <div class="bg-surface-white flex gap-2 items-center">
+      <div class="bg-surface-base flex gap-2 items-center">
         <Button
           :icon="IconTrash"
           theme="red"

@@ -1,11 +1,9 @@
 <template>
   <Dialog
-    v-model="showDialog"
+    v-model:open="showDialog"
     class="z-50"
-    :options="{
-      title: 'Error',
-      message: dialogMessage,
-    }"
+    title="Error"
+    :message="dialogMessage"
   />
 
   <div v-if="isValidated" class="w-full min-h-screen flex flex-col md:flex-row overflow-x-hidden">

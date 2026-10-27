@@ -22,7 +22,7 @@
     }"
   >
     <template #group-header="{ group }">
-      <span class="text-base font-medium"> {{ group.group }} ({{ group.rows.length }}) </span>
+      <span class="text-base-medium"> {{ group.group }} ({{ group.rows.length }}) </span>
     </template>
 
     <template #cell="{ item, column }">

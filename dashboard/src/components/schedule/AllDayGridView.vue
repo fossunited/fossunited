@@ -26,7 +26,7 @@
               style="min-width: 200px; width: 200px"
             >
               <div
-                class="bg-surface-gray-3 dark:bg-surface-gray-4 text-ink-gray-9 text-xs font-semibold uppercase leading-tight px-3 py-2 rounded-lg border border-outline-gray-3 w-full text-center"
+                class="bg-surface-gray-3 dark:bg-surface-gray-4 text-ink-gray-9 text-xs-semibold uppercase leading-tight px-3 py-2 rounded-6 border border-outline-gray-3 w-full text-center"
               >
                 {{ hall }}
               </div>
@@ -59,7 +59,7 @@
               >
                 {{ label.label }}
               </span>
-              <div class="hidden md:block w-2 h-px bg-surface-gray-5" />
+              <div class="hidden md:block w-2 h-px bg-surface-gray-8" />
             </div>
           </div>
 
@@ -67,7 +67,7 @@
           <div class="flex">
             <div v-for="hall in orderedHalls" :key="hall" style="min-width: 200px; width: 200px">
               <div class="relative" :style="{ height: totalHeight + 'px' }">
-                <div class="absolute inset-y-0 left-4 border-l border-outline-gray-5" />
+                <div class="absolute inset-y-0 left-4 border-l border-outline-gray-7" />
                 <div
                   v-for="label in timeLabels"
                   :key="'grid-' + label.minutes"

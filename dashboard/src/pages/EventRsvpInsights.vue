@@ -10,7 +10,7 @@
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div class="font-semibold text-ink-gray-8">
         {{ sectionTitle }}
-        <span v-if="currentView === 'checkins'" class="ml-2 text-sm font-normal text-ink-gray-5">
+        <span v-if="currentView === 'checkins'" class="ml-2 text-sm text-ink-gray-5">
           ({{ checkins.data?.length || 0 }} checked-in out of
           {{ eventStats.data?.total_accepted || 0 }} confirmed attendees)
         </span>
@@ -18,12 +18,12 @@
 
       <div class="flex items-center gap-2">
         <!-- View Toggle - Only show when check-ins are available -->
-        <div class="flex items-center gap-1 bg-surface-gray-2 rounded-lg p-1">
+        <div class="flex items-center gap-1 bg-surface-gray-2 rounded-6 p-1">
           <button
-            class="px-3 py-1.5 text-sm rounded-md transition-colors"
+            class="px-3 py-1.5 text-sm rounded-5 transition-colors"
             :class="
               currentView === 'attendees'
-                ? 'bg-surface-white text-ink-gray-9 font-medium shadow-sm'
+                ? 'bg-surface-base text-ink-gray-9 font-medium shadow-sm'
                 : 'text-ink-gray-5 hover:text-ink-gray-9'
             "
             @click="currentView = 'attendees'"
@@ -31,10 +31,10 @@
             Attendees
           </button>
           <button
-            class="px-3 py-1.5 text-sm rounded-md transition-colors"
+            class="px-3 py-1.5 text-sm rounded-5 transition-colors"
             :class="
               currentView === 'checkins'
-                ? 'bg-surface-white text-ink-gray-9 font-medium shadow-sm'
+                ? 'bg-surface-base text-ink-gray-9 font-medium shadow-sm'
                 : 'text-ink-gray-5 hover:text-ink-gray-9'
             "
             @click="currentView = 'checkins'"
@@ -83,7 +83,7 @@
       row-drawer
     >
       <template #group-header="{ group }">
-        <span class="text-base font-medium leading-6 text-ink-gray-9">
+        <span class="text-base-medium leading-6 text-ink-gray-9">
           {{ group.group }} ({{ group.rows.length }})
         </span>
       </template>
@@ -91,8 +91,8 @@
       <template #cell="{ item, row, column }">
         <span
           v-if="column.key === 'confirm_attendance'"
-          class="px-2 py-1 rounded text-sm font-medium"
-          :class="item ? 'bg-surface-green-2 text-ink-green-3' : 'bg-surface-red-2 text-ink-red-3'"
+          class="px-2 py-1 rounded-4 text-sm-medium"
+          :class="item ? 'bg-surface-green-2 text-ink-green-6' : 'bg-surface-red-2 text-ink-red-6'"
         >
           {{ item ? 'Yes' : 'No' }}
         </span>
@@ -113,7 +113,7 @@
             />
             <div
               v-if="checkinAction(row).tooltip"
-              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-7 text-ink-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-10 text-ink-base text-xs rounded-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
             >
               {{ checkinAction(row).tooltip }}
             </div>
@@ -155,8 +155,8 @@
         <!-- confirm_attendance badge -->
         <span
           v-if="column.key === 'confirm_attendance'"
-          class="px-2 py-0.5 rounded text-sm font-medium w-fit"
-          :class="item ? 'bg-surface-green-2 text-ink-green-3' : 'bg-surface-red-2 text-ink-red-3'"
+          class="px-2 py-0.5 rounded-4 text-sm-medium w-fit"
+          :class="item ? 'bg-surface-green-2 text-ink-green-6' : 'bg-surface-red-2 text-ink-red-6'"
         >
           {{ item ? 'Yes' : 'No' }}
         </span>
@@ -192,7 +192,7 @@
           />
           <div
             v-if="checkinAction(row).tooltip"
-            class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-7 text-ink-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+            class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-10 text-ink-base text-xs rounded-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
           >
             {{ checkinAction(row).tooltip }}
           </div>

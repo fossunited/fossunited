@@ -26,18 +26,18 @@
     leave-to="opacity-0 translate-y-4"
   >
     <Popover v-if="!inUpdate">
-      <template #target="{ togglePopover }">
-        <Button variant="solid" label="Send" class="w-full" @click="togglePopover()" />
+      <template #trigger>
+        <Button variant="solid" label="Send" class="w-full" />
       </template>
-      <template #body-main="{ togglePopover }">
-        <div class="p-2 text-ink-white rounded-sm flex flex-col gap-2 items-center">
+      <template #default="{ close }">
+        <div class="p-2 text-ink-base rounded-1 flex flex-col gap-2 items-center">
           <Button
             v-for="(option, key) in sendOptions"
             :key="key"
             :label="option.label"
             :onclick="
               () => {
-                togglePopover()
+                close()
                 option.onclick()
               }
             "

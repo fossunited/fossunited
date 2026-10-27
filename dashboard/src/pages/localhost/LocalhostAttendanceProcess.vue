@@ -1,11 +1,9 @@
 <template>
   <Dialog
-    v-model="showDialog"
+    v-model:open="showDialog"
     class="z-50"
-    :options="{
-      title: 'Error',
-      message: dialogMessage,
-    }"
+    title="Error"
+    :message="dialogMessage"
   />
   <Header />
   <div class="w-full h-screen flex justify-center">

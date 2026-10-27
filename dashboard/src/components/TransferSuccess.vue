@@ -5,7 +5,7 @@
       <h2 class="text-ink-gray-6">Transfer Initiated</h2>
     </div>
 
-    <div class="shadow-lg w-2/5 rounded bg-surface-white text-center px-4 py-6">
+    <div class="shadow-lg w-2/5 rounded-4 bg-surface-base text-center px-4 py-6">
       <p>
         Ticket Transfer has been initiated. <br /><br />
         An email has been sent to the ticket holder.

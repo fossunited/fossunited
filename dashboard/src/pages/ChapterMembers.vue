@@ -49,29 +49,27 @@
     <!-- REMOVE A MEMBER -->
     <div v-if="selectedMember">
       <Dialog
-        v-model="showRemoveModal"
+        v-model:open="showRemoveModal"
         class="z-50"
-        :options="{
-          title: 'Remove Team Member?',
-          message: `Are you sure you want to remove ${selectedMember.full_name} from the team?`,
-          actions: [
-            {
-              label: 'Cancel',
-              theme: 'gray',
-              onClick: () => {
-                showRemoveModal = false
-              },
+        title="Remove Team Member?"
+        :message="`Are you sure you want to remove ${selectedMember.full_name} from the team?`"
+        :actions="[
+          {
+            label: 'Cancel',
+            theme: 'gray',
+            onClick: () => {
+              showRemoveModal = false
             },
-            {
-              label: 'Remove',
-              theme: 'red',
-              onClick: () => {
-                removeMember(selectedMember)
-                showRemoveModal = false
-              },
+          },
+          {
+            label: 'Remove',
+            theme: 'red',
+            onClick: () => {
+              removeMember(selectedMember)
+              showRemoveModal = false
             },
-          ],
-        }"
+          },
+        ]"
       >
       </Dialog>
     </div>
@@ -79,7 +77,7 @@
     <!-- EDIT MEMBER ROLE -->
     <div v-if="selectedMember && showEditmodal">
       <EditMemberDialog
-        v-model="showEditmodal"
+        v-model:open="showEditmodal"
         class="z-50"
         :chapter="chapter"
         :member="selectedMember"
@@ -92,7 +90,7 @@
     <!-- ADD NEW MEMBER -->
     <div v-if="showAddmodal">
       <AddMemberDialog
-        v-model="showAddmodal"
+        v-model:open="showAddmodal"
         class="z-50"
         :chapter="chapter"
         @update:add-member="addNewMember"
@@ -102,6 +100,7 @@
   </div>
 </template>
 <script setup>
+import Card from '@/components/ui/Card.vue'
 import { useRoute } from 'vue-router'
 import { createDocumentResource, Badge, Dialog } from 'frappe-ui'
 import { ref, inject } from 'vue'

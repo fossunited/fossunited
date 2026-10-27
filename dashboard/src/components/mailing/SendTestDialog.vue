@@ -1,50 +1,46 @@
 <template>
   <Dialog
-    v-model="open"
+    v-model:open="open"
     class="z-[70]"
-    :options="{
-      title: inSuccess ? ' ' : 'Send Test Mail',
-      actions: getActions,
-    }"
-    :disable-outside-click-to-close="true"
+    :title="inSuccess ? ' ' : 'Send Test Mail'"
+    :actions="getActions"
+    :dismissible="false"
   >
-    <template #body-content>
-      <TransitionRoot
-        :show="!inSuccess"
-        enter="ease-in-out transition-all duration-500"
-        enter-from="opacity-0 -translate-x-12"
-        enter-to="opacity-100 translate-x-0"
-        leave="ease-in-out transition-all duration-500"
-        leave-from="opacity-100 translate-x-0"
-        leave-to="opacity-0 -translate-x-12"
-      >
-        <FormControl
-          v-if="!inSuccess"
-          v-model="email"
-          type="email"
-          :required="true"
-          placeholder="test@example.com"
-          label="Email"
-        />
-        <ErrorMessage :message="errorMessages" class="mt-2" />
-      </TransitionRoot>
-      <TransitionRoot
-        :show="inSuccess"
-        enter="ease-in-out transition-all duration-500"
-        enter-from="opacity-0 translate-x-12"
-        enter-to="opacity-100 translate-x-0"
-        leave="ease-in-out transition-all duration-500"
-        leave-from="opacity-100 translate-x-0"
-        leave-to="opacity-0 translate-x-12"
-      >
-        <div v-if="inSuccess" class="flex items-center flex-col gap-2">
-          <SuccessIcon class="w-10 h-10" />
-          <p class="text-base">
-            Test email successfully sent to <span class="font-semibold">{{ email }}</span>
-          </p>
-        </div>
-      </TransitionRoot>
-    </template>
+    <TransitionRoot
+      :show="!inSuccess"
+      enter="ease-in-out transition-all duration-500"
+      enter-from="opacity-0 -translate-x-12"
+      enter-to="opacity-100 translate-x-0"
+      leave="ease-in-out transition-all duration-500"
+      leave-from="opacity-100 translate-x-0"
+      leave-to="opacity-0 -translate-x-12"
+    >
+      <FormControl
+        v-if="!inSuccess"
+        v-model="email"
+        type="email"
+        :required="true"
+        placeholder="test@example.com"
+        label="Email"
+      />
+      <ErrorMessage :message="errorMessages" class="mt-2" />
+    </TransitionRoot>
+    <TransitionRoot
+      :show="inSuccess"
+      enter="ease-in-out transition-all duration-500"
+      enter-from="opacity-0 translate-x-12"
+      enter-to="opacity-100 translate-x-0"
+      leave="ease-in-out transition-all duration-500"
+      leave-from="opacity-100 translate-x-0"
+      leave-to="opacity-0 translate-x-12"
+    >
+      <div v-if="inSuccess" class="flex items-center flex-col gap-2">
+        <SuccessIcon class="w-10 h-10" />
+        <p class="text-base">
+          Test email successfully sent to <span class="font-semibold">{{ email }}</span>
+        </p>
+      </div>
+    </TransitionRoot>
   </Dialog>
 </template>
 <script setup>

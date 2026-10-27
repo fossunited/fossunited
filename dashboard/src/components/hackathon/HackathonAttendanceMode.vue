@@ -1,69 +1,61 @@
 <template>
-  <Dialog
-    v-model="showDialog"
-    class="z-50"
-    :options="{
-      title: 'Change Mode of Attendance',
-    }"
-  >
-    <template #body-content>
+  <Dialog v-model:open="showDialog" class="z-50" title="Change Mode of Attendance">
+    <div
+      class="flex flex-col gap-2 items-center text-center p-3 rounded-4 w-full bg-surface-orange-1 text-ink-amber-6 border-2 border-dashed border-outline-orange-1 text-xs"
+    >
+      <IconAlertCircle />
+      <p>
+        <b>Attention!</b> You are about to change your attendance mode for this hackathon.<br /><br />
+        Please note that requests for in-person attendance are subject to approval by the
+        organizers due to limited on-site availability.
+      </p>
+    </div>
+
+    <FormControl
+      v-model="attendanceMode"
+      label="Mode of Attendance"
+      type="select"
+      class="mt-4"
+      :options="attendanceModeOptions"
+    />
+
+    <FormControl
+      v-if="attendanceMode == 'local'"
+      v-model="participant_localhost.data.localhost_name"
+      label="Your Localhost"
+      :disabled="1"
+      class="mt-4"
+    />
+    <div v-if="attendanceMode == 'local-pending'">
       <div
-        class="flex flex-col gap-2 items-center text-center p-3 rounded w-full bg-surface-orange-1 text-ink-amber-3 border-2 border-dashed border-outline-orange-1 text-xs"
+        v-if="localhosts.data.length <= 7"
+        class="flex flex-col p-3 mt-4 items-center text-center rounded-4 w-full bg-surface-blue-1 text-ink-blue-5 border-2 border-dashed border-outline-blue-1 text-xs"
       >
-        <IconAlertCircle />
         <p>
-          <b>Attention!</b> You are about to change your attendance mode for this hackathon.<br /><br />
-          Please note that requests for in-person attendance are subject to approval by the
-          organizers due to limited on-site availability.
+          <b>Note:</b> This hackathon has a total of
+          <b>8 local host slots</b> available.<br /><br />
+          All localhosts will be added shortly.
         </p>
       </div>
 
       <FormControl
-        v-model="attendanceMode"
-        label="Mode of Attendance"
+        v-if="localhosts.data.length > 0"
+        v-model="selectedLocalhost"
+        label="Select LocalHost"
         type="select"
         class="mt-4"
-        :options="attendanceModeOptions"
+        :options="
+          localhosts.data.map((localhost) => ({
+            label: `${localhost.city} - ${localhost.localhost_name}`,
+            value: localhost.name,
+          }))
+        "
       />
-
-      <FormControl
-        v-if="attendanceMode == 'local'"
-        v-model="participant_localhost.data.localhost_name"
-        label="Your Localhost"
-        :disabled="1"
-        class="mt-4"
-      />
-      <div v-if="attendanceMode == 'local-pending'">
-        <div
-          v-if="localhosts.data.length <= 7"
-          class="flex flex-col p-3 mt-4 items-center text-center rounded w-full bg-surface-blue-1 text-ink-blue-2 border-2 border-dashed border-outline-blue-1 text-xs"
-        >
-          <p>
-            <b>Note:</b> This hackathon has a total of
-            <b>8 local host slots</b> available.<br /><br />
-            All localhosts will be added shortly.
-          </p>
-        </div>
-
-        <FormControl
-          v-if="localhosts.data.length > 0"
-          v-model="selectedLocalhost"
-          label="Select LocalHost"
-          type="select"
-          class="mt-4"
-          :options="
-            localhosts.data.map((localhost) => ({
-              label: `${localhost.city} - ${localhost.localhost_name}`,
-              value: localhost.name,
-            }))
-          "
-        />
-        <div v-else class="mt-2 text-sm text-red-500">
-          <span>No LocalHost slots available at this moment.</span>
-        </div>
+      <div v-else class="mt-2 text-sm text-red-500">
+        <span>No LocalHost slots available at this moment.</span>
       </div>
-      <ErrorMessage :message="errorMessage" class="mt-2" />
-    </template>
+    </div>
+    <ErrorMessage :message="errorMessage" class="mt-2" />
     <template #actions>
       <div class="grid grid-cols-2 gap-4">
         <Button label="Cancel" size="sm" theme="gray" @click="showDialog = false" />
@@ -78,13 +70,13 @@
     </template>
   </Dialog>
   <div
-    class="flex flex-col gap-1 border-2 rounded border-outline-gray-4 border-dashed min-w-[220px] p-4"
+    class="flex flex-col gap-1 border-2 rounded-4 border-outline-gray-4 border-dashed min-w-[220px] p-4"
   >
-    <h5 class="text-xs text-ink-gray-6 uppercase font-medium">Your Mode of attendance</h5>
+    <h5 class="text-xs-medium text-ink-gray-6 uppercase">Your Mode of attendance</h5>
     <div class="flex w-full items-center justify-between">
       <div
-        class="text-base font-medium"
-        :class="attendanceMode == 'local-pending' ? 'text-ink-amber-3' : ''"
+        class="text-base-medium"
+        :class="attendanceMode == 'local-pending' ? 'text-ink-amber-6' : ''"
       >
         {{
           attendanceMode == 'remote'

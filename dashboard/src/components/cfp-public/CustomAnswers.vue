@@ -1,15 +1,15 @@
 <template>
   <div v-if="answered.length" class="flex flex-col gap-4">
-    <h3 class="flex items-center gap-1.5 text-sm font-medium text-ink-gray-5 uppercase">
+    <h3 class="flex items-center gap-1.5 text-sm-medium text-ink-gray-5 uppercase">
       <IconMessageCircleQuestion class="w-4 h-4 text-ink-gray-4" />
       Additional Questions
     </h3>
     <div class="flex flex-col gap-4">
       <div v-for="(item, index) in answered" :key="index" class="flex flex-col gap-1.5">
-        <span class="text-xs font-medium text-ink-gray-5">{{ item.question }}</span>
+        <span class="text-xs-medium text-ink-gray-5">{{ item.question }}</span>
 
         <!-- Response is the highlight: very subtle box -->
-        <div class="w-fit max-w-full rounded-md border border-outline-gray-1 bg-surface-gray-1 px-3 py-2">
+        <div class="w-fit max-w-full rounded-5 border border-outline-gray-1 bg-surface-gray-1 px-3 py-2">
           <!-- Rich HTML (Text Editor) -->
           <div
             v-if="isRich(item.type)"

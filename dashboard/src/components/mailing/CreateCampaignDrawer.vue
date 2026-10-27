@@ -8,7 +8,7 @@
         :chapter="chapter"
         :document_type="document_type"
       />
-      <div class="w-full pt-4 space-y-2 border-t bg-surface-white sticky bottom-0 z-50 -mb-2">
+      <div class="w-full pt-4 space-y-2 border-t bg-surface-base sticky bottom-0 z-50 -mb-2">
         <ErrorMessage :message="errorMessages" />
         <Button label="Create" class="w-full" variant="solid" @click="handleCampaignCreate" />
       </div>

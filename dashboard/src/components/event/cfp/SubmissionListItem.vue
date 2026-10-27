@@ -74,13 +74,13 @@ defineEmits(['open:submission'])
         {{ submission.talk_title }}
       </h4>
       <div class="flex gap-2 items-center !text-sm flex-wrap">
-        <Tooltip text="Proposal status managed event organizer" placement="top">
+        <Tooltip text="Proposal status managed event organizer" side="top">
           <Badge :label="submission.status" :theme="getStatusBadgeTheme(submission.status)" />
         </Tooltip>
         <Tooltip
           v-if="submission._is_reviewed === 'Yes'"
           text="You've added your review"
-          placement="top"
+          side="top"
         >
           <Badge label="Reviewed" theme="blue" />
         </Tooltip>
@@ -106,7 +106,7 @@ defineEmits(['open:submission'])
           v-for="u in submission._assigned_users"
           :key="u.user"
           :text="verdictLabel(u)"
-          placement="top"
+          side="top"
         >
           <!-- can be LazyObserved, but since we've Only ~15-30 unique reviewers across all proposals
                URL repeats and the browser cache fetches each once. -->

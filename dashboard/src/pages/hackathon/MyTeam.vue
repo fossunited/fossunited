@@ -1,11 +1,9 @@
 <template>
-  <Dialog v-model="inTeamManage" class="z-50">
-    <template #body-title>
-      <h3 class="text-xl font-semibold">Manage Team</h3>
+  <Dialog v-model:open="inTeamManage" class="z-50">
+    <template #title>
+      <h3 class="text-lg-semibold">Manage Team</h3>
     </template>
-    <template #body-content>
-      <HackathonTeamMember :team="team" :hackathon="hackathon.data" />
-    </template>
+    <HackathonTeamMember :team="team" :hackathon="hackathon.data" />
   </Dialog>
   <Header />
   <div v-if="hackathon.data" class="w-full p-4 flex items-center justify-center">
@@ -18,7 +16,7 @@
         <input
           v-model="newTeamName"
           type="text"
-          class="border-l-0 border-t-0 border-r-0 p-2 pt-4 font-bold text-3xl text-ink-gray-9 active:outline-none focus:outline-none"
+          class="border-l-0 border-t-0 border-r-0 p-2 pt-4 text-4xl-bold text-ink-gray-9 active:outline-none focus:outline-none"
         />
         <div class="grid grid-cols-2 gap-2 w-full md:w-auto">
           <Button label="Discard" @click="inNameEdit = false" />
@@ -36,12 +34,12 @@
       <div class="py-4 my-4 gap-6 grid grid-cols-1 md:grid-cols-2">
         <div
           v-if="hasProject.data == 0"
-          class="rounded border-2 text-ink-gray-6 border-gray-700 bg-surface-gray-1 border-dashed flex flex-col justify-between p-5 gap-8"
+          class="rounded-4 border-2 text-ink-gray-6 border-gray-700 bg-surface-gray-1 border-dashed flex flex-col justify-between p-5 gap-8"
         >
-          <div class="text-base font-semibold uppercase">Project</div>
+          <div class="text-base-semibold uppercase">Project</div>
           <div class="flex justify-between items-end">
             <div class="flex flex-col gap-2">
-              <div class="font-medium text-lg uppercase">No Project Found</div>
+              <div class=" text-md-medium uppercase">No Project Found</div>
               <div class="text-sm">Set up your project for the hackathon</div>
             </div>
             <Button
@@ -59,12 +57,12 @@
         </div>
         <div
           v-else
-          class="rounded bg-surface-gray-1 border border-outline-gray-3 flex flex-col justify-between p-5 gap-8"
+          class="rounded-4 bg-surface-gray-1 border border-outline-gray-3 flex flex-col justify-between p-5 gap-8"
         >
-          <div class="text-base font-semibold uppercase">Project</div>
+          <div class="text-base-semibold uppercase">Project</div>
           <div class="flex justify-between items-end">
             <div class="flex flex-col gap-2">
-              <div class="font-medium text-lg uppercase break-all">
+              <div class=" text-md-medium uppercase break-all">
                 {{ project.data?.title }}
               </div>
               <div class="text-sm">{{ project.data?.short_description }}</div>
@@ -82,10 +80,10 @@
             />
           </div>
         </div>
-        <div class="rounded border flex flex-col justify-between p-5 gap-8">
-          <div class="text-base font-semibold uppercase">Team</div>
+        <div class="rounded-4 border flex flex-col justify-between p-5 gap-8">
+          <div class="text-base-semibold uppercase">Team</div>
           <div class="flex justify-between items-end">
-            <div class="font-medium text-lg uppercase">{{ team.data.members.length }} Members</div>
+            <div class=" text-md-medium uppercase">{{ team.data.members.length }} Members</div>
             <Button class="w-fit" size="sm" label="Manage" @click="inTeamManage = true" />
           </div>
         </div>
@@ -93,9 +91,9 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
         <div
           v-if="hackathon.data.hackathon_rules"
-          class="w-full bg-surface-gray-1 text-ink-gray-8 rounded p-4"
+          class="w-full bg-surface-gray-1 text-ink-gray-8 rounded-4 p-4"
         >
-          <h3 class="text-md font-semibold">Hackathon Rules</h3>
+          <h3 class="text-md-semibold">Hackathon Rules</h3>
           <div class="prose leading-normal" v-html="hackathon.data.hackathon_rules"></div>
         </div>
       </div>
