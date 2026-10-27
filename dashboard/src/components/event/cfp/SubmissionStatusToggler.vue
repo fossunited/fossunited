@@ -45,19 +45,25 @@ const selectedOption = computed(() => options.find((o) => o.value === newStatus.
 const hasChange = computed(() => !!newStatus.value && newStatus.value !== currentStatus.value)
 
 function optionHint(status) {
-  if (status === currentStatus.value) return 'No change.'
-  const notes = []
-  if (emailGroups[currentStatus.value]) {
-    notes.push(
-      `All Speakers get an email & leave the ${emailGroups[currentStatus.value]} email group.`,
-    )
-  }
-  if (emailGroups[status]) {
-    notes.push(
-      `All Speakers get confirmation email & join the ${emailGroups[status]} email group.`,
-    )
-  }
-  return notes.length ? notes.join(' ') : 'No email group change.'
+  const current = currentStatus.value
+  if (status === current) return 'No change.'
+  const from = emailGroups[current]
+  const to = emailGroups[status]
+  if (!from && !to) return 'No email group change.'
+
+  const action =
+    from && to
+      ? `move from the ${from} to the ${to} email group`
+      : to
+        ? `join the ${to} email group`
+        : `leave the ${from} email group`
+  // Accepted wins over Rejected across a speaker's proposals for this event.
+  let unless = ''
+  if (current === 'Approved') unless = 'another approved proposal'
+  else if (status === 'Rejected') unless = 'an approved proposal'
+  else if (current === 'Rejected' && !to) unless = 'another rejected proposal'
+  const suffix = unless ? `, unless they have ${unless} for this event` : ''
+  return `All speakers get a generic confirmation email, then ${action}${suffix}.`
 }
 
 const showDialog = ref(false)
