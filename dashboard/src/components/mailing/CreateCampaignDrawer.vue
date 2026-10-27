@@ -3,7 +3,7 @@
     <div class="space-y-4 h-full">
       <p class="text-sm text-ink-gray-5 -mt-4">Create email campaigns to be sent to users.</p>
       <EmailFormTemplate
-        v-model="data"
+        :model-value="data"
         :event="event"
         :chapter="chapter"
         :document_type="document_type"
