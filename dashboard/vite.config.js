@@ -11,6 +11,8 @@ export default defineConfig({
   plugins: [
     frappeui({
       frappeProxy: true,
+      // unused here, and its esbuild plugin crashes Vite 8 (rolldown) dep pre-bundling
+      codeLanguages: false,
       // frappe-ui's buildConfig plugin requires indexHtmlPath in production
       buildConfig: {
         outDir,

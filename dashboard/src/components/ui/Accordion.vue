@@ -20,6 +20,8 @@
   </AccordionRoot>
 </template>
 <script setup>
+// TODO: unused anywhere in the dashboard. Use it somewhere or delete this file.
+// Ref: https://reka-ui.com/docs/components/accordion
 import { IconChevronDown } from '@tabler/icons-vue'
 import {
   AccordionContent,
@@ -27,7 +29,7 @@ import {
   AccordionItem,
   AccordionRoot,
   AccordionTrigger,
-} from 'radix-vue'
+} from 'reka-ui'
 
 defineProps({
   accordianItems: {
