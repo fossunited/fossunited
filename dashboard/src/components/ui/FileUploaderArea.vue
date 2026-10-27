@@ -15,9 +15,9 @@
     >
       <template #default="{ uploading, progress, openFileSelector, error }">
         <!-- Image Preview -->
-        <div v-if="modelValue" class="mb-2">
+        <div v-if="previewUrl" class="mb-2">
           <img
-            :src="modelValue"
+            :src="previewUrl"
             class="w-full h-40 object-contain rounded-4 border bg-surface-gray-1"
             :alt="label ? `${label} preview` : 'Image preview'"
           />
@@ -102,10 +102,22 @@
 </template>
 
 <script setup>
+import { computed, ref, watch } from 'vue'
 import { FileUploader } from 'frappe-ui'
 import { IconPhotoScan, IconTrash, IconEdit } from '@tabler/icons-vue'
 
 const model = defineModel({ type: String, default: '' })
+
+// Mirrors the upload result locally rather than reading `modelValue`
+const justUploaded = ref('')
+const previewUrl = computed(() => justUploaded.value || model.value)
+
+// A dialog reused across entities clears
+// `modelValue` from outside this component - follow it back to empty so a
+// stale local preview doesn't survive into the next, unrelated use.
+watch(model, (val) => {
+  if (!val) justUploaded.value = ''
+})
 
 const props = defineProps({
   label: { type: String, default: '' },
@@ -133,6 +145,7 @@ const validateFile = (file) => {
 }
 
 const handleSuccess = (response) => {
+  justUploaded.value = response.file_url
   model.value = response.file_url
   emit('uploaded', response.file_url)
 }
@@ -142,6 +155,7 @@ const handleError = (error) => {
 }
 
 const removeImage = () => {
+  justUploaded.value = ''
   model.value = ''
 }
 </script>
