@@ -33,6 +33,8 @@ ALLOWED_SESSION_TYPES = {
 }
 
 # Proposal status -> event email group its speakers belong to.
+# Order is priority: a speaker with both an Approved and a Rejected proposal
+# get into Accepted as first priority.
 STATUS_EMAIL_GROUPS = {
     "Approved": "Accepted Proposers",
     "Rejected": "Rejected Proposers",
@@ -490,41 +492,37 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def handle_status_change(self) -> None:
         if not self.has_value_changed("status"):
             return
-        # leave the old group, then join the new one.
-        before = self.get_doc_before_save()
-        old_status = before.status if before else None
-        if old_status in STATUS_EMAIL_GROUPS:
-            emails = self.get_speakers_without_other_proposal(old_status)
-            self.handle_email_group(STATUS_EMAIL_GROUPS[old_status], emails, subscribe=False)
-
-        if self.status in STATUS_EMAIL_GROUPS:
-            self.handle_email_group(STATUS_EMAIL_GROUPS[self.status])
-
-    def get_speakers_without_other_proposal(self, status) -> list[str]:
-        """Speaker emails not on another proposal for this event with the same status.
-
-        A speaker with a second Approved proposal must stay in Accepted Proposers
-        when only one of their proposals changes status.
-        """
         emails = [s.email for s in self.speakers if s.email]
-        other_proposals = frappe.get_all(
-            PROPOSAL,
-            filters={"event": self.event, "status": status, "name": ["!=", self.name]},
-            pluck="name",
-        )
-        if not emails or not other_proposals:
-            return emails
+        if not emails:
+            return
 
-        still_listed = frappe.get_all(
-            SPEAKER,
-            filters={
-                "parenttype": PROPOSAL,
-                "parent": ["in", other_proposals],
-                "email": ["in", emails],
-            },
-            pluck="email",
+        # One status group per speaker per event, across all their proposals.
+        statuses = {email: {self.status} for email in emails}
+        proposal, speaker = frappe.qb.DocType(PROPOSAL), frappe.qb.DocType(SPEAKER)
+        other_proposals = (
+            frappe.qb.from_(speaker)
+            .join(proposal)
+            .on(speaker.parent == proposal.name)
+            .select(speaker.email, proposal.status)
+            .where(
+                (proposal.event == self.event)
+                & (proposal.name != self.name)
+                & proposal.status.isin(list(STATUS_EMAIL_GROUPS))
+                & speaker.email.isin(emails)
+            )
+            .run(as_dict=True)
         )
-        return [email for email in emails if email not in still_listed]
+        for row in other_proposals:
+            statuses.setdefault(row.email, set()).add(row.status)
+
+        target = {
+            e: next((s for s in STATUS_EMAIL_GROUPS if s in statuses[e]), None) for e in emails
+        }
+        for status, group in STATUS_EMAIL_GROUPS.items():
+            self.handle_email_group(group, [e for e in emails if target[e] == status])
+            self.handle_email_group(
+                group, [e for e in emails if target[e] != status], subscribe=False
+            )
 
     def handle_email_group(self, email_group_type, emails=None, subscribe=True) -> None:
         if emails is None:
