@@ -13,8 +13,6 @@ from fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_subm
 from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
 from fossunited.fossunited.utils import get_ograph_url
 
-RSVP_FALLBACK_IMAGE = "https://fossunited.org/files/og-image.png"
-
 
 class FOSSEventRSVP(WebsiteGenerator):
     # begin: auto-generated types
@@ -49,8 +47,6 @@ class FOSSEventRSVP(WebsiteGenerator):
         context.event = frappe.get_doc(EVENT, self.event)
         context.event_name = self.event_name
         og_url = get_ograph_url()
-        # Fall back to the static OG image when ograph-gen isn't configured.
-        context.image = RSVP_FALLBACK_IMAGE
         if og_url:
             rsvp_params = urlencode(
                 {
@@ -59,6 +55,10 @@ class FOSSEventRSVP(WebsiteGenerator):
                 }
             )
             context.image = f"{og_url}/gen/rsvp?{rsvp_params}"
+        else:
+            # Fall back to the parent event's OG image (RSVP belongs to an event).
+            # meta_tags() supplies the site-wide default if the event has none.
+            _, _, context.image = context.event.get_meta()
         is_guest = frappe.session.user in ("Guest", "Administrator")
 
         form_fields = [
