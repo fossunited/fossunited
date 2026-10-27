@@ -36,6 +36,6 @@
 
 [data-theme="dark"] body,
 [data-theme="dark"] #app {
-  background-color: var(--surface-menu-bar);
+  background-color: var(--surface-base);
   color: var(--ink-gray-8);
 }
