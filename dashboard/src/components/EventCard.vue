@@ -4,7 +4,7 @@
     role="button"
     tabindex="0"
     :aria-label="`Open ${event.event_name} dashboard`"
-    class="border-2 border-transparent hover:border-outline-gray-4 transition-colors hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-gray-4"
+    class="!bg-surface-gray-1 border-2 border-transparent hover:border-outline-gray-4 transition-colors hover:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-outline-gray-4"
     @click="goToDashboard"
     @keydown.enter="goToDashboard"
     @keydown.space.prevent="goToDashboard"
