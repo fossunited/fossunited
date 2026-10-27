@@ -8,7 +8,7 @@
       aria-label="Go to homepage"
       class="flex gap-1 items-center focus:outline-none focus:ring-2 focus:ring-blue-500"
     >
-      <FossUnitedLogo class="w-auto h-8" fill="black" />
+      <FossUnitedLogo class="w-auto h-8 text-ink-gray-9" />
     </router-link>
 
     <div class="flex items-center gap-2">
@@ -65,6 +65,7 @@ import { inject } from 'vue'
 import { Avatar, Dropdown } from 'frappe-ui'
 import { IconUser, IconLayoutDashboard, IconWorld, IconLogout } from '@tabler/icons-vue'
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
+import ThemeToggle from '@/components/ui/ThemeToggle.vue'
 import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
 
 defineProps({
