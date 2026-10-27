@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-4">
     <div class="space-y-2">
-      <h3 class="text-2xl-semibold">Preview Submission</h3>
+      <h3 class="text-3xl-semibold">Preview Submission</h3>
       <p class="text-sm text-ink-gray-5">Review the details of your proposal before submitting.</p>
     </div>
     <div class="border p-4 md:p-8 bg-surface-base rounded-4">

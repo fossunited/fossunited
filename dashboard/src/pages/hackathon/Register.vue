@@ -25,7 +25,7 @@
         "
         class="h-12 mb-4"
       />
-      <h1 class="text-3xl-medium">
+      <h1 class="text-4xl-medium">
         Register For
         <span class="font-bold">{{ hackathon.data.hackathon_name }}</span>
       </h1>

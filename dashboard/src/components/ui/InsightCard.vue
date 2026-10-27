@@ -33,7 +33,7 @@ defineProps({
       </slot>
       <slot name="value">
         <div class="flex gap-2 items-end">
-          <span class="text-2xl-semibold">{{ value }}</span>
+          <span class="text-3xl-semibold">{{ value }}</span>
           <slot name="post-value"></slot>
         </div>
       </slot>

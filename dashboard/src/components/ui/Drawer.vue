@@ -50,7 +50,7 @@
                 <div class="flex h-full flex-col overflow-y-scroll bg-surface-base py-6 sm:py-10 shadow-xl">
                   <div class="px-3 sm:px-6 flex gap-2">
                     <slot name="pre-title"></slot>
-                    <DialogTitle class="text-2xl-semibold text-ink-gray-9">
+                    <DialogTitle class="text-3xl-semibold text-ink-gray-9">
                       <slot name="dialog-title">{{ title }}</slot>
                     </DialogTitle>
                     <slot name="post-title"></slot>

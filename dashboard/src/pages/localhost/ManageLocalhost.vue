@@ -43,31 +43,31 @@
     <div class="grid grid-cols-1 sm:grid-cols-5 mt-6 mb-4 gap-4">
       <div class="flex flex-col gap-2 bg-surface-gray-1 w-full p-4 rounded-4 border">
         <div class="text-base-medium">Total Requests</div>
-        <div class="text-2xl">
+        <div class="text-3xl">
           {{ requests.originalData.length }}
         </div>
       </div>
       <div class="flex flex-col gap-2 w-full p-4 rounded-4 border">
         <div class="text-base-medium">Pending Requests</div>
-        <div class="text-2xl text-ink-amber-6">
+        <div class="text-3xl text-ink-amber-6">
           {{ requests.data['Pending'].length }}
         </div>
       </div>
       <div class="flex flex-col gap-2 w-full p-4 rounded-4 border">
         <div class="text-base-medium">Pending Confirmation</div>
-        <div class="text-2xl text-ink-blue-5">
+        <div class="text-3xl text-ink-blue-5">
           {{ requests.data['Pending Confirmation'].length }}
         </div>
       </div>
       <div class="flex flex-col gap-2 w-full p-4 rounded-4 border">
         <div class="text-base-medium">Accepted Participants</div>
-        <div class="text-2xl text-ink-green-6">
+        <div class="text-3xl text-ink-green-6">
           {{ requests.data['Accepted'].length }}
         </div>
       </div>
       <div class="flex flex-col gap-2 w-full p-4 rounded-4 border">
         <div class="text-base-medium">Rejected Participants</div>
-        <div class="text-2xl text-ink-red-8">
+        <div class="text-3xl text-ink-red-8">
           {{ requests.data['Rejected'].length }}
         </div>
       </div>

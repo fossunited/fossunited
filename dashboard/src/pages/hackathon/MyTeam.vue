@@ -16,7 +16,7 @@
         <input
           v-model="newTeamName"
           type="text"
-          class="border-l-0 border-t-0 border-r-0 p-2 pt-4 text-3xl-bold text-ink-gray-9 active:outline-none focus:outline-none"
+          class="border-l-0 border-t-0 border-r-0 p-2 pt-4 text-4xl-bold text-ink-gray-9 active:outline-none focus:outline-none"
         />
         <div class="grid grid-cols-2 gap-2 w-full md:w-auto">
           <Button label="Discard" @click="inNameEdit = false" />

@@ -19,7 +19,7 @@
 
         <!-- Page Header -->
         <div class="flex flex-col gap-1">
-          <h1 class="text-2xl-bold tracking-tight text-ink-gray-9">Registration</h1>
+          <h1 class="text-3xl-bold tracking-tight text-ink-gray-9">Registration</h1>
         </div>
 
         <EventHeader :event="event.data" />
@@ -297,7 +297,7 @@
                     class="bg-surface-base border border-outline-gray-2 rounded-6 p-6 flex flex-col gap-5 w-full max-w-[375px]"
                   >
                     <div class="flex items-center justify-between">
-                      <span class=" text-2xl-semibold text-ink-gray-9 tracking-tight"
+                      <span class=" text-3xl-semibold text-ink-gray-9 tracking-tight"
                         >#{{ idx + 1 }}</span
                       >
                       <span

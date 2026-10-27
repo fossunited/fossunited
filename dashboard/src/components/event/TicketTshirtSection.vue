@@ -26,7 +26,7 @@
           <Input
             v-model="newTshirtPrice"
             class="w-1/3"
-            input-classes="text-2xl"
+            input-classes="text-3xl"
             placeholder="0.00"
           >
           </Input>

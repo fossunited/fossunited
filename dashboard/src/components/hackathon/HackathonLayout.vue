@@ -12,7 +12,7 @@
           </div>
         </div>
         <div>
-          <h2 class="text-2xl-semibold text-ink-gray-7">Access Denied</h2>
+          <h2 class="text-3xl-semibold text-ink-gray-7">Access Denied</h2>
           <p class="mt-2 text-ink-gray-5">
             You have been disqualified from {{ hackathonName }}. You won't be able to participate
             anymore.

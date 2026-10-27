@@ -14,7 +14,7 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <h1 class="text-2xl-bold text-ink-gray-9">Payment Successful!</h1>
+          <h1 class="text-3xl-bold text-ink-gray-9">Payment Successful!</h1>
           <p class="text-sm text-ink-gray-5">
             Your tickets are confirmed. Check your email for the confirmation.
           </p>

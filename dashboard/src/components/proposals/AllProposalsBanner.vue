@@ -3,7 +3,7 @@
     <AllProposalsBannerImage class="hidden lg:block" />
     <div class="flex flex-col gap-y-4 lg:w-3/4">
       <div class="flex flex-col gap-y-2">
-        <h1 class="text-3xl-semibold">Talk Proposals</h1>
+        <h1 class="text-4xl-semibold">Talk Proposals</h1>
         <p class="text-ink-gray-6 font-medium">
           <span v-if="event.proposal_page_description">
             {{ event.proposal_page_description }}

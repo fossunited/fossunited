@@ -53,7 +53,7 @@
               v-for="(log, index) in selectedAttendee.checkin_data"
               :key="log.name || log.id || log.check_in_time || index"
               :class="{
-                'text-ink-red-8 font-semibold text-2xl uppercase': isToday(log.check_in_time),
+                'text-ink-red-8 font-semibold text-3xl uppercase': isToday(log.check_in_time),
               }"
             >
               {{ formatCheckinLog(log.check_in_time) }}
