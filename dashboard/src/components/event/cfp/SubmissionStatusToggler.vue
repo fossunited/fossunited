@@ -48,10 +48,14 @@ function optionHint(status) {
   if (status === currentStatus.value) return 'No change.'
   const notes = []
   if (emailGroups[currentStatus.value]) {
-    notes.push(`All Speakers get an email & leave the ${emailGroups[currentStatus.value]} email group.`)
+    notes.push(
+      `All Speakers get an email & leave the ${emailGroups[currentStatus.value]} email group.`,
+    )
   }
   if (emailGroups[status]) {
-    notes.push(`All Speakers get confirmation email & join the ${emailGroups[status]} email group.`)
+    notes.push(
+      `All Speakers get confirmation email & join the ${emailGroups[status]} email group.`,
+    )
   }
   return notes.length ? notes.join(' ') : 'No email group change.'
 }
@@ -118,7 +122,12 @@ const dialogActions = computed(() => [
     </Button>
   </div>
 
-  <Dialog v-model:open="showDialog" title="Change status" :actions="dialogActions">
+  <Dialog
+    v-model:open="showDialog"
+    title="Change status"
+    :message="submission.data?.talk_title"
+    :actions="dialogActions"
+  >
     <fieldset class="flex flex-col gap-2">
       <legend class="mb-3 text-base text-ink-gray-7 dark:text-ink-gray-8">
         Currently
