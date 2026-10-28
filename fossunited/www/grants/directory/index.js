@@ -228,7 +228,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function toggleTag(tag) {
-    state.tags.has(tag) ? state.tags.delete(tag) : state.tags.add(tag)
+    if (state.tags.has(tag)) state.tags.delete(tag)
+    else state.tags.add(tag)
 
     state.page = 1
     tagsPanel.style.display = 'flex'

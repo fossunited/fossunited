@@ -118,7 +118,17 @@
     "fossunited/dev/**"
   ],
   "rules": {
-    "no-console": "warn",
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "error",
+          "warn",
+          "group",
+          "groupEnd"
+        ]
+      }
+    ],
     "no-unused-vars": "off",
     "no-useless-escape": "off",
     "no-control-regex": "off",
