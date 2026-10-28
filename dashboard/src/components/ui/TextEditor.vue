@@ -17,7 +17,7 @@
         <EditorFixedMenu
           v-if="!disabled"
           class="flex-wrap border-b border-outline-gray-3 px-2 py-1.5"
-          :items="articleToolbar"
+          :items="toolbar"
         />
         <EditorTableMenu />
         <EditorContent
@@ -41,12 +41,24 @@
 <script setup>
 import { upload } from 'frappe-ui'
 import {
+  Blockquote,
+  Bold,
+  BulletList,
   Editor,
   EditorContent,
   EditorFixedMenu,
   EditorTableMenu,
+  H2,
+  H3,
+  H4,
+  InsertLink,
+  InsertTable,
+  Italic,
+  OrderedList,
+  Paragraph,
   RichTextKit,
-  articleToolbar,
+  Separator,
+  Strike,
 } from 'frappe-ui/editor'
 import { computed, getCurrentInstance } from 'vue'
 
@@ -73,6 +85,25 @@ const editorClass = computed(() => {
 const emit = defineEmits(['update:modelValue'])
 
 const extensions = [RichTextKit]
+
+// articleToolbar minus its HeadingGroup (which prints a static "Heading" label
+// before its buttons) and InsertImage (images still go in by paste or drop).
+const toolbar = [
+  Paragraph,
+  H2,
+  H3,
+  H4,
+  Separator,
+  Bold,
+  Italic,
+  Strike,
+  Separator,
+  BulletList,
+  OrderedList,
+  Blockquote,
+  InsertLink,
+  InsertTable,
+]
 
 // frappe-ui uploads pasted/dropped images as private by default. These
 // editors feed public website pages (event/chapter descriptions etc.), so

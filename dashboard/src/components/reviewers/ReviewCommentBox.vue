@@ -2,9 +2,9 @@
   <ErrorMessage :message="errorMessages" class="-mb-4 text-sm" /><br />
   <div>
     <div
-      class="flex items-center gap-2 rounded-t-4 border border-b-0 border-outline-gray-3 px-4 pt-4"
+      class="flex flex-wrap items-center gap-2 rounded-t-6 border border-outline-gray-3 px-3 py-3"
     >
-      <span class="text-base text-ink-gray-5">Review: </span>
+      <span class="text-base text-ink-gray-7 dark:text-ink-gray-8">Review: </span>
       <Button
         v-for="option in reviewOptions"
         :key="option.value"
