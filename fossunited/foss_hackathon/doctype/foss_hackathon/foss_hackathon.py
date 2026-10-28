@@ -195,7 +195,9 @@ class FOSSHackathon(WebsiteGenerator):
 
         description = f"{self.hackathon_name} is a hackathon organized by {chapter_name} Community from {start_date} to {end_date}. {hackathon_type_text}{desc_short}"
 
-        image = frappe.utils.get_url(self.hackathon_banner)
+        image = ""
+        if self.hackathon_banner:
+            image = frappe.utils.get_url(self.hackathon_banner)
 
         return pagetitle, description, image
 
