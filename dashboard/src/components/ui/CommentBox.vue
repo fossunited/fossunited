@@ -1,36 +1,58 @@
 <template>
-  <TextEditor
-    ref="editorRef"
-    editor-class="prose-sm max-w-none min-h-[6rem] max-h-[20rem] overflow-y-auto"
-    :content="modelValue"
-    placeholder="Write a comment…"
-    :upload-args="publicUploadArgs"
-    @change="emit('update:modelValue', $event)"
+  <div
+    class="rounded-6 border border-outline-gray-3 focus-within:ring-2 focus-within:ring-outline-gray-5"
   >
-    <template #top>
-      <TextEditorFixedMenu class="-ml-1 mb-2 overflow-x-auto" :buttons="menuButtons" />
-    </template>
-
-    <template #editor="{ editor }">
-      <EditorContent
-        class="border rounded-6 p-3 focus-within:ring-1 focus-within:ring-outline-gray-3"
-        :editor="editor"
-      />
-    </template>
-
-    <template #bottom>
-      <div class="mt-2 flex items-center justify-end">
-        <Button :label="buttonLabel" variant="solid" @click="submit" />
-      </div>
-    </template>
-  </TextEditor>
+    <Editor
+      ref="editorRef"
+      :model-value="modelValue"
+      :extensions="extensions"
+      :upload-function="publicUpload"
+      placeholder="Write a comment…"
+      @update:model-value="emit('update:modelValue', $event)"
+    >
+      <template #default="{ isEmpty }">
+        <EditorBubbleMenu :items="commentToolbar" />
+        <EditorContent
+          aria-label="Comment"
+          class="max-h-[20rem] min-h-[6rem] overflow-y-auto px-3 py-2"
+        />
+        <div
+          class="flex flex-wrap items-center justify-between gap-2 border-t border-outline-gray-3 px-2 py-1.5"
+        >
+          <EditorFixedMenu :items="commentToolbar" />
+          <div class="flex gap-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              label="Discard"
+              :disabled="isEmpty"
+              @click="discard"
+            />
+            <Button
+              size="sm"
+              variant="solid"
+              :label="buttonLabel"
+              :disabled="isEmpty"
+              @click="submit"
+            />
+          </div>
+        </div>
+      </template>
+    </Editor>
+  </div>
 </template>
 
 <script setup>
+import { Button, createResource, upload } from 'frappe-ui'
+import {
+  Editor,
+  EditorContent,
+  EditorFixedMenu,
+  EditorBubbleMenu,
+  CommentKit,
+  commentToolbar,
+} from 'frappe-ui/editor'
 import { ref, inject } from 'vue'
-import { EditorContent } from '@tiptap/vue-3'
-import { Button, createResource } from 'frappe-ui'
-import { TextEditor, TextEditorFixedMenu } from 'frappe-ui/experimental'
 import { toast } from 'vue-sonner'
 
 const session = inject('$session')
@@ -46,21 +68,14 @@ const props = defineProps({
 })
 
 const editorRef = ref(null)
-// frappe-ui 1.0's editor uploads pasted images as private by default; keep
-// 0.1.x's public uploads so other reviewers can still see them.
-const publicUploadArgs = { private: false }
-const menuButtons = [
-  'Bold',
-  'Italic',
-  'Strikethrough',
-  'Separator',
-  'Bullet List',
-  'Numbered List',
-  'Separator',
-  'Blockquote',
-  'Code',
-  'Link',
-]
+const extensions = [CommentKit]
+// frappe-ui uploads pasted images as private by default; keep them public so
+// other reviewers can still see them.
+const publicUpload = (file, options) => upload(file, { ...options, private: false })
+
+const discard = () => {
+  editorRef.value?.editor?.commands.clearContent()
+}
 
 const submit = () => {
   if (props.hasCustomActions) {

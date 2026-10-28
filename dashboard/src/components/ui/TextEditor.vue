@@ -1,29 +1,58 @@
 <template>
   <div class="flex flex-col gap-1">
-    <div v-if="label" :id="labelId" class="text-base text-ink-gray-5">
+    <div v-if="label" :id="labelId" class="text-base text-ink-gray-7 dark:text-ink-gray-8">
       {{ label }}
-      <span v-if="required" aria-hidden="true" class="text-red-500">*</span>
+      <span v-if="required" aria-hidden="true" class="text-ink-red-4">*</span>
       <span v-if="required" class="sr-only">(required)</span>
     </div>
-    <FrappeTextEditor
-      :content="modelValue"
+    <Editor
+      :model-value="modelValue"
+      :extensions="extensions"
       :placeholder="placeholder"
-      :fixed-menu="menuButtons"
       :editable="!disabled"
-      :editor-class="editorClass"
-      :upload-args="publicUploadArgs"
-      @change="emit('update:modelValue', $event)"
-    />
-    <small v-if="description" class="text-sm text-ink-gray-5">{{ description }}</small>
+      :upload-function="publicUpload"
+      @update:model-value="emit('update:modelValue', $event)"
+    >
+      <div class="rounded-6 border border-outline-gray-3">
+        <EditorFixedMenu
+          v-if="!disabled"
+          class="flex-wrap border-b border-outline-gray-3 px-2 py-1.5"
+          :items="articleToolbar"
+        />
+        <EditorTableMenu />
+        <EditorContent
+          :aria-labelledby="label ? labelId : undefined"
+          :aria-describedby="description ? descriptionId : undefined"
+          :aria-required="required || undefined"
+          :class="editorClass"
+        />
+      </div>
+    </Editor>
+    <small
+      v-if="description"
+      :id="descriptionId"
+      class="text-sm text-ink-gray-7 dark:text-ink-gray-8"
+    >
+      {{ description }}
+    </small>
   </div>
 </template>
 
 <script setup>
+import { upload } from 'frappe-ui'
+import {
+  Editor,
+  EditorContent,
+  EditorFixedMenu,
+  EditorTableMenu,
+  RichTextKit,
+  articleToolbar,
+} from 'frappe-ui/editor'
 import { computed, getCurrentInstance } from 'vue'
-import { TextEditor as FrappeTextEditor } from 'frappe-ui/experimental'
 
 const uid = getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2, 7)
 const labelId = `te-label-${uid}`
+const descriptionId = `te-desc-${uid}`
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
@@ -38,57 +67,15 @@ const props = defineProps({
 
 const editorClass = computed(() => {
   const height = props.large ? 'min-h-[24rem]' : 'min-h-[12rem]'
-  return `w-full max-w-none ${height} max-h-[48rem] overflow-y-auto border border-t-0 rounded-b-6 p-3`
+  return `${height} max-h-[48rem] overflow-y-auto p-3`
 })
 
 const emit = defineEmits(['update:modelValue'])
 
-// frappe-ui 1.0's editor uploads pasted/dropped images as private by default.
-// These editors feed public website pages (event/chapter descriptions etc.),
-// so keep 0.1.x's public uploads.
-const publicUploadArgs = { private: false }
+const extensions = [RichTextKit]
 
-// Standard TipTap behavior: Enter = new paragraph, Shift+Enter = <br>
-const starterkitOptions = {}
-const extraExtensions = []
-
-const menuButtons = [
-  ['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6'],
-  'Paragraph',
-  'Separator',
-  'Bold',
-  'Italic',
-  'Separator',
-  'Bullet List',
-  'Numbered List',
-  'Task List',
-  'Separator',
-  'Align Left',
-  'Align Center',
-  'Align Right',
-  'FontColor',
-  'Separator',
-  'Link',
-  'Blockquote',
-  'Code',
-  'Horizontal Rule',
-  [
-    'InsertTable',
-    'AddColumnBefore',
-    'AddColumnAfter',
-    'DeleteColumn',
-    'AddRowBefore',
-    'AddRowAfter',
-    'DeleteRow',
-    'MergeCells',
-    'SplitCell',
-    'ToggleHeaderColumn',
-    'ToggleHeaderRow',
-    'ToggleHeaderCell',
-    'DeleteTable',
-  ],
-  'Separator',
-  'Undo',
-  'Redo',
-]
+// frappe-ui uploads pasted/dropped images as private by default. These
+// editors feed public website pages (event/chapter descriptions etc.), so
+// keep uploads public.
+const publicUpload = (file, options) => upload(file, { ...options, private: false })
 </script>
