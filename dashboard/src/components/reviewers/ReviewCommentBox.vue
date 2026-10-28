@@ -1,8 +1,10 @@
 <template>
-  <ErrorMessage :message="errorMessages" class="text-sm -mb-4" /><br />
+  <ErrorMessage :message="errorMessages" class="-mb-4 text-sm" /><br />
   <div>
-    <div class="flex gap-2 items-center px-4 pt-4 border border-b-0 rounded-t-4">
-      <span class="text-base text-ink-gray-5">Review: </span>
+    <div
+      class="flex flex-wrap items-center gap-2 rounded-t-6 border border-outline-gray-3 px-3 py-3"
+    >
+      <span class="text-base text-ink-gray-7 dark:text-ink-gray-8">Review: </span>
       <Button
         v-for="option in reviewOptions"
         :key="option.value"
@@ -13,20 +15,18 @@
     </div>
     <CommentBox
       v-model="draft.remarks"
-      class="border-t-0 mt-0 rounded-t-none"
+      class="mt-0 rounded-t-none border-t-0"
       :has-custom-actions="true"
       :custom-actions="getCustomAction()"
     />
-    <div class="mt-4 pt-4 border-t border-outline-gray-2 flex flex-col gap-1.5">
+    <div class="mt-4 flex flex-col gap-1.5 border-t border-outline-gray-2 pt-4">
       <div class="flex items-center justify-between gap-2">
         <Tooltip
           text="Internal note for organizers, co-chairs and other reviewers. Not shown to the proposer or on the public page."
         >
-          <span class="text-xs text-ink-gray-5 w-fit">Private note (optional)</span>
+          <span class="w-fit text-xs text-ink-gray-5">Private note (optional)</span>
         </Tooltip>
-        <Tooltip
-          text="Signals that the proposal must be included in the final schedule"
-        >
+        <Tooltip text="Signals that the proposal must be included in the final schedule">
           <Button
             :variant="draft.must_have ? 'subtle' : 'ghost'"
             label="Must-have"
@@ -34,7 +34,7 @@
           >
             <template #prefix>
               <IconStar
-                class="w-4 h-4"
+                class="h-4 w-4"
                 :class="draft.must_have ? 'text-yellow-500' : 'text-ink-gray-5'"
                 :fill="draft.must_have ? 'currentColor' : 'none'"
               />
@@ -54,13 +54,14 @@
   </div>
 </template>
 <script setup>
-import { createResource, ErrorMessage, Tooltip, Textarea } from 'frappe-ui'
-import { ref, inject, watch } from 'vue'
-import CommentBox from '@/components/ui/CommentBox.vue'
 import { IconStar } from '@tabler/icons-vue'
-import { toast } from 'vue-sonner'
 import { useStorage } from '@vueuse/core'
+import { createResource, ErrorMessage, Tooltip, Textarea } from 'frappe-ui'
 import { debounce } from 'lodash-es'
+import { ref, inject, watch } from 'vue'
+import { toast } from 'vue-sonner'
+
+import CommentBox from '@/components/ui/CommentBox.vue'
 
 const emits = defineEmits(['add:review', 'update:review'])
 
