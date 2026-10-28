@@ -399,27 +399,26 @@ def get_tickets_insights(event_id: str) -> dict:
 @require_chapter_or_event_member(event_id="event_id")
 def get_tickets_sold_over_time(event_id: str) -> dict:
     """Return daily cumulative ticket sales split by ticket type."""
-    daily_counts = frappe.db.get_all(
+    # Grouped per day in Python: get_all has no DATE() in its dict function syntax (frappe v16)
+    tickets = frappe.db.get_all(
         EVENT_TICKET,
         filters={"event": event_id},
-        fields=["date(creation) as date", "tier", "count(name) as tickets_sold"],
-        group_by="date(creation), tier",
-        order_by="date(creation), tier",
+        fields=["creation", "tier"],
     )
 
-    if not daily_counts:
+    if not tickets:
         return {"data": [], "series": []}
 
-    ticket_types = sorted({row.tier or "Uncategorized" for row in daily_counts}, key=str.casefold)
+    ticket_types = sorted({row.tier or "Uncategorized" for row in tickets}, key=str.casefold)
     series = [
         {"key": f"ticket_type_{index}", "label": ticket_type}
         for index, ticket_type in enumerate(ticket_types)
     ]
     series_key_by_type = {item["label"]: item["key"] for item in series}
     counts_by_date_and_type = {}
-    for row in daily_counts:
-        key = (frappe.utils.getdate(row.date), row.tier or "Uncategorized")
-        counts_by_date_and_type[key] = counts_by_date_and_type.get(key, 0) + row.tickets_sold
+    for row in tickets:
+        key = (frappe.utils.getdate(row.creation), row.tier or "Uncategorized")
+        counts_by_date_and_type[key] = counts_by_date_and_type.get(key, 0) + 1
     dates = {date for date, _ticket_type in counts_by_date_and_type}
     current_date = min(dates)
     final_date = max(dates)

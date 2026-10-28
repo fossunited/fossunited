@@ -280,7 +280,7 @@ class FOSSChapter(WebsiteGenerator):
                 "role": "Core Team Member",
                 "member": ["not in", excluded_profiles],
             },
-            fields=["member", "full_name", "count(name) as count"],
+            fields=["member", "full_name", {"COUNT": "name", "as": "count"}],
             group_by="member",
         )
         qualifying = [
