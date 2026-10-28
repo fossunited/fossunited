@@ -27,6 +27,7 @@ def ensure_app_priority():
     apps in reverse install order, first match wins. Frappe Builder ships its
     own www/404.html, and when it's installed after fossunited it silently
     wins, so our custom 404 (and custom_404_page_context hook) never runs.
+    Same for the blog app's www/rss.xml, which would shadow our full-content feed.
     Re-asserted on every migrate since a site restore can reset the order.
     """
     installed_apps = frappe.get_installed_apps()
