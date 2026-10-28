@@ -1,4 +1,4 @@
-exclude: 'node_modules|.git'
+exclude: "node_modules|.git"
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -18,6 +18,33 @@ repos:
         args: ["--fix", "--config=pyproject.toml"]
       - id: ruff-format
         args: ["--config=pyproject.toml"]
+
+  # JS tooling runs from node_modules (`yarn install`), pinned once in package.json.
+  # Formatters first, then linters. See .oxfmtrc.json / .oxlintrc.json.
+  - repo: local
+    hooks:
+      - id: oxfmt
+        name: oxfmt
+        entry: node_modules/.bin/oxfmt --no-error-on-unmatched-pattern
+        language: system
+        types_or: [javascript, vue, css, scss, json, yaml, markdown]
+      - id: prettier-jinja
+        # Oxfmt can't run Prettier plugins, so Jinja templates stay on Prettier.
+        name: prettier (Jinja html)
+        entry: node_modules/.bin/prettier --write
+        language: system
+        types: [html]
+      - id: oxlint
+        name: oxlint
+        entry: node_modules/.bin/oxlint --fix --no-error-on-unmatched-pattern
+        language: system
+        types_or: [javascript, vue]
+      - id: eslint-vue
+        # Oxlint can't parse Vue templates; ESLint runs eslint-plugin-vue only.
+        name: eslint (Vue templates)
+        entry: node_modules/.bin/eslint --fix --no-warn-ignored
+        language: system
+        files: \.vue$
 
   # grammar checker for /docs content
   # - repo: https://github.com/errata-ai/vale
@@ -42,13 +69,21 @@ repos:
         stages: [pre-commit]
 
   - repo: https://github.com/semgrep/pre-commit
-    rev: 'v1.173.0'
+    rev: "v1.173.0"
     hooks:
       - id: semgrep
         stages: [pre-commit]
-        exclude: '^development/'
+        exclude: "^development/"
         entry: semgrep
         # or see https://semgrep.dev/explore to select a ruleset and copy its URL
         # TODO: remove exclude once the 25 doctypes with "All" role perms are triaged (see relaxed-permissions rule)
-        args: ['--config', 'development/frappe-semgrep-rules/rules', '--error', '--skip-unknown-extensions', '--exclude-rule', 'development.frappe-semgrep-rules.rules.security.relaxed-permissions']
-        additional_dependencies: ['attrs']
+        args:
+          [
+            "--config",
+            "development/frappe-semgrep-rules/rules",
+            "--error",
+            "--skip-unknown-extensions",
+            "--exclude-rule",
+            "development.frappe-semgrep-rules.rules.security.relaxed-permissions",
+          ]
+        additional_dependencies: ["attrs"]
