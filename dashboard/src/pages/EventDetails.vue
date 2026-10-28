@@ -1,6 +1,6 @@
 <template>
-  <div v-if="event.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen pb-24">
-    <div class="flex flex-col md:flex-row gap-2 justify-between">
+  <div v-if="event.doc" class="z-0 min-h-screen w-full px-4 py-8 pb-24 md:p-8">
+    <div class="flex flex-col justify-between gap-2 md:flex-row">
       <EventHeader
         :event="event.doc"
         :form-exists="true"
@@ -29,15 +29,15 @@
         ></Button>
       </div>
     </div>
-    <div class="flex flex-col gap-3 my-6">
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Banner Image</div>
+    <div class="my-6 flex flex-col gap-3">
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Banner Image</div>
       <div>
         <img
           :src="getBannerImage()"
           alt="Banner Image"
-          class="object-cover w-[280px] border rounded-6 aspect-[1/1]"
+          class="aspect-[1/1] w-[280px] rounded-6 border object-cover"
         />
-        <div class="flex gap-2 my-2">
+        <div class="my-2 flex gap-2">
           <FileUploader
             :file-types="'image/*'"
             :private="false"
@@ -73,9 +73,9 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-col my-6">
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Event Details</div>
-      <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+    <div class="my-6 flex flex-col">
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Event Details</div>
+      <div class="my-1 grid gap-x-4 gap-y-6 p-2 sm:grid-cols-1 md:grid-cols-2">
         <FormControl
           v-model="event.doc.event_permalink"
           :type="'text'"
@@ -101,7 +101,7 @@
             label="See on Website"
             class="w-fit"
             :icon-right="IconExternalLink"
-            :link="createAbsoluteUrlFromRoute(event.doc.route)"
+            :href="createAbsoluteUrlFromRoute(event.doc.route)"
             :disabled="['Draft', 'Cancelled'].includes(event.doc.status)"
           />
         </div>
@@ -191,9 +191,9 @@
         />
       </div>
     </div>
-    <div class="flex flex-col my-6">
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Event Timeline</div>
-      <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+    <div class="my-6 flex flex-col">
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Event Timeline</div>
+      <div class="my-1 grid gap-x-4 gap-y-6 p-2 sm:grid-cols-1 md:grid-cols-2">
         <FormControl
           v-model="event.doc.event_start_date"
           :type="'datetime-local'"
@@ -208,9 +208,9 @@
         />
       </div>
     </div>
-    <div class="flex flex-col my-6">
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Livestreaming</div>
-      <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+    <div class="my-6 flex flex-col">
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Livestreaming</div>
+      <div class="my-1 grid gap-x-4 gap-y-6 p-2 sm:grid-cols-1 md:grid-cols-2">
         <FormControl
           v-model="event.doc.livestream_link"
           type="url"
@@ -226,9 +226,9 @@
         />
       </div>
     </div>
-    <div class="flex flex-col my-6">
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Location Details</div>
-      <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+    <div class="my-6 flex flex-col">
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Location Details</div>
+      <div class="my-1 grid gap-x-4 gap-y-6 p-2 sm:grid-cols-1 md:grid-cols-2">
         <FormControl
           v-model="event.doc.event_location"
           :type="'text'"
@@ -259,9 +259,9 @@
       </div>
     </div>
 
-    <div class="flex flex-col my-6">
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Ticket Settings</div>
-      <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+    <div class="my-6 flex flex-col">
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Ticket Settings</div>
+      <div class="my-1 grid gap-x-4 gap-y-6 p-2 sm:grid-cols-1 md:grid-cols-2">
         <FormControl
           v-model="event.doc.is_paid_event"
           type="checkbox"
@@ -290,16 +290,17 @@
 </template>
 
 <script setup>
-import EventHeader from '@/components/EventHeader.vue'
-import TextEditor from '@/components/ui/TextEditor.vue'
-import CopyToClipboardButton from '@/components/CopyToClipboardButton.vue'
-import FormActionBar from '@/components/FormActionBar.vue'
+import { IconEdit, IconExternalLink, IconCancel, IconEye } from '@tabler/icons-vue'
 import { createDocumentResource, createResource, FileUploader, FormControl } from 'frappe-ui'
+import { inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
-import { IconEdit, IconExternalLink, IconCancel, IconEye } from '@tabler/icons-vue'
+
+import CopyToClipboardButton from '@/components/CopyToClipboardButton.vue'
+import EventHeader from '@/components/EventHeader.vue'
+import FormActionBar from '@/components/FormActionBar.vue'
+import TextEditor from '@/components/ui/TextEditor.vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
-import { inject } from 'vue'
 
 const route = useRoute()
 const event = createDocumentResource({

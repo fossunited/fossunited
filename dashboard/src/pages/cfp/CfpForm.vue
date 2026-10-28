@@ -1,9 +1,9 @@
 <template>
   <Header />
-  <div class="w-full flex flex-col items-center bg-surface-gray-1 mb-20 min-h-screen">
+  <div class="mb-20 flex min-h-screen w-full flex-col items-center bg-surface-gray-1">
     <main
       v-if="cfpData.data"
-      class="max-w-[800px] w-full flex flex-col gap-4 my-2 px-4"
+      class="my-2 flex w-full max-w-[800px] flex-col gap-4 px-4"
       :aria-label="`CFP Application — ${sectionLabel}`"
     >
       <Breadcrumb :items="breadcrumb_items" />
@@ -59,7 +59,7 @@
             <Button
               label="Log In"
               variant="outline"
-              :link="createAbsoluteUrlFromRoute(`login?redirect=/dashboard${$route.fullPath}`)"
+              :href="createAbsoluteUrlFromRoute(`login?redirect=/dashboard${$route.fullPath}`)"
             />
           </template>
         </MessageBanner>
@@ -86,20 +86,22 @@
   </div>
 </template>
 <script setup>
-import Header from '@/components/Header.vue'
+import { createResource, LoadingIndicator, usePageMeta, ErrorMessage } from 'frappe-ui'
+import { provide, ref, watch, computed, inject, nextTick } from 'vue'
+import { useRoute } from 'vue-router'
+import { toast } from 'vue-sonner'
+
 import Breadcrumb from '@/components/Breadcrumb.vue'
-import EventHeader from '@/components/common/EventHeader.vue'
+import FormClosedSection from '@/components/cfp-public/FormClosedSection.vue'
 import GuidelineSection from '@/components/cfp-public/GuidelineSection.vue'
+import PreviewSubmission from '@/components/cfp-public/PreviewSubmission.vue'
 import SessionDetailForm from '@/components/cfp-public/SessionDetailForm.vue'
 import SpeakersForm from '@/components/cfp-public/SpeakersForm.vue'
 import StepButtons from '@/components/cfp-public/StepButtons.vue'
-import FormClosedSection from '@/components/cfp-public/FormClosedSection.vue'
 import SubmissionSuccessView from '@/components/cfp-public/SubmissionSuccessView.vue'
-import PreviewSubmission from '@/components/cfp-public/PreviewSubmission.vue'
+import EventHeader from '@/components/common/EventHeader.vue'
+import Header from '@/components/Header.vue'
 import MessageBanner from '@/components/ui/MessageBanner.vue'
-import { createResource, LoadingIndicator, usePageMeta, ErrorMessage } from 'frappe-ui'
-import { useRoute } from 'vue-router'
-import { provide, ref, watch, computed, inject, nextTick } from 'vue'
 import {
   getProposalFormFields,
   getReferenceItemSchema,
@@ -111,7 +113,6 @@ import {
   getTransformedSubmissionFields,
 } from '@/helpers/cfp'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
-import { toast } from 'vue-sonner'
 
 const curr_section = ref(0)
 const maxSectionIndex = 3

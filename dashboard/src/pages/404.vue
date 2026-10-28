@@ -1,12 +1,12 @@
 <template>
-  <div class="h-svh flex flex-col items-center justify-center">
+  <div class="flex h-svh flex-col items-center justify-center">
     <component
       :is="getIcon()"
-      class="m-2 w-12 h-12 bg-surface-gray-3 text-ink-gray-8 p-2 rounded-full"
+      class="m-2 h-12 w-12 rounded-full bg-surface-gray-3 p-2 text-ink-gray-8"
     ></component>
     <h1 class="text-3xl-bold">{{ getTitle() }}</h1>
     <p class="mb-2">{{ getMessage() }}</p>
-    <Button label="Go Home" link="/" />
+    <Button label="Go Home" route="/" />
   </div>
 </template>
 <script setup>
