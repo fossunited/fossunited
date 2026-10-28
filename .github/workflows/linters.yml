@@ -12,21 +12,37 @@ permissions:
 
 jobs:
   precommit-linters:
-    name: pre-commit Linters + frappe semgrep
+    name: prek Linters + frappe semgrep
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.10'
 
-      - name: Install and Run Pre-commit
-        uses: pre-commit/action@v3.0.1
+      # The oxfmt/oxlint/eslint/prettier hooks run from node_modules.
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: 'yarn'
+          cache-dependency-path: |
+            yarn.lock
+            dashboard/yarn.lock
+
+      - name: Install JS tooling
+        # postinstall also installs dashboard/: oxfmt's Tailwind class sorting loads
+        # dashboard/tailwind.config.js, which imports frappe-ui.
+        run: yarn install --frozen-lockfile
+
+      # prek reads the same .pre-commit-config.yaml as pre-commit.
+      - name: Run prek
+        uses: j178/prek-action@44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d # v3.0.1
 
       - name: Install Semgrep
         run: pip install semgrep
