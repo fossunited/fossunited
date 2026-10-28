@@ -834,16 +834,6 @@ h6 {
   border-radius: 0.5rem;
 }
 
-.edit-modal-button {
-  padding: 6px;
-  margin: 8px;
-  border-radius: 100%;
-  align-self: flex-start;
-  width: min-content;
-  height: min-content;
-  aspect-ratio: 1;
-}
-
 /* Common */
 .chapter-brand-block {
   display: block;

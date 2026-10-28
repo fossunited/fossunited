@@ -34,7 +34,7 @@ from fossunited.doctype_ids import (
     SPEAKER,
     USER_PROFILE,
 )
-from fossunited.fossunited.utils import get_ograph_url, sanitize_text_content
+from fossunited.fossunited.utils import get_ograph_url, get_user_socials, sanitize_text_content
 
 # A "CFP Reviewer" role can be granted and later revoked, so it's a weak signal
 # for the reviewer badge. Treat someone as a reviewer once they've actually
@@ -290,6 +290,9 @@ class FOSSUserProfile(WebsiteGenerator):
                     fields=[
                         "name",
                         "chapter",
+                        "chapter_name",
+                        "chapter.chapter_type as chapter_type",
+                        "chapter.city as chapter_city",
                         "event_start_date",
                         "event_name",
                         "banner_image",
@@ -424,6 +427,7 @@ class FOSSUserProfile(WebsiteGenerator):
             ) = self.get_user_activity(participants)
 
         context.hackathon_badges = self.get_hackathon_badges(participants)
+        context.user_socials = get_user_socials(self)
         context.pagetitle, context.description, context.image = self.get_meta()
 
         context.no_cache = 1

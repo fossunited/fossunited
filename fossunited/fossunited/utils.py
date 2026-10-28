@@ -117,33 +117,12 @@ def filter_field_values(key):
     return False
 
 
-@frappe.whitelist()
-def get_user_editable_doctype_fields(doctype: str, docname: str | None = None):
-    meta = frappe.get_meta(doctype).as_dict()
-    NOT_EDITABLE_FIELDS = ["is_published", "route", "user"]
-    for field in meta["fields"]:
-        if field["fieldname"] in NOT_EDITABLE_FIELDS:
-            meta["fields"].remove(field)
-
-    meta["fields"] = [
-        {k: v for k, v in field.items() if filter_field_values(k)} for field in meta["fields"]
-    ]
-
-    if docname is not None:
-        doc = frappe.get_doc(doctype, docname).as_dict()
-        for field in meta["fields"]:
-            if field["fieldname"] in doc:
-                field["default"] = doc[field["fieldname"]]
-
-    return meta["fields"]
-
-
-def get_user_socials(foss_user):
+def get_user_socials(profile):
     """
     Function to get dict for social svg for profile page.
     Based on svgl.app/library
     """
-    user = frappe.get_doc(USER_PROFILE, foss_user).as_dict()
+    user = profile.as_dict()
     SOCIAL_LINK_FIELDNAMES = [
         "github",
         "gitlab",
@@ -228,13 +207,6 @@ def check_username_availability(username: str):
 
     is_cityname = frappe.db.exists("City", {"name": username})
     return username_exists or is_cityname
-
-
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
-def check_if_profile_owner(username: str):
-    profile_user = frappe.get_doc(USER_PROFILE, {"username": username})
-    return profile_user.user == frappe.session.user
 
 
 @frappe.whitelist()
