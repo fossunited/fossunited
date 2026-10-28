@@ -90,7 +90,7 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
     This API function is intended to only apply for cases where every time event is created
     they would not add themselves to event_members table
     """
-    event_doc = frappe.get_doc(EVENT, event, ["name"])
+    event_doc = frappe.get_doc(EVENT, event)
     chapter_id = event_doc.chapter
     is_team = bool(
         check_if_event_member(event) or check_if_chapter_member(chapter_id, frappe.session.user)
@@ -196,7 +196,7 @@ def generate_ics(event_ids: str | list, chapter: str | None = None, download: bo
             if not isinstance(event_id, str) or len(event_id) > 140:
                 frappe.throw(_("Invalid event ID format"), frappe.ValidationError)
 
-    except (json.JSONDecodeError, ValueError):
+    except json.JSONDecodeError, ValueError:
         frappe.throw(_("Invalid JSON format"), frappe.ValidationError)
 
     if chapter and (not isinstance(chapter, str) or len(chapter) > 140):

@@ -34,6 +34,7 @@ import frappe
 import frappe.utils.password
 from faker import Faker
 from frappe import _
+from frappe.tests.utils import toggle_test_mode
 
 from fossunited.doctype_ids import (
     CHAPTER,
@@ -410,9 +411,9 @@ def seed(profile="full"):
     profile_config = SEED_PROFILES[profile]
 
     prev_ignore_permissions = frappe.flags.get("ignore_permissions", False)
-    prev_in_test = frappe.flags.get("in_test", False)
+    prev_in_test = frappe.in_test
     frappe.flags.ignore_permissions = True
-    frappe.flags.in_test = True
+    toggle_test_mode(True)
 
     try:
         logger.info("Seeding development data")
@@ -445,7 +446,7 @@ def seed(profile="full"):
         raise
     finally:
         frappe.flags.ignore_permissions = prev_ignore_permissions
-        frappe.flags.in_test = prev_in_test
+        toggle_test_mode(prev_in_test)
 
     return {
         "profile": profile,
