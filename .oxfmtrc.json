@@ -1,9 +1,14 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "semi": false,
-  "singleQuote": true,
+  "singleQuote": false,
   "printWidth": 99,
-  "sortPackageJson": false,
+  "proseWrap": "never",
+  "insertFinalNewline": true,
+  "sortImports": {
+    "internalPattern": ["@/"]
+  },
+  "sortPackageJson": true,
   "ignorePatterns": [
     "*.html",
     "fossunited/**/*.json",
@@ -14,5 +19,15 @@
     "frappe_docker/**",
     "development/**",
     "**/*.geojson"
+  ],
+  "overrides": [
+    {
+      "files": ["dashboard/**"],
+      "options": {
+        "sortTailwindcss": {
+          "config": "dashboard/tailwind.config.js"
+        }
+      }
+    }
   ]
 }

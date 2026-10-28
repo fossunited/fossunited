@@ -1,11 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "eslint",
-    "oxc",
-    "unicorn",
-    "vue"
-  ],
+  "plugins": ["eslint", "oxc", "unicorn", "vue"],
   "env": {
     "browser": true,
     "node": true,
@@ -121,12 +116,7 @@
     "no-console": [
       "warn",
       {
-        "allow": [
-          "error",
-          "warn",
-          "group",
-          "groupEnd"
-        ]
+        "allow": ["error", "warn", "group", "groupEnd"]
       }
     ],
     "no-unused-vars": "off",

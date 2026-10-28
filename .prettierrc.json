@@ -1,6 +1,6 @@
 {
   "semi": false,
-  "singleQuote": true,
+  "singleQuote": false,
   "plugins": ["prettier-plugin-jinja-template"],
   "overrides": [
     {
