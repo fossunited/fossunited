@@ -19,6 +19,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           submodules: recursive
+          # prek compares against the base commit to find changed files.
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -41,8 +43,19 @@ jobs:
         run: yarn install --frozen-lockfile
 
       # prek reads the same .pre-commit-config.yaml as pre-commit.
-      - name: Run prek
-        uses: j178/prek-action@44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d # v3.0.1
+      # Only changed files are checked, so untouched files get formatted when next
+      # edited instead of in one repo-wide commit.
+      - name: Run prek on files changed in the PR
+        if: github.event_name == 'pull_request'
+        uses: j178/prek-action@44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d # v3.1.0
+        with:
+          extra-args: --from-ref origin/${{ github.base_ref }} --to-ref HEAD
+
+      - name: Run prek on files changed in the push
+        if: github.event_name == 'push'
+        uses: j178/prek-action@44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d # v3.1.0
+        with:
+          extra-args: --from-ref ${{ github.event.before }} --to-ref ${{ github.sha }}
 
       - name: Install Semgrep
         run: pip install semgrep
