@@ -1,1 +1,7 @@
 /fossunited/templates/macros/**/*.html
+# Prettier only formats Jinja *.html now; everything else is Oxfmt (.oxfmtrc.json).
+/fossunited/dev/
+/fossunited/public/dashboard/
+/fossunited/www/dashboard.html
+/frappe_docker/
+/development/
