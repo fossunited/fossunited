@@ -11,13 +11,14 @@ The **FOSS United Platform** is developed and maintained by the [FOSS United Fou
 > **Recommended Frappe Version:** v15+
 
 ### Recommended: Setup & Quick-start
+
 Our recommended setup is via [docker](https://www.docker.com/) + [frappe manager](https://github.com/rtCamp/Frappe-Manager).
 
 - Install [`uv`](https://github.com/astral-sh/uv) python manager and `docker`
 - `uv init` in a new directory
 - `uv add frappe-manager`
 - `uv run fm create foss.localhost --apps frappe:version-15`
-  `uv run fm info foss.localhost` will show all credential details for that build instance.
+- `uv run fm info foss.localhost` shows all credential details for that build instance.
 - `uv run fm start` — choose site as it shows in menu
 - `uv run fm shell` — enter into docker container shell and run further steps there
 - For frappe >= v16, install newsletter first:
@@ -36,8 +37,7 @@ Our recommended setup is via [docker](https://www.docker.com/) + [frappe manager
   - `bench --site break.site install-app fossunited`
   - `bench --site break.site set-config allow_tests true`
 
-- Open `http://foss.localhost/app` in your browser and start exploring!
-  Login as "Administrator" with password `admin` (as shown in `fm info foss.localhost`)
+- Open `http://foss.localhost/app` in your browser and start exploring! Login as "Administrator" with password `admin` (as shown in `fm info foss.localhost`)
 
 - Dashboard page can be accessed via `foss.localhost/dashboard`
 
@@ -48,10 +48,12 @@ If you would prefer for manual method, please follow on below
 ### Manual Install
 
 #### 1. Prerequisites
+
 - Set up your environment using the [official Frappe installation guide](https://frappeframework.com/docs/).
 - If you encounter a **MariaDB password issue**, refer to [this DigitalOcean guide](https://www.digitalocean.com/community/tutorials/how-to-reset-your-mysql-or-mariadb-root-password) to reset your root password.
 
 If the `kill` command fails:
+
 ```sh
 ps aux | grep mysqld
 sudo kill -9 <pid_of_mysqld> <pid_of_mysql_safe>
@@ -71,7 +73,7 @@ cd fossu-bench
 
 ##### Install Newsletter App
 
-For frappe >= v16, the **Newsletter** module has been moved as an separate app. Install it *before* `fossunited`:
+For frappe >= v16, the **Newsletter** module has been moved as an separate app. Install it _before_ `fossunited`:
 
 ```sh
 bench new-site foss.localhost
@@ -97,8 +99,7 @@ bench --site foss.localhost migrate
 bench start
 ```
 
-> To access the site in your browser, follow:
-> [Access Site via Browser](https://frappeframework.com/docs/user/en/tutorial/create-a-site#access-site-in-your-browser)
+> To access the site in your browser, follow: [Access Site via Browser](https://frappeframework.com/docs/user/en/tutorial/create-a-site#access-site-in-your-browser)
 
 ---
 
@@ -138,44 +139,39 @@ In your `site_config.json`, add the following:
 yarn dev
 ```
 
-The dashboard will be available at:
-==> `http://<your-site-name>:8080`
+The dashboard will be available at: ==> `http://<your-site-name>:8080`
 
 ---
 
 ## Seed Script
 
-The seed script populates a fresh site with realistic development data so you
-can explore the full platform immediately after install — chapters, events,
-RSVPs, CFPs, and a hackathon — without having to create records manually.
+The seed script populates a fresh site with realistic development data so you can explore the full platform immediately after install — chapters, events, RSVPs, CFPs, and a hackathon — without having to create records manually.
 
 ### Running the Script
 
 > **Important:** The seed script requires `frappe_factory_bot`. Please install it first:
+>
 > ```sh
 > bench get-app https://github.com/TomasBarry/frappe_factory_bot
 > bench install-app frappe_factory_bot
 > ```
 
 For Frappe Manager / Manual Bench installations:
+
 ```sh
 bench execute fossunited.dev.seed.seed
 ```
 
 For Devcontainer (Docker/Podman) environments:
+
 ```sh
 <docker|podman> exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
     ../env/bin/python /workspace/development/run_seed.py --profile full
 ```
 
-The script is **idempotent** — running it multiple times on the same database
-is safe. Existing records are detected and skipped.
+The script is **idempotent** — running it multiple times on the same database is safe. Existing records are detected and skipped.
 
-The `full` profile mirrors the variety and scale needed to explore the public
-site and organizer dashboard. It creates 120 ticket purchases spread across 60
-days. Use `--profile quick` for 18 purchases across 14 days when you only need
-a fast smoke-test dataset. With the repository Justfile, run `just demo full`
-or `just demo quick`.
+The `full` profile mirrors the variety and scale needed to explore the public site and organizer dashboard. It creates 120 ticket purchases spread across 60 days. Use `--profile quick` for 18 purchases across 14 days when you only need a fast smoke-test dataset. With the repository Justfile, run `just demo full` or `just demo quick`.
 
 ### Data Hierarchy
 
@@ -214,7 +210,7 @@ Hackathon — FOSSIT Hackathon (Campus Chapter)
 **What each Doctype represents:**
 
 | Doctype | Purpose |
-|---|---|
+| --- | --- |
 | **Chapter** | A regional FOSS group (City Community) or campus group (Student Club). The top-level organising unit. |
 | **Event** | A meetup, conference, workshop, or hackathon organised by a Chapter. |
 | **Event Ticket** | A generated ticket for an attendee of a paid or registered event. |
@@ -238,12 +234,14 @@ To test the Pretalx-inspired reviewer workflow with pre-populated demo data, use
 ```
 
 This script will:
+
 1. Start the necessary containers (MariaDB, Redis, Frappe).
 2. Setup a local Frappe bench.
 3. Build the Vite-based dashboard.
 4. Seed demo data including events, CFP submissions, and a demo reviewer.
 
 **Access Details:**
+
 - **URL:** [http://fossunited.localhost:8000](http://fossunited.localhost:8000)
 - **Demo Reviewer:** `mock-reviewer@example.com`
 - **Password:** `password` (default for all seeded users)
@@ -252,63 +250,80 @@ The demo uses your local repository changes, allowing for rapid iteration and te
 
 ### What to Expect in the UI
 
-
-| Record type | Count |
-|---|---|
-| Users | 9 |
-| User Profiles | 9 |
-| Chapters | 4 |
-| Events | 13 |
-| Event Tickets | 120 with `full`; 18 with `quick` |
-| RSVP forms | 6 |
-| RSVP submissions | 12 |
-| CFP forms | 6 |
-| CFP submissions | 12 |
-| Hackathon | 1 |
-| Hackathon Teams | 4 |
-| Hackathon Projects | 4 |
+| Record type        | Count                            |
+| ------------------ | -------------------------------- |
+| Users              | 9                                |
+| User Profiles      | 9                                |
+| Chapters           | 4                                |
+| Events             | 13                               |
+| Event Tickets      | 120 with `full`; 18 with `quick` |
+| RSVP forms         | 6                                |
+| RSVP submissions   | 12                               |
+| CFP forms          | 6                                |
+| CFP submissions    | 12                               |
+| Hackathon          | 1                                |
+| Hackathon Teams    | 4                                |
+| Hackathon Projects | 4                                |
 
 ### Default Credentials
 
 All seed users share the same password.
 
-| Role | Email | Password |
-|---|---|---|
-| Attendee | mock-attendee-1@example.com | `password` |
-| Attendee | mock-attendee-2@example.com | `password` |
-| Speaker | mock-speaker-1@example.com | `password` |
-| Speaker | mock-speaker-2@example.com | `password` |
+| Role                     | Email                           | Password   |
+| ------------------------ | ------------------------------- | ---------- |
+| Attendee                 | mock-attendee-1@example.com     | `password` |
+| Attendee                 | mock-attendee-2@example.com     | `password` |
+| Speaker                  | mock-speaker-1@example.com      | `password` |
+| Speaker                  | mock-speaker-2@example.com      | `password` |
 | Chapter Lead (Bangalore) | mock-bangalore-lead@example.com | `password` |
-| Chapter Lead (Mumbai) | mock-mumbai-lead@example.com | `password` |
-| Chapter Lead (Kochi) | mock-kochi-lead@example.com | `password` |
-| Chapter Lead (Campus) | mock-campus-lead@example.com | `password` |
+| Chapter Lead (Mumbai)    | mock-mumbai-lead@example.com    | `password` |
+| Chapter Lead (Kochi)     | mock-kochi-lead@example.com     | `password` |
+| Chapter Lead (Campus)    | mock-campus-lead@example.com    | `password` |
 
 ---
 
 ## Pre-commit Hooks
 
-To automatically run linters before commits:
+Hooks in `.pre-commit-config.yaml` run linters and formatters before each commit. CI runs the same hooks on every pull request.
 
-- We use [ruff](https://docs.astral.sh/ruff/) for linting python files. It is recommended to use [prettier](https://prettier.io/) for formatting HTML, CSS & Vue files.
+- [ruff](https://docs.astral.sh/ruff/) lints and formats Python files.
+- [Oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) formats JS, Vue, CSS, JSON, YAML and Markdown. [Prettier](https://prettier.io/) formats Jinja `.html` templates, because Oxfmt cannot run the Jinja plugin.
+- [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) lints JS and the `<script>` blocks of Vue files. ESLint checks Vue templates only, because Oxlint cannot parse them.
 - [Vale](https://vale.sh) is used for spell check and grammar check for docs content.
 - [Bruno CLI](https://docs.usebruno.com/bru-cli/overview) runs API e2e tests when Python API files or `.bru` test files change.
 
+The JS tools run from `node_modules`, so install them first:
 
 ```sh
-uv add pre-commit
+yarn install
+```
+
+Then install the hooks. We recommend [prek](https://github.com/j178/prek), a faster drop-in replacement for pre-commit that reads the same `.pre-commit-config.yaml`. CI uses prek.
+
+```sh
+uv tool install prek   # or: nix-shell (shell.nix includes prek)
+prek install
+```
+
+[pre-commit](https://pre-commit.com/) works with the same config if you prefer it:
+
+```sh
+uv tool install pre-commit
 pre-commit install
 ```
 
-Or use [uv](https://github.com/astral-sh/uv) as an alternative Python package manager.
+To run the formatters or linters across the whole repo:
+
+```sh
+yarn format   # oxfmt + prettier (Jinja html)
+yarn lint     # oxlint + eslint (Vue templates)
+```
 
 ---
 
 ## Bruno API Tests
 
-The `bruno-collection/` directory contains end-to-end API tests written in
-[Bruno](https://www.usebruno.com/) `.bru` format. These tests verify security
-hardening (field exposure, auth checks, mass assignment prevention, path
-traversal) against a running Frappe instance with seed data.
+The `bruno-collection/` directory contains end-to-end API tests written in [Bruno](https://www.usebruno.com/) `.bru` format. These tests verify security hardening (field exposure, auth checks, mass assignment prevention, path traversal) against a running Frappe instance with seed data.
 
 ### Setup
 
@@ -336,13 +351,11 @@ for folder in api/*/; do
 done
 ```
 
-Tests also run automatically via the pre-commit hook when you change Python
-API files or `.bru` test files.
+Tests also run automatically via the pre-commit hook when you change Python API files or `.bru` test files.
 
 ### Environment Variables
 
-Edit `bruno-collection/environments/local-development.bru` to match your
-local seed data IDs. After running the seed script, look up docnames:
+Edit `bruno-collection/environments/local-development.bru` to match your local seed data IDs. After running the seed script, look up docnames:
 
 ```sh
 bench execute frappe.client.get_list \
@@ -376,17 +389,20 @@ bench --site foss.localhost install-app --force fossunited
 If you're using Colima instead of Docker Desktop, here are the fixes for the common errors you'll hit:
 
 **1. Docker socket not found**
+
 ```bash
 sudo ln -sfn ~/.colima/default/docker.sock /var/run/docker.sock
 ```
 
 **2. Missing Compose plugin**
+
 ```bash
 mkdir -p ~/.docker/cli-plugins
 ln -sfn $(which docker-compose) ~/.docker/cli-plugins/docker-compose
 ```
 
 **3. UID 1000 crash**
+
 ```bash
 SITE_PKGS="$(uv run python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
 find "$SITE_PKGS/frappe_manager" -type f -name "*.py" -exec sed -i '' 's/os.getuid()/1000/g' {} +
@@ -396,6 +412,7 @@ find "$SITE_PKGS/frappe_manager" -type f -name "*.py" -exec sed -i '' 's/os.getg
 **4. uv install failing (os error 1)**
 
 Run these inside `fm shell` before `bench get-app`:
+
 ```bash
 export UV_CACHE_DIR=/tmp/uv_cache
 export UV_LINK_MODE=copy
@@ -404,6 +421,7 @@ export UV_LINK_MODE=copy
 **5. Dashboard build crash (exit code 137)**
 
 Colima's default RAM is too low for the Vite build. Restart with more resources:
+
 ```bash
 colima start --cpu 4 --memory 8
 ```
@@ -414,9 +432,9 @@ colima start --cpu 4 --memory 8
 
 ## Useful Links
 
-* [FOSS United GitHub repo](https://github.com/fossunited/fossunited)
-* [Frappe Docs](https://frappeframework.com/docs/)
-* [Create a Site Guide](https://frappeframework.com/docs/user/en/tutorial/create-a-site)
+- [FOSS United GitHub repo](https://github.com/fossunited/fossunited)
+- [Frappe Docs](https://frappeframework.com/docs/)
+- [Create a Site Guide](https://frappeframework.com/docs/user/en/tutorial/create-a-site)
 
 ---
 
