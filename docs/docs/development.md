@@ -169,9 +169,14 @@ For Devcontainer (Docker/Podman) environments:
     ../env/bin/python /workspace/development/run_seed.py --profile full
 ```
 
-The script is **idempotent** — running it multiple times on the same database is safe. Existing records are detected and skipped.
+The seed script itself is **idempotent** :: running it multiple times on the same database is safe. Existing records are detected and skipped.
 
-The `full` profile mirrors the variety and scale needed to explore the public site and organizer dashboard. It creates 120 ticket purchases spread across 60 days. Use `--profile quick` for 18 purchases across 14 days when you only need a fast smoke-test dataset. With the repository Justfile, run `just demo full` or `just demo quick`.
+The `full` profile mirrors the variety and scale needed to explore the public site and organizer dashboard. It creates 120 ticket purchases spread across 60 days. Use `--profile quick` for 18 purchases across 14 days when you only need a fast smoke-test dataset.
+
+With the repository Justfile:
+
+- `just seed full` or `just seed quick` seeds an existing site and keeps its data.
+- `just demo full` or `just demo quick` runs `just setup` first, which **reinstalls the site and wipes its data**, then seeds and builds the dashboard. Use it only when you want a fresh demo site.
 
 ### Data Hierarchy
 
