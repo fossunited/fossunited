@@ -6,9 +6,7 @@
   "proseWrap": "never",
   "insertFinalNewline": true,
   "sortImports": {
-    "internalPattern": [
-      "@/"
-    ]
+    "internalPattern": ["@/"]
   },
   "sortPackageJson": true,
   "ignorePatterns": [
@@ -24,9 +22,7 @@
   ],
   "overrides": [
     {
-      "files": [
-        "dashboard/**"
-      ],
+      "files": ["dashboard/**"],
       "options": {
         "sortTailwindcss": {
           "config": "dashboard/tailwind.config.js"
