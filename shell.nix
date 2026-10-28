@@ -14,7 +14,9 @@ in
 	  # pypkgs
 	  # ruff black
 	  # ty basedpyright # some are from uv itself
-	  uv eslint prettier html-tidy yarn
+	  # JS lint/format tools (oxlint, oxfmt, eslint, prettier) come from node_modules
+	  # via yarn, so editors and scripts share one pinned version.
+	  uv nodejs yarn html-tidy
 	  vale harper
     # bruno bruno-cli
 	];

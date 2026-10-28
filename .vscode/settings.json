@@ -3,4 +3,15 @@
     "cSpell.words": [
         "Hackathon"
     ],
+    // Oxfmt formats everything except Jinja templates, which stay on Prettier.
+    "[javascript][vue][css][scss][json][jsonc][markdown][yaml]": {
+        "editor.defaultFormatter": "oxc.oxc-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.oxlint": "explicit"
+    },
+    "eslint.validate": ["vue"],
 }

@@ -180,36 +180,30 @@ function getOperators(fieldtype) {
   let options = []
   if (typeString.includes(fieldtype) || typeLink.includes(fieldtype)) {
     options.push(
-      ...[
-        { label: 'Equals', value: '=' },
-        { label: 'Not Equals', value: '!=' },
-        { label: 'Like', value: 'like' },
-        { label: 'Not Like', value: 'not like' },
-      ],
+      { label: 'Equals', value: '=' },
+      { label: 'Not Equals', value: '!=' },
+      { label: 'Like', value: 'like' },
+      { label: 'Not Like', value: 'not like' },
     )
   }
   if (typeNumber.includes(fieldtype)) {
     options.push(
-      ...[
-        { label: '<', value: '<' },
-        { label: '>', value: '>' },
-        { label: '<=', value: '<=' },
-        { label: '>=', value: '>=' },
-        { label: 'Equals', value: '=' },
-        { label: 'Not Equals', value: '!=' },
-      ],
+      { label: '<', value: '<' },
+      { label: '>', value: '>' },
+      { label: '<=', value: '<=' },
+      { label: '>=', value: '>=' },
+      { label: 'Equals', value: '=' },
+      { label: 'Not Equals', value: '!=' },
     )
   }
   if (typeSelect.includes(fieldtype)) {
     options.push(
-      ...[
-        { label: 'Equals', value: '=' },
-        { label: 'Not Equals', value: '!=' },
-      ],
+      { label: 'Equals', value: '=' },
+      { label: 'Not Equals', value: '!=' },
     )
   }
   if (typeCheck.includes(fieldtype)) {
-    options.push(...[{ label: 'Equals', value: '=' }])
+    options.push({ label: 'Equals', value: '=' })
   }
   return options
 }

@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": false,
+  "singleQuote": true,
+  "printWidth": 99,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "*.html",
+    "fossunited/**/*.json",
+    "fossunited/public/dashboard/**",
+    "fossunited/public/dist/**",
+    "fossunited/public/css/styles.css",
+    "fossunited/dev/**",
+    "frappe_docker/**",
+    "development/**",
+    "**/*.geojson"
+  ]
+}

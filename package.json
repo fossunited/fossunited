@@ -16,10 +16,11 @@
     "build-tailwind": "npx tailwindcss -i ./fossunited/templates/base.css -o ./fossunited/public/css/styles.css",
     "build-dashboard": "cd dashboard && yarn build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint .",
-    "format": "prettier --write .",
+    "lint": "oxlint && eslint .",
+    "format": "oxfmt && prettier --write \"**/*.html\"",
     "purge-css": "purgecss --config purgecss.config.cjs",
-    "docs": "command -v zensical >/dev/null 2>&1 && zensical serve -f docs/zensical.toml -o || uv run --with zensical zensical serve -f docs/zensical.toml -o"
+    "docs": "command -v zensical >/dev/null 2>&1 && zensical serve -f docs/zensical.toml -o || uv run --with zensical zensical serve -f docs/zensical.toml -o",
+    "format:check": "oxfmt --check && prettier --check \"**/*.html\""
   },
   "keywords": [],
   "author": "",
@@ -28,16 +29,17 @@
     "@knadh/autocomp": "^1.2.0"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@tailwindcss/typography": "^0.5.16",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-oxlint": "^1.90.0",
     "eslint-plugin-vue": "^10.9.2",
-    "globals": "^17.7.0",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
     "prettier": "^3.9.3",
     "prettier-plugin-jinja-template": "^2.2.0",
     "purgecss": "^8.0.0",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "vue-eslint-parser": "^10.4.1"
   }
 }

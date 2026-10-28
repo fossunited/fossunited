@@ -3,7 +3,13 @@
   // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
 
   // List of extensions which should be recommended for users of this workspace.
-  "recommendations": ["ms-vscode-remote.remote-containers"],
+  // oxc: Oxlint + Oxfmt. eslint: Vue template rules only. prettier: Jinja *.html only.
+  "recommendations": [
+    "ms-vscode-remote.remote-containers",
+    "oxc.oxc-vscode",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
+  ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []
 }

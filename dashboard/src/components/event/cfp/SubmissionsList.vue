@@ -170,6 +170,12 @@ watch(showAssignedOnly, (val) => {
 })
 
 const filters = useStorage(storageKey, {})
+// Before the first await: expose() only registers while setup() is synchronous.
+defineExpose({
+  reloadSubmissions: () => cfpSubmissions.reload(),
+  patchAssignedUsers,
+})
+
 const docfields = await getCfpFilterFields(route.params.id)
 
 // Surface Select-type custom questions as compact dropdowns outside the Filter
@@ -375,8 +381,4 @@ function handleOpenSubmission(submission) {
   emit('open:submission', submission.name)
 }
 
-defineExpose({
-  reloadSubmissions: () => cfpSubmissions.reload(),
-  patchAssignedUsers,
-})
 </script>
