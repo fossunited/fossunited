@@ -12,7 +12,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.8
+    rev: v0.17.3
     hooks:
       - id: ruff
         args: ["--fix", "--config=pyproject.toml"]
@@ -69,7 +69,7 @@ repos:
         stages: [pre-commit]
 
   - repo: https://github.com/semgrep/pre-commit
-    rev: "v1.173.0"
+    rev: "v1.182.1"
     hooks:
       - id: semgrep
         stages: [pre-commit]
