@@ -78,11 +78,50 @@ custom_404_page_context = [
     "fossunited.foss_profiles.doctype.foss_user_profile.foss_user_profile.get_404_context",
 ]
 
+# User Data Protection (account deletion / anonymization)
+# -------------------------------------------------------
+# Drives Frappe's Personal Data Deletion Request workflow: on an approved
+# request, the listed `redact_fields` are overwritten with placeholder values
+# (and the User is renamed), removing the person's PII while keeping rows intact.
+# `filter_by` is matched against the user's email. Profile child rows are
+# handled by the request's on_change event, matching their parent profile.
+user_data_fields = [
+    # --- FOSS User Profile (the /u/<username> page + the identity hub) ---
+    {
+        "doctype": "FOSS User Profile",
+        "filter_by": "email",
+        "redact_fields": [
+            "full_name",
+            "email",
+            "bio",
+            "about",
+            "profile_photo",
+            "cover_image",
+            "current_city",
+            "gender",
+            "website",
+            "github",
+            "gitlab",
+            "linkedin",
+            "mastodon",
+            "bluesky",
+            "x",
+            "instagram",
+            "devto",
+            "youtube",
+            "medium",
+        ],
+    },
+]
+
 # Document Events
 # ---------------
 # Hook on document methods and events
 
 doc_events = {
+    "Personal Data Deletion Request": {
+        "on_change": "fossunited.foss_profiles.account_deletion.redact_profile_children",
+    },
     "User": {
         "after_insert": [
             "fossunited.fossunited.user_utils.set_unique_username",
