@@ -11,7 +11,7 @@ from fossunited.doctype_ids import (
 )
 from fossunited.fossunited.utils import FORKLORE_MAINTAINERS_CACHE_KEY
 
-# Forklore stores one file per maintainer at content/maintainers/<github-username>.json
+# Forklore stores one file per maintainer at content/maintainers/<github-username>.md
 FORKLORE_MAINTAINERS_API = (
     "https://api.github.com/repos/fossunited/forklore/contents/content/maintainers"
 )
@@ -21,7 +21,7 @@ def sync_forklore_maintainers():
     """Cache the set of forklore maintainer usernames for the profile OG image.
 
     Forklore (https://forklore.in) is a static site; a user is a maintainer iff a
-    file content/maintainers/<github-username>.json exists in the forklore repo.
+    file content/maintainers/<github-username>.md exists in the forklore repo.
     We refresh the username set daily so FOSS User Profile.get_profile_badges() can
     flag maintainers locally instead of hitting GitHub's (rate-limited) API on every
     profile render.
@@ -42,9 +42,9 @@ def sync_forklore_maintainers():
         return
 
     usernames = [
-        entry["name"].removesuffix(".json")
+        entry["name"].removesuffix(".md")
         for entry in entries
-        if isinstance(entry, dict) and entry.get("name", "").endswith(".json")
+        if isinstance(entry, dict) and entry.get("name", "").endswith(".md")
     ]
     # Guard against a transient empty/error response wiping a good cache.
     if usernames:
