@@ -20,6 +20,8 @@
 {% block meta_block %}
   {% if pagetitle or description or image %}
     {{ meta_tags(pagetitle, description, image) }}
+  {% else %}
+    {{ super() }}
   {% endif %}
 {% endblock %}
 

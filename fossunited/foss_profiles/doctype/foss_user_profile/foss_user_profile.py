@@ -677,11 +677,7 @@ class FOSSUserProfile(WebsiteGenerator):
             .select(Proposal.name)
             .where(
                 (Proposal.status == "Approved")
-                & (
-                    (Proposal.email == self.email)
-                    | (Speaker.email == self.email)
-                    | (Speaker.linked_user == self.name)
-                )
+                & ((Speaker.email == self.email) | (Speaker.linked_user == self.name))
             )
             .limit(1)
             .run()
