@@ -29,11 +29,17 @@ from fossunited.doctype_ids import (
     HACKATHON_TEAM_MEMBER,
     LOCALHOST_ORGANIZER,
     PROPOSAL,
+    PROPOSAL_REVIEW,
     RSVP_RESPONSE,
     SPEAKER,
     USER_PROFILE,
 )
 from fossunited.fossunited.utils import get_ograph_url, sanitize_text_content
+
+# A "CFP Reviewer" role can be granted and later revoked, so it's a weak signal
+# for the reviewer badge. Treat someone as a reviewer once they've actually
+# completed this many CFP reviews instead.
+REVIEWER_BADGE_MIN_REVIEWS = 5
 
 
 class PrivateProfileError(PermissionError):
@@ -684,11 +690,9 @@ class FOSSUserProfile(WebsiteGenerator):
         return {
             "is_volunteer": is_volunteer,
             "is_speaker": bool(approved_speaker),
-            "is_reviewer": bool(
-                frappe.db.exists(
-                    "Has Role",
-                    {"parent": self.user, "role": "CFP Reviewer"},
-                )
+            "is_reviewer": (
+                frappe.db.count(PROPOSAL_REVIEW, {"reviewer_profile": self.name})
+                >= REVIEWER_BADGE_MIN_REVIEWS
             ),
         }
 
