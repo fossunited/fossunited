@@ -8,7 +8,9 @@ The **FOSS United Platform** is developed and maintained by the [FOSS United Fou
 
 ## Installation Guide
 
-> **Recommended Frappe Version:** v15+
+> **Frappe Version:** v16 (Python 3.14, Node 24). The `newsletter` and `blog` apps are required, since frappe v16 moved them out of core.
+>
+> On frappe v15? Use the [legacy v15 guide](https://github.com/fossunited/fossunited/blob/37e5aa3a27bdffc13ec2961a22533412705734b7/docs/docs/development.md).
 
 ### Recommended: Setup & Quick-start
 
@@ -17,15 +19,15 @@ Our recommended setup is via [docker](https://www.docker.com/) + [frappe manager
 - Install [`uv`](https://github.com/astral-sh/uv) python manager and `docker`
 - `uv init` in a new directory
 - `uv add frappe-manager`
-- `uv run fm create foss.localhost --apps frappe:version-15`
+- `uv run fm create foss.localhost --apps frappe:version-16` - the image comes with Python 3.14 and Node 24
 - `uv run fm info foss.localhost` shows all credential details for that build instance.
 - `uv run fm start` — choose site as it shows in menu
 - `uv run fm shell` — enter into docker container shell and run further steps there
-- For frappe >= v16, install newsletter first:
-  - `bench get-app https://github.com/frappe/newsletter`
-  - `bench --site foss.localhost install-app newsletter`
-- `bench get-app https://github.com/fossunited/fossunited.git`
-- `bench --site foss.localhost install-app fossunited` — this will also install dashboard
+- Get the required apps, then fossunited:
+  - `bench get-app https://github.com/frappe/newsletter --branch version-16`
+  - `bench get-app https://github.com/frappe/blog --branch version-16`
+  - `bench get-app https://github.com/fossunited/fossunited.git`
+- `bench --site foss.localhost install-app newsletter blog fossunited` - this will also install dashboard
 - Configure frappe for server scripts and developer mode:
   - `bench set-config -g server_script_enabled true`
   - `bench --site foss.localhost set-config developer_mode 1`
@@ -33,11 +35,10 @@ Our recommended setup is via [docker](https://www.docker.com/) + [frappe manager
 
 - To run tests please create new-site since it can have unintended DB changes.
   - `bench new-site break.site`
-  - For frappe >= v16: `bench --site break.site install-app newsletter`
-  - `bench --site break.site install-app fossunited`
+  - `bench --site break.site install-app newsletter blog fossunited`
   - `bench --site break.site set-config allow_tests true`
 
-- Open `http://foss.localhost/app` in your browser and start exploring! Login as "Administrator" with password `admin` (as shown in `fm info foss.localhost`)
+- Open `http://foss.localhost/desk` in your browser and start exploring! Login as "Administrator" with password `admin` (as shown in `fm info foss.localhost`)
 
 - Dashboard page can be accessed via `foss.localhost/dashboard`
 
@@ -50,6 +51,7 @@ If you would prefer for manual method, please follow on below
 #### 1. Prerequisites
 
 - Set up your environment using the [official Frappe installation guide](https://frappeframework.com/docs/).
+- Frappe v16 needs Python 3.14 and Node 24.
 - If you encounter a **MariaDB password issue**, refer to [this DigitalOcean guide](https://www.digitalocean.com/community/tutorials/how-to-reset-your-mysql-or-mariadb-root-password) to reset your root password.
 
 If the `kill` command fails:
@@ -67,18 +69,19 @@ Ensure MySQL processes are fully stopped before restarting.
 
 ```sh
 # Create a new bench
-bench init fossu-bench
+bench init --frappe-branch version-16 fossu-bench
 cd fossu-bench
+bench new-site foss.localhost
 ```
 
-##### Install Newsletter App
+##### Install Newsletter and Blog Apps
 
-For frappe >= v16, the **Newsletter** module has been moved as an separate app. Install it _before_ `fossunited`:
+Frappe v16 moved **Newsletter** and **Blog** out of core into separate apps. `fossunited` lists both in `required_apps`, so install them _before_ `fossunited`:
 
 ```sh
-bench new-site foss.localhost
-bench get-app https://github.com/frappe/newsletter
-bench --site foss.localhost install-app newsletter
+bench get-app https://github.com/frappe/newsletter --branch version-16
+bench get-app https://github.com/frappe/blog --branch version-16
+bench --site foss.localhost install-app newsletter blog
 ```
 
 > Related discussion: [#1120](https://github.com/fossunited/fossunited/issues/1120)
@@ -378,14 +381,6 @@ See `bruno-collection/README.md` for the full variable reference.
 - **MariaDB root password error** — follow [this guide](https://www.digitalocean.com/community/tutorials/how-to-reset-your-mysql-or-mariadb-root-password) to reset it
 - **Site shows errors after install** — make sure you ran `bench --site foss.localhost migrate`
 - **Server scripts not running** — verify `server_script_enabled` is set to `true`
-- **`tatsu` crash during install** — a recent `tatsu` release is broken. Fix it by downgrading and using `--force`:
-
-```bash
-./env/bin/pip install "tatsu<5.10.0"
-bench --site foss.localhost install-app --force fossunited
-```
-
-> See [#1320](https://github.com/fossunited/fossunited/issues/1320) for more context on this issue.
 
 ---
 

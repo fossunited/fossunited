@@ -85,7 +85,7 @@ jobs:
       - name: Install App and Setup Site
         working-directory: ${{ env.BENCH_PATH }}
         run: |
-          bench get-app harshtandiya/frappe_factory_bot --branch main
+          bench get-app https://github.com/TomasBarry/frappe_factory_bot
           bench get-app https://github.com/frappe/newsletter --branch version-16
           bench get-app https://github.com/frappe/blog --branch version-16
           bench get-app fossunited $GITHUB_WORKSPACE
