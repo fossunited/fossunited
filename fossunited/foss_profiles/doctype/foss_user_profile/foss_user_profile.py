@@ -518,6 +518,7 @@ class FOSSUserProfile(WebsiteGenerator):
                     "type": "hackathon-winner",
                     "href": f"/{project_route}" if project_route else None,
                     "title": f"{result.status} at {hack.hackathon_name}",
+                    "status": result.status,
                 }
             )
             winning_hackathon_ids.add(p.hackathon)
@@ -727,7 +728,10 @@ class FOSSUserProfile(WebsiteGenerator):
                 frappe.db.count(PROPOSAL_REVIEW, {"reviewer_profile": self.name})
                 >= REVIEWER_BADGE_MIN_REVIEWS
             ),
-            "is_forklore": is_forklore_maintainer(self.get_forklore_username()),
+            "is_forklore": (
+                is_forklore_maintainer(self.get_forklore_username())
+                or is_forklore_maintainer(self.username)
+            ),
             "fosshack_role": self.get_fosshack_role(hackathon_badges),
         }
 
@@ -748,11 +752,14 @@ class FOSSUserProfile(WebsiteGenerator):
         Returns "winner" | "judge" | "localhost" | "participant", or "" if none.
         Year isn't encoded: the OG image shows the role only.
         """
-        roles = {
-            _FOSSHACK_ROLE_BY_BADGE[badge["type"]]
-            for badge in hackathon_badges
-            if badge.get("type") in _FOSSHACK_ROLE_BY_BADGE
-        }
+        roles = set()
+        for badge in hackathon_badges:
+            btype = badge.get("type")
+            if btype == "hackathon-winner" and badge.get("status") != "Winner":
+                # A Commendation is a runner-up, not a win: don't claim winner.
+                roles.add("participant")
+            elif btype in _FOSSHACK_ROLE_BY_BADGE:
+                roles.add(_FOSSHACK_ROLE_BY_BADGE[btype])
         for role in _FOSSHACK_ROLE_PRECEDENCE:
             if role in roles:
                 return role
