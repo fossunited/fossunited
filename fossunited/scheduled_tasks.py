@@ -11,27 +11,20 @@ from fossunited.doctype_ids import (
 )
 from fossunited.fossunited.utils import FORKLORE_MAINTAINERS_CACHE_KEY
 
-# Forklore stores one file per maintainer at content/maintainers/<github-username>.md
-FORKLORE_MAINTAINERS_API = (
-    "https://api.github.com/repos/fossunited/forklore/contents/content/maintainers"
-)
+# Forklore publishes a list of {"username", "github"} maintainers at this URL.
+FORKLORE_MAINTAINERS_URL = "https://forklore.in/maintainers.json"
 
 
 def sync_forklore_maintainers():
-    """Cache the set of forklore maintainer usernames for the profile OG image.
+    """Cache the set of forklore maintainer handles for the profile OG image.
 
-    Forklore (https://forklore.in) is a static site; a user is a maintainer iff a
-    file content/maintainers/<github-username>.md exists in the forklore repo.
-    We refresh the username set daily so FOSS User Profile.get_profile_badges() can
-    flag maintainers locally instead of hitting GitHub's (rate-limited) API on every
-    profile render.
+    Forklore (https://forklore.in) publishes /maintainers.json. We refresh the
+    handle set daily so FOSS User Profile.get_profile_badges() can flag
+    maintainers from a local lookup instead of calling an external service on
+    every profile render.
     """
     try:
-        resp = requests.get(
-            FORKLORE_MAINTAINERS_API,
-            headers={"Accept": "application/vnd.github+json"},
-            timeout=30,
-        )
+        resp = requests.get(FORKLORE_MAINTAINERS_URL, timeout=30)
         resp.raise_for_status()
         entries = resp.json()
     except Exception:
@@ -41,14 +34,18 @@ def sync_forklore_maintainers():
         )
         return
 
-    usernames = [
-        entry["name"].removesuffix(".md")
+    # Cache both handles per maintainer: a profile may match by GitHub handle or
+    # by forklore username (the two can differ).
+    handles = [
+        handle
         for entry in entries
-        if isinstance(entry, dict) and entry.get("name", "").endswith(".md")
+        if isinstance(entry, dict)
+        for handle in (entry.get("github"), entry.get("username"))
+        if handle
     ]
     # Guard against a transient empty/error response wiping a good cache.
-    if usernames:
-        frappe.cache().set_value(FORKLORE_MAINTAINERS_CACHE_KEY, usernames)
+    if handles:
+        frappe.cache().set_value(FORKLORE_MAINTAINERS_CACHE_KEY, handles)
 
 
 def conclude_events():
