@@ -29,6 +29,8 @@ def sync_forklore_maintainers():
         resp = requests.get(FORKLORE_MAINTAINERS_URL, timeout=30)
         resp.raise_for_status()
         entries = resp.json()
+        if not isinstance(entries, list):
+            raise ValueError("Forklore maintainer feed must be a list")
     except Exception:
         frappe.log_error(
             title="Forklore maintainer sync failed",
