@@ -68,7 +68,7 @@ def get_project_grant_counts():
         fields=[
             "grant_type",
             "grant_status",
-            "count(name) as count",
+            {"COUNT": "name", "as": "count"},
         ],
         filters={
             "grant_status": ["in", OPEN_STATUSES + APPROVED_STATUS],
@@ -95,7 +95,7 @@ def get_event_grant_counts():
         EVENT_GRANTS,
         fields=[
             "grant_status",
-            "count(name) as count",
+            {"COUNT": "name", "as": "count"},
         ],
         filters={
             "grant_status": ["in", OPEN_STATUSES + APPROVED_STATUS],

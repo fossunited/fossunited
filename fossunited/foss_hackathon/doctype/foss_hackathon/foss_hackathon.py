@@ -213,13 +213,13 @@ class FOSSHackathon(WebsiteGenerator):
         attending_counts = frappe.db.get_all(
             HACKATHON_PARTICIPANT,
             filters={"localhost_request_status": "Accepted", "hackathon": self.name},
-            fields=["localhost", "count(name) as count"],
+            fields=["localhost", {"COUNT": "name", "as": "count"}],
             group_by="localhost",
         )
         applied_counts = frappe.db.get_all(
             HACKATHON_PARTICIPANT,
             filters={"hackathon": self.name},
-            fields=["localhost", "count(name) as count"],
+            fields=["localhost", {"COUNT": "name", "as": "count"}],
             group_by="localhost",
         )
         localhost_names = [h["name"] for h in localhosts]
@@ -230,7 +230,7 @@ class FOSSHackathon(WebsiteGenerator):
                 "reference_doctype": HACKATHON_LOCALHOST,
                 "reference_name": ("in", localhost_names),
             },
-            fields=["reference_name as localhost", "count(name) as count"],
+            fields=["reference_name as localhost", {"COUNT": "name", "as": "count"}],
             group_by="reference_name",
         )
 

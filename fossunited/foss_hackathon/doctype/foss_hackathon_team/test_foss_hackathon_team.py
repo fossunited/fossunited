@@ -1,5 +1,5 @@
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests.utils import FrappeTestCase, toggle_test_mode
 
 from fossunited.doctype_ids import HACKATHON_TEAM, HACKATHON_TEAM_MEMBER
 from fossunited.tests.factories import (
@@ -123,7 +123,7 @@ class TestFOSSHackathonTeam(FrappeTestCase):
         self.assertTrue(frappe.db.exists(HACKATHON_TEAM, team_name))
 
         # Temporarily disable test flag to allow auto-delete
-        frappe.flags.in_test = False
+        toggle_test_mode(False)
 
         try:
             team = frappe.get_doc(HACKATHON_TEAM, team_name)
@@ -135,4 +135,4 @@ class TestFOSSHackathonTeam(FrappeTestCase):
             frappe.db.commit()  # nosemgrep
             self.assertFalse(frappe.db.exists(HACKATHON_TEAM, team_name))
         finally:
-            frappe.flags.in_test = True
+            toggle_test_mode(True)
