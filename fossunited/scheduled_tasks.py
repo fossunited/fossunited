@@ -39,7 +39,7 @@ def sync_forklore_maintainers():
     # Store both handles per maintainer: a profile may match by GitHub handle or
     # by forklore username (the two can differ).
     handles = [
-        handle
+        handle.lower()
         for entry in entries
         if isinstance(entry, dict)
         for handle in (entry.get("github"), entry.get("username"))

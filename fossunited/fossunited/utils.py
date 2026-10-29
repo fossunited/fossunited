@@ -66,22 +66,12 @@ def get_ograph_url():
     return frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
 
-def get_forklore_maintainers() -> set[str]:
-    """Return maintainer handles stored in Ograph Settings, lowercased.
-
-    Empty until the monthly sync has run at least once.
-    """
-    if not frappe.db.exists("DocType", "Ograph Settings"):
-        return set()
-    handles = frappe.db.get_single_value("Ograph Settings", "forklore_maintainers")
-    return {u.lower() for u in (frappe.parse_json(handles) or [])}
-
-
 def is_forklore_maintainer(username: str | None) -> bool:
     """Whether a GitHub handle is a Forklore maintainer per Ograph Settings."""
-    if not username:
+    if not username or not frappe.db.exists("DocType", "Ograph Settings"):
         return False
-    return username.lower() in get_forklore_maintainers()
+    handles = frappe.db.get_single_value("Ograph Settings", "forklore_maintainers")
+    return username.lower() in (frappe.parse_json(handles) or [])
 
 
 # Filter

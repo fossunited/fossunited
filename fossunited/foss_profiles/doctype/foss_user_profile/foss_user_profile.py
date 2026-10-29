@@ -41,15 +41,8 @@ from fossunited.fossunited.utils import (
     sanitize_text_content,
 )
 
-# Maps a hackathon badge type to the fosshack OG role token. A profile can hold
-# several hackathon badges; the OG image shows only the highest-precedence role.
-_FOSSHACK_ROLE_BY_BADGE = {
-    "hackathon-winner": "winner",
-    "hackathon-judge": "judge",
-    "hackathon-localhost": "localhost",
-    "hackathon-participant": "participant",
-}
-_FOSSHACK_ROLE_PRECEDENCE = ("winner", "judge", "localhost", "participant")
+# The OG image shows only the highest-precedence hackathon role.
+FOSSHACK_ROLES = ("winner", "judge", "localhost", "participant")
 
 # A "CFP Reviewer" role can be granted and later revoked, so it's a weak signal
 # for the reviewer badge. Treat someone as a reviewer once they've actually
@@ -754,16 +747,12 @@ class FOSSUserProfile(WebsiteGenerator):
         """
         roles = set()
         for badge in hackathon_badges:
-            btype = badge.get("type")
-            if btype == "hackathon-winner" and badge.get("status") != "Winner":
+            role = badge["type"].removeprefix("hackathon-")
+            if role == "winner" and badge.get("status") != "Winner":
                 # A Commendation is a runner-up, not a win: don't claim winner.
-                roles.add("participant")
-            elif btype in _FOSSHACK_ROLE_BY_BADGE:
-                roles.add(_FOSSHACK_ROLE_BY_BADGE[btype])
-        for role in _FOSSHACK_ROLE_PRECEDENCE:
-            if role in roles:
-                return role
-        return ""
+                role = "participant"
+            roles.add(role)
+        return next((role for role in FOSSHACK_ROLES if role in roles), "")
 
     def on_trash(self):
         frappe.delete_doc("User", self.user, force=True)
