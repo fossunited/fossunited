@@ -36,17 +36,17 @@ def sync_forklore_maintainers():
         )
         return
 
-    # Store both handles per maintainer: a profile may match by GitHub handle or
-    # by forklore username (the two can differ).
-    handles = [
-        handle.lower()
-        for entry in entries
-        if isinstance(entry, dict)
-        for handle in (entry.get("github"), entry.get("username"))
-        if handle
-    ]
+    # Keep GitHub handles and Forklore usernames in separate namespaces.
+    handles = {
+        source: [
+            entry[source].lower()
+            for entry in entries
+            if isinstance(entry, dict) and isinstance(entry.get(source), str) and entry[source]
+        ]
+        for source in ("github", "username")
+    }
     # Preserve the saved handles on a transient empty/error response.
-    if handles:
+    if any(handles.values()):
         frappe.db.set_single_value(
             "Ograph Settings", "forklore_maintainers", frappe.as_json(handles)
         )

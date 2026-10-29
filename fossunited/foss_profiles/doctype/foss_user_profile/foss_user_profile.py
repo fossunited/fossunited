@@ -723,21 +723,18 @@ class FOSSUserProfile(WebsiteGenerator):
             ),
             "is_forklore": (
                 is_forklore_maintainer(self.get_forklore_username())
-                or is_forklore_maintainer(self.username)
+                or is_forklore_maintainer(self.username, source="username")
             ),
             "fosshack_role": self.get_fosshack_role(hackathon_badges),
         }
 
     def get_forklore_username(self):
-        """GitHub handle used to match a forklore maintainer, mirroring the profile page.
-
-        Falls back to the FOSS United username when no GitHub URL is set.
-        """
+        """Return the GitHub handle used to match a Forklore maintainer."""
         if self.github:
             match = re.search(r"github\.com/([^/?#]+)", self.github, re.IGNORECASE)
             if match:
                 return match.group(1)
-        return self.username
+        return None
 
     def get_fosshack_role(self, hackathon_badges):
         """Collapse hackathon badges to the single highest-precedence fosshack role.
