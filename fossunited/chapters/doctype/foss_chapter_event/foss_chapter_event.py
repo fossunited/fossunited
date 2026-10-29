@@ -544,7 +544,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                 lat_str, lng_str = self.map_coordinate.split(",")
                 context.map_lat = float(lat_str) if lat_str and lat_str != "None" else None
                 context.map_lng = float(lng_str) if lng_str and lng_str != "None" else None
-            except ValueError, AttributeError:
+            except (ValueError, AttributeError):
                 pass
 
         context.breadcrumbs = self.get_breadcrumb()
@@ -717,7 +717,7 @@ def extract_map_coordinates(map_url):
                             avg_lon = sum(n["lon"] for n in nodes) / len(nodes)
                             return float(avg_lat), float(avg_lon)
 
-        except requests.RequestException, ValueError, KeyError:
+        except (requests.RequestException, ValueError, KeyError):
             pass
 
     return None, None

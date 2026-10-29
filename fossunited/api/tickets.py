@@ -203,6 +203,10 @@ def create_transfer_request(ticket: str, receiver_details: dict):
     """
     Create a transfer request for the ticket
     """
+    # insert() validates links before before_insert, so check here to raise a clean 404
+    if not frappe.db.exists(EVENT_TICKET, ticket):
+        frappe.throw(_("Ticket not found"), frappe.DoesNotExistError)
+
     transfer_request = frappe.get_doc(
         {
             "doctype": TICKET_TRANSFER,

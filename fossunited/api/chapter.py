@@ -196,7 +196,7 @@ def generate_ics(event_ids: str | list, chapter: str | None = None, download: bo
             if not isinstance(event_id, str) or len(event_id) > 140:
                 frappe.throw(_("Invalid event ID format"), frappe.ValidationError)
 
-    except json.JSONDecodeError, ValueError:
+    except (json.JSONDecodeError, ValueError):
         frappe.throw(_("Invalid JSON format"), frappe.ValidationError)
 
     if chapter and (not isinstance(chapter, str) or len(chapter) > 140):

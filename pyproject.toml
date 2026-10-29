@@ -46,7 +46,7 @@ frappe = ">=16.0.0,<17.0.0"
 
 [tool.ruff]
 line-length = 99
-target-version = "py314"
+target-version = "py313"
 fix = true
 exclude = ["development/", ".venv/"]
 
