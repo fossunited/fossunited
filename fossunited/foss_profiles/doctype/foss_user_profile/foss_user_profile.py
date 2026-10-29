@@ -745,9 +745,6 @@ class FOSSUserProfile(WebsiteGenerator):
         roles = set()
         for badge in hackathon_badges:
             role = badge["type"].removeprefix("hackathon-")
-            if role == "winner" and badge.get("status") != "Winner":
-                # A Commendation is a runner-up, not a win: don't claim winner.
-                role = "participant"
             roles.add(role)
         return next((role for role in FOSSHACK_ROLES if role in roles), "")
 
