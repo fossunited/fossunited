@@ -22,6 +22,12 @@
   ],
   "overrides": [
     {
+      "files": ["docs/**/*.md"],
+      "options": {
+        "proseWrap": "preserve"
+      }
+    },
+    {
       "files": ["dashboard/**"],
       "options": {
         "sortTailwindcss": {
