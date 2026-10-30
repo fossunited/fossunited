@@ -1,2 +1,26 @@
-{% extends "templates/rss.xml" %}
-{% block ttl %}600{% endblock %}
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>{{ feed_url | e }}</id>
+  <title>{{ title | e }}</title>
+  <subtitle>{{ description | e }}</subtitle>
+  <updated>{{ modified | e }}</updated>
+  <link rel="self" href="{{ feed_url | e }}" type="application/atom+xml" />
+  <link rel="alternate" href="{{ link | e }}" />
+  {% for item in items %}
+  <entry>
+    <id>{{ item.guid | e }}</id>
+    <title>{{ item.title | e }}</title>
+    {% if item.link %}<link rel="alternate" href="{{ item.link | e }}" />{% endif %}
+    <published>{{ item.published_date | e }}</published>
+    <updated>{{ item.updated | e }}</updated>
+    <author>
+      <name>{{ item.author | e }}</name>
+      {% if item.author_uri %}<uri>{{ item.author_uri | e }}</uri>{% endif %}
+    </author>
+    {% if item.category %}<category term="{{ item.category | e }}" label="{{ item.category_title | e }}" />{% endif %}
+    <summary type="text">{{ (item.blog_intro or "") | e }}</summary>
+    <content type="html">{{ item.content | e }}</content>
+    {% if item.enclosure %}<link rel="enclosure" href="{{ item.enclosure | e }}" />{% endif %}
+  </entry>
+  {% endfor %}
+</feed>
