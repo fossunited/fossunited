@@ -1,13 +1,14 @@
 {
   "name": "frappe-ui-frontend",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build --base=/assets/fossunited/dashboard/ && yarn copy-html-entry",
     "preview": "vite preview",
-    "copy-html-entry": "cp ../fossunited/public/dashboard/index.html ../fossunited/www/dashboard.html"
+    "copy-html-entry": "cp ../fossunited/public/dashboard/index.html ../fossunited/www/dashboard.html",
+    "test": "vitest run"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
@@ -26,16 +27,18 @@
     "vue-router": "^4.5.1",
     "vue-sonner": "^1.1.2"
   },
-  "peerDependencies": {
-    "vue": ">=3.5.0",
-    "vue-router": "^4.1.6"
-  },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6",
     "autoprefixer": "^10.4.13",
+    "happy-dom": "20.8.9",
     "postcss": "^8.5.10",
     "tailwindcss": "^3.4.2",
-    "vite": "^8"
+    "vite": "^8",
+    "vitest": "4.1.11"
+  },
+  "peerDependencies": {
+    "vue": ">=3.5.0",
+    "vue-router": "^4.1.6"
   },
   "resolutions": {
     "prosemirror-model": "1.25.12",
