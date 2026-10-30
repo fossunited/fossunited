@@ -981,7 +981,7 @@ def download_ticket(ticket_id: str):
     pdf_file = frappe.get_print(
         EVENT_TICKET,
         ticket_id,
-        "[Designer] Event Ticket",
+        "Event Ticket",
         no_letterhead=1,
         as_pdf=True,
     )
@@ -1026,7 +1026,7 @@ def download_all_tickets(ticket_ids: str | list):
     download_multi_pdf(
         doctype=EVENT_TICKET,
         name=json.dumps(ticket_ids),
-        format="[Designer] Event Ticket",
+        format="Event Ticket",
         no_letterhead=True,
     )
     frappe.local.response.type = "download"
