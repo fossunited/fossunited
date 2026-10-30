@@ -13,6 +13,81 @@ Please find the TLDR reports for each month in blog posts and forum thread:
 
 > Project stats: [git commands before reading code](https://piechowski.io/post/git-commands-before-reading-code/)
 
+## October 2026
+
+October was an hack-break-upgrade month. The platform moved from Frappe Framework v15 to v16 (on Python 3.14) and the dashboard from frappe-ui 0.1.160 to 1.0, with Vite 6 to 8 and `pre-commit` replaced by `prek` alongside. Most of this is internal: desk changes and performance, little that a user sees. With it, every tool listed on [/stack](https://fossunited.org/stack) now runs its latest release. On the doctype side: CFP submission data model cleanup, single-use free coupons bound to their email, dynamic OG images for profiles, RSVPs, events and CFPs, and the IndiaFOSS handbook on the docs site.
+
+### Upgrades
+
+- [#1866](https://github.com/fossunited/fossunited/pull/1866) Frappe Framework v15 to v16, targeting Python 3.14. The `blog` and `newsletter` apps are now required dependencies, since v16 moved them out of the core framework. String SQL functions inside `get_all` fields were rewritten for v16 compatibility.
+- [#1851](https://github.com/fossunited/fossunited/pull/1851) frappe-ui 0.1.160 to 1.0.2. Removed dead dependencies, cleaned up Vite and Tailwind config, moved `useTheme` to `useColorScheme`, and migrated `TextEditor`, `ListView`, `AxisChart` and `Autocomplete` off frappe-ui root exports that 1.0 removed.
+  Some followup checklist work: https://github.com/fossunited/fossunited/issues/1437
+- [#1864](https://github.com/fossunited/fossunited/pull/1864) Text fields in the dashboard now use frappe-ui's molecule `Editor` in place of the old `TextEditor`. Markdown input converts correctly. The image insert button is left out of the toolbar for plain text fields.
+- [#1857](https://github.com/fossunited/fossunited/pull/1857) `radix-vue` renamed to `reka-ui`.
+- [#1860](https://github.com/fossunited/fossunited/pull/1860) Vite 6 to 8.
+- [#1863](https://github.com/fossunited/fossunited/pull/1863) [prek](https://prek.j178.dev/) replaces `pre-commit` in CI and locally; formatters and linters now in pre-commit.
+- [#1834](https://github.com/fossunited/fossunited/pull/1834) Remaining Feather icons in the dashboard replaced with Tabler icons.
+
+### CFP & Proposals
+
+- [#1828](https://github.com/fossunited/fossunited/pull/1828) The speakers section on a **FOSS Event CFP Submission** is simplified into three sections. A speaker's profile is now found by _Linked User_ first, falling back to an email match.
+- [#1829](https://github.com/fossunited/fossunited/pull/1829) The _Personal Information_ section is removed from **FOSS Event CFP Submission**, since it duplicated the speakers table. Existing data was migrated into the speakers table. Desk fields are reordered.
+- [#1833](https://github.com/fossunited/fossunited/pull/1833) Dashboard proposal queries now use `submitted_by`, following the removal of the duplicate `email` field.
+- [#1859](https://github.com/fossunited/fossunited/pull/1859) Changing a proposal's status now moves its speakers between the matching email groups. A speaker with another accepted proposal in the same event stays in the approved group.
+- [#1850](https://github.com/fossunited/fossunited/pull/1850) The event page hides speakers when the CFP has _Anonymise Proposals_ set; the proposal page notes when a proposal is anonymised.
+- [#1847](https://github.com/fossunited/fossunited/pull/1847) A speaker with several accepted proposals appears once on the event page. Duplicate volunteer rows are also skipped.
+- [#1831](https://github.com/fossunited/fossunited/pull/1831) Email notification on review assignment removed; the assignment stays as a tracker in the dashboard. Partial fix for [#1765](https://github.com/fossunited/fossunited/issues/1765).
+
+### Tickets & Coupons
+
+- [#1795](https://github.com/fossunited/fossunited/pull/1795) Single-use **Free Ticket Code** coupons (_Max Count_ of 1) now require the applicant email to match the coupon's _Mapped Email_. Multi-use coupons stay shareable. Usage count is now read with a row lock, so two simultaneous redemptions of the last use cannot both get a ticket. Credits: James Reilly.
+- [#1804](https://github.com/fossunited/fossunited/pull/1804) Fixed a 500 error when downloading a ticket PDF. Closes [#1803](https://github.com/fossunited/fossunited/issues/1803).
+- [#1871](https://github.com/fossunited/fossunited/pull/1871) Frappe's `get_qr_code` is enabled in Jinja, so ticket print formats can use custom HTML instead of the visual print format builder. "My Tickets" can open a ticket dialog from a query param, so a profile link or the check-in scanner can deep-link to a ticket.
+
+### Profiles & OG Images
+
+- [#1861](https://github.com/fossunited/fossunited/pull/1861) Profile, RSVP, event and CFP pages now emit dynamic OG images from ograph-gen. Profile images were sending the wrong parameter names before this. RSVP pages fall back to the generic image if _Ograph Settings_ is not configured.
+- [#1867](https://github.com/fossunited/fossunited/pull/1867) Profile OG images carry Forklore and FOSS Hack badges. The FOSS Hack badge shows only the highest role (winner > judge > localhost > participant, in that order). Forklore maintainership is read from a synced json output.
+- [commit 37e5aa3a](https://github.com/fossunited/fossunited/commit/37e5aa3a) **FOSS User Profile** cleanup: unused API and redundant script removed; profiles show education and projects.
+
+### Chapters & Grants
+
+- [#1819](https://github.com/fossunited/fossunited/pull/1819) A chapter's _Chapter Name_ is set to its city only when left empty, so communities can keep custom names. Partial fix for [#1814](https://github.com/fossunited/fossunited/issues/1814).
+- [#1846](https://github.com/fossunited/fossunited/pull/1846) **FOSS Project Grant** and **FOSS Event Grant** now track changes, so edits by any team member are visible in the version history.
+
+### Links & RSS
+
+- [#1810](https://github.com/fossunited/fossunited/pull/1810) A full-site audit checked 934 URLs across markdown, templates, config and dashboard files, and repointed the dead ones (for example `/policy` is now `/public-policy`, `/grantees` is now `/grants/grantees`). Licence to Learn added to the site links. Credits: Anas Khan.
+- [#1843](https://github.com/fossunited/fossunited/pull/1843) Link to the 2026 governing board blog post.
+- [#1807](https://github.com/fossunited/fossunited/pull/1807) Event links in RSS feeds are now escaped.
+
+### Tests
+
+- [#1830](https://github.com/fossunited/fossunited/pull/1830) All tests now use factory files; the custom `tests.utils` module is deleted.
+
+### Documentation
+
+- [#1824](https://github.com/fossunited/fossunited/pull/1824) IndiaFOSS handbook added to [docs.fossunited.org](https://docs.fossunited.org), with 2026 details, and docs files restructured.
+- [commit 2c5c19bb](https://github.com/fossunited/fossunited/commit/2c5c19bb), [commit 4d31b094](https://github.com/fossunited/fossunited/commit/4d31b094) IndiaFOSS 2026 logistics document and logistics numbers link.
+- [commit 6aafe362](https://github.com/fossunited/fossunited/commit/6aafe362) FAQ title revised and FOSS definitions improved.
+- [commit 13058d71](https://github.com/fossunited/fossunited/commit/13058d71), [commit ef2152b9](https://github.com/fossunited/fossunited/commit/ef2152b9), [commit f890fd26](https://github.com/fossunited/fossunited/commit/f890fd26) Club docs paths fixed in `zensical.toml`, duplicate note removed, clubs guide link updated.
+- [#1840](https://github.com/fossunited/fossunited/pull/1840) Documentation links updated and duplicate `zensical.toml` navigation entries removed. Credits: Ganesh (Vecto).
+
+### IndiaFOSS 2026
+
+- Event photos are up in an Ente album: [indiafoss/2026/photos](https://fossunited.org/indiafoss/2026/photos).
+
+---
+
+### Contributor Spotlight
+
+- **James Reilly** :: single-use coupon binding and race-safe usage count ([#1795](https://github.com/fossunited/fossunited/pull/1795))
+- **Anas Khan** :: full-site dead link audit, 934 URLs checked ([#1810](https://github.com/fossunited/fossunited/pull/1810))
+- **S Mayur** :: ticket PDF download fix ([#1804](https://github.com/fossunited/fossunited/pull/1804))
+- **Vecto** :: documentation link fixes and `zensical.toml` navigation cleanup ([#1840](https://github.com/fossunited/fossunited/pull/1840))
+
+---
+
 ## September 2026
 
 September was IndiaFOSS 2026 month. The event itself ran on a self-hosted live stream setup, the devroom and livestream pages got their final polish, and awards and stats are updated to reflect post-event. On the platform side: a guest-friendly ticket transfer flow with approval tokens, free-coupon tracking (including whether a tier's coupon includes a t-shirt), orderless search on proposals and speakers, a round of schedule-page fixes, and continued security hardening with Bruno API tests.
@@ -130,6 +205,7 @@ August's biggest project was an accessibility audit focused on IndiaFOSS and nei
 An internal accessibility push, scoped to IndiaFOSS and neighbouring pages for this round. Reference material used: [A11y Collective blog](https://www.a11y-collective.com/blog/), [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/), [WCAG 2.2](https://www.w3.org/TR/WCAG22/), and the [Digital Accessibility Concepts by ADA](https://www.youtube.com/watch?v=lmQGS3Igl88&list=PLRWIkE998w-z8Wb85qXT8da_QJUvkqfAV) playlist.
 
 Pages audited and fixed this round:
+
 - Stats page ([indiafoss/2026/stats](https://fossunited.org/indiafoss/2026/stats))
 - IF Archive: list, speakers, and talk pages ([indiafoss/archive](https://fossunited.org/indiafoss/archive))
 - Booths page ([indiafoss/2026/booths](https://fossunited.org/indiafoss/2026/booths))
@@ -144,6 +220,7 @@ Pending for a future round: schedule page, CFP form, proposal details page, tick
 - [#1683](https://github.com/fossunited/fossunited/pull/1683) Improved `aria-label` on the proposal page.
 
 **Volunteer findings this month:**
+
 - Gauri reported low-contrast UI on the Schedule page, not meeting WCAG AA ([#1707](https://github.com/fossunited/fossunited/issues/1707)).
 - Amith Biju flagged a progress-report component from frappe-ui that needs a frappe-ui version bump to fix many accessibility issues ([#1696](https://github.com/fossunited/fossunited/issues/1696)).
 
@@ -213,6 +290,7 @@ We internally have self-hosted [Miniflux](https://miniflux.app) instance for int
 #### IndiaFOSS Pages Live (Desk-managed)
 
 The following IndiaFOSS 2026 pages went live this month via Frappe's Web Page / CMS tooling (data-level, not code changes):
+
 - Workshops page, with tickets and schedule
 - Booths page
 - [FOSS Awards](https://fossunited.org/indiafoss/awards) page
@@ -470,6 +548,7 @@ This month had focus on "Maintainers May" program and IndiaFOSS 2026 works were 
   After an event concludes, attendees now automatically receive a feedback link via email. Sent as a Frappe's newsletter for bulk async approach. Triggered by the event scheduler, with a field on the doctype to prevent re-sending on accidental status changes. All programmatic email sends are now grouped under a `fossunited/utils/notifications.py` utility file.
 
 Feedback web form is made in two way:
+
 1. [RSVP Chapter events](https://fossunited.org/chapter-events-feedback/new) - Only for generic RSVP events (form takes 5-10 mins)
 2. [Paid ticket Chapter events](https://fossunited.org/main-events-feedback/new) - For Big main FOSS festivals (takes 15 mins to answer them all)
 
@@ -517,7 +596,7 @@ Factory-based test pattern continues rolling out across the suite:
 - [#1585](https://github.com/fossunited/fossunited/pull/1585) Free ticket tests refactored to use factories.
 - [#1584](https://github.com/fossunited/fossunited/pull/1584) User profile and volunteers tests refactored.
 - [#1583](https://github.com/fossunited/fossunited/pull/1583) Ticketing tests refactored to factories.
-Credits: Harsh Tandiya
+  Credits: Harsh Tandiya
 - `create_order` API tested for sync with front-end validation logic.
 - Bunch of tests to ensure payments and ticketing workflow is more rigid and future changes won't break page UI or backend.
 - Tests added for `permission_query_conditions` hooks (carried over from April's security work).
@@ -561,7 +640,7 @@ Credits: Harsh Tandiya
 - Siddharth: incident response checklist + clubs docs ([#1588](https://github.com/fossunited/fossunited/pull/1588), [#1580](https://github.com/fossunited/fossunited/pull/1580), [#1590](https://github.com/fossunited/fossunited/pull/1590))
 - Poruri Sai Rahul: project status badge on README ([#1582](https://github.com/fossunited/fossunited/pull/1582))
 - Adimalupu Ganesh: upgrade static calendar download to subscription dropdown
-([#1600](https://github.com/fossunited/fossunited/pull/1600))
+  ([#1600](https://github.com/fossunited/fossunited/pull/1600))
 
 ---
 
@@ -658,7 +737,7 @@ Things are now strict, contact Siddharth upon this.
 
 Every signup form will show checkbox to signin a user for our monthly fossunited newsletter managed via Listmonk.
 
-  Visit: https://fossunited.org/newsletter
+Visit: https://fossunited.org/newsletter
 
 #### ICS Calendar Enrichment
 
@@ -706,7 +785,7 @@ Also provides Action buttons (Accept, reject and checkin)
 ## March 2026
 
 | Metric        | Count |
-|---------------|-------|
+| ------------- | ----- |
 | Issues Closed | 18    |
 | PRs merged    | 50    |
 
@@ -719,7 +798,7 @@ March was the month for **FOSS Hack 2026**, previous FOSS Hack results page is l
 - [#1480](https://github.com/fossunited/fossunited/pull/1480) **FOSS Hack Results Page**
   The results page for all FOSS Hack is now live, showing previous year winners with project and their team. Also shows quick statistics of each year.
 
-    Visit: [FOSS Hack Results Page](https://fossunited.org/fosshack/results)
+  Visit: [FOSS Hack Results Page](https://fossunited.org/fosshack/results)
 
 - [#1478](https://github.com/fossunited/fossunited/pull/1478) **Participant Disqualification & Linking**
   Added disqualification control for hackathon participants as a desk only action. Each participant entry now links to their associated team and project for easier post-event management.
@@ -761,7 +840,7 @@ Three new RSS feeds added this month, completing the core RSS ecosystem:
 - [#1448](https://github.com/fossunited/fossunited/pull/1448) **Partner Project Template Page**
   New dedicated template page for partner and contributor projects with a responsive grid layout, project type indicator icons (contributor vs partner), and search functionality. Bidirectional redirect from the old `partner-project` URL path is in place.
 
-    Visit: [FOSSUnited Partner Page](https://fossunited.org/fosshack/2026/partner-projects/foss_united_platform)
+  Visit: [FOSSUnited Partner Page](https://fossunited.org/fosshack/2026/partner-projects/foss_united_platform)
 
 #### Accessibility Improvements
 
@@ -887,32 +966,29 @@ Significant accessibility work shipped this month, with multiple contributions f
 - [@agriyakhetarpal](https://github.com/agriyakhetarpal) (Agriya Khetarpal) — fixed dashboard header navigation links ([#1508](https://github.com/fossunited/fossunited/pull/1508))
 
 #### FOSS Hack 2026 Contributions
-  Grateful for all the contributors for considering and investing thier time.
+
+Grateful for all the contributors for considering and investing thier time.
 
 - [@jasilfaras](https://github.com/jasilfaras) (Jasil) — pinned `tatsu<5.10.0` to fix install crash on fresh setups ([#1474](https://github.com/fossunited/fossunited/pull/1474))
 - Jenisha Dsouza — FOSS Hack 2026 accessibility contributions across dashboard components ([#1489](https://github.com/fossunited/fossunited/pull/1489), [#1490](https://github.com/fossunited/fossunited/pull/1490), [#1493](https://github.com/fossunited/fossunited/pull/1493))
 - [@aflahaa](https://github.com/aflaha01) — refactored newsletter custom CSS with Bootstrap utilities ([#1473](https://github.com/fossunited/fossunited/pull/1473))
 - [@nimiverma](https://github.com/nimiverma) - Newsletter Subscription on RSVP Success #1513
-Returning contributors this month:
+  Returning contributors this month:
 - [@ni5arga](https://github.com/ni5arga) (Nisarga Adhikary) — security, performance, RSS feeds, and profile features
 - [@anshi321](https://github.com/anshi321) (Anshika Yadav) — event UX, security sanitization, CFP improvements, dashboard sidebar refactor, and documentation
 
-
 ---
-
 
 ## February 2026
 
 | Metric        | Count |
-|---------------|-------|
+| ------------- | ----- |
 | Issues Closed | 8     |
 | PRs merged    | 32    |
 
 Hello,
 
 February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon page, added dark mode support to the dashboard, implemented crucial security fixes, and polished the RSVP experience.
-
-
 
 ### PR Highlights
 
@@ -921,13 +997,13 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
 - [#1430](https://github.com/fossunited/fossunited/pull/1430) **Redesigned Default Hackathon Page**
   Complete redesign of default hackathon pages to match the event page design with v3.0 styling. Better visual hierarchy, improved sponsor display, and cleaner navigation. Listing of localhosts, submissions button, mentors and so on.
 
-    Visit: [FOSS Hack 2026](https://fossunited.org/hack/fosshack26)
+  Visit: [FOSS Hack 2026](https://fossunited.org/hack/fosshack26)
 
 - [#1429](https://github.com/fossunited/fossunited/pull/1429) **Project Contribution Carousel**
   Added carousel cards showcasing project contributions on the FOSS Hack 2026 page. Highlights partner projects and informs open contribution to FOSS ecosystem.
 
-    Credits: Jeswin Josu for design.
-    View carousel: [FOSS Hack 2026 Landing](https://fossunited.org/fosshack)
+  Credits: Jeswin Josu for design.
+  View carousel: [FOSS Hack 2026 Landing](https://fossunited.org/fosshack)
 
 - [#1417](https://github.com/fossunited/fossunited/pull/1417) **Hackathon Projects Listing Page**
   Enhanced hackathon projects listing page with improved layout and filtering.
@@ -945,7 +1021,7 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
 - DocsInfo component now has a close button to hide help messages.
 - Applied proper color scales and theme-aware styling across all dashboard components importing frappe-ui method of doing things.
 
-    Related issue to address in the future: [#1221](https://github.com/fossunited/fossunited/issues/1221)
+  Related issue to address in the future: [#1221](https://github.com/fossunited/fossunited/issues/1221)
 
 #### Security Improvements
 
@@ -971,13 +1047,13 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
 - [#1419](https://github.com/fossunited/fossunited/pull/1419) **RSVP Success Feedback for Guests**
   Guest users now get clear success feedback after RSVP submission. Submit button is disabled after click to prevent duplicate submissions.
 
-    Although should be taken care via DB-level uniqueness [#1418](https://github.com/fossunited/fossunited/issues/1418)
+  Although should be taken care via DB-level uniqueness [#1418](https://github.com/fossunited/fossunited/issues/1418)
 
 - [#1405](https://github.com/fossunited/fossunited/pull/1405) **RSVP Insights Table Toggle**
   Added table view toggle in RSVP insights. Manual check-in button now only enabled during event days for better UX.
 
-    Related: [frappe-ui PR #488](https://github.com/frappe/frappe-ui/pull/488).
-    Credits to Harsh patel for reporting bad design.
+  Related: [frappe-ui PR #488](https://github.com/frappe/frappe-ui/pull/488).
+  Credits to Harsh patel for reporting bad design.
 
 - Adapted RSVP pages to v3 design with improved forms and better visual consistency.
 - Simplified feedback messages - logged-in users can edit their responses directly.
@@ -988,7 +1064,7 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
 - [#1436](https://github.com/fossunited/fossunited/pull/1436) **Event Grants in Timeline**
   Accepted event grants now appear in the events timeline and RSS feed as upcoming events. Links to external website if provided, otherwise to grants page.
 
-    Visit: [Events Timeline](https://fossunited.org/events/timeline)
+  Visit: [Events Timeline](https://fossunited.org/events/timeline)
 
 - [#1435](https://github.com/fossunited/fossunited/pull/1435) **Compact Agenda with Icons**
   Made event agenda more compact for halls/dates (especially useful for hackathon pages). Uses `talk_video` field for online meeting links when no linked CFP or hall is given.
@@ -1045,7 +1121,7 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
 - [#1423](https://github.com/fossunited/fossunited/pull/1423) **Frappe Semgrep & PR Linter**
   Added Frappe semgrep rules and conventional commit linter checks to CI pipeline for better code quality and consistency.
 
-    Credits: Harsh Tandiya for informing for best practice
+  Credits: Harsh Tandiya for informing for best practice
 
 #### UI/UX Polish
 
@@ -1091,7 +1167,7 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
 - markdown-it: 14.1.0 → 14.1.1
 - cryptography: 46.0.3 → 46.0.5
 
-    Planning to bump other dependency manually via [#1437](https://github.com/fossunited/fossunited/issues/1437)
+  Planning to bump other dependency manually via [#1437](https://github.com/fossunited/fossunited/issues/1437)
 
 ---
 
@@ -1100,24 +1176,20 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
 - [@ni5arga](https://github.com/ni5arga) (Nisarga Adhikary) made significant security contributions:
   - [#1398](https://github.com/fossunited/fossunited/pull/1398): Rate limiting & ticket transfer validation fixes
   - [#1401](https://github.com/fossunited/fossunited/pull/1401): Team member validation in project creation
-  Credits also to [@kewonit](https://github.com/kewonit) (Kartik Kulloli) for security research
-
+    Credits also to [@kewonit](https://github.com/kewonit) (Kartik Kulloli) for security research
 
 ---
-
 
 ## January 2026
 
 | Metric        | Count |
-|---------------|-------|
+| ------------- | ----- |
 | Issues Closed | 14    |
 | PRs merged    | 42    |
 
 Hey everyone,
 
 January kicked off with significant improvements focused on **FOSS Hack 2026** preparation, **Events Timeline redesign** (much needed), and **Grants page overhaul**. We've also enhanced the dashboard with better **localhost management**.
-
-
 
 ### PR Highlights
 
@@ -1271,22 +1343,18 @@ January kicked off with significant improvements focused on **FOSS Hack 2026** p
 - [@Pranav1921](https://github.com/Pranav1921) made their first contribution:
   - [#1342](https://github.com/fossunited/fossunited/pull/1342): Added edit event button for concluded events with proper permission checks
 
-
 ---
-
 
 ## December 2025
 
 | Metric        | Count |
-|---------------|-------|
+| ------------- | ----- |
 | Issues Closed | 10    |
 | PRs merged    | 37    |
 
 Hi everyone,
 
 December was a quieter but productive month as we wrapped up the year amidst holidays and year-end slowdowns. This month focus has been early groundwork for upcoming **FOSS Hack 2026**, ensuring the platform enters the New Year in a more stable and maintainable state.
-
-
 
 ### PR Highlights
 
@@ -1295,7 +1363,7 @@ December was a quieter but productive month as we wrapped up the year amidst hol
 - [#1337](https://github.com/fossunited/fossunited/pull/1337) **FOSS Hack 2026 page**
   Introduced the initial FOSS Hack 2026 landing page directly in the codebase.
   - Designed to be fully open for community contributions
-  Visit: https://fossunited.org/fosshack/2026
+    Visit: https://fossunited.org/fosshack/2026
 
 #### Tickets
 
@@ -1367,7 +1435,7 @@ December was a quieter but productive month as we wrapped up the year amidst hol
 - [#1312](https://github.com/fossunited/fossunited/pull/1312) Proposal review notifications
   Introduced email notifications when a proposal receives a **new review or updated remarks**.
   - Notifies proposers and CCs speaker emails
-  Credits: Aryak for previous work (#982)
+    Credits: Aryak for previous work (#982)
 
 - [#1339](https://github.com/fossunited/fossunited/pull/1339) Increase reference link length for CFP submissions
   Long reference links (Google Docs, slides, blogs) are now fully supported.
@@ -1400,11 +1468,10 @@ December was a quieter but productive month as we wrapped up the year amidst hol
   - Proposal lists
   - Dashboard sidebar navigation
   - My Proposals page
-  Credits: @grittyuffy (Keerthana)
+    Credits: @grittyuffy (Keerthana)
 
 - [#1306](https://github.com/fossunited/fossunited/pull/1306): Added missing `alt` text to images across dashboard and main site, improving screen reader support.
   Credits: @ig-imanish (Manish Kumar)
-
 
 ### New Contributor Spotlight
 
@@ -1421,20 +1488,16 @@ December was a quieter but productive month as we wrapped up the year amidst hol
 - [@ig-imanish](https://github.com/ig-imanish) made their first contribution:
   - [#1306](https://github.com/fossunited/fossunited/pull/1306): Improve accessibility: Add missing alt text to all images across dashboard and main site
 
-
-
 ## November 2025
 
 | Metric        | Count |
-|---------------|-------|
+| ------------- | ----- |
 | Issues Closed | 19    |
 | PRs merged    | 40    |
 
 Hi everyone,
 
 November brought some major additions to the platform! We've introduced a **Grants Funding Directory** inspired by floss.fund, implemented **RSVP Check-ins** for better event management, and launched **Host Approval workflow** for RSVPs. The new **Events Page redesign** with v3.0 design is now live, alongside the [**First Commit**](https://fossunited.org/first-commit) initiative page. We've also added comprehensive **Free Ticket management** for organisers.
-
-
 
 ### PR Highlights
 
@@ -1562,14 +1625,12 @@ Credits: [@jeswinjosu](https://github.com/jeswinjosu)
 
 - [#1278](https://github.com/fossunited/fossunited/issues/1278) Temporarily hid the **Projects**, **Education**, and **Resume** tabs on user profiles until we redesigned profile page. For now, only the **About** and **Activity** sections will be shown.
 
-
 ---
-
 
 ## October 2025
 
 | Metric        | Count |
-|---------------|-------|
+| ------------- | ----- |
 | Issues Closed | 28    |
 | PRs merged    | 31    |
 
@@ -1577,8 +1638,6 @@ Hey folks,
 
 It was Hack-tober month!
 We've a new [**Volunteers Page**](https://fossunited.org/volunteers) and with initiation of **Dark Theme** support was introduced to it, alongside several UI refinements and [documentation](https://docs.fossunited.org) upgrades. Moving on next month, we will be focusing more on IndiaFOSS related issues and hey if you did not know there are many important (Big) events lined up like MangaloreFOSS, MumbaiFOSS, ChennaiFOSS and [more](https://fossunited.org/events/timeline).
-
-
 
 ### PR Highlights
 
@@ -1657,21 +1716,17 @@ We've a new [**Volunteers Page**](https://fossunited.org/volunteers) and with in
 
 - [@dependabot[bot]](https://github.com/dependabot) Yea, for Automation of package updates!
 
-
 ---
-
 
 ## September 2025
 
 | Metric        | Count |
-|---------------|-------|
+| ------------- | ----- |
 | Issues Closed | 10    |
 | PRs merged    | 32    |
 
 Hi again,
 We had Successfully Concluded our 5th Edition of IndiaFOSS (2025) on 20-21 Sept. This month had most focus on Schedule page.
-
-
 
 ### PR Highlights
 
@@ -1684,7 +1739,6 @@ We had Successfully Concluded our 5th Edition of IndiaFOSS (2025) on 20-21 Sept.
 - [#1128](https://github.com/fossunited/fossunited/pull/1128) Small Doc on purpose of `event_permalink`
   Some users might confuse with the term permalink, so added some doc to give info that it means page 'route' (alias)
 
-
 #### Ticket Management
 
 - [#1118](https://github.com/fossunited/fossunited/pull/1118) Make ticket transfer page public
@@ -1693,6 +1747,7 @@ We had Successfully Concluded our 5th Edition of IndiaFOSS (2025) on 20-21 Sept.
   Implemented a QR code based quick check-in scanner to log check-in details. Both pages `/dashboard/event/.../quick-checkin` and `/dashboard/event/.../checkins` use this component to scan QR.
 
 #### Event Schedule
+
 Could not complete the Schedule re-design, so added some features to enhance UX.
 
 - [#1126](https://github.com/fossunited/fossunited/pull/1126) Search by Speaker in proposal (CFP) page
@@ -1706,7 +1761,9 @@ Could not complete the Schedule re-design, so added some features to enhance UX.
   Further plan is to make PDF generation in FOSS theme using `Typst`
 
 ---
+
 ### New Contributor Spotlight
+
 - [@agriyakhetarpal](https://github.com/agriyakhetarpal) made their first contribution:
   - [#1142](https://github.com/fossunited/fossunited/pull/1142): Added Zulip logo for chapters
     With merge of Zulip into svgl, we now have Zulip support into socials link for Chapter Info.
@@ -1716,31 +1773,26 @@ Could not complete the Schedule re-design, so added some features to enhance UX.
   - [#1167](https://github.com/fossunited/fossunited/pull/1167): Added more docs
     Complementing to [#1150](https://github.com/fossunited/fossunited/issues/1150), Arun added some missing docs for events, social media and more.
 
-
 <br>
-
-
 
 ## August 2025
 
 | Metric        | Count |
-|---------------|-------|
+| ------------- | ----- |
 | Issues Closed | 13    |
 | PRs merged    | 19    |
 
 Hi everyone,
 
-I'm **Dilip G** (also known as *Zororg* on Telegram, or with username `@idlip`), the new Developer for FOSS United. First month on board, after Harsh Tandiya as Developer.
+I'm **Dilip G** (also known as _Zororg_ on Telegram, or with username `@idlip`), the new Developer for FOSS United. First month on board, after Harsh Tandiya as Developer.
 This is my first monthly tech report as part of the FOSS United team. I'd love your feedback on the format, content, or anything you'd like to see added in future changelogs. You can share your suggestions via GitHub Issues or drop me an email; whichever works best for you.
-
-
 
 ### PR Highlights
 
 #### Jobs & Scheduling
 
 - [#1080](https://github.com/fossunited/fossunited/pull/1080) Scheduled expiry for job posts older than 90 days
-  Implemented a background scheduler that automatically marks job listings as *expired* after 90 days.
+  Implemented a background scheduler that automatically marks job listings as _expired_ after 90 days.
   🔗 Visit: [FOSS United Jobs](https://fossunited.org/jobs)
 
 #### Roles & Permissions
@@ -1793,22 +1845,18 @@ This is my first monthly tech report as part of the FOSS United team. I'd love y
 - [@HarshPatel5940](https://github.com/HarshPatel5940) made their first contribution:
   - [#1010](https://github.com/fossunited/fossunited/pull/1010): Dynamic user search in Chapter/Events member dashboard
 
-
-
 <br>
-
-
 
 ## July 2025
 
 The FOSS United platform was mostly under maintenance mode during this period. This was mostly my scrutiny period with some given tasks for two weeks.
 
-
-
 ### PR Highlights
 
 #### Setup with NixOS
+
 - [#1068](https://github.com/fossunited/fossunited/issues/1068) Doc and guide on setting up FossUnited platform with NixOS. I plan to extend this further more.
 
 #### Job Management
+
 - [#1077](https://github.com/fossunited/fossunited/pull/1077) Added date of posting for each job card and closing for expired ones
