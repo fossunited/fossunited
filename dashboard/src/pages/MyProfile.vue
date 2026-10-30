@@ -22,6 +22,7 @@
                 :private="false"
                 :validate-file="validateFile"
                 @success="(file) => setBannerImage(file)"
+                @failure="(error) => showUploadError(error, 'Error uploading banner image')"
               >
                 <template #default="{ openFileSelector }">
                   <Button
@@ -62,6 +63,7 @@
               :private="false"
               :validate-file="validateFile"
               @success="(file) => setProfileImage(file)"
+              @failure="(error) => showUploadError(error, 'Error uploading profile image')"
             >
               <template #default="{ openFileSelector }">
                 <Button
@@ -350,7 +352,7 @@
 import TextEditor from '@/components/ui/TextEditor.vue'
 import { IconCheck, IconEdit, IconTrash, IconPlus } from '@tabler/icons-vue'
 import { createResource, createDocumentResource, FileUploader, Switch, FormControl, ErrorMessage } from 'frappe-ui'
-import { isValidUrl, ensureHttpsPrefix } from '@/helpers/utils'
+import { isValidUrl, ensureHttpsPrefix, showError } from '@/helpers/utils'
 import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
 
 import { reactive, ref, watch, computed } from 'vue'
@@ -374,6 +376,15 @@ watch(
   { immediate: true }
 )
 
+// FileUploader emits Error instances for transport and client-side failures.
+// Unlike API errors, these can carry a useful message without server messages.
+const showUploadError = (error, context) => {
+  const uploadError = error instanceof Error && error.message && error.message !== 'Error Uploading File'
+    ? { ...error, messages: error.messages?.length ? error.messages : [error.message] }
+    : error
+  showError(uploadError, context)
+}
+
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
   if (!['png', 'jpg', 'jpeg'].includes(extn)) {
@@ -392,6 +403,9 @@ const setBannerImage = (_file) => {
       }
     },
     auto: true,
+    onError(err) {
+      showError(err, 'Error updating banner image')
+    },
     onSuccess() {
       if (_file.file_url) {
         toast.success('Banner Image Updated')
@@ -417,7 +431,7 @@ const setProfileImage = (_file) => {
       toast.success('Profile Image Updated')
     },
     onError(err) {
-      toast.error('Error updating profile image' + err)
+      showError(err, 'Error updating profile image')
     },
   })
 }
