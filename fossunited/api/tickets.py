@@ -160,8 +160,6 @@ def get_ticket_qr(ticket_id: str):
     here. A ticket's QR content never changes once issued, so the response
     is cacheable by the requesting browser.
     """
-    from urllib.parse import quote
-
     from werkzeug.wrappers import Response
 
     ticket = frappe.db.get_value(
@@ -183,15 +181,14 @@ def get_ticket_qr(ticket_id: str):
     ):
         frappe.throw(_("Not permitted to access this ticket"), frappe.PermissionError)
 
-    url = frappe.utils.get_url(f"/dashboard/my-tickets?id={quote(ticket_id)}")
     return Response(
-        get_ticket_qr_svg(url),
+        get_ticket_qr_svg(ticket_id),
         mimetype="image/svg+xml",
         headers={"Cache-Control": "private, max-age=86400"},
     )
 
 
-def get_ticket_qr_svg(data: str) -> str:
+def get_ticket_qr_svg(ticket_id: str) -> str:
     """
     Styled QR as inline SVG for the "Event Ticket" print format (Jinja method)
     and the My Tickets dialog: round dots, and the FOSS United logo in centre.
@@ -199,10 +196,12 @@ def get_ticket_qr_svg(data: str) -> str:
     Error correction "H" recovers ~30% of the code; the centre is ~5%.
     """
     import re
+    from urllib.parse import quote
 
     import pyqrcode
 
-    matrix = pyqrcode.create(data, error="H").code
+    url = f"https://fossunited.org/dashboard/my-tickets?id={quote(ticket_id)}"
+    matrix = pyqrcode.create(url, error="H").code
     n = len(matrix)
     gap = range(n * 2 // 5, n - n * 2 // 5)
     eyes = ((0, 0), (n - 7, 0), (0, n - 7))
