@@ -35,6 +35,7 @@ from fossunited.doctype_ids import (
     USER_PROFILE,
 )
 from fossunited.fossunited.utils import (
+    get_forklore_maintainer,
     get_ograph_url,
     get_user_socials,
     is_forklore_maintainer,
@@ -435,6 +436,9 @@ class FOSSUserProfile(WebsiteGenerator):
             ) = self.get_user_activity(participants)
 
         context.hackathon_badges = self.get_hackathon_badges(participants)
+        context.forklore_maintainer = get_forklore_maintainer(
+            self.get_forklore_username()
+        ) or get_forklore_maintainer(self.username, source="username")
         context.user_socials = get_user_socials(self)
         context.pagetitle, context.description, context.image = self.get_meta(
             context.hackathon_badges

@@ -15,16 +15,13 @@ FORKLORE_MAINTAINERS_URL = "https://forklore.in/maintainers.json"
 
 
 def sync_forklore_maintainers():
-    """Store Forklore maintainer handles in Ograph Settings for profile OG images.
+    """Save Forklore's maintainer feed verbatim for profile badges.
 
     Forklore (https://forklore.in) publishes /maintainers.json. We refresh the
-    handle set monthly so FOSS User Profile.get_profile_badges() can flag
+    feed monthly so FOSS User Profile.get_profile_badges() can flag
     maintainers from a local lookup instead of calling an external service on
     every profile render.
     """
-    if not frappe.db.exists("DocType", "Ograph Settings"):
-        return
-
     try:
         resp = requests.get(FORKLORE_MAINTAINERS_URL, timeout=30)
         resp.raise_for_status()
@@ -38,19 +35,10 @@ def sync_forklore_maintainers():
         )
         return
 
-    # Keep GitHub handles and Forklore usernames in separate namespaces.
-    handles = {
-        source: [
-            entry[source].lower()
-            for entry in entries
-            if isinstance(entry, dict) and isinstance(entry.get(source), str) and entry[source]
-        ]
-        for source in ("github", "username")
-    }
-    # Preserve the saved handles on a transient empty/error response.
-    if any(handles.values()):
+    # Preserve the saved feed on a transient empty/error response.
+    if entries:
         frappe.db.set_single_value(
-            "Ograph Settings", "forklore_maintainers", frappe.as_json(handles)
+            "Ograph Settings", "forklore_maintainers", frappe.as_json(entries)
         )
 
 

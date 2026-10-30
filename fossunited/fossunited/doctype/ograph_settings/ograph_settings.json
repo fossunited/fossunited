@@ -18,7 +18,7 @@
    "reqd": 1
   },
   {
-   "description": "Maintainer handles refreshed monthly from Forklore for profile badges.",
+   "description": "Maintainer feed refreshed monthly from Forklore for profile badges.",
    "fieldname": "forklore_maintainers",
    "fieldtype": "JSON",
    "label": "Forklore Maintainers",
