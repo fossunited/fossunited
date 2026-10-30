@@ -3,7 +3,6 @@ APIs for Tickets and Transfer Tickets
 """
 
 import hmac
-import io
 from datetime import timedelta
 
 import frappe
@@ -154,17 +153,15 @@ def get_session_user_tickets() -> list:
 @frappe.whitelist(methods=["GET"])
 def get_ticket_qr(ticket_id: str):
     """
-    Render a QR code (SVG) for a ticket, encoding the plain ticket ID.
+    Render the ticket's styled QR (SVG), the same one printed on the ticket PDF.
 
     Ownership-gated via `_ticket_belongs_to_user` - the same rule used for
     the "My Tickets" list, so a ticket that shows up there is never blocked
     here. A ticket's QR content never changes once issued, so the response
     is cacheable by the requesting browser.
-
-    Uses pyqrcode's .svg() (same as frappe.twofactor.get_qr_svg_code) since
-    .png() needs the separate `pypng` package, which isn't installed here.
     """
-    import pyqrcode
+    from urllib.parse import quote
+
     from werkzeug.wrappers import Response
 
     ticket = frappe.db.get_value(
@@ -186,13 +183,59 @@ def get_ticket_qr(ticket_id: str):
     ):
         frappe.throw(_("Not permitted to access this ticket"), frappe.PermissionError)
 
-    buf = io.BytesIO()
-    pyqrcode.create(ticket_id).svg(buf, scale=6, background="#fff")
-
+    url = frappe.utils.get_url(f"/dashboard/my-tickets?id={quote(ticket_id)}")
     return Response(
-        buf.getvalue(),
+        get_ticket_qr_svg(url),
         mimetype="image/svg+xml",
         headers={"Cache-Control": "private, max-age=86400"},
+    )
+
+
+def get_ticket_qr_svg(data: str) -> str:
+    """
+    Styled QR as inline SVG for the "Event Ticket" print format (Jinja method)
+    and the My Tickets dialog: round dots, and the FOSS United logo in centre.
+    The logo is inlined, so the SVG also works as an <img>.
+    Error correction "H" recovers ~30% of the code; the centre is ~5%.
+    """
+    import re
+
+    import pyqrcode
+
+    matrix = pyqrcode.create(data, error="H").code
+    n = len(matrix)
+    gap = range(n * 2 // 5, n - n * 2 // 5)
+    eyes = ((0, 0), (n - 7, 0), (0, n - 7))
+
+    def skip(x, y):
+        in_eye = any(ex <= x < ex + 7 and ey <= y < ey + 7 for ex, ey in eyes)
+        return in_eye or (x in gap and y in gap)
+
+    dots = "".join(
+        f"M{x + 0.05} {y + 0.5}a.45 .45 0 1 0 .9 0a.45 .45 0 1 0 -.9 0"
+        for y, row in enumerate(matrix)
+        for x, cell in enumerate(row)
+        if cell and not skip(x, y)
+    )
+    rings = "".join(
+        f'<rect x="{ex + 0.5}" y="{ey + 0.5}" width="6" height="6" rx="1.6" '
+        f'fill="none" stroke="#141414"/><rect x="{ex + 2}" y="{ey + 2}" width="3" height="3" rx=".9"/>'
+        for ex, ey in eyes
+    )
+    logo_file = frappe.get_app_path("fossunited", "public", "images", "fossunited-logo.svg")
+    # Fixed path inside this app, no user input in it
+    # nosemgrep: frappe-security-file-traversal
+    logo = open(logo_file).read()
+    logo_view = re.search(r'viewBox="([^"]+)"', logo).group(1)
+    logo_body = logo[logo.index(">") + 1 : logo.rindex("</svg>")]
+    size = len(gap) - 1
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 {n + 4} {n + 4}" '
+        f'fill="#141414" role="img" aria-label="Ticket QR code">'
+        f'<rect x="-2" y="-2" width="{n + 4}" height="{n + 4}" fill="#fff"/>'
+        f'<path d="{dots}"/>{rings}'
+        f'<svg x="{gap[0] + 0.5}" y="{gap[0] + 0.5}" width="{size}" height="{size}" '
+        f'viewBox="{logo_view}" fill="none" color="#141414">{logo_body}</svg></svg>'
     )
 
 
