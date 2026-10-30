@@ -1,46 +1,28 @@
 # Delete personal data
 
-If you want us to delete your data that is saved on the FOSS United
-Foundation systems, including Personally Identifiable Information (PII),
-please submit your email address on the
+If you want us to delete the personal data saved on FOSS United Foundation
+systems, including Personally Identifiable Information (PII), submit your email
+address on the
 [Delete Data](https://fossunited.org/request-for-account-deletion/new) page.
 
 ![Request data](./assets/delete-data.png)
 
-## Profile anonymization
+## What happens next
 
-After email verification, a System Manager approves the request with **Delete
-Data**. Frappe processes the request on the long background queue, disables the
-account, and renames the User to a `deleted-user-…` identifier.
+1. You'll receive a confirmation email — click the link to confirm your request.
+2. Our team reviews it and completes the deletion, usually within a week.
+3. Your account is disabled and your profile is removed: your name, photo, bio,
+   contact and social links, location, and your education / work / project
+   details. Your public profile page (`/u/<username>`) will no longer be available.
 
-The profile's name, contact details, biography, location, gender, image references,
-and social links are replaced with placeholders. Education, work experience, and
-personal project details are redacted by their parent profile, including entries
-added by an administrator. The profile and child rows remain so existing links
-stay valid. The anonymized profile's `/u/<username>` page returns 404.
+## What is kept
 
-This is the first part of a staged rollout. It does **not** yet scrub copies of
-identity data in chapter rosters, CFP speakers, tickets, hackathon records, or
-payments. It also does not delete uploaded File records or historical versions.
-The profile username and route remain stored, but the profile page is unavailable.
-Deleting a profile directly in Desk continues to use the existing hard-delete
-behavior; use a Personal Data Deletion Request for this anonymization workflow.
+To keep event history and counts accurate without identifying you, some records
+are **anonymized** rather than deleted — for example your event RSVPs and talk
+proposals no longer show your name or email.
 
-### Verify locally
+Financial records such as ticket payments are **retained** where we're legally
+required to, with your personal details removed.
 
-Run the profile deletion regressions and existing profile tests:
-
-```sh
-bench --site <site> run-tests --module fossunited.tests.test_account_deletion_profile
-bench --site <site> run-tests --module fossunited.foss_profiles.doctype.foss_user_profile.test_foss_user_profile
-```
-
-For a browser check, create a disposable profile, visit its public page, submit a
-Personal Data Deletion Request, follow the confirmation email, and approve the
-request as a System Manager. Confirm the request reaches **Deleted**, its profile
-and child rows contain placeholders, another user's profile is unchanged, and the
-original public profile URL returns 404.
-
-Email delivery needs a configured outgoing Email Account. Approval also requires
-a running long-queue worker; saving or verifying a request alone does not
-anonymize the profile.
+> We're expanding this coverage in stages. If you have a specific concern about
+> where your data appears, mention it in your request and our team will handle it.

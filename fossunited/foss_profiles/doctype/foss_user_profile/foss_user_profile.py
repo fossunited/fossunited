@@ -394,10 +394,6 @@ class FOSSUserProfile(WebsiteGenerator):
         return attended, attended_hack, talked, cfps, volunteered
 
     def get_context(self, context):
-        # Frappe renames an anonymized User while preserving the profile link.
-        if (self.user or "").startswith("deleted-user-"):
-            raise frappe.DoesNotExistError
-
         if self.is_private and frappe.session.user not in (
             "Administrator",
             self.user,

@@ -83,8 +83,12 @@ custom_404_page_context = [
 # Drives Frappe's Personal Data Deletion Request workflow: on an approved
 # request, the listed `redact_fields` are overwritten with placeholder values
 # (and the User is renamed), removing the person's PII while keeping rows intact.
-# `filter_by` is matched against the user's email. Profile child rows are
-# handled by the request's on_change event, matching their parent profile.
+# `filter_by` is matched against the user's email.
+#
+# Only plain Data fields are listed here — they redact cleanly to "[REDACTED]".
+# Fields whose type-based placeholder would be broken (images, the current_city
+# Link, long-text bio/about) and the profile's child rows are handled in
+# `account_deletion.finalize_profile_anonymization` on the request's on_change.
 user_data_fields = [
     # --- FOSS User Profile (the /u/<username> page + the identity hub) ---
     {
@@ -93,11 +97,6 @@ user_data_fields = [
         "redact_fields": [
             "full_name",
             "email",
-            "bio",
-            "about",
-            "profile_photo",
-            "cover_image",
-            "current_city",
             "gender",
             "website",
             "github",
@@ -120,7 +119,7 @@ user_data_fields = [
 
 doc_events = {
     "Personal Data Deletion Request": {
-        "on_change": "fossunited.foss_profiles.account_deletion.redact_profile_children",
+        "on_change": "fossunited.foss_profiles.account_deletion.finalize_profile_anonymization",
     },
     "User": {
         "after_insert": [
