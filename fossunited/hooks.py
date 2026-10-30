@@ -63,6 +63,8 @@ jinja = {
         "fossunited.stack.utils.get_inactive_stack",
         "fossunited.www.events.timeline.index.get_must_attend_events",
         "fossunited.fossunited.utils.get_all_city_names",
+        # QR as an SVG data URI, for the "Event Ticket" print format
+        "frappe.utils.print_format_generator.get_qr_code",
     ],
     "filters": [
         "fossunited.fossunited.utils.make_badge",
