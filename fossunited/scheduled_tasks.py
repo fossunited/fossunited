@@ -1,4 +1,5 @@
 import frappe
+import requests
 from frappe.utils import add_days, now_datetime
 
 from fossunited.doctype_ids import (
@@ -8,6 +9,37 @@ from fossunited.doctype_ids import (
     JOB_STATUS_APPROVED,
     JOB_STATUS_EXPIRED,
 )
+
+# Forklore publishes a list of {"username", "github"} maintainers at this URL.
+FORKLORE_MAINTAINERS_URL = "https://forklore.in/maintainers.json"
+
+
+def sync_forklore_maintainers():
+    """Save Forklore's maintainer feed verbatim for profile badges.
+
+    Forklore (https://forklore.in) publishes /maintainers.json. We refresh the
+    feed monthly so FOSS User Profile.get_profile_badges() can flag
+    maintainers from a local lookup instead of calling an external service on
+    every profile render.
+    """
+    try:
+        resp = requests.get(FORKLORE_MAINTAINERS_URL, timeout=30)
+        resp.raise_for_status()
+        entries = resp.json()
+        if not isinstance(entries, list):
+            raise ValueError("Forklore maintainer feed must be a list")
+    except Exception:
+        frappe.log_error(
+            title="Forklore maintainer sync failed",
+            message=frappe.get_traceback(),
+        )
+        return
+
+    # Preserve the saved feed on a transient empty/error response.
+    if entries:
+        frappe.db.set_single_value(
+            "Ograph Settings", "forklore_maintainers", frappe.as_json(entries)
+        )
 
 
 def conclude_events():

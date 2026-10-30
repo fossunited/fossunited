@@ -161,6 +161,7 @@ before_tests = "fossunited.setup.before_tests"
 # Migration
 # ----------------
 before_migrate = "fossunited.migrate.before_migrate"
+after_migrate = "fossunited.scheduled_tasks.sync_forklore_maintainers"
 
 # Scheduler Events
 # ----------------
@@ -170,5 +171,6 @@ scheduler_events = {
     ],
     "monthly": [
         "fossunited.scheduled_tasks.update_past_job_status",
+        "fossunited.scheduled_tasks.sync_forklore_maintainers",
     ],
 }

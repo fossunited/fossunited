@@ -5,7 +5,8 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "ograph_url"
+  "ograph_url",
+  "forklore_maintainers"
  ],
  "fields": [
   {
@@ -15,6 +16,13 @@
    "in_list_view": 1,
    "label": "Ograph URL",
    "reqd": 1
+  },
+  {
+   "description": "Maintainer feed refreshed monthly from Forklore for profile badges.",
+   "fieldname": "forklore_maintainers",
+   "fieldtype": "JSON",
+   "label": "Forklore Maintainers",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,

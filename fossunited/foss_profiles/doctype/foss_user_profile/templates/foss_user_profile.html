@@ -1,5 +1,4 @@
 {% from "fossunited/templates/macros/profile_badge.html" import profile_badge %}
-
 {% extends "templates/foss_base.html" %}
 
 {% block page_content %}
@@ -26,27 +25,45 @@
             </div>
           {% endfor %}
         </div>
-        <div class="content-div" id="about" role="tabpanel" tabindex="0" aria-labelledby="about-nav-item">
+        <div
+          class="content-div"
+          id="about"
+          role="tabpanel"
+          tabindex="0"
+          aria-labelledby="about-nav-item"
+        >
           <div class="profile-content-div">
             <h5>About</h5>
             <div class="about v3-text-primary">{{ doc.about or "Nothing in about." }}</div>
           </div>
         </div>
         {% if _has_resume %}
-        <div class="content-div" id="resume" role="tabpanel" tabindex="0" aria-labelledby="resume-nav-item">
-          {{ render_experience() }} {{ render_education() }}
-        </div>
+          <div
+            class="content-div"
+            id="resume"
+            role="tabpanel"
+            tabindex="0"
+            aria-labelledby="resume-nav-item"
+          >
+            {{ render_experience() }} {{ render_education() }}
+          </div>
         {% endif %}
         {% if _has_projects or doc.user == frappe.session.user %}
-        <div class="content-div" id="projects" role="tabpanel" tabindex="0" aria-labelledby="projects-nav-item">{{ render_projects() }}</div>
+          <div
+            class="content-div"
+            id="projects"
+            role="tabpanel"
+            tabindex="0"
+            aria-labelledby="projects-nav-item"
+          >
+            {{ render_projects() }}
+          </div>
         {% endif %}
       </div>
 
       <div class="profile-content-section mt-10">
         <div class="d-flex align-items-center border-bottom">
-          <h2 class="subtitle" style="padding-left: 2.5rem;">
-            Activity
-          </h2>
+          <h2 class="subtitle" style="padding-left: 2.5rem;">Activity</h2>
           <a
             href="https://docs.fossunited.org/manage-profile/#show-community-activity"
             target="_blank"
@@ -60,7 +77,6 @@
         </div>
         <div id="activity">{{ render_activity() }}</div>
       </div>
-
     </div>
   </div>
 {% endblock %}
@@ -85,16 +101,18 @@
           >
             <div class="project-card-icon-wrap">
               {% if project.cover_image %}
-                <img src="{{ project.cover_image }}" alt="{{ project.project_name }}" class="project-cover-icon" />
+                <img
+                  src="{{ project.cover_image }}"
+                  alt="{{ project.project_name }}"
+                  class="project-cover-icon"
+                />
               {% else %}
                 <i class="ti ti-folder-code"></i>
               {% endif %}
             </div>
             <div class="project-title">{{ project.project_name }}</div>
             <div class="project-description">{{ (project.tagline or "") | truncate(120) }}</div>
-            <span class="project-link-text">
-              View Project <i class="ti ti-arrow-right"></i>
-            </span>
+            <span class="project-link-text"> View Project <i class="ti ti-arrow-right"></i> </span>
           </a>
         {% endfor %}
       </div>
@@ -137,7 +155,10 @@
                   <div class="experience-item--company-location">
                     {# if values | len < 2 #}
                     <span style="color: hsl(var(--clr-foss-mint-500))">
-                      <a rel="noopener noreferrer nofollow" href="{{ value.company_website }}" target="_blank"
+                      <a
+                        rel="noopener noreferrer nofollow"
+                        href="{{ value.company_website }}"
+                        target="_blank"
                         >{{ value.company }}</a
                       >
                     </span>
@@ -199,21 +220,21 @@
     {% if doc.show_activity %}
 
       {% if hackathon_badges %}
-      <div>
-        <h3 class="subtitle">FOSS Hackathon Badges</h3>
-        <div class="d-flex flex-wrap align-items-center gap-4">
-          {% for b in hackathon_badges %}
-            {{ profile_badge(b.type, href=b.href, title=b.title, size=104) }}
-          {% endfor %}
+        <div>
+          <h3 class="subtitle">FOSS Hackathon Badges</h3>
+          <div class="d-flex flex-wrap align-items-center gap-4">
+            {% for b in hackathon_badges %}
+              {{ profile_badge(b.type, href=b.href, title=b.title, size=104) }}
+            {% endfor %}
+          </div>
         </div>
-      </div>
       {% endif %}
 
       {% if talked | length > 0 %}
-      <div>
-        <h3 class="subtitle">Talks Given</h3>
-        {% for talk in talked %}{{ speaker_card(talk) }}{% endfor %}
-      </div>
+        <div>
+          <h3 class="subtitle">Talks Given</h3>
+          {% for talk in talked %}{{ speaker_card(talk) }}{% endfor %}
+        </div>
       {% endif %}
 
       {% if cfps | length > 0 %}
@@ -224,28 +245,28 @@
       {% endif %}
 
       {% if volunteered | length > 0 %}
-      <div>
-        <h3 class="subtitle">Chapter & Event Volunteership</h3>
-        {% for item in volunteered %}{{ volunteer_card(item) }}{% endfor %}
-      </div>
+        <div>
+          <h3 class="subtitle">Chapter & Event Volunteership</h3>
+          {% for item in volunteered %}{{ volunteer_card(item) }}{% endfor %}
+        </div>
       {% endif %}
 
       {% if attended | length > 0 %}
-      <div>
-        <h3 class="subtitle">Events Attended</h3>
-        <div class="events-grid-4">
-          {% for event in attended %}{{ event_card(event) }}{% endfor %}
+        <div>
+          <h3 class="subtitle">Events Attended</h3>
+          <div class="events-grid-4">
+            {% for event in attended %}{{ event_card(event) }}{% endfor %}
+          </div>
         </div>
-      </div>
       {% endif %}
 
       {% if attended_hack | length > 0 %}
-      <div>
-        <h3 class="subtitle">Hackathons Attended</h3>
-        <div class="events-grid-4">
-          {% for hackathon in attended_hack %}{{ hackathon_card(hackathon) }}{% endfor %}
+        <div>
+          <h3 class="subtitle">Hackathons Attended</h3>
+          <div class="events-grid-4">
+            {% for hackathon in attended_hack %}{{ hackathon_card(hackathon) }}{% endfor %}
+          </div>
         </div>
-      </div>
       {% endif %}
     {% else %}
       <div>User has chosen to keep their Community Activity anonymous</div>
@@ -253,49 +274,47 @@
   </div>
 {% endmacro %}
 {% macro volunteer_card(item) %}
-<a
-  class="talk-card"
-  data-docname="{{ item.name }}"
-  data-route="{{ item.route }}"
-  href="/{{ item.route }}"
-  aria-label="{{ item.title }}, {{ item.role }}"
->
-  <div class="talk-card--container">
-    <div class="talk-card--meta">
-      <div class="chapter-brand-block
+  <a
+    class="talk-card"
+    data-docname="{{ item.name }}"
+    data-route="{{ item.route }}"
+    href="/{{ item.route }}"
+    aria-label="{{ item.title }}, {{ item.role }}"
+  >
+    <div class="talk-card--container">
+      <div class="talk-card--meta">
+        <div
+          class="chapter-brand-block
           {% if item.chapter_type == 'FOSS Club' %}club-brand{% endif %}
-          talk-card--event-name">
-        {% if item.chapter_type == 'FOSS Club' %}
-          <img src="/assets/fossunited/images/chapter/fossclub_logo.svg">
-          <span>{{ item.title | truncate(25, True, '...', 0) }}</span>
-        {% else %}
-          <span class="fff-forward">
-            {{ item.title.upper() | truncate(25, True, '...', 0) }}
-          </span>
-        {% endif %}
+          talk-card--event-name"
+        >
+          {% if item.chapter_type == 'FOSS Club' %}
+            <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" />
+            <span>{{ item.title | truncate(25, True, '...', 0) }}</span>
+          {% else %}
+            <span class="fff-forward">
+              {{ item.title.upper() | truncate(25, True, '...', 0) }}
+            </span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="talk-card--title">{{ item.title }}</div>
+
+      <div class="chapter-volunteer-card--type">
+        <svg width="9" height="9" viewBox="0 0 9 9">
+          <path
+            d="M4.0869 0.906652C4.27429 0.595275 4.72571 0.595274 4.9131 0.906652L6.05745 2.80815L8.2195 3.30889C8.57355 3.39089 8.71305 3.82022 8.47482 4.09466L7.02 5.77059L7.21188 7.98157C7.2433 8.34362 6.87809 8.60896 6.54347 8.4672L4.5 7.60148L2.45653 8.4672C2.12191 8.60896 1.75669 8.34362 1.78812 7.98157L1.98 5.77059L0.525185 4.09466C0.286954 3.82022 0.426453 3.39089 0.780497 3.30889L2.94255 2.80815L4.0869 0.906652Z"
+            fill="#08B74F"
+          />
+        </svg>
+
+        <div class="chapter-volunteer-card--role">{{ item.role }}</div>
       </div>
     </div>
-
-    <div class="talk-card--title">
-      {{ item.title }}
-    </div>
-
-    <div class="chapter-volunteer-card--type">
-      <svg width="9" height="9" viewBox="0 0 9 9">
-        <path d="M4.0869 0.906652C4.27429 0.595275 4.72571 0.595274 4.9131 0.906652L6.05745 2.80815L8.2195 3.30889C8.57355 3.39089 8.71305 3.82022 8.47482 4.09466L7.02 5.77059L7.21188 7.98157C7.2433 8.34362 6.87809 8.60896 6.54347 8.4672L4.5 7.60148L2.45653 8.4672C2.12191 8.60896 1.75669 8.34362 1.78812 7.98157L1.98 5.77059L0.525185 4.09466C0.286954 3.82022 0.426453 3.39089 0.780497 3.30889L2.94255 2.80815L4.0869 0.906652Z"
-        fill="#08B74F"/>
-      </svg>
-
-      <div class="chapter-volunteer-card--role">
-        {{ item.role }}
-      </div>
-    </div>
-  </div>
-  <div class="talk-card--location-date">
-      {{ item.meta }}
-  </div>
-</a>
-<br>
+    <div class="talk-card--location-date">{{ item.meta }}</div>
+  </a>
+  <br />
 {% endmacro %}
 {% macro speaker_card(talk) %}
   <a
@@ -368,6 +387,9 @@
               {% for b in hackathon_badges %}
                 {{ profile_badge(b.type, href=b.href, title=b.title, size=52) }}
               {% endfor %}
+              {% if forklore_maintainer %}
+                {{ profile_badge("forklore", href="https://forklore.in/maintainers/" ~ (forklore_maintainer.username | urlencode), title="Forklore Maintainer", size=52, glow="#CFF2DA") }}
+              {% endif %}
             </div>
             <div class="header--username-location" style="font-size: var(--text-sm)">
               <span style="color: hsl(var(--clr-foss-mint-500))">{{ doc.username }}</span>
@@ -396,7 +418,9 @@
             </div>
           </div>
           {% if doc.user == frappe.session.user %}
-            <a href="/dashboard/me" class="btn btn-secondary btn-sm align-self-start text-nowrap">Edit Profile</a>
+            <a href="/dashboard/me" class="btn btn-secondary btn-sm align-self-start text-nowrap"
+              >Edit Profile</a
+            >
           {% endif %}
         </div>
       </div>
@@ -412,7 +436,11 @@
       {% if user_socials %}
         <div class="header-section--socials" aria-label="Social media links">
           {% for (key,value) in user_socials.items() %}
-            <a rel="me nofollow noopener noreferrer" href="{{ value }}" aria-label="{{ key | title }} profile" target="_blank"
+            <a
+              rel="me nofollow noopener noreferrer"
+              href="{{ value }}"
+              aria-label="{{ key | title }} profile"
+              target="_blank"
               ><img src="https://svgl.app/library/{{ key }}.svg" alt="{{ key | title }}"
             /></a>
           {% endfor %}
@@ -444,30 +472,14 @@
       setNavbarControl()
     })
 
-    ;(() => {
-      const u = {% if doc.github %}({{ doc.github | tojson }}.match(/github\.com\/([^\/\?#]+)/i)||[])[1] || {% endif %}{{ doc.username | tojson }};
-      if (!u) return;
-      $.get(`https://api.github.com/repos/fossunited/forklore/contents/content/maintainers/${u}.json`)
-        .done(() => {
-          $('.header--content-section .d-flex.align-items-center.flex-wrap').append(
-            `<a href="https://forklore.in/maintainers/${u}" target="_blank" rel="noopener noreferrer"
-                class="position-relative d-inline-block" data-toggle="tooltip" data-title="Forklore Maintainer">
-              <span class="hackathon-badge-wrap" style="--badge-size:52px;--badge-glow-color:#CFF2DA;--badge-glow-anim:hackathon-badge-glow-color;">
-                <img src="https://raw.githubusercontent.com/fossunited/Branding/refs/heads/main/asset/stickers/Forklore-diecut-V2.svg"
-                     alt="Forklore Maintainer" style="width:100%;height:100%;pointer-events:none;">
-              </span>
-            </a>`
-          );
-          $('[data-toggle="tooltip"]').tooltip();
-        });
-    })();
-
     function renderCompanyImage(e) {
       $(e).attr('src', '/assets/fossunited/images/defaults/company_icon.png')
     }
 
     function setNavbarControl() {
-      const navItems = Array.from(document.querySelectorAll('.horizontal-navbar--item[role="tab"]'))
+      const navItems = Array.from(
+        document.querySelectorAll('.horizontal-navbar--item[role="tab"]'),
+      )
       const contentDivs = Array.from(document.querySelectorAll('.content-div'))
 
       function activateTab(navItem, moveFocus) {

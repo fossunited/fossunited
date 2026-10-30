@@ -34,7 +34,15 @@ from fossunited.doctype_ids import (
     SPEAKER,
     USER_PROFILE,
 )
-from fossunited.fossunited.utils import get_ograph_url, get_user_socials, sanitize_text_content
+from fossunited.fossunited.utils import (
+    get_forklore_maintainer,
+    get_ograph_url,
+    get_user_socials,
+    sanitize_text_content,
+)
+
+# The OG image shows only the highest-precedence hackathon role.
+FOSSHACK_ROLES = ("winner", "judge", "localhost", "participant")
 
 # A "CFP Reviewer" role can be granted and later revoked, so it's a weak signal
 # for the reviewer badge. Treat someone as a reviewer once they've actually
@@ -427,8 +435,13 @@ class FOSSUserProfile(WebsiteGenerator):
             ) = self.get_user_activity(participants)
 
         context.hackathon_badges = self.get_hackathon_badges(participants)
+        context.forklore_maintainer = get_forklore_maintainer(
+            self.get_forklore_username(), self.username
+        )
         context.user_socials = get_user_socials(self)
-        context.pagetitle, context.description, context.image = self.get_meta()
+        context.pagetitle, context.description, context.image = self.get_meta(
+            context.hackathon_badges, is_forklore=bool(context.forklore_maintainer)
+        )
 
         context.no_cache = 1
 
@@ -501,6 +514,7 @@ class FOSSUserProfile(WebsiteGenerator):
                     "type": "hackathon-winner",
                     "href": f"/{project_route}" if project_route else None,
                     "title": f"{result.status} at {hack.hackathon_name}",
+                    "status": result.status,
                 }
             )
             winning_hackathon_ids.add(p.hackathon)
@@ -633,7 +647,7 @@ class FOSSUserProfile(WebsiteGenerator):
 
         return badges
 
-    def get_meta(self):
+    def get_meta(self, hackathon_badges=None, *, is_forklore=None):
         if self.is_private:
             return self.username, "Private Profile", ""
 
@@ -655,7 +669,12 @@ class FOSSUserProfile(WebsiteGenerator):
                 "designation": self.bio or "FOSS United User",
                 "profile_image": self.profile_photo
                 or "/assets/fossunited/images/defaults/user_profile_image.png",
-                **{key: str(value).lower() for key, value in self.get_profile_badges().items()},
+                **{
+                    key: str(value).lower()
+                    for key, value in self.get_profile_badges(
+                        hackathon_badges, is_forklore=is_forklore
+                    ).items()
+                },
             }
             image = f"{og_url}/gen/profile?{urlencode(profile_image_params)}"
         else:
@@ -665,8 +684,14 @@ class FOSSUserProfile(WebsiteGenerator):
 
         return pagetitle, description, image
 
-    def get_profile_badges(self):
-        """Return the badge flags used by the profile Open Graph image."""
+    def get_profile_badges(self, hackathon_badges=None, *, is_forklore=None):
+        """Return the badge flags used by the profile Open Graph image.
+
+        `hackathon_badges` is the list from get_hackathon_badges(); pass it in to
+        avoid recomputing (get_context already has it). When omitted, the fosshack
+        badge is resolved from a fresh participants lookup.
+        Pass the resolved Forklore flag to avoid reading the feed again.
+        """
         is_volunteer = bool(
             frappe.db.exists(CHAPTER_MEMBER, {"chapter_member": self.name})
             or frappe.db.exists(EVENT_VOLUNTEER, {"member": self.name})
@@ -687,6 +712,19 @@ class FOSSUserProfile(WebsiteGenerator):
             .run()
         )
 
+        if hackathon_badges is None:
+            participants = frappe.get_all(
+                HACKATHON_PARTICIPANT,
+                filters={"user_profile": self.name},
+                fields=["name", "hackathon", "team", "localhost"],
+            )
+            hackathon_badges = self.get_hackathon_badges(participants)
+
+        if is_forklore is None:
+            is_forklore = bool(
+                get_forklore_maintainer(self.get_forklore_username(), self.username)
+            )
+
         return {
             "is_volunteer": is_volunteer,
             "is_speaker": bool(approved_speaker),
@@ -694,7 +732,29 @@ class FOSSUserProfile(WebsiteGenerator):
                 frappe.db.count(PROPOSAL_REVIEW, {"reviewer_profile": self.name})
                 >= REVIEWER_BADGE_MIN_REVIEWS
             ),
+            "is_forklore": is_forklore,
+            "fosshack_role": self.get_fosshack_role(hackathon_badges),
         }
+
+    def get_forklore_username(self):
+        """Return the GitHub handle used to match a Forklore maintainer."""
+        if self.github:
+            match = re.search(r"github\.com/([^/?#]+)", self.github, re.IGNORECASE)
+            if match:
+                return match.group(1)
+        return None
+
+    def get_fosshack_role(self, hackathon_badges):
+        """Collapse hackathon badges to the single highest-precedence fosshack role.
+
+        Returns "winner" | "judge" | "localhost" | "participant", or "" if none.
+        Year isn't encoded: the OG image shows the role only.
+        """
+        roles = set()
+        for badge in hackathon_badges:
+            role = badge["type"].removeprefix("hackathon-")
+            roles.add(role)
+        return next((role for role in FOSSHACK_ROLES if role in roles), "")
 
     def on_trash(self):
         frappe.delete_doc("User", self.user, force=True)

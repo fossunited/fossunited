@@ -66,6 +66,20 @@ def get_ograph_url():
     return frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
 
+def get_forklore_maintainer(github_handle: str | None, username: str | None = None) -> dict | None:
+    """Find a saved maintainer record, including its canonical Forklore username."""
+    if not github_handle and not username:
+        return None
+    saved = frappe.db.get_single_value("Ograph Settings", "forklore_maintainers")
+    entries = frappe.parse_json(saved or "[]") or []
+    for source, handle in (("github", github_handle), ("username", username)):
+        if handle:
+            for entry in entries:
+                if (entry.get(source) or "").lower() == handle.lower():
+                    return entry
+    return None
+
+
 # Filter
 def make_badge(text="Default", size="sm"):
     # stored in the form of (background-color, text-color)
