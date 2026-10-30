@@ -111,6 +111,21 @@ class TestAccountDeletionProfile(FrappeTestCase):
         self._seed_children(other)
         other.save(ignore_permissions=True)
         self.other_before = frappe.get_doc(USER_PROFILE, self.other_profile).as_dict()
+        # Control File on the other profile — deletion must be scoped, not blanket.
+        self.other_file_name = (
+            frappe.get_doc(
+                {
+                    "doctype": "File",
+                    "file_name": "other-photo.png",
+                    "attached_to_doctype": USER_PROFILE,
+                    "attached_to_name": self.other_profile,
+                    "is_private": 0,
+                    "content": "other-image-bytes",
+                }
+            )
+            .insert(ignore_permissions=True)
+            .name
+        )
 
     def _seed_children(self, doc):
         for table, values in CHILD_ROWS.items():
@@ -187,6 +202,8 @@ class TestAccountDeletionProfile(FrappeTestCase):
             self.assertEqual(other[field], self.other_before[field], field)
         counts = self._child_count(self.other_profile)
         self.assertTrue(all(c >= 1 for c in counts.values()), counts)
+        # File deletion is scoped to the target profile only.
+        self.assertTrue(frappe.db.exists("File", self.other_file_name))
 
     # ---- render guards -------------------------------------------------------
     def test_normal_public_profile_still_renders(self):
