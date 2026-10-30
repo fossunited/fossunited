@@ -38,7 +38,6 @@ from fossunited.fossunited.utils import (
     get_forklore_maintainer,
     get_ograph_url,
     get_user_socials,
-    is_forklore_maintainer,
     sanitize_text_content,
 )
 
@@ -437,11 +436,11 @@ class FOSSUserProfile(WebsiteGenerator):
 
         context.hackathon_badges = self.get_hackathon_badges(participants)
         context.forklore_maintainer = get_forklore_maintainer(
-            self.get_forklore_username()
-        ) or get_forklore_maintainer(self.username, source="username")
+            self.get_forklore_username(), self.username
+        )
         context.user_socials = get_user_socials(self)
         context.pagetitle, context.description, context.image = self.get_meta(
-            context.hackathon_badges
+            context.hackathon_badges, is_forklore=bool(context.forklore_maintainer)
         )
 
         context.no_cache = 1
@@ -648,7 +647,7 @@ class FOSSUserProfile(WebsiteGenerator):
 
         return badges
 
-    def get_meta(self, hackathon_badges=None):
+    def get_meta(self, hackathon_badges=None, *, is_forklore=None):
         if self.is_private:
             return self.username, "Private Profile", ""
 
@@ -672,7 +671,9 @@ class FOSSUserProfile(WebsiteGenerator):
                 or "/assets/fossunited/images/defaults/user_profile_image.png",
                 **{
                     key: str(value).lower()
-                    for key, value in self.get_profile_badges(hackathon_badges).items()
+                    for key, value in self.get_profile_badges(
+                        hackathon_badges, is_forklore=is_forklore
+                    ).items()
                 },
             }
             image = f"{og_url}/gen/profile?{urlencode(profile_image_params)}"
@@ -683,12 +684,13 @@ class FOSSUserProfile(WebsiteGenerator):
 
         return pagetitle, description, image
 
-    def get_profile_badges(self, hackathon_badges=None):
+    def get_profile_badges(self, hackathon_badges=None, *, is_forklore=None):
         """Return the badge flags used by the profile Open Graph image.
 
         `hackathon_badges` is the list from get_hackathon_badges(); pass it in to
         avoid recomputing (get_context already has it). When omitted, the fosshack
         badge is resolved from a fresh participants lookup.
+        Pass the resolved Forklore flag to avoid reading the feed again.
         """
         is_volunteer = bool(
             frappe.db.exists(CHAPTER_MEMBER, {"chapter_member": self.name})
@@ -718,6 +720,11 @@ class FOSSUserProfile(WebsiteGenerator):
             )
             hackathon_badges = self.get_hackathon_badges(participants)
 
+        if is_forklore is None:
+            is_forklore = bool(
+                get_forklore_maintainer(self.get_forklore_username(), self.username)
+            )
+
         return {
             "is_volunteer": is_volunteer,
             "is_speaker": bool(approved_speaker),
@@ -725,10 +732,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 frappe.db.count(PROPOSAL_REVIEW, {"reviewer_profile": self.name})
                 >= REVIEWER_BADGE_MIN_REVIEWS
             ),
-            "is_forklore": (
-                is_forklore_maintainer(self.get_forklore_username())
-                or is_forklore_maintainer(self.username, source="username")
-            ),
+            "is_forklore": is_forklore,
             "fosshack_role": self.get_fosshack_role(hackathon_badges),
         }
 

@@ -66,32 +66,18 @@ def get_ograph_url():
     return frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
 
-def get_forklore_maintainer(username: str | None, *, source: str = "github") -> dict | None:
+def get_forklore_maintainer(github_handle: str | None, username: str | None = None) -> dict | None:
     """Find a saved maintainer record, including its canonical Forklore username."""
-    if not username:
+    if not github_handle and not username:
         return None
     saved = frappe.db.get_single_value("Ograph Settings", "forklore_maintainers")
     entries = frappe.parse_json(saved or "[]") or []
-    handle = username.lower()
-    if isinstance(entries, dict):
-        # Older syncs stored separate lists without the full maintainer records.
-        entries = entries.get(source, [])
-    if not isinstance(entries, list):
-        return None
-    for entry in entries:
-        if isinstance(entry, dict):
-            value = entry.get(source)
-            if isinstance(value, str) and value.lower() == handle:
-                return entry
-        elif isinstance(entry, str) and entry.lower() == handle:
-            # Legacy flat lists cannot supply the other source's identifier.
-            return {source: entry}
+    for source, handle in (("github", github_handle), ("username", username)):
+        if handle:
+            for entry in entries:
+                if (entry.get(source) or "").lower() == handle.lower():
+                    return entry
     return None
-
-
-def is_forklore_maintainer(username: str | None, *, source: str = "github") -> bool:
-    """Match a handle against its source in the saved Forklore maintainers."""
-    return get_forklore_maintainer(username, source=source) is not None
 
 
 # Filter
