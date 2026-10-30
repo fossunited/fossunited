@@ -1,10 +1,6 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <Dialog
-    v-model:open="showDialog"
-    class="z-50"
-    title="Confirm Attendee Check In?"
-  >
+  <Dialog v-model:open="showDialog" class="z-50" title="Confirm Attendee Check In?">
     <template v-if="selectedAttendee">
       <div class="flex flex-col py-2">
         <p class="text-base">
@@ -12,8 +8,8 @@
           <span class="font-semibold">{{ selectedAttendee.full_name }}</span
           >?
         </p>
-        <div class="bg-surface-gray-1 text-base p-2 my-2 rounded-1 font-mono">
-          <p class="leading-6 text-base-medium text-ink-gray-9">
+        <div class="my-2 rounded-1 bg-surface-gray-1 p-2 font-mono text-base">
+          <p class="text-base-medium leading-6 text-ink-gray-9">
             <strong>Name:</strong> {{ selectedAttendee.full_name }}<br />
             <strong>Ticket ID:</strong> {{ selectedAttendee.name }}<br />
             <strong>Tier:</strong> {{ selectedAttendee.tier }}<br />
@@ -22,14 +18,16 @@
             <!-- Tshirt section starts -->
             <template v-if="selectedAttendee.wants_tshirt && selectedAttendee.tshirt_delivered">
               <strong>Has T-shirt Add-on:</strong>
-              <span class="text-ink-green-6 font-semibold">Delivered already!</span><br />
+              <span class="font-semibold text-ink-green-6">Delivered already!</span><br />
             </template>
 
             <template
               v-else-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered"
             >
               <strong>Has T-shirt Add-on:</strong>
-              <span class="bg-surface-amber-2 text-ink-amber-6 font-semibold px-2 py-0.5 rounded-4">
+              <span
+                class="rounded-4 bg-surface-amber-2 px-2 py-0.5 font-semibold text-ink-amber-6"
+              >
                 YES </span
               ><br />
               <strong>T-shirt Size:</strong>
@@ -38,14 +36,15 @@
 
             <template v-else>
               <strong>Has T-shirt Add-on:</strong>
-              <span class="bg-surface-red-2 text-ink-red-8 font-semibold px-2 py-0.5 rounded-4"> NO </span
+              <span class="rounded-4 bg-surface-red-2 px-2 py-0.5 font-semibold text-ink-red-8">
+                NO </span
               ><br />
             </template>
 
             <strong>Check-in Log:</strong>
           </p>
 
-          <ul class="text-sm font-mono mt-1 list-disc list-inside">
+          <ul class="mt-1 list-inside list-disc font-mono text-sm">
             <li v-if="!selectedAttendee.checkin_data?.length" class="text-ink-gray-4">
               No check-ins yet
             </li>
@@ -53,7 +52,7 @@
               v-for="(log, index) in selectedAttendee.checkin_data"
               :key="log.name || log.id || log.check_in_time || index"
               :class="{
-                'text-ink-red-8 font-semibold text-3xl uppercase': isToday(log.check_in_time),
+                'text-3xl font-semibold uppercase text-ink-red-8': isToday(log.check_in_time),
               }"
             >
               {{ formatCheckinLog(log.check_in_time) }}
@@ -63,9 +62,9 @@
 
         <div v-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered">
           <hr class="my-4" />
-          <div class="text-sm-medium uppercase mb-2">Assign T‑shirt</div>
+          <div class="text-sm-medium mb-2 uppercase">Assign T‑shirt</div>
           <Checkbox v-model="assignTshirt" label="Confirm T‑shirt Assignment" />
-          <p class="text-sm leading-5 mt-1 text-ink-gray-5">
+          <p class="mt-1 text-sm leading-5 text-ink-gray-5">
             Only check this if you are providing the T-shirt to the attendee at the time of
             check-in.
           </p>
@@ -87,6 +86,7 @@
           label="Check In"
           variant="solid"
           theme="green"
+          class="!bg-surface-green-9 hover:!bg-surface-green-10"
           :loading="checkinAttendee.loading"
           loading-text="Checking in..."
           @click="checkinAttendee.fetch()"
@@ -98,11 +98,10 @@
 
 <!-- eslint-disable vue/no-mutating-props -->
 <script setup>
-import { toast } from 'vue-sonner'
-import { defineProps, defineModel, inject, ref } from 'vue'
-import { createResource, Dialog, Checkbox } from 'frappe-ui'
-
 import dayjs from 'dayjs'
+import { createResource, Dialog, Checkbox } from 'frappe-ui'
+import { defineProps, defineModel, inject, ref } from 'vue'
+import { toast } from 'vue-sonner'
 const isToday = (datetime) => dayjs(datetime).isSame(dayjs(), 'day')
 
 const formatCheckinLog = (datetime) => {
