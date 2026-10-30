@@ -94,11 +94,11 @@ afterEach(() => {
   vi.unstubAllGlobals()
   vi.restoreAllMocks()
 })
-async function selectFile(index, size = 1) {
+async function selectFile(index, size = 1, name = 'photo.jpg') {
   const input = host.querySelectorAll('input[type=file]')[index]
   Object.defineProperty(input, 'files', {
     configurable: true,
-    value: [new File([new Uint8Array(size)], 'photo.jpg', { type: 'image/jpeg' })],
+    value: [new File([new Uint8Array(size)], name, { type: 'image/jpeg' })],
   })
   input.dispatchEvent(new Event('change', { bubbles: true }))
   await settle()
@@ -181,6 +181,14 @@ for (const [index, label] of [
       await settle()
       expect(boundary.toastError).toHaveBeenCalledExactlyOnceWith(
         `Error uploading ${label} image: Something went wrong. Please try again in a bit.`,
+        expect.any(Object),
+      )
+    })
+    it('shows one error for an unsupported image format', async () => {
+      await selectFile(index, 1, 'photo.gif')
+      expect(ControlledXHR.instances).toHaveLength(0)
+      expect(boundary.toastError).toHaveBeenCalledExactlyOnceWith(
+        `Error uploading ${label} image: Only PNG and JPG images are allowed`,
         expect.any(Object),
       )
     })
