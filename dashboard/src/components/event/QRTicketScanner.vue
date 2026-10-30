@@ -3,8 +3,8 @@
     v-if="modelValue"
     :class="[
       isFullscreen
-        ? 'fixed inset-0 z-50 bg-surface-gray-10/90 flex items-center justify-center overflow-hidden p-4 md:p-8'
-        : 'relative my-4 mx-auto border border-outline-gray-2 w-full max-w-md',
+        ? 'fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-surface-gray-10/90 p-4 md:p-8'
+        : 'relative mx-auto my-4 w-full max-w-md border border-outline-gray-2',
     ]"
   >
     <!-- Close Button -->
@@ -12,8 +12,8 @@
       type="button"
       aria-label="Close scanner"
       title="Close"
+      class="absolute right-3 top-3 z-50 grid h-10 w-10 place-items-center rounded-full bg-red-600/60 text-lg text-ink-base hover:bg-surface-gray-10/70 focus:outline-none focus:ring-2 focus:ring-white/70"
       @click="emit('update:modelValue', false)"
-      class="absolute top-3 right-3 z-50 grid place-items-center w-10 h-10 rounded-full bg-red-600/60 text-ink-base text-lg hover:bg-surface-gray-10/70 focus:outline-none focus:ring-2 focus:ring-white/70"
     >
       <span aria-hidden="true">✕</span>
     </button>
@@ -22,37 +22,37 @@
     <div
       :class="[
         isFullscreen
-          ? 'w-[80vw] h-[80vh] max-w-[864px] aspect-video rounded-8'
-          : 'w-full aspect-video rounded-7',
+          ? 'aspect-video h-[80vh] w-[80vw] max-w-[864px] rounded-8'
+          : 'aspect-video w-full rounded-7',
       ]"
       class="relative bg-surface-gray-10"
     >
       <qrcode-stream
         :constraints="{ facingMode: 'environment' }"
         :paused="processing || !modelValue"
+        class="absolute left-0 top-0 h-full w-full object-cover"
         @detect="onDetect"
         @camera-on="onCameraOn"
         @error="onError"
-        class="absolute top-0 left-0 w-full h-full object-cover"
       />
 
       <!-- Corner overlay box -->
       <div
         v-if="showOverlay"
-        class="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+        class="pointer-events-none absolute inset-0 z-20 flex items-center justify-center"
       >
-        <div class="relative w-3/4 max-w-xs h-40">
+        <div class="relative h-40 w-3/4 max-w-xs">
           <div
-            class="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-green-400 rounded-tl-5"
+            class="absolute left-0 top-0 h-6 w-6 rounded-tl-5 border-l-4 border-t-4 border-green-400"
           ></div>
           <div
-            class="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-green-400 rounded-tr-5"
+            class="absolute right-0 top-0 h-6 w-6 rounded-tr-5 border-r-4 border-t-4 border-green-400"
           ></div>
           <div
-            class="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-green-400 rounded-bl-5"
+            class="absolute bottom-0 left-0 h-6 w-6 rounded-bl-5 border-b-4 border-l-4 border-green-400"
           ></div>
           <div
-            class="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-green-400 rounded-br-5"
+            class="absolute bottom-0 right-0 h-6 w-6 rounded-br-5 border-b-4 border-r-4 border-green-400"
           ></div>
         </div>
       </div>
@@ -61,8 +61,8 @@
 </template>
 
 <script setup>
-import { QrcodeStream } from 'vue-qrcode-reader'
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { QrcodeStream } from 'vue-qrcode-reader'
 import { toast } from 'vue-sonner'
 
 // Props
@@ -94,7 +94,7 @@ const isFullscreen = computed(() => {
   return props.fullscreen !== undefined ? props.fullscreen : isMobile.value
 })
 
-function extractTicketId(input) {
+function extractTicketId(input, depth = 0) {
   const s = String(input || '').trim()
   if (!s) return ''
   try {
@@ -108,6 +108,8 @@ function extractTicketId(input) {
       u.searchParams.get('ticket') ||
       u.searchParams.get('id') ||
       u.searchParams.get('name')
+    // Some printed tickets wrap the ticket URL inside ?id=; unwrap it once
+    if (q && depth < 1 && /^https?:\/\//i.test(q)) return extractTicketId(q, depth + 1)
     if (q) return q
     const parts = u.pathname.split('/').filter(Boolean)
     return parts[parts.length - 1] || s
@@ -121,17 +123,16 @@ function onDetect(detectedCodes) {
   if (!rawValue || processing.value) return
   processing.value = true
 
-  try {
-    const scannedId = extractTicketId(rawValue)
-    if (!scannedId || !/^[A-Za-z0-9_-]{6,}$/.test(scannedId)) {
-      throw new Error('Invalid scanned ID')
-    }
-    emit('scanned', scannedId)
-    emit('update:modelValue', false)
-  } catch (err) {
-    toast.error('Invalid QR code or format')
+  const scannedId = extractTicketId(rawValue)
+  if (!scannedId || !/^[A-Za-z0-9_-]{6,}$/.test(scannedId)) {
+    // Show what was read, so a wrong host or format is visible at the desk
+    console.warn('[QRTicketScanner] unrecognised QR content:', rawValue)
+    toast.error('Invalid QR code or format', { description: String(rawValue).slice(0, 120) })
     processing.value = false
+    return
   }
+  emit('scanned', scannedId)
+  emit('update:modelValue', false)
 }
 
 function onCameraOn() {

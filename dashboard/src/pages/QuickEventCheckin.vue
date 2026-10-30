@@ -1,13 +1,13 @@
 <template>
-  <div class="min-h-screen flex md:items-center justify-center bg-surface-base">
+  <div class="flex min-h-screen justify-center bg-surface-base md:items-center">
     <div class="w-full max-w-md p-4 md:p-6">
       <!-- Header Section -->
       <div v-if="event.data" class="mb-10">
         <EventHeader :event="event.data" />
       </div>
 
-      <h1 class="text-[2em] font-bold mb-2 text-center">Quick Check-In</h1>
-      <p class="text-sm text-ink-gray-5 mb-10 text-center">
+      <h1 class="mb-2 text-center text-[2em] font-bold">Quick Check-In</h1>
+      <p class="mb-10 text-center text-sm text-ink-gray-5">
         Scan or enter a ticket to check in attendee.
       </p>
 
@@ -25,7 +25,7 @@
           />
           <button
             type="button"
-            class="absolute right-2 top-[17px] bg-surface-gray-9 text-ink-base rounded-4 py-2 px-2 hover:bg-surface-red-7 text-md"
+            class="absolute right-2 top-[17px] rounded-4 bg-surface-gray-9 px-2 py-2 text-md text-ink-base hover:bg-surface-red-7"
             title="Clear"
             aria-label="Clear ticket ID"
             :disabled="!ticketId"
@@ -38,7 +38,7 @@
         <!-- Manual Check-In Button -->
         <button
           type="button"
-          class="btn btn-primary bg-surface-green-3 text-ink-base rounded-4 py-2 px-4 w-full"
+          class="btn btn-primary w-full rounded-4 bg-surface-green-9 px-4 py-2 font-medium text-ink-base hover:bg-surface-green-10 focus-visible:ring-2 focus-visible:ring-outline-gray-5 disabled:cursor-not-allowed disabled:opacity-50"
           :disabled="loading || !ticketId.trim()"
           @click="handleTicketInput"
         >
@@ -48,7 +48,7 @@
         <!-- Scan QR button -->
         <button
           type="button"
-          class="btn btn-primary bg-surface-gray-9 text-ink-base rounded-4 py-2 px-4 w-full"
+          class="btn btn-primary w-full rounded-4 bg-surface-gray-9 px-4 py-2 text-ink-base"
           :disabled="loading || showConfirmDialog"
           @click="showScanner = !showScanner"
         >
@@ -62,7 +62,7 @@
       <!-- Error message -->
       <div
         v-if="message"
-        class="mt-4 text-sm-medium text-ink-red-8"
+        class="text-sm-medium mt-4 text-ink-red-8"
         role="alert"
         aria-live="polite"
       >
@@ -74,20 +74,21 @@
         v-model="showConfirmDialog"
         :selected-attendee="selectedAttendee"
         :attendees="attendeeResource"
-        @update:selectedAttendee="onSelectedAttendeeUpdate"
+        @update:selected-attendee="onSelectedAttendeeUpdate"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import EventHeader from '@/components/EventHeader.vue'
-import { ref, provide, onBeforeUnmount, reactive, watch } from 'vue'
 import { call, createResource, FormControl } from 'frappe-ui'
-import CheckinConfirmationDialog from '@/components/event/CheckinConfirmationDialog.vue'
+import { ref, provide, onBeforeUnmount, reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import QRTicketScanner from '@/components/event/QRTicketScanner.vue'
 import { toast } from 'vue-sonner'
+
+import CheckinConfirmationDialog from '@/components/event/CheckinConfirmationDialog.vue'
+import QRTicketScanner from '@/components/event/QRTicketScanner.vue'
+import EventHeader from '@/components/EventHeader.vue'
 
 // State
 const ticketId = ref('')
