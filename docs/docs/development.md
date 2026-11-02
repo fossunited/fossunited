@@ -329,6 +329,37 @@ yarn lint     # oxlint + eslint (Vue templates)
 
 ---
 
+## Testing Emails Locally (Mailpit)
+
+Frappe Manager bundles [Mailpit](https://github.com/axllent/mailpit) as part of its admin tools, so you can capture and read every email the platform sends (account verification, data-deletion confirmation links, ticket receipts, newsletters) without configuring a real SMTP server or delivering anything to real inboxes.
+
+### Enable Mailpit
+
+Run these against your bench (replace `foss.localhost` with your bench name):
+
+```sh
+fm update foss.localhost --admin-tools enable
+fm update foss.localhost --mailpit-as-default-mail-server
+```
+
+The first command enables the admin tools (which include Mailpit); the second sets the site's default outgoing mail server to Mailpit, so all mail is caught locally instead of being sent.
+
+### View Captured Mail
+
+Open the Mailpit inbox at:
+
+==> `http://foss.localhost/mailpit`
+
+Every email the site sends now lands here. This is handy for testing any flow that mails the user, such as signup verification, the Personal Data Deletion Request confirmation link, and event or ticket notifications.
+
+> **Note:** You can still point Frappe at Gmail SMTP via the **Email Account** doctype for a production-like check, but for day-to-day development Mailpit is faster and keeps test mail out of real inboxes.
+
+### Manual / non-fm Setups
+
+If you are not using Frappe Manager (for example a raw `frappe_docker` setup), see [frappe_docker#1446](https://github.com/frappe/frappe_docker/issues/1446) for how to wire up Mailpit by hand.
+
+---
+
 ## Bruno API Tests
 
 The `bruno-collection/` directory contains end-to-end API tests written in [Bruno](https://www.usebruno.com/) `.bru` format. These tests verify security hardening (field exposure, auth checks, mass assignment prevention, path traversal) against a running Frappe instance with seed data.
