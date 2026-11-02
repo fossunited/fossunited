@@ -119,7 +119,10 @@ user_data_fields = [
 
 doc_events = {
     "Personal Data Deletion Request": {
-        "on_change": "fossunited.foss_profiles.account_deletion.finalize_profile_anonymization",
+        "on_change": [
+            "fossunited.foss_profiles.account_deletion.finalize_profile_anonymization",
+            "fossunited.chapters.account_deletion.scrub_chapter_rosters",
+        ],
     },
     "User": {
         "after_insert": [
