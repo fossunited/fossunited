@@ -16,4 +16,4 @@ Where you took part in activities (for example event RSVPs or talk proposals), w
 
 Financial records such as ticket payments are retained where we're legally required to, and may still contain limited personal details.
 
-> This is handled in stages. If you have a specific concern about where your data appears, mention it in your request and our team will take care of it.
+> This is handled in stages. If you have a specific concern about where your data appears, email us at [developers@fossunited.org](mailto:developers@fossunited.org) and our team will take care of it.
