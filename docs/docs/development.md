@@ -217,19 +217,19 @@ Hackathon — FOSSIT Hackathon (Campus Chapter)
 
 **What each Doctype represents:**
 
-| Doctype | Purpose |
-| --- | --- |
-| **Chapter** | A regional FOSS group (City Community) or campus group (Student Club). The top-level organising unit. |
-| **Event** | A meetup, conference, workshop, or hackathon organised by a Chapter. |
-| **Event Ticket** | A generated ticket for an attendee of a paid or registered event. |
-| **Event RSVP** | A registration form attached to an Event. Tracks attendee count and collects custom questions. |
-| **RSVP Submission** | A single attendee's RSVP response linked to the form. |
-| **Event CFP** | A Call for Proposals form attached to an Event. Accepts speaker submissions with a deadline. |
-| **CFP Submission** | A single speaker's talk proposal linked to the CFP form. |
-| **Hackathon** | A standalone hackathon record linked to a Chapter, with its own registration and localhost venue. |
-| **Hackathon Team** | A participating team inside a Hackathon. |
+| Doctype               | Purpose                                                                                               |
+| --------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Chapter**           | A regional FOSS group (City Community) or campus group (Student Club). The top-level organising unit. |
+| **Event**             | A meetup, conference, workshop, or hackathon organised by a Chapter.                                  |
+| **Event Ticket**      | A generated ticket for an attendee of a paid or registered event.                                     |
+| **Event RSVP**        | A registration form attached to an Event. Tracks attendee count and collects custom questions.        |
+| **RSVP Submission**   | A single attendee's RSVP response linked to the form.                                                 |
+| **Event CFP**         | A Call for Proposals form attached to an Event. Accepts speaker submissions with a deadline.          |
+| **CFP Submission**    | A single speaker's talk proposal linked to the CFP form.                                              |
+| **Hackathon**         | A standalone hackathon record linked to a Chapter, with its own registration and localhost venue.     |
+| **Hackathon Team**    | A participating team inside a Hackathon.                                                              |
 | **Hackathon Project** | A project submitted by a team, with repo link, description, and optional "contribution project" flag. |
-| User Profile | The public-facing profile for every registered user on the platform. |
+| User Profile          | The public-facing profile for every registered user on the platform.                                  |
 
 ---
 
@@ -326,6 +326,37 @@ To run the formatters or linters across the whole repo:
 yarn format   # oxfmt + prettier (Jinja html)
 yarn lint     # oxlint + eslint (Vue templates)
 ```
+
+---
+
+## Testing Emails Locally (Mailpit)
+
+Frappe Manager bundles [Mailpit](https://github.com/axllent/mailpit) as part of its admin tools, so you can capture and read every email the platform sends (account verification, data-deletion confirmation links, ticket receipts, newsletters) without configuring a real SMTP server or delivering anything to real inboxes.
+
+### Enable Mailpit
+
+Run these against your bench (replace `foss.localhost` with your bench name):
+
+```sh
+fm update foss.localhost --admin-tools enable
+fm update foss.localhost --mailpit-as-default-mail-server
+```
+
+The first command enables the admin tools (which include Mailpit); the second sets the site's default outgoing mail server to Mailpit, so all mail is caught locally instead of being sent.
+
+### View Captured Mail
+
+Open the Mailpit inbox at:
+
+==> `http://foss.localhost/mailpit`
+
+Every email the site sends now lands here. This is handy for testing any flow that mails the user, such as signup verification, the Personal Data Deletion Request confirmation link, and event or ticket notifications.
+
+> **Note:** You can still point Frappe at Gmail SMTP via the **Email Account** doctype for a production-like check, but for day-to-day development Mailpit is faster and keeps test mail out of real inboxes.
+
+### Manual / non-fm Setups
+
+If you are not using Frappe Manager (for example a raw `frappe_docker` setup), see [frappe_docker#1446](https://github.com/frappe/frappe_docker/issues/1446) for how to wire up Mailpit by hand.
 
 ---
 
