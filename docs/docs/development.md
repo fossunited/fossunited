@@ -217,19 +217,19 @@ Hackathon — FOSSIT Hackathon (Campus Chapter)
 
 **What each Doctype represents:**
 
-| Doctype | Purpose |
-| --- | --- |
-| **Chapter** | A regional FOSS group (City Community) or campus group (Student Club). The top-level organising unit. |
-| **Event** | A meetup, conference, workshop, or hackathon organised by a Chapter. |
-| **Event Ticket** | A generated ticket for an attendee of a paid or registered event. |
-| **Event RSVP** | A registration form attached to an Event. Tracks attendee count and collects custom questions. |
-| **RSVP Submission** | A single attendee's RSVP response linked to the form. |
-| **Event CFP** | A Call for Proposals form attached to an Event. Accepts speaker submissions with a deadline. |
-| **CFP Submission** | A single speaker's talk proposal linked to the CFP form. |
-| **Hackathon** | A standalone hackathon record linked to a Chapter, with its own registration and localhost venue. |
-| **Hackathon Team** | A participating team inside a Hackathon. |
+| Doctype               | Purpose                                                                                               |
+| --------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Chapter**           | A regional FOSS group (City Community) or campus group (Student Club). The top-level organising unit. |
+| **Event**             | A meetup, conference, workshop, or hackathon organised by a Chapter.                                  |
+| **Event Ticket**      | A generated ticket for an attendee of a paid or registered event.                                     |
+| **Event RSVP**        | A registration form attached to an Event. Tracks attendee count and collects custom questions.        |
+| **RSVP Submission**   | A single attendee's RSVP response linked to the form.                                                 |
+| **Event CFP**         | A Call for Proposals form attached to an Event. Accepts speaker submissions with a deadline.          |
+| **CFP Submission**    | A single speaker's talk proposal linked to the CFP form.                                              |
+| **Hackathon**         | A standalone hackathon record linked to a Chapter, with its own registration and localhost venue.     |
+| **Hackathon Team**    | A participating team inside a Hackathon.                                                              |
 | **Hackathon Project** | A project submitted by a team, with repo link, description, and optional "contribution project" flag. |
-| User Profile | The public-facing profile for every registered user on the platform. |
+| User Profile          | The public-facing profile for every registered user on the platform.                                  |
 
 ---
 
