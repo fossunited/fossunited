@@ -2,11 +2,14 @@
   "name": "fossunited",
   "version": "1.0.0",
   "description": "<div align=\"center\">     <img alt=\"fossunited logo\" src=\".github/logo.png\" width=\"150px\" height=\"120px\"> </div>",
-  "main": "index.js",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
   "directories": {
     "doc": "docs"
   },
   "type": "module",
+  "main": "index.js",
   "scripts": {
     "postinstall": "cd dashboard && yarn install",
     "dev": "cd dashboard && yarn dev --host",
@@ -22,9 +25,6 @@
     "docs": "command -v zensical >/dev/null 2>&1 && zensical serve -f docs/zensical.toml -o || uv run --with zensical zensical serve -f docs/zensical.toml -o",
     "format:check": "oxfmt --check && prettier --check \"**/*.html\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@knadh/autocomp": "^1.2.0"
   },
