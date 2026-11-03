@@ -147,6 +147,8 @@ class GrantsFundingDirectory(WebsiteGenerator):
         # page metadata
         entity_name = context.entity.get("name") or self.name
         context.page_title = f"{entity_name} - Funding Profile"
+        context.pagetitle = context.page_title
+        context.description = context.entity.get("description")
         context.doctype_name = self.doctype
         context.doc_name = self.name
         context.no_cache = 1

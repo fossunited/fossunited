@@ -178,6 +178,9 @@ class FOSSChapter(WebsiteGenerator):
 
     def get_context(self, context):
         context.no_cache = 1
+        context.pagetitle = self.chapter_name
+        context.description = self.about_chapter
+        context.image = frappe.utils.get_url(self.banner_image) if self.banner_image else None
         logo_assets = {
             CITY_COMMUNITY: "city_community",
             STUDENT_CLUB: "foss_club",

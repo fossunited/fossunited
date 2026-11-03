@@ -60,5 +60,7 @@ class JobBoard(WebsiteGenerator):
     def get_context(self, context):
         """Context for rendering job detail page"""
         context.title = f"{self.job_title} at {self.company_name}"
+        context.pagetitle = context.title
+        context.description = f"{self.job_type} role at {self.company_name}, {self.job_location}."
         context.posted_on = self.publish_date or self.creation
         context.closed_on = self.closed_date

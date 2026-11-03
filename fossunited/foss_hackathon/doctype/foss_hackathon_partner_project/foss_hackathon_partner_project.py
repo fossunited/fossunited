@@ -57,6 +57,9 @@ class FOSSHackathonPartnerProject(WebsiteGenerator):
 
         hackathon = frappe.get_doc(HACKATHON, self.hackathon)
         context.hackathon = hackathon
+        context.pagetitle = f"{self.project_name} | {hackathon.hackathon_name}"
+        context.description = self.about or self.description
+        _, _, context.image = hackathon.get_meta()
 
         # Get all participant projects linked to this partner project
         participant_projects = frappe.get_all(

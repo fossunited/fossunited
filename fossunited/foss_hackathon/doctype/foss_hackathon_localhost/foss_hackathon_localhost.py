@@ -68,6 +68,11 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
             HACKATHON,
             self.parent_hackathon,
         )
+        context.pagetitle = f"{self.localhost_name} | {context.hackathon.hackathon_name}"
+        context.description = self.description
+        context.image = (
+            frappe.utils.get_url(self.image) if self.image else context.hackathon.get_meta()[2]
+        )
         context.hackathon_format_date = self.get_formatted_date(context.hackathon)
         context.registration_link = f"/dashboard/register-for-hackathon?id={self.parent_hackathon}"
         context.attending = self.get_attending_stat()
