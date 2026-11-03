@@ -105,6 +105,28 @@ class TestAccountDeletionProfile(FrappeTestCase):
             .name
         )
 
+        # A dashboard-style upload: a File NOT attached to the profile, but whose
+        # URL is what cover_image points at. The attached_to lookup misses it; only
+        # matching by URL catches it.
+        self.unattached_file_name = (
+            frappe.get_doc(
+                {
+                    "doctype": "File",
+                    "file_name": "jane-cover.png",
+                    "is_private": 0,
+                    "content": "fake-cover-bytes",
+                }
+            )
+            .insert(ignore_permissions=True)
+            .name
+        )
+        frappe.db.set_value(
+            USER_PROFILE,
+            self.profile,
+            "cover_image",
+            frappe.db.get_value("File", self.unattached_file_name, "file_url"),
+        )
+
         # Control: another person's profile + child rows must be untouched.
         self.other_profile = get_foss_profile_id(UserFactory.create().name)
         other = frappe.get_doc(USER_PROFILE, self.other_profile)
@@ -180,8 +202,10 @@ class TestAccountDeletionProfile(FrappeTestCase):
         # Child rows are deleted outright (pure PII, no incoming links).
         self.assertEqual(self._child_count(self.profile), dict.fromkeys(PROFILE_CHILD_DOCTYPES, 0))
 
-        # Uploaded File is gone.
+        # Uploaded Files are gone — the attached one, and the unattached dashboard
+        # upload matched only by its URL.
         self.assertFalse(frappe.db.exists("File", self.file_name))
+        self.assertFalse(frappe.db.exists("File", self.unattached_file_name))
 
         # Account itself anonymized.
         self.assertEqual(p.user, req.name)
