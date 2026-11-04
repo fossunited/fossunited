@@ -3,6 +3,8 @@
 {% from "fossunited/templates/macros/issue_pr_table.html" import issue_pr_table %}
 {% from "fossunited/templates/macros/profile_badge.html" import profile_badge %}
 
+{% block title %}{{ pagetitle | e }}{% endblock %}
+
 {% block page_content %}
   <div class="v3-page">
     <div class="v3-container">
