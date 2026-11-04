@@ -140,6 +140,9 @@ class FOSSHackathonProject(WebsiteGenerator):
     def get_context(self, context):
         context.no_cache = 1
         context.hackathon = frappe.get_doc(HACKATHON, self.hackathon)
+        context.pagetitle = f"{self.title} | {context.hackathon.hackathon_name}"
+        context.description = self.short_description or self.description
+        _, _, context.image = context.hackathon.get_meta()
 
         context.team = frappe.get_doc(HACKATHON_TEAM, self.team)
         context.team_members = self.get_team_members(context.team)

@@ -3,6 +3,8 @@
 {% from "fossunited/templates/macros/issue_pr_table.html" import issue_pr_table %}
 {% from "fossunited/templates/macros/profile_badge.html" import profile_badge %}
 
+{% block title %}{{ pagetitle | e }}{% endblock %}
+
 {% block page_content %}
   <div class="v3-page">
     <div class="v3-container">
@@ -37,7 +39,12 @@
 
             <div class="d-flex flex-wrap gap-2 align-items-center">
               {% if doc.repo_link %}
-                <a class="v3-btn v3-btn-primary" href="{{ doc.repo_link }}" target="_blank" rel="noopener noreferrer">
+                <a
+                  class="v3-btn v3-btn-primary"
+                  href="{{ doc.repo_link }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <i class="ti ti-brand-github"></i>
                   <span>View Repository</span>
                 </a>
@@ -61,9 +68,9 @@
 {% endblock %}
 
 {% block page_script %}
-<script>
-  frappe.ready(() => $('[data-toggle="tooltip"]').tooltip())
-</script>
+  <script>
+    frappe.ready(() => $('[data-toggle="tooltip"]').tooltip())
+  </script>
 {% endblock %}
 
 {% macro render_description() %}
