@@ -1,7 +1,7 @@
 {% macro meta_tags(page_title, description, image_url) %}
 {#- Values can be raw doc fields (Text Editor HTML), and Jinja has no autoescape here: strip tags and escape every attribute. -#}
 {%- set page_title = (page_title or "FOSS United") | striptags -%}
-{%- set description = (description or "FOSS United is a non-profit foundation that aims at promoting & strengthening the Free and Open Source Software (FOSS) ecosystem in India.") | striptags | truncate(200) -%}
+{%- set description = (description or "FOSS United is a non-profit foundation that aims at promoting & strengthening the Free and Open Source Software (FOSS) ecosystem in India.") | striptags | truncate(200, leeway=0) -%}
 {%- set image_url = image_url or "https://fossunited.org/files/og-image.png" -%}
 <meta property="og:site_name" content="FOSS United" />
 <meta property="og:type" content="object" />
