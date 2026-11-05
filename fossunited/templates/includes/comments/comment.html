@@ -1,0 +1,24 @@
+{# Override of frappe's comment.html (fossunited templates load first): links the name to the FOSS profile when known #}
+{% from "frappe/templates/includes/avatar_macro.html" import avatar %}
+{% set comment_name = frappe.utils.strip_html(comment.sender_full_name or comment.comment_by) %}
+
+<div class="my-5 comment-row media">
+  <div class="comment-avatar">
+    {{ avatar(user_id=(frappe.utils.strip_html(comment.comment_email or comment.sender)), size='avatar-medium') }}
+  </div>
+  <div class="comment-content">
+    <div class="mb-2 head">
+      {% if comment.profile_route %}
+        <a href="{{ comment.profile_route | e }}" class="mr-2 title font-weight-bold"
+          >{{ comment_name | e }}</a
+        >
+      {% else %}
+        <span class="mr-2 title font-weight-bold">{{ comment_name | e }}</span>
+      {% endif %}
+      <span class="time small text-muted">{{ frappe.utils.pretty_date(comment.creation) }}</span>
+    </div>
+    <div id="{{ comment.name }}" class="content">
+      {{ frappe.utils.strip_html(comment.content) | markdown }}
+    </div>
+  </div>
+</div>
