@@ -35,5 +35,7 @@ class BlogPostExtend:
 def get_profile_route(user):
     if not user:
         return ""
-    username = frappe.db.get_value("FOSS User Profile", {"user": user}, "username")
+    username = frappe.db.get_value(
+        "FOSS User Profile", {"user": user, "is_published": 1}, "username"
+    )
     return f"/u/{username}" if username else ""
