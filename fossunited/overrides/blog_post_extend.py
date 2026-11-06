@@ -1,3 +1,5 @@
+from urllib.parse import quote
+
 import frappe
 
 DEFAULT_COVER = "/files/blog-og.png"
@@ -41,9 +43,59 @@ class BlogPostExtend:
         for comment in context.comment_list:
             comment.profile_route = get_profile_route(comment.owner)
 
+    def fetch_social_links_info(self):
+        """Share links shown under the post; replaces the blog app's list (same Blog Settings switch)."""
+        if not frappe.db.get_single_value("Blog Settings", "enable_social_sharing", cache=True):
+            return []
+        url = quote(frappe.utils.get_url(self.route), safe="")
+        title = quote(self.title, safe="")
+        return [
+            # Share2Fedi lets the reader pick their own Mastodon instance
+            {
+                "label": "Mastodon",
+                "icon": "brand-mastodon",
+                "link": f"https://s2f.kytta.dev/?text={title}%20{url}",
+            },
+            {
+                "label": "Bluesky",
+                "icon": "brand-bluesky",
+                "link": f"https://bsky.app/intent/compose?text={title}%20{url}",
+            },
+            {
+                "label": "FOSS United Forum",
+                "icon": "messages",
+                "link": f"https://forum.fossunited.org/new-topic?title={title}&body={url}",
+            },
+            {
+                "label": "X",
+                "icon": "brand-x",
+                "link": f"https://x.com/intent/post?text={title}&url={url}",
+            },
+            {
+                "label": "LinkedIn",
+                "icon": "brand-linkedin",
+                "link": f"https://www.linkedin.com/sharing/share-offsite/?url={url}",
+            },
+            {
+                "label": "Telegram",
+                "icon": "brand-telegram",
+                "link": f"https://t.me/share/url?url={url}&text={title}",
+            },
+            {
+                "label": "WhatsApp",
+                "icon": "brand-whatsapp",
+                "link": f"https://wa.me/?text={title}%20{url}",
+            },
+            {
+                "label": "Email",
+                "icon": "mail",
+                "link": f"mailto:?cc=team@fossunited.org&subject={title}&body={url}",
+            },
+        ]
+
 
 def get_profile_route(user):
-    if not user:
+    if not user or user == "Guest":
         return ""
     username = frappe.db.get_value(
         "FOSS User Profile", {"user": user, "is_published": 1}, "username"
