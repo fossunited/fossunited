@@ -19,17 +19,27 @@ class BlogPostExtend:
         # OG image: cover, else first image in the post (set by the blog app), else the blog default
         context.og_image = frappe.utils.get_url(context.metatags.get("image") or DEFAULT_COVER)
 
-        blogger_user = (
-            frappe.db.get_value("Blogger", self.blogger, "user") if self.blogger else None
-        )
-        context.author_profile_route = get_profile_route(blogger_user)
-        # Blogger avatar is often empty; fall back to the user's profile image
-        if context.get("blogger_info") and not context.blogger_info.avatar and blogger_user:
-            context.blogger_info.avatar = frappe.db.get_value("User", blogger_user, "user_image")
+        # Blogger fields come first; the author's published FOSS profile fills the gaps, in one query
+        blogger = context.get("blogger_info")
+        profile = frappe._dict()
+        if blogger and blogger.user:
+            profile = (
+                frappe.db.get_value(
+                    "FOSS User Profile",
+                    {"user": blogger.user, "is_published": 1},
+                    ["username", "bio", "user.user_image as user_image"],
+                    as_dict=True,
+                )
+                or profile
+            )
+            blogger.avatar = blogger.avatar or profile.user_image
+            blogger.bio = blogger.bio or profile.bio
+        context.author_profile_route = f"/u/{profile.username}" if profile.username else ""
 
-        # lets templates/includes/comments/comment.html link commenters to their profile
+        # lets templates/includes/comments/comment.html link commenters to their profile.
+        # owner, not comment_email: guests type any email, so only logged-in owners get a link.
         for comment in context.comment_list:
-            comment.profile_route = get_profile_route(comment.comment_email)
+            comment.profile_route = get_profile_route(comment.owner)
 
 
 def get_profile_route(user):
