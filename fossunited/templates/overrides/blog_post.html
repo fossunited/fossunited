@@ -50,6 +50,24 @@
       object-fit: cover;
       border-radius: 0.75rem;
     }
+    .blog-link {
+      color: var(--v3-link-blue);
+    }
+    #blog-like[aria-pressed='true'] i {
+      color: var(--v3-error-text);
+    }
+    /* Frappe's comment box uses light-only BS4 colours */
+    .blog-post .comment-view .form-control {
+      background: var(--v3-main-bg);
+      color: var(--v3-text-color);
+      border-color: var(--v3-button-border);
+    }
+    .blog-post .comment-view :is(.text-muted, .form-label, .content) {
+      color: var(--v3-text-color2) !important;
+    }
+    .blog-post .comment-view .title {
+      color: var(--v3-text-color);
+    }
     .blog-post-actions a {
       color: var(--v3-text-color2);
       font-size: 1.25rem;
@@ -90,6 +108,24 @@
       display: block;
       overflow-x: auto;
     }
+    /* Frappe's .from-markdown / .ql-editor hardcode light-mode colours; use v3 vars instead */
+    .blog-post-content :is(b, strong) {
+      color: var(--v3-text-color);
+    }
+    .blog-post-content code:not(.hljs) {
+      background: var(--v3-button-border);
+      color: var(--v3-text-color);
+    }
+    .blog-post .blog-post-content thead {
+      background: var(--v3-main-bg);
+      color: var(--v3-text-color);
+    }
+    .blog-post-content :is(table, th, td, blockquote, .screenshot) {
+      border-color: var(--v3-button-border);
+    }
+    .blog-post-content blockquote {
+      border-left-color: var(--v3-primary-button);
+    }
     /* Rich Text (Quill): drop pasted inline colours that vanish in dark mode */
     .blog-post-content.ql-editor {
       white-space: normal;
@@ -102,7 +138,7 @@
   </style>
 
   <div class="v3-page">
-    <div class="v3-container">
+    <div class="v3-container v3-container-wide">
       <div class="d-flex justify-content-between align-items-center">
         {{ breadcrumb(items=[{"route": "/blog", "label": "Blog"}, {"label": title}]) }}
         {{ theme_toggle() }}
@@ -110,13 +146,6 @@
 
       <article class="v3-card blog-post d-flex flex-column gap-6">
         <header class="d-flex flex-column align-items-start gap-3">
-          {% if category %}
-            <a
-              href="/blog?category={{ doc.blog_category | urlencode }}"
-              class="v3-tag v3-tag--category"
-              >{{ category.title }}</a
-            >
-          {% endif %}
           <h1 class="blog-post-title v3-text-primary m-0">{{ title }}</h1>
           {% if blog_intro %}<p class="blog-post-intro m-0">{{ blog_intro }}</p>{% endif %}
           <div class="blog-post-byline d-flex flex-wrap align-items-center gap-2">
@@ -137,6 +166,12 @@
               <span aria-hidden="true">&middot;</span>
               <span><i class="ti ti-clock" aria-hidden="true"></i> {{ read_time }} min read</span>
             {% endif %}
+            {% if category %}
+              <span aria-hidden="true">&middot;</span>
+              <a href="/blog?category={{ doc.blog_category | urlencode }}"
+                >#{{ category.title }}</a
+              >
+            {% endif %}
           </div>
         </header>
 
@@ -156,7 +191,21 @@
 
         <div class="blog-post-actions d-flex align-items-center justify-content-between gap-3">
           <div>
-            {% if not disable_likes %}{% include 'templates/includes/likes/likes.html' %}{% endif %}
+            {% if not disable_likes %}
+              <button
+                type="button"
+                id="blog-like"
+                class="v3-btn v3-btn-secondary"
+                aria-pressed="{{ 'true' if like else 'false' }}"
+                data-count="{{ like_count or 0 }}"
+              >
+                <i
+                  class="ti {{ 'ti-heart-filled' if like else 'ti-heart' }}"
+                  aria-hidden="true"
+                ></i>
+                <span>{{ like_count or 0 }} {{ "Like" if like_count == 1 else "Likes" }}</span>
+              </button>
+            {% endif %}
           </div>
           {% if social_links %}
             {% set icons = {"twitter": "brand-x", "facebook": "brand-facebook", "linkedin": "brand-linkedin", "envelope": "mail"} %}
@@ -190,7 +239,7 @@
                 <p class="v3-text-secondary text-sm m-0">{{ blogger_info.bio }}</p>
               {% endif %}
               {% if author_profile_route %}
-                <a href="{{ author_profile_route | e }}" class="text-sm"
+                <a href="{{ author_profile_route | e }}" class="text-sm blog-link"
                   ><i class="ti ti-user" aria-hidden="true"></i> FOSS United profile</a
                 >
               {% endif %}
@@ -206,4 +255,31 @@
       </article>
     </div>
   </div>
+{% endblock %}
+
+{% block script %}
+  {{ super() }}
+  <script>
+    // like button: blog app's endpoint (respects disable_likes, clears the page cache)
+    const likeBtn = document.getElementById('blog-like')
+    const renderLike = (liked, count) => {
+      likeBtn.setAttribute('aria-pressed', liked)
+      likeBtn.dataset.count = count
+      likeBtn.querySelector('i').className = 'ti ' + (liked ? 'ti-heart-filled' : 'ti-heart')
+      likeBtn.querySelector('span').textContent = count + (count === 1 ? ' Like' : ' Likes')
+    }
+    likeBtn?.addEventListener('click', () => {
+      const liked = likeBtn.getAttribute('aria-pressed') !== 'true'
+      const count = Number(likeBtn.dataset.count) + (liked ? 1 : -1)
+      renderLike(liked, count)
+      frappe
+        .call('blog.templates.includes.likes.likes.like', {
+          reference_doctype: 'Blog Post',
+          reference_name: '{{ name }}',
+          like: liked,
+          route: '{{ pathname }}',
+        })
+        .fail(() => renderLike(!liked, count + (liked ? -1 : 1)))
+    })
+  </script>
 {% endblock %}
