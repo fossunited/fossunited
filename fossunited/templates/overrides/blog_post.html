@@ -74,18 +74,40 @@
     }
 
     /* reading typography; Markdown / HTML / Rich Text all land in .blog-post-content */
+    /* sizes and link colour follow the listmonk newsletter (development/listmonk/newsletter.html) */
     .blog-post-content {
-      line-height: 1.8;
+      font-size: 1rem;
+      line-height: 1.5;
       color: var(--v3-text-color2);
       overflow-wrap: break-word;
     }
-    .blog-post-content :is(h1, h2, h3, h4, h5, h6) {
+    .blog-post .blog-post-content :is(h1, h2, h3, h4, h5, h6) {
       color: var(--v3-text-color);
-      margin: 2rem 0 0.75rem;
+      font-weight: 700;
+      padding: 0;
+      margin: 1.75rem 0 0.75rem;
+    }
+    .blog-post .blog-post-content h1 {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+    .blog-post .blog-post-content h2 {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+    }
+    .blog-post .blog-post-content :is(h3, h4, h5, h6) {
+      font-size: 1.0625rem;
+      line-height: 1.5rem;
+    }
+    .blog-post-content p {
+      margin: 0 0 1rem;
     }
     .blog-post-content a {
-      color: var(--v3-link-blue);
+      color: var(--v3-dark-green);
       text-decoration: underline;
+    }
+    [data-theme='dark'] .blog-post-content a {
+      color: var(--v3-primary-button);
     }
     .blog-post-content :is(img, iframe, video) {
       max-width: 100%;
@@ -187,6 +209,25 @@
           {{ content }}
         </div>
 
+        {# Blog Settings CTA (title, subtitle, cta_label, cta_url), drawn in v3 instead of frappe's web block #}
+        {% if enable_cta %}
+          <aside
+            class="d-flex flex-wrap align-items-center justify-content-between gap-3 p-4 rounded-lg border v3-border"
+          >
+            <div class="d-flex flex-column gap-1">
+              <p class="v3-text-primary semi-bold mb-0">{{ cta.title }}</p>
+              {% if cta.subtitle %}
+                <p class="v3-text-secondary text-sm mb-0">{{ cta.subtitle }}</p>
+              {% endif %}
+            </div>
+            {% if cta.cta_url %}
+              <a href="{{ cta.cta_url | e }}" class="v3-btn v3-btn-dark text-decoration-none"
+                >{{ cta.cta_label }}</a
+              >
+            {% endif %}
+          </aside>
+        {% endif %}
+
         <hr />
 
         <div class="blog-post-actions d-flex align-items-center justify-content-between gap-3">
@@ -208,16 +249,16 @@
             {% endif %}
           </div>
           {% if social_links %}
-            {% set icons = {"twitter": "brand-x", "facebook": "brand-facebook", "linkedin": "brand-linkedin", "envelope": "mail"} %}
             <div class="d-flex gap-3">
               {% for link in social_links %}
                 <a
                   href="{{ link.link | e }}"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Share on {{ link.icon | capitalize }}"
+                  aria-label="Share on {{ link.label }}"
+                  title="Share on {{ link.label }}"
                 >
-                  <i class="ti ti-{{ icons[link.icon] }}" aria-hidden="true"></i>
+                  <i class="ti ti-{{ link.icon }}" aria-hidden="true"></i>
                 </a>
               {% endfor %}
             </div>
@@ -229,7 +270,7 @@
             {% if blogger_info.avatar %}
               <img src="{{ blogger_info.avatar | e }}" alt="" class="blog-avatar blog-avatar-lg" />
             {% endif %}
-            <div class="d-flex flex-column gap-1">
+            <div class="d-flex flex-column gap-2">
               <a
                 href="/blog?blogger={{ doc.blogger | urlencode }}"
                 class="v3-text-primary semi-bold"
