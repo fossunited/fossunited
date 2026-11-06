@@ -9,6 +9,7 @@ from fossunited.doctype_ids import (
     TICKET_TIER,
     USER_PROFILE,
 )
+from fossunited.fossunited.permissions import _ctm_chapters
 from fossunited.payments.doctype.razorpay_payment.razorpay_payment import (
     capture_payment,
     fail_payment,
@@ -229,35 +230,32 @@ def get_profile_data(username: str | None = None, email: str | None = None) -> d
 
 
 @frappe.whitelist()
-def get_user_profile_list(filters: dict | None = None, search_term: str | None = None) -> list:
+def get_user_profile_list(search_term: str | None = None, exclude: list | None = None) -> list:
     """
-    Returns the list of user profiles based on the given filters and optional search term.
+    Profiles for the dashboard "Add member" picker, matched on username or full name.
+    Only members of a chapter's team (FOSS Chapter Lead Team Member) may search.
     """
-    if not filters:
-        filters = {}
-
-    if search_term and len(search_term.strip()) >= 2:
-        search_term = search_term.strip()
-        or_filters = [
-            ["username", "like", f"%{search_term}%"],
-            ["full_name", "like", f"%{search_term}%"],
-        ]
-
-        profiles = frappe.db.get_all(
-            USER_PROFILE,
-            filters=filters,
-            or_filters=or_filters,
-            fields=[
-                "full_name",
-                "profile_photo",
-                "route",
-                "username",
-                "name",
-            ],
-            page_length=50,
-            order_by="username asc",
+    if not _ctm_chapters(frappe.session.user):
+        frappe.throw(
+            _("Only chapter team members can search for members."),
+            frappe.PermissionError,
         )
-    else:
-        profiles = []
 
-    return profiles
+    search_term = (search_term or "").strip().lstrip("@")
+    if len(search_term) < 2:
+        return []
+
+    query = frappe.qb.get_query(
+        USER_PROFILE,
+        fields=["full_name", "profile_photo", "route", "username", "name"],
+        filters={"name": ["not in", exclude]} if exclude else None,
+        order_by="username asc",
+        limit=50,
+    )
+    # each word must match the username or full name, in any order ("imu nerona" finds "nerona imu")
+    profile = frappe.qb.DocType(USER_PROFILE)
+    for word in search_term.split():
+        query = query.where(
+            profile.username.like(f"%{word}%") | profile.full_name.like(f"%{word}%")
+        )
+    return query.run(as_dict=True)
