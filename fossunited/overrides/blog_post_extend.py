@@ -1,6 +1,6 @@
 import frappe
 
-DEFAULT_COVER = "/assets/fossunited/images/defaults/blog-og.png"
+DEFAULT_COVER = "/files/blog-og.png"
 
 
 # Mixin via `extend_doctype_class`: frappe puts it before the blog app's BlogPost in the MRO,
