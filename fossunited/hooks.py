@@ -27,6 +27,12 @@ required_apps = ["frappe/newsletter", "frappe/blog"]
 
 # Add all simple route bench rules here
 website_route_rules = [
+    # Blog Post's DocType route ("blog") would map /blog to the blog app's list page;
+    # this rule comes first so /blog renders fossunited/www/blog instead.
+    {
+        "from_route": "/blog",
+        "to_route": "blog",
+    },
     {
         "from_route": "/dashboard/<path:app_path>",
         "to_route": "dashboard",
@@ -132,6 +138,8 @@ website_redirects = [
     {"source": r"^blog/rss$", "target": r"/rss.xml"},
     {"source": r"^rss$", "target": r"/rss.xml"},
     {"source": r"^(?!.*\.xml$)(.*)/rss$", "target": r"/\1/rss.xml"},
+    # blog category pages -> our listing (the blog app's /blog/<category> rule would win otherwise)
+    {"source": r"^blog/([^/]+)/?$", "target": r"/blog?category=\1", "redirect_http_status": 302},
     {
         "source": r"hack/(.+)/partner-projects(.*)",
         "target": r"/api/method/fossunited.api.pages.partner_projects_redirect?hack=\1&project=\2",
@@ -153,6 +161,10 @@ after_install = "fossunited.install.after_install"
 # Uninstallation
 # ----------------
 before_uninstall = "fossunited.uninstall.before_uninstall"
+
+extend_doctype_class = {
+    "Blog Post": ["fossunited.overrides.blog_post_extend.BlogPostExtend"],
+}
 
 permission_query_conditions = {
     "FOSS Event CFP Submission": "fossunited.fossunited.permissions.cfp_submission_query",

@@ -1,0 +1,209 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+
+{% block meta_block %}{{ meta_tags(title, description, og_image) }}{% endblock %}
+{% block title %}{{ title }} | FOSS United{% endblock %}
+
+{% block page_content %}
+  {# Layout is BS4 + v3 utilities; post text is styled by .v3-prose in custom.css.
+     Only what has no utility class lives here. #}
+  <style>
+    #blog-like[aria-pressed='true'] i {
+      color: var(--v3-error-text);
+    }
+    /* frappe's comments include uses light-only BS4 colours */
+    .comment-view .form-control {
+      background: var(--v3-main-bg);
+      color: var(--v3-text-color);
+      border-color: var(--v3-button-border);
+    }
+    .comment-view :is(.text-muted, .form-label, .content) {
+      color: var(--v3-text-color2) !important;
+    }
+    .comment-view .title {
+      color: var(--v3-text-color);
+    }
+  </style>
+
+  <div class="v3-page">
+    <div class="v3-container v3-container-wide">
+      <div class="d-flex justify-content-between align-items-center">
+        {{ breadcrumb(items=[{"route": "/blog", "label": "Blog"}, {"label": title}]) }}
+        {{ theme_toggle() }}
+      </div>
+
+      <article class="v3-card d-flex flex-column gap-6 mt-4 mb-5">
+        <header class="d-flex flex-column align-items-start gap-4">
+          <h1 class="text-3xl font-weight-bold v3-text-primary mt-0 mb-2">{{ title }}</h1>
+          {% if blog_intro %}
+            <p class="text-lg v3-text-secondary m-0">{{ blog_intro }}</p>
+          {% endif %}
+          <div class="d-flex flex-wrap align-items-center gap-2 text-sm v3-text-secondary">
+            {% if blogger_info %}
+              {% if blogger_info.avatar %}
+                <img
+                  src="{{ blogger_info.avatar | e }}"
+                  alt=""
+                  width="32"
+                  height="32"
+                  class="rounded-circle object-cover"
+                />
+              {% endif %}
+              <a
+                href="/blog?blogger={{ doc.blogger | urlencode }}"
+                class="semi-bold v3-text-primary"
+                >{{ blogger_info.full_name }}</a
+              >
+              <span aria-hidden="true">&middot;</span>
+            {% endif %}
+            <span
+              ><i class="ti ti-calendar" aria-hidden="true"></i>
+              <time datetime="{{ published_on }}">{{ updated }}</time></span
+            >
+            {% if read_time %}
+              <span aria-hidden="true">&middot;</span>
+              <span><i class="ti ti-clock" aria-hidden="true"></i> {{ read_time }} min read</span>
+            {% endif %}
+            {% if category %}
+              <span aria-hidden="true">&middot;</span>
+              <a
+                href="/blog?category={{ doc.blog_category | urlencode }}"
+                class="semi-bold v3-text-primary"
+                >#{{ category.title }}</a
+              >
+            {% endif %}
+          </div>
+        </header>
+
+        {% if cover_image %}
+          <img src="{{ cover_image | e }}" alt="" class="w-100 rounded-lg object-cover" />
+        {% endif %}
+
+        {# Rich Text is Quill HTML and needs .ql-editor for its list/indent/align markup.
+           Markdown (converted by the blog app) and HTML need nothing extra. #}
+        <div class="v3-prose {{ 'ql-editor read-mode' if doc.content_type == 'Rich Text' }}">
+          {{ content }}
+        </div>
+
+        {# Blog Settings CTA (title, subtitle, cta_label, cta_url), drawn in v3 instead of frappe's web block #}
+        {% if enable_cta %}
+          <aside
+            class="d-flex flex-wrap align-items-center justify-content-between gap-3 p-4 rounded-lg v3-border"
+          >
+            <div class="d-flex flex-column gap-1">
+              <p class="v3-text-primary semi-bold mb-0">{{ cta.title }}</p>
+              {% if cta.subtitle %}
+                <p class="v3-text-secondary text-sm mb-0">{{ cta.subtitle }}</p>
+              {% endif %}
+            </div>
+            {% if cta.cta_url %}
+              <a href="{{ cta.cta_url | e }}" class="v3-btn v3-btn-dark text-decoration-none"
+                >{{ cta.cta_label }}</a
+              >
+            {% endif %}
+          </aside>
+        {% endif %}
+
+        <hr class="v3-divider m-0" />
+
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+          <div>
+            {% if not disable_likes %}
+              <button
+                type="button"
+                id="blog-like"
+                class="v3-btn v3-btn-secondary"
+                aria-pressed="{{ 'true' if like else 'false' }}"
+                data-count="{{ like_count or 0 }}"
+              >
+                <i
+                  class="ti {{ 'ti-heart-filled' if like else 'ti-heart' }}"
+                  aria-hidden="true"
+                ></i>
+                <span>{{ like_count or 0 }} {{ "Like" if like_count == 1 else "Likes" }}</span>
+              </button>
+            {% endif %}
+          </div>
+          {% if social_links %}
+            <div class="d-flex flex-wrap gap-3 text-xl">
+              {% for link in social_links %}
+                <a
+                  href="{{ link.link | e }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="v3-text-secondary"
+                  aria-label="Share on {{ link.label }}"
+                  title="Share on {{ link.label }}"
+                  ><i class="ti ti-{{ link.icon }}" aria-hidden="true"></i
+                ></a>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        {% if blogger_info %}
+          <div class="d-flex align-items-start gap-3 p-3 rounded-lg v3-border">
+            {% if blogger_info.avatar %}
+              <img
+                src="{{ blogger_info.avatar | e }}"
+                alt=""
+                width="48"
+                height="48"
+                class="rounded-circle object-cover flex-shrink-0"
+              />
+            {% endif %}
+            <div class="d-flex flex-column gap-2">
+              <a
+                href="/blog?blogger={{ doc.blogger | urlencode }}"
+                class="v3-text-primary semi-bold"
+                >{{ blogger_info.full_name }}</a
+              >
+              {% if blogger_info.bio %}
+                <p class="v3-text-secondary text-sm m-0">{{ blogger_info.bio }}</p>
+              {% endif %}
+              {% if author_profile_route %}
+                <a href="{{ author_profile_route | e }}" class="text-sm v3-link"
+                  ><i class="ti ti-user" aria-hidden="true"></i> FOSS United profile</a
+                >
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if not disable_comments %}
+          <section aria-label="Comments">
+            {% include 'templates/includes/comments/comments.html' %}
+          </section>
+        {% endif %}
+      </article>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+  {{ super() }}
+  <script>
+    // like button: blog app's endpoint (respects disable_likes, clears the page cache)
+    const likeBtn = document.getElementById('blog-like')
+    const renderLike = (liked, count) => {
+      likeBtn.setAttribute('aria-pressed', liked)
+      likeBtn.dataset.count = count
+      likeBtn.querySelector('i').className = 'ti ' + (liked ? 'ti-heart-filled' : 'ti-heart')
+      likeBtn.querySelector('span').textContent = count + (count === 1 ? ' Like' : ' Likes')
+    }
+    likeBtn?.addEventListener('click', () => {
+      const liked = likeBtn.getAttribute('aria-pressed') !== 'true'
+      const count = Number(likeBtn.dataset.count) + (liked ? 1 : -1)
+      renderLike(liked, count)
+      frappe
+        .call('blog.templates.includes.likes.likes.like', {
+          reference_doctype: 'Blog Post',
+          reference_name: '{{ name }}',
+          like: liked,
+          route: '{{ pathname }}',
+        })
+        .fail(() => renderLike(!liked, count + (liked ? -1 : 1)))
+    })
+  </script>
+{% endblock %}
