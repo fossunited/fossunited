@@ -6,156 +6,23 @@
 {% block title %}{{ title }} | FOSS United{% endblock %}
 
 {% block page_content %}
+  {# Layout is BS4 + v3 utilities; post text is styled by .v3-prose in custom.css.
+     Only what has no utility class lives here. #}
   <style>
-    /* custom css for v3 theming colors mostly */
-    .blog-post {
-      margin: 1.5rem 0 3rem;
-    } /* padding: v3-card default 1.5rem */
-    .blog-post > * {
-      margin: 0;
-    }
-    .blog-post hr {
-      border-color: var(--v3-button-border);
-    }
-    .blog-post-title {
-      font-size: clamp(1.625rem, 4vw, 2.25rem);
-      font-weight: 700;
-      line-height: 1.25;
-    }
-    .blog-post-intro {
-      font-size: 1.0625rem;
-      color: var(--v3-text-color2);
-    }
-    .blog-post-byline {
-      font-size: 0.875rem;
-      color: var(--v3-text-color2);
-    }
-    .blog-post-byline a {
-      font-weight: 600;
-      color: var(--v3-text-color);
-    }
-    .blog-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    .blog-avatar-lg {
-      width: 48px;
-      height: 48px;
-    }
-    .blog-post-cover {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      border-radius: 0.75rem;
-    }
-    .blog-link {
-      color: var(--v3-link-blue);
-    }
     #blog-like[aria-pressed='true'] i {
       color: var(--v3-error-text);
     }
-    /* Frappe's comment box uses light-only BS4 colours */
-    .blog-post .comment-view .form-control {
+    /* frappe's comments include uses light-only BS4 colours */
+    .comment-view .form-control {
       background: var(--v3-main-bg);
       color: var(--v3-text-color);
       border-color: var(--v3-button-border);
     }
-    .blog-post .comment-view :is(.text-muted, .form-label, .content) {
+    .comment-view :is(.text-muted, .form-label, .content) {
       color: var(--v3-text-color2) !important;
     }
-    .blog-post .comment-view .title {
+    .comment-view .title {
       color: var(--v3-text-color);
-    }
-    .blog-post-actions a {
-      color: var(--v3-text-color2);
-      font-size: 1.25rem;
-    }
-
-    /* reading typography; Markdown / HTML / Rich Text all land in .blog-post-content */
-    /* sizes and link colour follow the listmonk newsletter (development/listmonk/newsletter.html) */
-    .blog-post-content {
-      font-size: 1rem;
-      line-height: 1.5;
-      color: var(--v3-text-color2);
-      overflow-wrap: break-word;
-    }
-    .blog-post .blog-post-content :is(h1, h2, h3, h4, h5, h6) {
-      color: var(--v3-text-color);
-      font-weight: 700;
-      padding: 0;
-      margin: 1.75rem 0 0.75rem;
-    }
-    .blog-post .blog-post-content h1 {
-      font-size: 1.5rem;
-      line-height: 2rem;
-    }
-    .blog-post .blog-post-content h2 {
-      font-size: 1.25rem;
-      line-height: 1.75rem;
-    }
-    .blog-post .blog-post-content :is(h3, h4, h5, h6) {
-      font-size: 1.0625rem;
-      line-height: 1.5rem;
-    }
-    .blog-post-content p {
-      margin: 0 0 1rem;
-    }
-    .blog-post-content a {
-      color: var(--v3-dark-green);
-      text-decoration: underline;
-    }
-    [data-theme='dark'] .blog-post-content a {
-      color: var(--v3-primary-button);
-    }
-    .blog-post-content :is(img, iframe, video) {
-      max-width: 100%;
-      height: auto;
-      border-radius: 0.5rem;
-    }
-    .blog-post-content pre {
-      background: var(--v3-main-bg);
-      border: 1px solid var(--v3-button-border);
-      border-radius: 0.5rem;
-      padding: 1rem;
-      overflow-x: auto;
-    }
-    .blog-post-content blockquote {
-      border-left: 3px solid var(--v3-primary-button);
-      padding-left: 1rem;
-    }
-    .blog-post-content table {
-      width: 100%;
-      display: block;
-      overflow-x: auto;
-    }
-    /* Frappe's .from-markdown / .ql-editor hardcode light-mode colours; use v3 vars instead */
-    .blog-post-content :is(b, strong) {
-      color: var(--v3-text-color);
-    }
-    .blog-post-content code:not(.hljs) {
-      background: var(--v3-button-border);
-      color: var(--v3-text-color);
-    }
-    .blog-post .blog-post-content thead {
-      background: var(--v3-main-bg);
-      color: var(--v3-text-color);
-    }
-    .blog-post-content :is(table, th, td, blockquote, .screenshot) {
-      border-color: var(--v3-button-border);
-    }
-    .blog-post-content blockquote {
-      border-left-color: var(--v3-primary-button);
-    }
-    /* Rich Text (Quill): drop pasted inline colours that vanish in dark mode */
-    .blog-post-content.ql-editor {
-      white-space: normal;
-      overflow: visible;
-    }
-    .blog-post-content.ql-editor [style*='color'] {
-      color: inherit !important;
-      background-color: transparent !important;
     }
   </style>
 
@@ -166,16 +33,26 @@
         {{ theme_toggle() }}
       </div>
 
-      <article class="v3-card blog-post d-flex flex-column gap-6">
-        <header class="d-flex flex-column align-items-start gap-3">
-          <h1 class="blog-post-title v3-text-primary m-0">{{ title }}</h1>
-          {% if blog_intro %}<p class="blog-post-intro m-0">{{ blog_intro }}</p>{% endif %}
-          <div class="blog-post-byline d-flex flex-wrap align-items-center gap-2">
+      <article class="v3-card d-flex flex-column gap-6 mt-4 mb-5">
+        <header class="d-flex flex-column align-items-start gap-4">
+          <h1 class="text-3xl font-weight-bold v3-text-primary mt-0 mb-2">{{ title }}</h1>
+          {% if blog_intro %}
+            <p class="text-lg v3-text-secondary m-0">{{ blog_intro }}</p>
+          {% endif %}
+          <div class="d-flex flex-wrap align-items-center gap-2 text-sm v3-text-secondary">
             {% if blogger_info %}
               {% if blogger_info.avatar %}
-                <img src="{{ blogger_info.avatar | e }}" alt="" class="blog-avatar" />
+                <img
+                  src="{{ blogger_info.avatar | e }}"
+                  alt=""
+                  width="32"
+                  height="32"
+                  class="rounded-circle object-cover"
+                />
               {% endif %}
-              <a href="/blog?blogger={{ doc.blogger | urlencode }}"
+              <a
+                href="/blog?blogger={{ doc.blogger | urlencode }}"
+                class="semi-bold v3-text-primary"
                 >{{ blogger_info.full_name }}</a
               >
               <span aria-hidden="true">&middot;</span>
@@ -190,7 +67,9 @@
             {% endif %}
             {% if category %}
               <span aria-hidden="true">&middot;</span>
-              <a href="/blog?category={{ doc.blog_category | urlencode }}"
+              <a
+                href="/blog?category={{ doc.blog_category | urlencode }}"
+                class="semi-bold v3-text-primary"
                 >#{{ category.title }}</a
               >
             {% endif %}
@@ -198,21 +77,19 @@
         </header>
 
         {% if cover_image %}
-          <img src="{{ cover_image | e }}" alt="" class="blog-post-cover" />
+          <img src="{{ cover_image | e }}" alt="" class="w-100 rounded-lg object-cover" />
         {% endif %}
 
-        {# Rich Text is Quill HTML and needs .ql-editor for its list/indent/align classes.
-           Markdown is converted to HTML by the blog app; HTML is used as written. #}
-        <div
-          class="blog-post-content {{ 'ql-editor read-mode' if doc.content_type == 'Rich Text' else 'from-markdown' }}"
-        >
+        {# Rich Text is Quill HTML and needs .ql-editor for its list/indent/align markup.
+           Markdown (converted by the blog app) and HTML need nothing extra. #}
+        <div class="v3-prose {{ 'ql-editor read-mode' if doc.content_type == 'Rich Text' }}">
           {{ content }}
         </div>
 
         {# Blog Settings CTA (title, subtitle, cta_label, cta_url), drawn in v3 instead of frappe's web block #}
         {% if enable_cta %}
           <aside
-            class="d-flex flex-wrap align-items-center justify-content-between gap-3 p-4 rounded-lg border v3-border"
+            class="d-flex flex-wrap align-items-center justify-content-between gap-3 p-4 rounded-lg v3-border"
           >
             <div class="d-flex flex-column gap-1">
               <p class="v3-text-primary semi-bold mb-0">{{ cta.title }}</p>
@@ -228,9 +105,9 @@
           </aside>
         {% endif %}
 
-        <hr />
+        <hr class="v3-divider m-0" />
 
-        <div class="blog-post-actions d-flex align-items-center justify-content-between gap-3">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
           <div>
             {% if not disable_likes %}
               <button
@@ -249,26 +126,32 @@
             {% endif %}
           </div>
           {% if social_links %}
-            <div class="d-flex gap-3">
+            <div class="d-flex flex-wrap gap-3 text-xl">
               {% for link in social_links %}
                 <a
                   href="{{ link.link | e }}"
                   target="_blank"
                   rel="noopener noreferrer"
+                  class="v3-text-secondary"
                   aria-label="Share on {{ link.label }}"
                   title="Share on {{ link.label }}"
-                >
-                  <i class="ti ti-{{ link.icon }}" aria-hidden="true"></i>
-                </a>
+                  ><i class="ti ti-{{ link.icon }}" aria-hidden="true"></i
+                ></a>
               {% endfor %}
             </div>
           {% endif %}
         </div>
 
         {% if blogger_info %}
-          <div class="d-flex align-items-start gap-3 p-3 rounded-lg border v3-border">
+          <div class="d-flex align-items-start gap-3 p-3 rounded-lg v3-border">
             {% if blogger_info.avatar %}
-              <img src="{{ blogger_info.avatar | e }}" alt="" class="blog-avatar blog-avatar-lg" />
+              <img
+                src="{{ blogger_info.avatar | e }}"
+                alt=""
+                width="48"
+                height="48"
+                class="rounded-circle object-cover flex-shrink-0"
+              />
             {% endif %}
             <div class="d-flex flex-column gap-2">
               <a
@@ -280,7 +163,7 @@
                 <p class="v3-text-secondary text-sm m-0">{{ blogger_info.bio }}</p>
               {% endif %}
               {% if author_profile_route %}
-                <a href="{{ author_profile_route | e }}" class="text-sm blog-link"
+                <a href="{{ author_profile_route | e }}" class="text-sm v3-link"
                   ><i class="ti ti-user" aria-hidden="true"></i> FOSS United profile</a
                 >
               {% endif %}
