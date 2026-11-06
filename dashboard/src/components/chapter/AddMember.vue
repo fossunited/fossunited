@@ -2,14 +2,14 @@
   <Dialog title="Add New Member">
     <div class="flex flex-col gap-2">
       <div class="text-p-base text-ink-gray-6">
-        Enter the username of the new member you want to add to the team.
+        Search by name or username for the members you want to add to the team.
       </div>
       <MultiSelect
         class="w-full"
         :model-value="newMemberIds"
         :options="pickerOptions"
         :filterable="false"
-        placeholder="Search for a user"
+        placeholder="Name or username"
         :loading="memberOptions.loading"
         @update:query="handleSearchQuery"
         @update:model-value="handleSelectionChange"
@@ -99,9 +99,7 @@ const MIN_QUERY_CHARS = 2
 const memberOptions = createResource({
   url: 'fossunited.api.dashboard.get_user_profile_list',
   makeParams() {
-    const params = {
-      filters: { name: ['not in', existingMembers.value] },
-    }
+    const params = { exclude: existingMembers.value }
     if (searchTerm.value?.trim().length >= MIN_QUERY_CHARS) {
       params.search_term = searchTerm.value.trim()
     }
