@@ -3,6 +3,7 @@ from frappe import _
 
 from fossunited.doctype_ids import (
     CHAPTER,
+    CORE_TEAM,
     EVENT,
     EVENT_TICKET,
     RAZORPAY_PAYMENT,
@@ -233,11 +234,15 @@ def get_profile_data(username: str | None = None, email: str | None = None) -> d
 def get_user_profile_list(search_term: str | None = None, exclude: list | None = None) -> list:
     """
     Profiles for the dashboard "Add member" picker, matched on username or full name.
-    Only members of a chapter's team (FOSS Chapter Lead Team Member) may search.
+    Only chapter team members and event Core Team Members (the two places the picker is used) may search.
     """
-    if not _ctm_chapters(frappe.session.user):
+    user = frappe.session.user
+    is_event_core = frappe.db.exists(
+        "FOSS Chapter Event Member", {"email": user, "role": CORE_TEAM}
+    )
+    if not (_ctm_chapters(user) or is_event_core):
         frappe.throw(
-            _("Only chapter team members can search for members."),
+            _("Only chapter or event team members can search for members."),
             frappe.PermissionError,
         )
 
