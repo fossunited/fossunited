@@ -1,0 +1,29 @@
+info:
+  name: get-my-chapter-dashboard
+  type: http
+  seq: 4
+http:
+  method: GET
+  url: '{{base}}/method/fossunited.api.chapter.get_my_chapter_dashboard'
+  auth:
+    type: none
+runtime:
+  scripts:
+    - type: tests
+      code: |
+        test("authenticated chapter dashboard keeps its response contract", function() {
+          const data = res.getBody();
+          expect(res.getStatus()).to.equal(200);
+          expect(data.message).to.have.all.keys("chapters", "scheduled", "recent_concluded");
+          expect(data.message.chapters).to.be.an("array");
+          expect(data.message.scheduled).to.be.an("array");
+          expect(data.message.recent_concluded).to.be.an("array");
+          const eventNames = data.message.scheduled.concat(data.message.recent_concluded)
+            .map(event => event.name);
+          expect(new Set(eventNames).size).to.equal(eventNames.length);
+        });
+docs: |-
+  Uses the HTTP cookie jar populated by the existing login request. The adjacent
+  identity request asserts that the cookie represents the intended attendee.
+  Native database tests cover membership, volunteer status/date boundaries,
+  exact row parity and query growth.

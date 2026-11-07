@@ -49,6 +49,7 @@ declare -A API_MAP=(
   ["fossunited/api/proposal.py"]="api/proposal"
   ["fossunited/api/rsvp.py"]="api/rsvp"
   ["fossunited/api/dashboard.py"]="api/dashboard"
+  ["fossunited/api/chapter.py"]="api/dashboard"
   ["fossunited/api/emailing.py"]="api/emailing"
   ["fossunited/api/profile.py"]="api/profile"
   ["fossunited/api/schedule.py"]="api/schedule"
