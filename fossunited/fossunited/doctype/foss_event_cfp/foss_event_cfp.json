@@ -1,5 +1,6 @@
 {
   "actions": [],
+  "allow_bulk_edit": 1,
   "allow_rename": 1,
   "autoname": "hash",
   "creation": "2023-07-10 01:05:08.149329",
@@ -53,6 +54,7 @@
       "fieldtype": "Link",
       "in_list_view": 1,
       "label": "Event",
+      "link_filters": "[[\"FOSS Chapter Event\",\"is_published\",\"=\",1],[\"FOSS Chapter Event\",\"status\",\"=\",\"Live\"]]",
       "options": "FOSS Chapter Event",
       "reqd": 1
     },
@@ -174,7 +176,7 @@
       "link_fieldname": "linked_cfp"
     }
   ],
-  "modified": "2026-08-28 17:29:30.216781",
+  "modified": "2026-11-09 13:33:01.050572",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP",
