@@ -150,7 +150,6 @@
 {% endblock page_content %}
 
 {% block page_script %}
-  <!-- prettier-ignore-start -->
   <script>
     frappe.boot = {{ frappe.utils.orjson_dumps(boot, default=frappe.json_handler) }};
     frappe._messages = {{ translated_messages }};

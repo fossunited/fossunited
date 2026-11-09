@@ -1,4 +1,5 @@
 /fossunited/templates/macros/**/*.html
+/fossunited/templates/overrides/web_form.html
 # Prettier only formats Jinja *.html now; everything else is Oxfmt (.oxfmtrc.json).
 /fossunited/dev/
 /fossunited/public/dashboard/

@@ -12,9 +12,7 @@ class WebFormExtend:
     def get_context(self, context):
         super().get_context(context)
 
-        if context.template == WEB_LIST_TEMPLATE:
-            context.template = "fossunited/templates/overrides/web_form_list.html"
-        else:
+        if context.template != WEB_LIST_TEMPLATE:
             context.template = "fossunited/templates/overrides/web_form.html"
 
         # foss_base.html reads these two context keys for its own navbar/footer blocks;
