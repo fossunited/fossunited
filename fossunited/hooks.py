@@ -164,6 +164,7 @@ before_uninstall = "fossunited.uninstall.before_uninstall"
 
 extend_doctype_class = {
     "Blog Post": ["fossunited.overrides.blog_post_extend.BlogPostExtend"],
+    "Web Form": ["fossunited.overrides.web_form_extend.WebFormExtend"],
 }
 
 permission_query_conditions = {
