@@ -1,5 +1,6 @@
 {
   "actions": [],
+  "allow_bulk_edit": 1,
   "allow_guest_to_view": 1,
   "allow_rename": 1,
   "autoname": "hash",
@@ -39,6 +40,7 @@
       "fieldtype": "Link",
       "in_list_view": 1,
       "label": "Event",
+      "link_filters": "[[\"FOSS Chapter Event\",\"is_published\",\"=\",1],[\"FOSS Chapter Event\",\"status\",\"=\",\"Live\"]]",
       "options": "FOSS Chapter Event",
       "reqd": 1
     },
@@ -140,7 +142,7 @@
       "link_fieldname": "linked_rsvp"
     }
   ],
-  "modified": "2026-03-07 16:38:57.955983",
+  "modified": "2026-11-09 13:33:35.454356",
   "modified_by": "Administrator",
   "module": "Chapters",
   "name": "FOSS Event RSVP",

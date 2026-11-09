@@ -1,5 +1,6 @@
 {
   "actions": [],
+  "allow_bulk_edit": 1,
   "allow_rename": 1,
   "autoname": "hash",
   "creation": "2024-06-19 13:57:16.273808",
@@ -66,6 +67,7 @@
       "in_list_view": 1,
       "in_standard_filter": 1,
       "label": "Event",
+      "link_filters": "[[\"FOSS Chapter Event\",\"is_paid_event\",\"=\",1]]",
       "options": "FOSS Chapter Event",
       "read_only": 1
     },
@@ -133,7 +135,7 @@
     }
   ],
   "links": [],
-  "modified": "2026-09-21 20:56:38.412257",
+  "modified": "2026-11-09 13:31:58.012443",
   "modified_by": "Administrator",
   "module": "Ticketing",
   "name": "FOSS Event Ticket Transfer",

@@ -38,6 +38,7 @@
       "fieldtype": "Link",
       "in_list_view": 1,
       "label": "Parent Hackathon",
+      "link_filters": "[[\"FOSS Hackathon\", \"is_published\", \"=\", 1]]",
       "options": "FOSS Hackathon",
       "reqd": 1,
       "search_index": 1
@@ -167,7 +168,7 @@
   "has_web_view": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2026-02-09 12:12:21.225554",
+  "modified": "2026-11-09 14:10:00.000000",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon LocalHost",

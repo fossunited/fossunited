@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_bulk_edit": 1,
  "allow_rename": 1,
  "creation": "2025-11-04 13:46:19.250389",
  "doctype": "DocType",
@@ -63,6 +64,7 @@
    "fieldname": "coupon_id",
    "fieldtype": "Link",
    "label": "Coupon ID",
+   "link_filters": "[[\"Event Free Ticket Code\",\"is_used\",\"=\",0]]",
    "options": "Event Free Ticket Code",
    "reqd": 1
   },
@@ -78,6 +80,7 @@
    "fieldname": "event",
    "fieldtype": "Link",
    "label": "Event",
+   "link_filters": "[[\"FOSS Chapter Event\",\"is_paid_event\",\"=\",1],[\"FOSS Chapter Event\",\"status\",\"=\",\"Live\"]]",
    "options": "FOSS Chapter Event"
   },
   {
@@ -95,7 +98,7 @@
  ],
  "grid_page_length": 50,
  "links": [],
- "modified": "2026-08-24 12:46:13.722991",
+ "modified": "2026-11-09 13:36:48.086476",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Event Free Ticket Applications",

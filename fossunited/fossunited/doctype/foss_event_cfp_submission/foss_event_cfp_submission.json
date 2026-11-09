@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_bulk_edit": 1,
  "allow_guest_to_view": 1,
  "allow_rename": 1,
  "autoname": "hash",
@@ -92,6 +93,7 @@
    "fieldname": "linked_cfp",
    "fieldtype": "Link",
    "label": "Linked CFP",
+   "link_filters": "[[\"FOSS Event CFP\",\"status\",\"=\",\"Live\"]]",
    "options": "FOSS Event CFP",
    "reqd": 1
   },
@@ -307,7 +309,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-10-09 16:57:40.763199",
+ "modified": "2026-11-09 13:37:50.279844",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
