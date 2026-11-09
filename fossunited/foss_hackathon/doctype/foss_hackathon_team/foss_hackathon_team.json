@@ -36,6 +36,7 @@
       "fieldname": "hackathon",
       "fieldtype": "Link",
       "label": "Hackathon",
+      "link_filters": "[[\"FOSS Hackathon\", \"is_published\", \"=\", 1]]",
       "options": "FOSS Hackathon",
       "reqd": 1,
       "search_index": 1
@@ -56,6 +57,7 @@
       "fieldname": "project",
       "fieldtype": "Link",
       "label": "Project",
+      "link_filters": "[[\"FOSS Hackathon Project\", \"hackathon\", \"=\", \"eval:doc.hackathon\"]]",
       "options": "FOSS Hackathon Project",
       "search_index": 1
     },
@@ -79,6 +81,7 @@
       "fieldname": "partner_project",
       "fieldtype": "Link",
       "label": "Partner Project",
+      "link_filters": "[[\"FOSS Hackathon Partner Project\", \"hackathon\", \"=\", \"eval:doc.hackathon\"]]",
       "options": "FOSS Hackathon Partner Project",
       "search_index": 1
     },
@@ -98,7 +101,7 @@
     }
   ],
   "links": [],
-  "modified": "2026-04-27 11:36:22.687421",
+  "modified": "2026-11-09 14:10:00.000000",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon Team",

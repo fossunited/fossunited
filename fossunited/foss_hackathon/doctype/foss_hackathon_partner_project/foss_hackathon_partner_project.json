@@ -34,6 +34,7 @@
       "fieldname": "hackathon",
       "fieldtype": "Link",
       "label": "Hackathon",
+      "link_filters": "[[\"FOSS Hackathon\", \"is_published\", \"=\", 1]]",
       "options": "FOSS Hackathon"
     },
     {
@@ -118,7 +119,7 @@
       "link_fieldname": "partner_project"
     }
   ],
-  "modified": "2026-03-02 16:55:06.446018",
+  "modified": "2026-11-09 14:10:00.000000",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon Partner Project",

@@ -20,6 +20,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Team",
+   "link_filters": "[[\"FOSS Hackathon Team\", \"hackathon\", \"=\", \"eval:parent.name\"]]",
    "options": "FOSS Hackathon Team"
   },
   {
@@ -27,6 +28,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Project",
+   "link_filters": "[[\"FOSS Hackathon Project\", \"hackathon\", \"=\", \"eval:parent.name\"]]",
    "options": "FOSS Hackathon Project"
   },
   {
@@ -53,7 +55,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-06-09 16:56:55.736751",
+ "modified": "2026-11-09 14:10:00.000000",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "Hackathon Result",

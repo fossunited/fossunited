@@ -71,6 +71,7 @@
    "fieldname": "hackathon",
    "fieldtype": "Link",
    "label": "Hackathon",
+   "link_filters": "[[\"FOSS Hackathon\", \"is_published\", \"=\", 1]]",
    "options": "FOSS Hackathon",
    "reqd": 1
   },
@@ -172,11 +173,12 @@
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
+   "link_filters": "[[\"FOSS Hackathon Project\", \"hackathon\", \"=\", \"eval:doc.hackathon\"]]",
    "options": "FOSS Hackathon Project"
   }
  ],
  "links": [],
- "modified": "2026-11-09 13:36:17.912166",
+ "modified": "2026-11-09 14:10:00.000000",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",

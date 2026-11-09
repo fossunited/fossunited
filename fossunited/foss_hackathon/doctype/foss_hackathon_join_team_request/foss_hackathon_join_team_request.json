@@ -24,6 +24,7 @@
       "fieldtype": "Link",
       "in_list_view": 1,
       "label": "Team",
+      "link_filters": "[[\"FOSS Hackathon Team\", \"looking_for_members\", \"=\", 1]]",
       "options": "FOSS Hackathon Team",
       "reqd": 1
     },
@@ -44,6 +45,7 @@
       "fieldtype": "Link",
       "in_list_view": 1,
       "label": "Hackathon",
+      "link_filters": "[[\"FOSS Hackathon\", \"is_published\", \"=\", 1]]",
       "options": "FOSS Hackathon",
       "reqd": 1
     },
@@ -101,7 +103,7 @@
     }
   ],
   "links": [],
-  "modified": "2024-12-19 18:33:17.914678",
+  "modified": "2026-11-09 14:10:00.000000",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon Join Team Request",

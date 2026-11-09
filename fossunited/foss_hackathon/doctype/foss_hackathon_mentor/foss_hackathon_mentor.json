@@ -36,6 +36,7 @@
       "fieldtype": "Link",
       "in_list_view": 1,
       "label": "Hackathon",
+      "link_filters": "[[\"FOSS Hackathon\", \"is_published\", \"=\", 1]]",
       "options": "FOSS Hackathon",
       "reqd": 1
     },
@@ -51,7 +52,7 @@
     }
   ],
   "links": [],
-  "modified": "2026-02-26 21:06:43.454539",
+  "modified": "2026-11-09 14:10:00.000000",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon Mentor",
