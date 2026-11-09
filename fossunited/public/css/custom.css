@@ -1278,6 +1278,15 @@ h6 {
   color: var(--v3-text-color2);
   background: var(--v3-button-border);
 }
+/* bootstrap.css's own .form-control:focus forces background:#fff (a pseudo-class beats the
+   plain .form-control rule above), a stark white box in dark mode -- keep our background,
+   just swap bootstrap's blue ring for a v3-coloured one */
+.form-control:focus {
+  color: var(--v3-text-color2);
+  background: var(--v3-button-border);
+  border-color: var(--v3-primary-button);
+  box-shadow: 0 0 0 0.2rem oklch(from var(--v3-primary-button) l c h / 0.25);
+}
 
 /* --------------- */
 
@@ -1696,6 +1705,23 @@ body:has(.v3-page) {
 
 .v3-page *:not(.no-font-inherit) {
   font-family: inherit;
+}
+
+/* Native checkbox/radio/date-time inputs default to the browser's LIGHT chrome regardless of
+   page CSS unless told otherwise. color-scheme switches that; accent-color tints the checked
+   state to the brand colour; scale() grows it without forcing a fixed size; outline (not
+   border, which native checkboxes mostly ignore) keeps the unchecked box visible in dark mode. */
+[data-theme='dark'] .v3-page {
+  color-scheme: dark;
+}
+.v3-page input[type='checkbox'],
+.v3-page input[type='radio'] {
+  accent-color: var(--v3-primary-button);
+  transform: scale(1.2);
+}
+[data-theme='dark'] .v3-page input[type='checkbox'] {
+  outline: 1px solid var(--v3-text-color);
+  outline-offset: 1px;
 }
 
 /* V3 Clickable Div - For divs that act as links */
@@ -3308,14 +3334,23 @@ a.hover-underline:hover {
   background: var(--v3-main-bg);
   color: var(--v3-text-color);
 }
-/* Quill (Rich Text): keep its list markup, drop pasted inline colours that vanish in dark mode */
+/* Pasted-from-Word/Docs/Quill inline colours (on any element, any content type -- Markdown and
+   raw HTML posts carry these just as often as Rich Text) are almost always "dark text for a
+   white page" and vanish or clash on the dark card; an inline style beats any CSS rule above
+   without !important, so strip colour/background off anything that sets either. */
+.v3-page .v3-prose [style*='color'] {
+  color: inherit !important;
+  background-color: transparent !important;
+}
+/* keep bold text the same colour everywhere, even when it's the thing carrying the inline colour
+   (e.g. a table cell's <strong style="color:#000">): more specific than the inherit rule above */
+.v3-page .v3-prose :is(b, strong)[style*='color'] {
+  color: var(--v3-text-color) !important;
+}
+/* Quill (Rich Text) list/indent markup needs this; unrelated to colour */
 .v3-page .v3-prose.ql-editor {
   white-space: normal;
   overflow: visible;
-}
-.v3-page .v3-prose.ql-editor [style*='color'] {
-  color: inherit !important;
-  background-color: transparent !important;
 }
 
 /* --- Text color --- */
