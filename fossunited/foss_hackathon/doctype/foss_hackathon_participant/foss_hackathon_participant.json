@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_bulk_edit": 1,
  "allow_rename": 1,
  "autoname": "hash",
  "creation": "2024-05-24 21:24:15.111949",
@@ -104,6 +105,7 @@
    "fieldname": "localhost",
    "fieldtype": "Link",
    "label": "LocalHost",
+   "link_filters": "[[\"FOSS Hackathon LocalHost\",\"is_accepting_attendees\",\"=\",1]]",
    "options": "FOSS Hackathon LocalHost"
   },
   {
@@ -174,7 +176,7 @@
   }
  ],
  "links": [],
- "modified": "2026-03-24 20:53:46.664711",
+ "modified": "2026-11-09 13:36:17.912166",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",
