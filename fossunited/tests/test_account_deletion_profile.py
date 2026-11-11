@@ -229,6 +229,14 @@ class TestAccountDeletionProfile(FrappeTestCase):
         # File deletion is scoped to the target profile only.
         self.assertTrue(frappe.db.exists("File", self.other_file_name))
 
+    def test_file_owned_by_other_profile_is_preserved(self):
+        # The deleting user's cover_image URL matches a File owned by another
+        # profile; URL matching must not delete another record's File.
+        other_url = frappe.db.get_value("File", self.other_file_name, "file_url")
+        frappe.db.set_value(USER_PROFILE, self.profile, "cover_image", other_url)
+        self._run_deletion()
+        self.assertTrue(frappe.db.exists("File", self.other_file_name))
+
     # ---- render guards -------------------------------------------------------
     def test_normal_public_profile_still_renders(self):
         with self.set_user("Guest"):

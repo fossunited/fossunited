@@ -93,7 +93,23 @@ def _finalize(profile):
         )
     )
     for url in [u for u in image_urls if u]:
-        file_names.update(frappe.get_all("File", filters={"file_url": url}, pluck="name"))
+        # Skip a URL another profile still points at -- it's a shared image.
+        if frappe.db.exists(USER_PROFILE, {"name": ["!=", profile], "profile_photo": url}):
+            continue
+        if frappe.db.exists(USER_PROFILE, {"name": ["!=", profile], "cover_image": url}):
+            continue
+        for f in frappe.get_all(
+            "File",
+            filters={"file_url": url},
+            fields=["name", "attached_to_doctype", "attached_to_name"],
+        ):
+            # Only this profile's own or unattached uploads -- never a File owned by
+            # another record that merely shares the URL.
+            if not f.attached_to_name or (f.attached_to_doctype, f.attached_to_name) == (
+                USER_PROFILE,
+                profile,
+            ):
+                file_names.add(f.name)
     for file in file_names:
         frappe.delete_doc("File", file, force=True, ignore_permissions=True)
 
