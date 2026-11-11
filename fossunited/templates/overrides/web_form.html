@@ -138,9 +138,8 @@
               {% if show_list %}
                 <a href="/{{ route }}/list{{ request_query }}" class="show-list-button v3-btn v3-btn-secondary">{{ _("See previous responses", context="Button in web form") }}</a>
               {% endif %}
-              {% if allows_public_access or allow_multiple %}
-                <a href="/{{ route }}/new{{ request_query }}" class="new-btn v3-btn v3-btn-secondary">{{ _("Submit another response", context="Button in web form") }}</a>
-              {% endif %}
+              {# "Submit another response" hidden by default: we don't want repeat submissions
+                 encouraged on any form, regardless of allow_multiple/allows_public_access. #}
             </div>
           {% endif %}
         </div>
@@ -245,6 +244,12 @@
   <style>
     /* chrome around the form; fields themselves are frappe's .form-control, already themed in
        custom.css regardless of page */
+    /* On submit, web_form.bundle.js only does $(".web-form-container").hide(); it has no idea
+       .web-form-footer exists outside that container now (we moved it below the card), so the
+       Discard/Submit/Delete row was staying visible next to the success message. */
+    .v3-container:has(.success-page:not(.hide)) .web-form-footer {
+      display: none !important;
+    }
     .web-form-footer .delete-btn {
       color: var(--v3-error-text);
     }

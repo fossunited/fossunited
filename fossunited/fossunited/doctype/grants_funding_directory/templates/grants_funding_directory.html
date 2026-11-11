@@ -1,5 +1,4 @@
 {% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
-
 {% extends "templates/foss_base.html" %}
 
 {% block title %}{{ entity.name }} – Funding Profile{% endblock %}
@@ -42,9 +41,7 @@
       {# main card #}
       <div class="v3-card v3-main-card">
         <div class="d-flex justify-content-between align-items-center">
-          <h1 class="v3-text-primary v3-grant-title">
-            {{ entity.name }}
-          </h1>
+          <h1 class="v3-text-primary v3-grant-title">{{ entity.name }}</h1>
 
           {%
             set mailto =
@@ -57,11 +54,7 @@
         </div>
 
         {% if entity.description %}
-          <p
-            class="v3-text-secondary mb-2"
-          >
-            {{ entity.description }}
-          </p>
+          <p class="v3-text-secondary mb-2">{{ entity.description }}</p>
         {% endif %}
 
         <div class="d-flex justify-content-between flex-column flex-md-row gap-2">
@@ -90,43 +83,32 @@
             <span>Projects</span>
           </div>
 
-          <div
-            class="v3-grant-grid"
-          >
+          <div class="v3-grant-grid">
             {% for project in projects %}
-              <div
-                class="d-flex flex-column p-4 gap-1"
-                style="background: var(--v3-main-bg);"
-              >
-                <h3
-                  class="v3-text-primary"
-                  style="font-size: 1.125rem; font-weight: 600;"
-                >
+              <div class="d-flex flex-column p-4 gap-1" style="background: var(--v3-main-bg);">
+                <h3 class="v3-text-primary" style="font-size: 1.125rem; font-weight: 600;">
                   {{ project.name }}
                 </h3>
 
                 {% if project.licenses %}
-                  <div
-                    class="v3-text-tertiary"
-                    style="font-size: 0.875rem;"
-                  >
+                  <div class="v3-text-tertiary" style="font-size: 0.875rem;">
                     {{ project.licenses | join(', ') }}
                   </div>
                 {% endif %}
 
                 {% if project.tags %}
-                <div class="v3-grant-tags">
-                  {% for tag in project.tags %}
-                  <a
-                    href="/grants/directory?tags={{ tag | lower | urlencode }}"
-                    target="_blank"
-                    rel="noopener"
-                    class="v3-grant-tag active"
-                  >
-                    {{ tag }}
-                  </a>
-                  {% endfor %}
-                </div>
+                  <div class="v3-grant-tags">
+                    {% for tag in project.tags %}
+                      <a
+                        href="/grants/directory?tags={{ tag | lower | urlencode }}"
+                        target="_blank"
+                        rel="noopener"
+                        class="v3-grant-tag active"
+                      >
+                        {{ tag }}
+                      </a>
+                    {% endfor %}
+                  </div>
                 {% endif %}
 
                 {% if project.description %}
@@ -159,63 +141,81 @@
             <span>Funding Plans</span>
           </div>
 
-          <div
-            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 1rem;"
-          >
+          {# one plan: full-width column, channel buttons side by side; multiple: normal grid, buttons stacked #}
+          {% set single_plan = funding.plans | length == 1 %}
+          <div class="row">
             {% for plan in funding.plans %}
-              <div
-                style="padding: 1.5rem; background: var(--v3-main-bg); border-radius: 0.5rem; display: flex; flex-direction: column;"
-              >
-                <h3
-                  class="v3-text-primary"
-                  style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;"
+              <div class="{{ 'col-12' if single_plan else 'col-md-6 col-lg-4' }} mb-4">
+                <div
+                  class="d-flex flex-column h-100"
+                  style="padding: 1.5rem; background: var(--v3-main-bg); border-radius: 0.5rem;"
                 >
-                  {{ plan.name }}
-                </h3>
-
-                <div class="v3-text-tertiary" style="font-size: 0.875rem; margin-bottom: 0.75rem;">
-                  {{ plan.frequency | capitalize }} · {{ plan.currency }}
-                </div>
-
-                {% if plan.description %}
-                  <p
-                    class="v3-text-secondary"
-                    style="font-size: 0.875rem; line-height: 1.5; margin-bottom: 1rem; flex: 1;"
-                  >
-                    {{ plan.description }}
-                  </p>
-                {% endif %}
-
-                {% if plan.amount %}
-                  <div
+                  <h3
                     class="v3-text-primary"
-                    style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;"
+                    style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;"
                   >
-                    {{ plan.amount }} {{ plan.currency }}
-                    {% if plan.frequency != "one-time" %}
-                      <span
-                        class="v3-text-tertiary"
-                        style="font-size: 0.875rem; font-weight: 400;"
-                      >
-                        / {{ plan.frequency }}
-                      </span>
-                    {% endif %}
-                  </div>
-                {% endif %}
+                    {{ plan.name }}
+                  </h3>
 
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                  {% for ch_guid in plan.channels %}
-                    {% set channel = funding_channels.get(ch_guid) %}
-                    {% if channel and channel.address %}
-                      <a
-                        href="{{ channel.address }}"
-                        target="_blank"
-                        class="v3-btn v3-btn-primary"
-                      >
-                        {{ channel.guid }}
-                      </a>
-                    {% endif %}
-                  {% endfor %}
+                  <div
+                    class="v3-text-tertiary"
+                    style="font-size: 0.875rem; margin-bottom: 0.75rem;"
+                  >
+                    {{ plan.frequency | capitalize }} · {{ plan.currency }}
+                  </div>
+
+                  {% if plan.description %}
+                    <p
+                      class="v3-text-secondary"
+                      style="font-size: 0.875rem; line-height: 1.5; margin-bottom: 1rem; flex: 1;"
+                    >
+                      {{ plan.description }}
+                    </p>
+                  {% endif %}
+
+                  {% if plan.amount %}
+                    <div
+                      class="v3-text-primary"
+                      style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;"
+                    >
+                      {{ plan.amount }} {{ plan.currency }}
+                      {% if plan.frequency != "one-time" %}
+                        <span
+                          class="v3-text-tertiary"
+                          style="font-size: 0.875rem; font-weight: 400;"
+                        >
+                          / {{ plan.frequency }}
+                        </span>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+
+                  <div
+                    class="d-flex gap-2 {{ 'flex-row flex-wrap' if single_plan else 'flex-column' }}"
+                  >
+                    {% for ch_guid in plan.channels %}
+                      {% set channel = funding_channels.get(ch_guid) %}
+                      {# same three-way split as the Funding Channels card below: http(s) link,
+                         mailto link, or plain text for anything else #}
+                      {% if channel and channel.address %}
+                        {% if channel.address.startswith(("http://", "https://")) %}
+                          <a
+                            href="{{ channel.address }}"
+                            target="_blank"
+                            class="v3-btn v3-btn-primary"
+                          >
+                            Visit Channel
+                          </a>
+                        {% elif channel.address.startswith("mailto:") %}
+                          <a href="{{ channel.address }}" class="v3-btn v3-btn-primary">
+                            {{ channel.address[7:] }}
+                          </a>
+                        {% else %}
+                          <span class="v3-text-tertiary">{{ channel.address }}</span>
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
             {% endfor %}
@@ -323,5 +323,4 @@
       {% endif %}
     </div>
   </div>
-
 {% endblock %}
