@@ -82,12 +82,12 @@ class GrantsFundingDirectory(WebsiteGenerator):
         return response.text
 
     def _validate_json_with_api(self, url: str, json_content: str) -> dict:
-        """Validate JSON using dir.floss.fund API."""
+        """Validate JSON using dir.fundingjson.fund API."""
         validation_data = {"url": url, "body": json_content}
 
         try:
             validation_response = requests.post(
-                "https://dir.floss.fund/api/validate",
+                "https://dir.fundingjson.org/api/validate",
                 data=validation_data,
                 headers={"Content-Type": "application/x-www-form-urlencoded"},
                 timeout=15,
@@ -110,7 +110,7 @@ class GrantsFundingDirectory(WebsiteGenerator):
 
         except Exception as e:
             frappe.throw(
-                f"Validation error. Please verify with https://dir.floss.fund/validate: {e!s}"
+                f"Validation error. Please verify with https://dir.fundingjson.org/validate: {e!s}"
             )
 
     def set_route(self):

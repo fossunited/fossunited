@@ -1,5 +1,5 @@
 """
-Tests for robust validation check on funding.json schema via dir.floss.fund/api/validate
+Tests for robust validation check on funding.json schema via https://dir.fundingjson.org/api/validate
 """
 
 import copy
