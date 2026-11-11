@@ -1,5 +1,6 @@
 {
   "actions": [],
+  "allow_bulk_edit": 1,
   "allow_guest_to_view": 1,
   "allow_rename": 1,
   "autoname": "hash",
@@ -112,7 +113,7 @@
       "label": "Meta"
     },
     {
-      "default": "0",
+      "default": "1",
       "fieldname": "is_published",
       "fieldtype": "Check",
       "label": "Is Published"
@@ -168,7 +169,7 @@
   "has_web_view": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2026-11-09 14:10:00.000000",
+  "modified": "2026-11-11 20:07:16.759069",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon LocalHost",

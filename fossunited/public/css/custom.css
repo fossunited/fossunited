@@ -5005,6 +5005,24 @@ summary:focus-visible {
   outline-offset: 2px;
 }
 
+/* Card grid/list reflow, paired with .v3-view-toggle + initViewToggle() */
+.v3-cover {
+  width: 100%;
+  aspect-ratio: 1200 / 630;
+}
+.v3-list-view > li {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+@media (min-width: 576px) {
+  .v3-list-view li .v3-card {
+    flex-direction: row !important;
+  }
+  .v3-list-view .v3-cover {
+    width: 220px;
+  }
+}
+
 /* List view */
 .v3-timeline-list {
   border-left: 1px solid var(--v3-text-color2);

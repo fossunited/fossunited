@@ -13,6 +13,31 @@ from fossunited.doctype_ids import (
 )
 from fossunited.fossunited.utils import get_event_sponsors, sanitize_text_content
 
+LOCALHOST_LIST_FIELDS = [
+    "name",
+    "route",
+    "localhost_name",
+    "location",
+    "image",
+    "is_accepting_attendees",
+    "parent_hackathon.hackathon_name as hackathon_name",
+]
+
+
+def get_list_context(context=None):
+    localhosts = frappe.get_all(
+        HACKATHON_LOCALHOST,
+        filters={"is_published": 1},
+        fields=LOCALHOST_LIST_FIELDS,
+        order_by="localhost_name asc",
+    )
+
+    return {
+        "get_list": lambda *args, **kwargs: [],
+        "template": "foss_hackathon/doctype/foss_hackathon_localhost/templates/foss_hackathon_localhost_list.html",
+        "localhosts": localhosts,
+    }
+
 
 class FOSSHackathonLocalHost(WebsiteGenerator):
     # begin: auto-generated types

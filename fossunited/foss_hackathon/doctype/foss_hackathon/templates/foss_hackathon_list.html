@@ -1,0 +1,117 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
+
+{% block title %}Hackathons | FOSS United{% endblock %}
+
+{% block page_content %}
+  <style>
+    #hackathon-list h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      margin: 0;
+    }
+    #hackathon-list h2 {
+      font-size: 1.0625rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+  </style>
+
+  <div class="v3-page" id="hackathon-list">
+    <div class="v3-container v3-container-wide">
+      {{ v3_navbar() }}
+
+      <main id="main-content" class="d-flex flex-column gap-6 pb-section">
+        <div class="d-flex align-items-center justify-content-between gap-3">
+          <h1 class="v3-text-primary">Hackathons</h1>
+          <div
+            class="btn-group v3-view-toggle d-none d-sm-inline-flex"
+            role="group"
+            aria-label="View mode"
+          >
+            <button
+              type="button"
+              class="btn d-inline-flex align-items-center justify-content-center p-0 border-0 rounded-0"
+              data-view="grid"
+              aria-label="Grid view"
+              title="Grid view"
+            >
+              <i class="ti ti-layout-grid" aria-hidden="true"></i>
+            </button>
+            <button
+              type="button"
+              class="btn d-inline-flex align-items-center justify-content-center p-0 border-0 rounded-0"
+              data-view="list"
+              aria-label="List view"
+              title="List view"
+            >
+              <i class="ti ti-list" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <ul class="row list-unstyled mb-0" id="hackathon-cards">
+          {% for h in hackathons %}
+            <li class="col-sm-6 col-md-4 mb-5">
+              <article
+                class="v3-card p-0 h-100 d-flex flex-column overflow-hidden position-relative"
+              >
+                <img
+                  src="{{ h.hackathon_banner or h.hackathon_logo or '/assets/fossunited/images/defaults/event_logo.png' }}"
+                  alt=""
+                  class="v3-cover object-cover flex-shrink-0"
+                  loading="lazy"
+                />
+                <div class="d-flex flex-column flex-fill gap-3 p-4 min-w-0">
+                  <div class="d-flex flex-wrap gap-2">
+                    {% if h.hackathon_type %}
+                      <span class="v3-tag v3-tag--category">{{ h.hackathon_type }}</span>
+                    {% endif %}
+                    {% if h.is_concluded %}
+                      <span class="v3-status v3-status--error">Concluded</span>
+                    {% elif h.is_registration_live %}
+                      <span class="v3-status v3-status--success">Registration open</span>
+                    {% endif %}
+                  </div>
+                  <h2 class="semi-bold">
+                    <a
+                      href="{{ h.route }}"
+                      class="stretched-link v3-text-primary text-decoration-none"
+                    >
+                      {{ h.hackathon_name }}
+                    </a>
+                  </h2>
+                  <div
+                    class="d-flex flex-wrap align-items-center gap-2 mt-auto pt-3 text-xs v3-text-secondary"
+                  >
+                    <i class="ti ti-calendar" aria-hidden="true"></i>
+                    <time datetime="{{ h.start_date }}"
+                      >{{ frappe.utils.formatdate(h.start_date, "dd MMM yyyy") }}</time
+                    >
+                    {% if h.end_date %}
+                      <span aria-hidden="true">&ndash;</span>
+                      <time datetime="{{ h.end_date }}"
+                        >{{ frappe.utils.formatdate(h.end_date, "dd MMM yyyy") }}</time
+                      >
+                    {% endif %}
+                    {% if h.chapter_city %}
+                      <span aria-hidden="true">&middot;</span>
+                      <i class="ti ti-map-pin" aria-hidden="true"></i> {{ h.chapter_city }}
+                    {% endif %}
+                  </div>
+                </div>
+              </article>
+            </li>
+          {% else %}
+            <li class="col-12 v3-text-secondary text-center py-5">
+              No hackathons to show right now.
+            </li>
+          {% endfor %}
+        </ul>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    frappe.ready(() => initViewToggle('#hackathon-list .v3-view-toggle', 'hackathon-cards'))
+  </script>
+{% endblock %}

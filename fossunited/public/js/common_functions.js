@@ -334,6 +334,25 @@ function saveViewMode(mode) {
   } catch (e) {}
 }
 
+// Wires up a grid/list view toggle (markup: `.v3-view-toggle .btn[data-view]`) to a
+// card list container, persisting the choice via getViewMode/saveViewMode.
+function initViewToggle(toggleSelector, cardsId) {
+  const buttons = document.querySelectorAll(`${toggleSelector} .btn[data-view]`)
+  const cards = document.getElementById(cardsId)
+  if (!buttons.length || !cards) return
+
+  const setView = (mode) => {
+    saveViewMode(mode)
+    cards.classList.toggle('v3-list-view', mode === 'list')
+    buttons.forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.view === mode)
+      btn.setAttribute('aria-pressed', btn.dataset.view === mode)
+    })
+  }
+  buttons.forEach((btn) => (btn.onclick = () => setView(btn.dataset.view)))
+  setView(getViewMode())
+}
+
 function toggleSection(id) {
   const content = document.getElementById(id)
   if (!content) return
@@ -399,6 +418,7 @@ Object.assign(window, {
   VIEW_MODE_KEY,
   getViewMode,
   saveViewMode,
+  initViewToggle,
   toggleSection,
   debounce,
   buildPageWindow,

@@ -51,6 +51,40 @@ HACKATHON_SAFE_FIELDS = [
 ]
 
 
+HACKATHON_LIST_FIELDS = [
+    "name",
+    "route",
+    "hackathon_name",
+    "hackathon_type",
+    "start_date",
+    "end_date",
+    "hackathon_banner",
+    "hackathon_logo",
+    "is_registration_live",
+    "chapter.chapter_name as chapter_name",
+    "chapter.city as chapter_city",
+]
+
+
+def get_list_context(context=None):
+    hackathons = frappe.get_all(
+        HACKATHON,
+        filters={"is_published": 1, "is_unlisted": 0},
+        fields=HACKATHON_LIST_FIELDS,
+        order_by="start_date desc",
+    )
+
+    now = frappe.utils.now_datetime()
+    for h in hackathons:
+        h.is_concluded = bool(h.end_date and frappe.utils.get_datetime(h.end_date) < now)
+
+    return {
+        "get_list": lambda *args, **kwargs: [],
+        "template": "foss_hackathon/doctype/foss_hackathon/templates/foss_hackathon_list.html",
+        "hackathons": hackathons,
+    }
+
+
 class FOSSHackathon(WebsiteGenerator):
     # begin: auto-generated types
     # This code is auto-generated. Do not modify anything in this block.

@@ -1,0 +1,106 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
+
+{% block title %}LocalHosts | FOSS United{% endblock %}
+
+{% block page_content %}
+  <style>
+    #localhost-list h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      margin: 0;
+    }
+    #localhost-list h2 {
+      font-size: 1.0625rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+  </style>
+
+  <div class="v3-page" id="localhost-list">
+    <div class="v3-container v3-container-wide pb-section">
+      {{ v3_navbar() }}
+
+      <main id="main-content" class="d-flex flex-column gap-6 mt-section">
+        <div class="d-flex align-items-center justify-content-between gap-3">
+          <h1 class="v3-text-primary">LocalHosts</h1>
+          <div
+            class="btn-group v3-view-toggle d-none d-sm-inline-flex"
+            role="group"
+            aria-label="View mode"
+          >
+            <button
+              type="button"
+              class="btn d-inline-flex align-items-center justify-content-center p-0 border-0 rounded-0"
+              data-view="grid"
+              aria-label="Grid view"
+              title="Grid view"
+            >
+              <i class="ti ti-layout-grid" aria-hidden="true"></i>
+            </button>
+            <button
+              type="button"
+              class="btn d-inline-flex align-items-center justify-content-center p-0 border-0 rounded-0"
+              data-view="list"
+              aria-label="List view"
+              title="List view"
+            >
+              <i class="ti ti-list" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <ul class="row list-unstyled mb-0" id="localhost-cards">
+          {% for l in localhosts %}
+            <li class="col-sm-6 col-md-4 mb-5">
+              <article
+                class="v3-card p-0 h-100 d-flex flex-column overflow-hidden position-relative"
+              >
+                <img
+                  src="{{ l.image or '/assets/fossunited/images/localhost_banner.png' }}"
+                  alt=""
+                  class="v3-cover object-cover flex-shrink-0"
+                  loading="lazy"
+                />
+                <div class="d-flex flex-column flex-fill gap-3 p-4 min-w-0">
+                  <div class="d-flex flex-wrap gap-2">
+                    {% if l.hackathon_name %}
+                      <span class="v3-tag v3-tag--category">{{ l.hackathon_name }}</span>
+                    {% endif %}
+                  </div>
+                  {% if l.is_accepting_attendees %}
+                    <div class="d-flex flex-wrap gap-2">
+                      <span class="v3-status v3-status--success">Accepting attendees</span>
+                    </div>
+                  {% endif %}
+                  <h2 class="semi-bold">
+                    <a
+                      href="{{ l.route }}"
+                      class="stretched-link v3-text-primary text-decoration-none"
+                    >
+                      {{ l.localhost_name }}
+                    </a>
+                  </h2>
+                  {% if l.location %}
+                    <div
+                      class="d-flex align-items-center gap-2 mt-auto pt-3 text-xs v3-text-secondary"
+                    >
+                      <i class="ti ti-map-pin" aria-hidden="true"></i> {{ l.location }}
+                    </div>
+                  {% endif %}
+                </div>
+              </article>
+            </li>
+          {% else %}
+            <li class="col-12 v3-text-secondary text-center py-5">
+              No LocalHosts to show right now.
+            </li>
+          {% endfor %}
+        </ul>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    frappe.ready(() => initViewToggle('#localhost-list .v3-view-toggle', 'localhost-cards'))
+  </script>
+{% endblock %}
