@@ -210,6 +210,7 @@ class FOSSChapter(WebsiteGenerator):
                 "chapter": self.name,
                 "event_end_date": (">=", frappe.utils.now()),
                 "status": "Live",
+                "is_unlisted": 0,
             },
             fields=["*"],
             order_by="event_start_date asc",
@@ -222,6 +223,7 @@ class FOSSChapter(WebsiteGenerator):
             filters={
                 "chapter": self.name,
                 "end_date": (">=", frappe.utils.now()),
+                "is_unlisted": 0,
             },
             fields=["*"],
         )

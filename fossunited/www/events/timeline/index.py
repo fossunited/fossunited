@@ -21,12 +21,16 @@ def get_foss_timeline_items(is_upcoming=True):
     now = get_datetime(now_datetime())
     date_op = ">=" if is_upcoming else "<"
 
+    event_filters = {
+        "event_end_date": [date_op, now],
+        "status": "Live" if is_upcoming else "Concluded",
+    }
+    if is_upcoming:
+        event_filters["is_unlisted"] = 0
+
     events = frappe.get_all(
         EVENT,
-        filters={
-            "event_end_date": [date_op, now],
-            "status": "Live" if is_upcoming else "Concluded",
-        },
+        filters=event_filters,
         or_filters={"is_published": 1, "is_external_event": 1},
         fields=[
             "name",
@@ -49,9 +53,13 @@ def get_foss_timeline_items(is_upcoming=True):
         ],
     )
 
+    hackathon_filters = {"is_published": 1, "end_date": [date_op, now]}
+    if is_upcoming:
+        hackathon_filters["is_unlisted"] = 0
+
     hackathons = frappe.get_all(
         HACKATHON,
-        filters={"is_published": 1, "end_date": [date_op, now]},
+        filters=hackathon_filters,
         fields=[
             "name",
             "route",
