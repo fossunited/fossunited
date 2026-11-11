@@ -42,6 +42,12 @@ HACKATHON_SAFE_FIELDS = [
     "route",
     "has_localhosts",
     "is_team_mandatory",
+    "enable_oss_contributon_projects",
+    "is_contribution_project_coming_soon",
+    "contribution_coming_soon_description",
+    "contribution_project_guidelines",
+    "has_partner_projects",
+    "partner_project_guidelines",
 ]
 
 
@@ -90,6 +96,7 @@ class FOSSHackathon(WebsiteGenerator):
         is_published: DF.Check
         is_registration_live: DF.Check
         is_team_mandatory: DF.Check
+        is_unlisted: DF.Check
         max_team_members: DF.Int
         only_show_logo: DF.Check
         partner_project_guidelines: DF.MarkdownEditor | None
