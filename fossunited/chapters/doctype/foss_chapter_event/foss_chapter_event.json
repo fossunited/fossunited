@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_bulk_edit": 1,
  "allow_guest_to_view": 1,
  "allow_rename": 1,
  "autoname": "hash",
@@ -15,6 +16,7 @@
   "external_event_url",
   "meta_info_section",
   "is_published",
+  "is_unlisted",
   "column_break_yozf",
   "route",
   "navbar_controls_section",
@@ -494,6 +496,12 @@
    "fieldtype": "Select",
    "label": "Lunch & Food",
    "options": "None\nLunch only\nBreakfast + Lunch\nCoffee/Tea only"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_unlisted",
+   "fieldtype": "Check",
+   "label": "Is Unlisted"
   }
  ],
  "has_web_view": 1,
@@ -526,7 +534,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2026-09-07 19:03:43.903035",
+ "modified": "2026-11-11 19:09:37.649856",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",

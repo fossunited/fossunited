@@ -89,6 +89,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         is_external_event: DF.Check
         is_paid_event: DF.Check
         is_published: DF.Check
+        is_unlisted: DF.Check
         livestream_embed_link: DF.Data | None
         livestream_link: DF.Data | None
         map_coordinate: DF.Data | None
