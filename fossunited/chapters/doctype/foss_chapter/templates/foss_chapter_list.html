@@ -1,0 +1,142 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
+
+{% block title %}Communities | FOSS United{% endblock %}
+
+{% block page_content %}
+  <style>
+    #chapter-list h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      margin: 0;
+    }
+    #chapter-list h2 {
+      font-size: 1.0625rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+    #chapter-list .cover {
+      width: 100%;
+      aspect-ratio: 1200 / 630;
+    }
+    #chapter-list .is-list > li {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+    @media (min-width: 576px) {
+      #chapter-list .is-list li .v3-card {
+        flex-direction: row !important;
+      }
+      #chapter-list .is-list .cover {
+        width: 220px;
+      }
+    }
+  </style>
+
+  <div class="v3-page" id="chapter-list">
+    <div class="v3-container v3-container-wide">
+      {{ v3_navbar() }}
+
+      <main id="main-content" class="d-flex flex-column gap-6 pb-section">
+        <div class="d-flex align-items-center justify-content-between gap-3">
+          <h1 class="v3-text-primary">Communities</h1>
+          <div
+            class="btn-group v3-view-toggle d-none d-sm-inline-flex"
+            role="group"
+            aria-label="View mode"
+          >
+            <button
+              type="button"
+              class="btn d-inline-flex align-items-center justify-content-center p-0 border-0 rounded-0"
+              data-view="grid"
+              aria-label="Grid view"
+              title="Grid view"
+            >
+              <i class="ti ti-layout-grid" aria-hidden="true"></i>
+            </button>
+            <button
+              type="button"
+              class="btn d-inline-flex align-items-center justify-content-center p-0 border-0 rounded-0"
+              data-view="list"
+              aria-label="List view"
+              title="List view"
+            >
+              <i class="ti ti-list" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <ul class="row list-unstyled mb-0" id="chapter-cards">
+          {% for c in chapters %}
+            <li class="col-sm-6 col-md-4 mb-5">
+              <article
+                class="v3-card p-0 h-100 d-flex flex-column overflow-hidden position-relative"
+              >
+                <img
+                  src="{{ c.banner_image or c.default_banner }}"
+                  alt=""
+                  class="cover object-cover flex-shrink-0"
+                  loading="lazy"
+                />
+                <div class="d-flex flex-column flex-fill gap-3 p-4 min-w-0">
+                  <div class="d-flex align-items-center gap-2">
+                    <img
+                      src="{{ c.chapter_logo or c.default_chapter_logo }}"
+                      alt=""
+                      width="32"
+                      height="32"
+                      class="rounded-circle object-cover flex-shrink-0"
+                    />
+                    <div class="d-flex flex-wrap gap-2">
+                      {% if c.chapter_type %}
+                        <span class="v3-tag v3-tag--category">{{ c.chapter_type }}</span>
+                      {% endif %}
+                      {% if c.chapter_status %}
+                        <span class="v3-status v3-status--success">{{ c.chapter_status }}</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <h2 class="semi-bold">
+                    <a
+                      href="{{ c.route }}"
+                      class="stretched-link v3-text-primary text-decoration-none"
+                    >
+                      {{ c.chapter_name }}
+                    </a>
+                  </h2>
+                  {% if c.city or c.state %}
+                    <div
+                      class="d-flex align-items-center gap-2 mt-auto pt-3 text-xs v3-text-secondary"
+                    >
+                      <i class="ti ti-map-pin" aria-hidden="true"></i>
+                      {{ c.city }}{% if c.city and c.state %},{% endif %}{{ c.state }}
+                    </div>
+                  {% endif %}
+                </div>
+              </article>
+            </li>
+          {% else %}
+            <li class="col-12 v3-text-secondary text-center py-5">
+              No chapters to show right now.
+            </li>
+          {% endfor %}
+        </ul>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    frappe.ready(() => {
+      const buttons = document.querySelectorAll('#chapter-list .v3-view-toggle .btn')
+      const setView = (mode) => {
+        saveViewMode(mode)
+        document.getElementById('chapter-cards').classList.toggle('is-list', mode === 'list')
+        buttons.forEach((btn) => {
+          btn.classList.toggle('active', btn.dataset.view === mode)
+          btn.setAttribute('aria-pressed', btn.dataset.view === mode)
+        })
+      }
+      buttons.forEach((btn) => (btn.onclick = () => setView(btn.dataset.view)))
+      setView(getViewMode())
+    })
+  </script>
+{% endblock %}
