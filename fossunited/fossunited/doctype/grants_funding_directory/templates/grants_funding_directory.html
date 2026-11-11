@@ -195,15 +195,24 @@
                   >
                     {% for ch_guid in plan.channels %}
                       {% set channel = funding_channels.get(ch_guid) %}
-                      {# a non-URL address (e.g. a plain mailing address string) can't be a link #}
-                      {% if channel and channel.address and channel.address.startswith(("http://", "https://")) %}
-                        <a
-                          href="{{ channel.address }}"
-                          target="_blank"
-                          class="v3-btn v3-btn-primary"
-                        >
-                          {{ channel.guid }}
-                        </a>
+                      {# same three-way split as the Funding Channels card below: http(s) link,
+                         mailto link, or plain text for anything else #}
+                      {% if channel and channel.address %}
+                        {% if channel.address.startswith(("http://", "https://")) %}
+                          <a
+                            href="{{ channel.address }}"
+                            target="_blank"
+                            class="v3-btn v3-btn-primary"
+                          >
+                            Visit Channel
+                          </a>
+                        {% elif channel.address.startswith("mailto:") %}
+                          <a href="{{ channel.address }}" class="v3-btn v3-btn-primary">
+                            {{ channel.address[7:] }}
+                          </a>
+                        {% else %}
+                          <span class="v3-text-tertiary">{{ channel.address }}</span>
+                        {% endif %}
                       {% endif %}
                     {% endfor %}
                   </div>
