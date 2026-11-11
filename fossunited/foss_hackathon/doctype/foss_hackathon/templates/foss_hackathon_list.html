@@ -14,22 +14,6 @@
       line-height: 1.4;
       margin: 0;
     }
-    #hackathon-list .cover {
-      width: 100%;
-      aspect-ratio: 1200 / 630;
-    }
-    #hackathon-list .is-list > li {
-      flex: 0 0 100%;
-      max-width: 100%;
-    }
-    @media (min-width: 576px) {
-      #hackathon-list .is-list li .v3-card {
-        flex-direction: row !important;
-      }
-      #hackathon-list .is-list .cover {
-        width: 220px;
-      }
-    }
   </style>
 
   <div class="v3-page" id="hackathon-list">
@@ -74,7 +58,7 @@
                 <img
                   src="{{ h.hackathon_banner or h.hackathon_logo or '/assets/fossunited/images/defaults/event_logo.png' }}"
                   alt=""
-                  class="cover object-cover flex-shrink-0"
+                  class="v3-cover object-cover flex-shrink-0"
                   loading="lazy"
                 />
                 <div class="d-flex flex-column flex-fill gap-3 p-4 min-w-0">
@@ -128,18 +112,6 @@
   </div>
 
   <script>
-    frappe.ready(() => {
-      const buttons = document.querySelectorAll('#hackathon-list .v3-view-toggle .btn')
-      const setView = (mode) => {
-        saveViewMode(mode)
-        document.getElementById('hackathon-cards').classList.toggle('is-list', mode === 'list')
-        buttons.forEach((btn) => {
-          btn.classList.toggle('active', btn.dataset.view === mode)
-          btn.setAttribute('aria-pressed', btn.dataset.view === mode)
-        })
-      }
-      buttons.forEach((btn) => (btn.onclick = () => setView(btn.dataset.view)))
-      setView(getViewMode())
-    })
+    frappe.ready(() => initViewToggle('#hackathon-list .v3-view-toggle', 'hackathon-cards'))
   </script>
 {% endblock %}

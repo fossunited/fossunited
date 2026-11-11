@@ -14,22 +14,6 @@
       line-height: 1.4;
       margin: 0;
     }
-    #chapter-list .cover {
-      width: 100%;
-      aspect-ratio: 1200 / 630;
-    }
-    #chapter-list .is-list > li {
-      flex: 0 0 100%;
-      max-width: 100%;
-    }
-    @media (min-width: 576px) {
-      #chapter-list .is-list li .v3-card {
-        flex-direction: row !important;
-      }
-      #chapter-list .is-list .cover {
-        width: 220px;
-      }
-    }
   </style>
 
   <div class="v3-page" id="chapter-list">
@@ -74,7 +58,7 @@
                 <img
                   src="{{ c.banner_image or c.default_banner }}"
                   alt=""
-                  class="cover object-cover flex-shrink-0"
+                  class="v3-cover object-cover flex-shrink-0"
                   loading="lazy"
                 />
                 <div class="d-flex flex-column flex-fill gap-3 p-4 min-w-0">
@@ -125,18 +109,6 @@
   </div>
 
   <script>
-    frappe.ready(() => {
-      const buttons = document.querySelectorAll('#chapter-list .v3-view-toggle .btn')
-      const setView = (mode) => {
-        saveViewMode(mode)
-        document.getElementById('chapter-cards').classList.toggle('is-list', mode === 'list')
-        buttons.forEach((btn) => {
-          btn.classList.toggle('active', btn.dataset.view === mode)
-          btn.setAttribute('aria-pressed', btn.dataset.view === mode)
-        })
-      }
-      buttons.forEach((btn) => (btn.onclick = () => setView(btn.dataset.view)))
-      setView(getViewMode())
-    })
+    frappe.ready(() => initViewToggle('#chapter-list .v3-view-toggle', 'chapter-cards'))
   </script>
 {% endblock %}
