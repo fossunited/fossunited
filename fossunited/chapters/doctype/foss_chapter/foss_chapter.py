@@ -20,6 +20,55 @@ from fossunited.doctype_ids import (
 PAST_ORGANISER_EVENT_THRESHOLD = 3
 
 
+def get_default_chapter_assets(chapter_type):
+    """Fallback logo/banner for a chapter that hasn't set its own."""
+    logo_assets = {
+        CITY_COMMUNITY: "city_community",
+        STUDENT_CLUB: "foss_club",
+    }
+
+    asset_key = logo_assets.get(chapter_type)
+    if asset_key:
+        return (
+            f"/assets/fossunited/images/chapter/{asset_key}_profile.svg",
+            f"/assets/fossunited/images/chapter/{asset_key}_banner.png",
+        )
+
+    safe_type = (chapter_type or "").lower().replace(" ", "_")
+    return (f"/files/{safe_type}_profile.svg", f"/files/{safe_type}_banner.png")
+
+
+CHAPTER_LIST_FIELDS = [
+    "name",
+    "route",
+    "chapter_name",
+    "chapter_type",
+    "chapter_status",
+    "chapter_logo",
+    "banner_image",
+    "city",
+    "state",
+]
+
+
+def get_list_context(context=None):
+    chapters = frappe.get_all(
+        CHAPTER,
+        filters={"is_published": 1},
+        fields=CHAPTER_LIST_FIELDS,
+        order_by="chapter_name asc",
+    )
+
+    for c in chapters:
+        c.default_chapter_logo, c.default_banner = get_default_chapter_assets(c.chapter_type)
+
+    return {
+        "get_list": lambda *args, **kwargs: [],
+        "template": "chapters/doctype/foss_chapter/templates/foss_chapter_list.html",
+        "chapters": chapters,
+    }
+
+
 class FOSSChapter(WebsiteGenerator):
     # begin: auto-generated types
     # This code is auto-generated. Do not modify anything in this block.
@@ -181,21 +230,9 @@ class FOSSChapter(WebsiteGenerator):
         context.pagetitle = self.chapter_name
         context.description = self.about_chapter
         context.image = frappe.utils.get_url(self.banner_image) if self.banner_image else None
-        logo_assets = {
-            CITY_COMMUNITY: "city_community",
-            STUDENT_CLUB: "foss_club",
-        }
-
-        asset_key = logo_assets.get(self.chapter_type)
-        if asset_key:
-            context.default_chapter_logo = (
-                f"/assets/fossunited/images/chapter/{asset_key}_profile.svg"
-            )
-            context.default_banner = f"/assets/fossunited/images/chapter/{asset_key}_banner.png"
-        else:
-            safe_type = (self.chapter_type or "").lower().replace(" ", "_")
-            context.default_chapter_logo = f"/files/{safe_type}_profile.svg"
-            context.default_banner = f"/files/{safe_type}_banner.png"
+        context.default_chapter_logo, context.default_banner = get_default_chapter_assets(
+            self.chapter_type
+        )
 
         context.upcoming_events = self.get_upcoming_events() + self.get_upcoming_hackathons()
         context.past_events = self.get_past_events() + self.get_past_hackathons()
