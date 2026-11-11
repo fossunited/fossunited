@@ -46,6 +46,10 @@ website_route_rules = [
         "to_route": "/hackathon/projects",
     },
     {
+        "from_route": "/hack/<permalink>/host",
+        "to_route": "/hackathon/localhosts",
+    },
+    {
         "from_route": "/c/<chapter>/rss.xml",
         "to_route": "/c/rss.xml",
     },
