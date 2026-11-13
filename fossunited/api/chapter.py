@@ -1,5 +1,4 @@
 import json
-from collections import defaultdict
 from zoneinfo import ZoneInfo
 
 import frappe
@@ -294,7 +293,8 @@ def get_my_chapter_dashboard():
     '/dashboard/chapter' to show events+chapters belonging to the user.
     """
     user = frappe.session.user
-    since_3w = add_days(now_datetime(), -21)
+    now = now_datetime()
+    since_3w = add_days(now, -21)
 
     chapter_names = get_my_chapters(user)
     chapters = []
@@ -308,42 +308,27 @@ def get_my_chapter_dashboard():
             fields=["*"],
         )
 
-        # Only query chapters actually returned above, not raw membership parents.
-        authorized_chapters = [chapter.name for chapter in chapters]
-        if authorized_chapters:
-            # Match the second-precision cutoff used by the chapter methods.
-            now = frappe.utils.now()
-            upcoming = frappe.get_all(
-                EVENT,
-                filters={
-                    "chapter": ["in", authorized_chapters],
-                    "event_end_date": [">=", now],
-                    "status": "Live",
-                },
-                fields=["*"],
-                order_by="event_start_date asc",
-            )
-            past = frappe.get_all(
-                EVENT,
-                filters=[
-                    ["chapter", "in", authorized_chapters],
-                    ["event_end_date", "<", now],
-                    ["event_end_date", ">=", since_3w],
-                    ["status", "=", "Concluded"],
-                ],
-                fields=["*"],
-                order_by="event_end_date desc",
-            )
-            # Preserve chapter order and each chapter's existing event order.
-            upcoming_by_chapter = defaultdict(list)
-            past_by_chapter = defaultdict(list)
-            for event in upcoming:
-                upcoming_by_chapter[event.chapter].append(event)
-            for event in past:
-                past_by_chapter[event.chapter].append(event)
-            for chapter in chapters:
-                scheduled.extend(upcoming_by_chapter[chapter.name])
-                recent_concluded.extend(past_by_chapter[chapter.name])
+        scheduled = frappe.get_all(
+            EVENT,
+            filters={
+                "chapter": ["in", chapter_names],
+                "event_end_date": [">=", now],
+                "status": "Live",
+            },
+            fields=["*"],
+            order_by="event_start_date asc",
+        )
+        recent_concluded = frappe.get_all(
+            EVENT,
+            filters=[
+                ["chapter", "in", chapter_names],
+                ["event_end_date", "<", now],
+                ["event_end_date", ">=", since_3w],
+                ["status", "=", "Concluded"],
+            ],
+            fields=["*"],
+            order_by="event_end_date desc",
+        )
 
     # Also include events where user is an event volunteer (but not a chapter member)
     chapter_event_names = {e.name for e in scheduled + recent_concluded}
