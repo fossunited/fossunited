@@ -78,6 +78,10 @@ def get_context(context):
         )
     context.devroom_managers = devroom_managers
 
+    # Staff hardcoded via json event_data.staff
+    context.staff = fetch_user_profiles(event_data.get("staff", []), "FOSS United Team")
+    staff_names = {s["full_name"] for s in context.staff}
+
     context.volunteers = [
         {
             "full_name": v["full_name"],
@@ -86,6 +90,7 @@ def get_context(context):
             "route": f"/{v['route']}" if v.get("route") else "#",
         }
         for v in event.get_volunteers()
+        if v["full_name"] not in staff_names
     ]
 
     # Timeline + progress bar - merge manual items with auto CFP items
@@ -168,6 +173,7 @@ def _empty_context(context):
                 "other_sponsors",
                 "partners",
                 "co_chairs",
+                "staff",
                 "reviewers",
                 "devroom_managers",
                 "volunteers",
