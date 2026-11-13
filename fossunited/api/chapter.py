@@ -293,7 +293,8 @@ def get_my_chapter_dashboard():
     '/dashboard/chapter' to show events+chapters belonging to the user.
     """
     user = frappe.session.user
-    since_3w = add_days(now_datetime(), -21)
+    now = now_datetime()
+    since_3w = add_days(now, -21)
 
     chapter_names = get_my_chapters(user)
     chapters = []
@@ -307,15 +308,27 @@ def get_my_chapter_dashboard():
             fields=["*"],
         )
 
-        for chapter in chapters:
-            doc = frappe.get_doc(CHAPTER, chapter.name)
-            scheduled.extend(doc.get_upcoming_events())
-            recent = [
-                e
-                for e in doc.get_past_events()
-                if e.event_end_date and (e.event_end_date >= since_3w)
-            ]
-            recent_concluded.extend(recent)
+        scheduled = frappe.get_all(
+            EVENT,
+            filters={
+                "chapter": ["in", chapter_names],
+                "event_end_date": [">=", now],
+                "status": "Live",
+            },
+            fields=["*"],
+            order_by="event_start_date asc",
+        )
+        recent_concluded = frappe.get_all(
+            EVENT,
+            filters=[
+                ["chapter", "in", chapter_names],
+                ["event_end_date", "<", now],
+                ["event_end_date", ">=", since_3w],
+                ["status", "=", "Concluded"],
+            ],
+            fields=["*"],
+            order_by="event_end_date desc",
+        )
 
     # Also include events where user is an event volunteer (but not a chapter member)
     chapter_event_names = {e.name for e in scheduled + recent_concluded}
