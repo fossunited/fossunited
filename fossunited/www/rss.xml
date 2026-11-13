@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="{{ link | e }}">
   <id>{{ feed_url | e }}</id>
   <title>{{ title | e }}</title>
   <subtitle>{{ description | e }}</subtitle>

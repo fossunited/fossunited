@@ -3,8 +3,7 @@
 # License: MIT. See LICENSE
 
 from datetime import datetime, time
-from hashlib import sha256
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import urlencode, urljoin
 from zoneinfo import ZoneInfo
 
 import frappe
@@ -17,18 +16,12 @@ from frappe.utils import (
     today,
 )
 
-from fossunited.doctype_ids import USER_PROFILE
-
 no_cache = 1
 base_template_path = "www/rss.xml"
 
 
 def _public_url(host, route):
-    if not route:
-        return None
-    url = urljoin(host.rstrip("/") + "/", route)
-    parts = urlsplit(url)
-    return url if parts.scheme in ("http", "https") and parts.netloc else None
+    return urljoin(host.rstrip("/") + "/", route) if route else None
 
 
 def _atom_date(value, zone):
@@ -57,50 +50,14 @@ def get_context(context):
             "content_type",
             "blogger",
             "blog_category",
+            "blogger.full_name as author",
+            "blog_category.title as category_title",
+            "blog_category.route as category_route",
             "meta_image",
         ],
         filters={"published": 1, "published_on": ["<=", today()]},
         order_by="published_on desc",
         limit=20,
-    )
-    blogger_names = list({blog.blogger for blog in blog_list if blog.blogger})
-    category_names = list({blog.blog_category for blog in blog_list if blog.blog_category})
-    bloggers = (
-        {
-            row.name: row
-            for row in frappe.get_all(
-                "Blogger",
-                filters={"name": ["in", blogger_names]},
-                fields=["name", "full_name", "user"],
-            )
-        }
-        if blogger_names
-        else {}
-    )
-    categories = (
-        {
-            row.name: row
-            for row in frappe.get_all(
-                "Blog Category",
-                filters={"name": ["in", category_names]},
-                fields=["name", "title", "route"],
-            )
-        }
-        if category_names
-        else {}
-    )
-    users = list({row.user for row in bloggers.values() if row.user})
-    profiles = (
-        {
-            row.user: row
-            for row in frappe.get_all(
-                USER_PROFILE,
-                filters={"user": ["in", users], "is_published": 1},
-                fields=["user", "route"],
-            )
-        }
-        if users
-        else {}
     )
     settings = frappe.get_single("Blog Settings")
     title = settings.blog_title or "FOSS United Blog"
@@ -108,23 +65,12 @@ def get_context(context):
 
     for blog in blog_list:
         blog.link = _public_url(host, blog.route)
-        blog.guid = (
-            blog.link
-            or "urn:sha256:" + sha256(f"{host.rstrip('/')}:{blog.name}".encode()).hexdigest()
-        )
-        blog.title = blog.title or blog.name
-        blogger = bloggers.get(blog.blogger)
-        blog.author = (blogger.full_name if blogger else None) or title
-        profile = profiles.get(blogger.user) if blogger else None
-        blog.author_uri = _public_url(host, profile.route) if profile else None
-        category = categories.get(blog.blog_category)
-        blog.category = _public_url(host, category.route) if category else None
-        blog.category_title = category.title if category else None
-        # published_on has Date precision only. Midnight in the site timezone is
-        # an explicit serialization convention, not a known publication time.
-        blog.published_date = _atom_date(
-            datetime.combine(get_datetime(blog.published_on).date(), time()), zone
-        )
+        blog.guid = blog.link
+        blog.author = blog.author or title
+        blog.author_uri = _public_url(host, "/blog?" + urlencode({"blogger": blog.blogger}))
+        blog.category = _public_url(host, blog.category_route)
+        # published_on has Date precision; serialize it at midnight in the site timezone.
+        blog.published_date = datetime.combine(blog.published_on, time(), zone).isoformat()
         blog.updated = _atom_date(blog.modified, zone)
         attr = {"Markdown": "content_md", "HTML": "content_html"}.get(blog.content_type, "content")
         value = blog.get(attr) or ""
@@ -133,9 +79,7 @@ def get_context(context):
 
     modified = max((get_datetime(blog.modified) for blog in blog_list), default=now_datetime())
     # TemplatePage's XML MIME default is overridden only for this response.
-    if not getattr(frappe.local, "response_headers", None):
-        frappe.local.response_headers = {}
-    frappe.local.response_headers["Content-Type"] = "application/atom+xml; charset=utf-8"
+    frappe.local.response_headers.set("Content-Type", "application/atom+xml; charset=utf-8")
     return {
         "title": title,
         "description": description,
