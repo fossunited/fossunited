@@ -3,21 +3,38 @@
 # License: MIT. See LICENSE
 
 from datetime import datetime, time
-from email.utils import format_datetime
-from urllib.parse import urljoin
+from urllib.parse import urlencode, urljoin
+from zoneinfo import ZoneInfo
 
 import frappe
-from frappe.utils import escape_html, get_request_site_address, md_to_html
+from frappe.utils import (
+    get_datetime,
+    get_request_site_address,
+    get_system_timezone,
+    md_to_html,
+    now_datetime,
+    today,
+)
 
 no_cache = 1
 base_template_path = "www/rss.xml"
 
 
+def _public_url(host, route):
+    return urljoin(host.rstrip("/") + "/", route) if route else None
+
+
+def _atom_date(value, zone):
+    value = get_datetime(value)
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=zone)
+    return value.isoformat(timespec="seconds")
+
+
 def get_context(context):
-    """generate rss feed for both blogs & newsletters"""
-
+    """Generate the blog Atom feed. Other RSS feeds use their existing templates."""
     host = get_request_site_address()
-
+    zone = ZoneInfo(get_system_timezone())
     blog_list = frappe.get_all(
         "Blog Post",
         fields=[
@@ -33,52 +50,41 @@ def get_context(context):
             "content_type",
             "blogger",
             "blog_category",
+            "blogger.full_name as author",
+            "blog_category.title as category_title",
+            "blog_category.route as category_route",
+            "meta_image",
         ],
-        filters={"published": 1},
+        filters={"published": 1, "published_on": ["<=", today()]},
         order_by="published_on desc",
         limit=20,
     )
+    settings = frappe.get_single("Blog Settings")
+    title = settings.blog_title or "FOSS United Blog"
+    description = settings.blog_introduction or ""
 
     for blog in blog_list:
-        blog.link = urljoin(host, blog.route)
-        blog.title = escape_html(
-            getattr(blog, "title", None) or getattr(blog, "subject", "") or ""
-        )
-        blog.author = escape_html(getattr(blog, "blogger", None) or "")
-        blog.published_date = format_datetime(
-            datetime.combine(getattr(blog, "published_on", None) or blog.modified, time())
-        )
-        attr = {"Markdown": "content_md", "HTML": "content_html"}.get(blog.content_type, "content")
-        value = getattr(blog, attr)
-        if blog.content_type == "Markdown":
-            blog_content = md_to_html(value)
-        else:
-            blog_content = value
-        blog.content = f"<![CDATA[{blog_content}]]>"
+        blog.link = _public_url(host, blog.route)
         blog.guid = blog.link
-        blog.category = blog.category or ""
+        blog.author = blog.author or title
+        blog.author_uri = _public_url(host, "/blog?" + urlencode({"blogger": blog.blogger}))
+        blog.category = _public_url(host, blog.category_route)
+        # published_on has Date precision; serialize it at midnight in the site timezone.
+        blog.published_date = datetime.combine(blog.published_on, time(), zone).isoformat()
+        blog.updated = _atom_date(blog.modified, zone)
+        attr = {"Markdown": "content_md", "HTML": "content_html"}.get(blog.content_type, "content")
+        value = blog.get(attr) or ""
+        blog.content = md_to_html(value) if blog.content_type == "Markdown" else value
+        blog.enclosure = _public_url(host, blog.meta_image)
 
-    all_items = blog_list
-    if all_items:
-        modified = format_datetime(max(blog["modified"] for blog in all_items))
-    else:
-        modified = format_datetime(datetime.now())
-
-    try:
-        blog_settings = frappe.get_doc("Blog Settings", "Blog Settings")
-        title = blog_settings.blog_title or "Blog"
-        description = blog_settings.blog_introduction or ""
-    except frappe.DoesNotExistError:
-        title = "FOSS United Blog"
-        description = "Latest updates from FOSS United"
-
-    context = {
+    modified = max((get_datetime(blog.modified) for blog in blog_list), default=now_datetime())
+    # TemplatePage's XML MIME default is overridden only for this response.
+    frappe.local.response_headers.set("Content-Type", "application/atom+xml; charset=utf-8")
+    return {
         "title": title,
         "description": description,
-        "modified": modified,
+        "modified": _atom_date(modified, zone),
         "items": blog_list,
-        "link": host + "/blog",
-        "feed_url": host + "/rss.xml",
+        "link": _public_url(host, "/blog"),
+        "feed_url": _public_url(host, "/rss.xml"),
     }
-
-    return context
