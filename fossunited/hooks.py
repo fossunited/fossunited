@@ -176,6 +176,13 @@ permission_query_conditions = {
     "FOSS Event RSVP Submission": "fossunited.fossunited.permissions.rsvp_submission_query",
 }
 
+has_permission = {
+    "FOSS Chapter": "fossunited.fossunited.permissions.chapter_has_permission",
+    "FOSS Chapter Event": "fossunited.fossunited.permissions.event_has_permission",
+    "FOSS Event RSVP": "fossunited.fossunited.permissions.event_form_has_permission",
+    "FOSS Event CFP": "fossunited.fossunited.permissions.event_form_has_permission",
+}
+
 before_tests = "fossunited.setup.before_tests"
 
 # Migration
