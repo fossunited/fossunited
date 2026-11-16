@@ -84,6 +84,9 @@ jobs:
           bench init --frappe-branch version-16 --skip-redis-config-generation --skip-assets --python "$(which python)" ${{ env.BENCH_PATH }}
           ${{ env.BENCH_PATH }}/env/bin/pip install --upgrade pip setuptools wheel
 
+          # The MariaDB 11.4+ client requires SSL by default; the mariadb:10.6 service has none.
+          printf '[client]\nskip-ssl\n' > ~/.my.cnf
+
           mariadb --host 127.0.0.1 --port 3306 -u root -p${{ env.MARIADB_ROOT_PASSWORD }} -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mariadb --host 127.0.0.1 --port 3306 -u root -p${{ env.MARIADB_ROOT_PASSWORD }} -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
 
