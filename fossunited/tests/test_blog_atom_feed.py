@@ -96,3 +96,23 @@ class TestBlogAtomFeed(FrappeTestCase):
             HOST + "/" + self.blog.route.lstrip("/"),
             [e.findtext("a:id", namespaces=NS) for e in root.findall("a:entry", NS)],
         )
+
+
+class TestBlogAtomHTTP(FrappeTestCase):
+    def test_rss_route_uses_foss_atom_template_and_mime(self):
+        from frappe.tests.test_api import make_request
+        from frappe.utils import get_test_client
+
+        # The framework helper runs the actual WSGI app in another thread/connection.
+        # No uncommitted fixture needs to be visible to this request.
+        response = make_request(
+            target=get_test_client(use_cookies=False).get,
+            args=(),
+            kwargs={"path": "/rss.xml"},
+            site=frappe.local.site,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "application/atom+xml")
+        root = ET.fromstring(response.get_data(as_text=True))
+        self.assertEqual(root.tag, "{http://www.w3.org/2005/Atom}feed")
+        self.assertTrue(root.findtext("a:id", namespaces=NS).endswith("/rss.xml"))
