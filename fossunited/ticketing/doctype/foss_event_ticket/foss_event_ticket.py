@@ -1,6 +1,7 @@
 # Copyright (c) 2024, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
+from collections import Counter
 from datetime import datetime
 from typing import TYPE_CHECKING
 
@@ -65,17 +66,24 @@ class FOSSEventTicket(Document):
         custom_fields_apply_to_all = payment_meta_data.get("custom_fields_apply_to_all", False)
         global_custom_fields = payment_meta_data.get("global_custom_fields", {})
 
-        tier_names = {a.get("ticket_type") for a in attendees if a.get("ticket_type")}
-        tshirt_included_by_tier = {
-            name: bool(frappe.db.get_value(TICKET_TIER, name, "tshirt_included"))
-            for name in tier_names
+        # Tier details come from this event's own tiers, never from data sent by the browser.
+        tiers = {
+            name: frappe.db.get_value(
+                TICKET_TIER,
+                {"name": name, "parent": payment.document_name, "parenttype": EVENT},
+                ["title", "tshirt_included"],
+                as_dict=True,
+            )
+            for name in {a.get("ticket_type") for a in attendees}
         }
+        if not all(tiers.values()):
+            frappe.throw(
+                _("A ticket tier does not belong to this event."), TicketTierMismatchError
+            )
 
         for attendee in attendees:
-            tier_name = attendee.get("ticket_type")
-            wants_tshirt = int(attendee.get("wants_tshirt", 0)) or int(
-                tshirt_included_by_tier.get(tier_name, False)
-            )
+            tier = tiers[attendee.get("ticket_type")]
+            wants_tshirt = int(attendee.get("wants_tshirt", 0)) or int(bool(tier.tshirt_included))
 
             ticket_doc = frappe.get_doc(
                 {
@@ -90,10 +98,7 @@ class FOSSEventTicket(Document):
                     "wants_tshirt": wants_tshirt,
                     "tshirt_size": attendee.get("tshirt_size") if wants_tshirt else None,
                     "accept_coc": attendee.get("accept_coc", 0),
-                    "tier": frappe.db.get_value(TICKET_TIER, attendee.get("ticket_type"), "title")
-                    or (payment_meta_data.get("tiers_snapshot") or {})
-                    .get(attendee.get("ticket_type"), {})
-                    .get("title"),
+                    "tier": tier.title,
                     "custom_fields": [],
                 }
             )
@@ -197,6 +202,39 @@ class TicketTierMismatchError(frappe.ValidationError):
     pass
 
 
+def validate_attendee_tiers(meta_data: dict):
+    """Check that the tickets to be issued are exactly the tickets that were priced.
+
+    The amount, tier and capacity checks use `tier_counts`, while tickets are created from
+    `attendees`, so both must describe the same tickets.
+    """
+    tier_counts = meta_data.get("tier_counts") or {}
+    attendees = meta_data.get("attendees")
+    if not isinstance(tier_counts, dict) or not isinstance(attendees, list):
+        frappe.throw(_("Invalid ticket order."), TicketTierMismatchError)
+
+    try:
+        ordered = {name: int(count or 0) for name, count in tier_counts.items()}
+    except (TypeError, ValueError):
+        frappe.throw(_("Invalid ticket count."), TicketTierMismatchError)
+    ordered = {name: count for name, count in ordered.items() if count > 0}
+    if not ordered:
+        frappe.throw(_("No ticket tiers selected."), TicketTierMismatchError)
+
+    issued = Counter()
+    for attendee in attendees:
+        ticket_type = attendee.get("ticket_type") if isinstance(attendee, dict) else None
+        if not ticket_type or not isinstance(ticket_type, str):
+            frappe.throw(_("Every attendee needs a ticket tier."), TicketTierMismatchError)
+        issued[ticket_type] += 1
+
+    if dict(issued) != ordered:
+        frappe.throw(
+            _("Attendee tickets do not match the order - please refresh and try again."),
+            TicketTierMismatchError,
+        )
+
+
 def validate_tier_availability(tier, event_name: str, count: int):
     if tier.parent != event_name:
         frappe.throw(_("A tier does not belong to this event."), TicketTierMismatchError)
@@ -233,6 +271,8 @@ def validate_ticket_fulfillment(doc: "RazorpayPayment"):
     if not event or event.tickets_status != "Live":
         frappe.throw(_("Ticket sales are closed for this event."), TicketTierMismatchError)
 
+    validate_attendee_tiers(payment_meta_data)
+
     for tier_name, count in tier_counts.items():
         count = int(count or 0)
         if count <= 0:
@@ -252,6 +292,8 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
 
     if not tier_counts:
         frappe.throw(_("No ticket tiers selected."), TicketTierMismatchError)
+
+    validate_attendee_tiers(payment_meta_data)
 
     calculated_amount = 0.0
     tshirt_included_by_tier: dict[str, bool] = {}
