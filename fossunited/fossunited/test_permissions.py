@@ -1,5 +1,6 @@
 import frappe
 import frappe.client
+import frappe.share
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import (
@@ -304,6 +305,34 @@ class TestChapterScopedWrites(FrappeTestCase):
         self.assertEqual(
             frappe.db.get_value(TICKET_TIER, other_tier, "parent"), self.other_event.name
         )
+
+    def test_write_share_does_not_allow_taking_rows(self):
+        # A document shared with write access passes Frappe's permission check even when the
+        # has_permission hook says no, so the row check must also hold on save.
+        other_row = self.other_chapter.chapter_members[0].name
+        friend = UserFactory.create("with_foss_website_user_role")
+
+        for label, sharee in (
+            ("shared with self", self.ctm.name),
+            ("shared with friend", friend.name),
+        ):
+            with self.subTest(label):
+                frappe.set_user(self.ctm.name)
+                frappe.share.add(CHAPTER, self.chapter.name, sharee, write=1)
+
+                frappe.set_user(sharee)
+                own_chapter = frappe.get_doc(CHAPTER, self.chapter.name).as_dict()
+                own_chapter["chapter_members"].append(
+                    frappe.get_doc(CHAPTER_MEMBER, other_row).as_dict()
+                )
+                with self.assertRaises(frappe.PermissionError):
+                    frappe.client.save(own_chapter)
+
+                frappe.set_user("Administrator")
+                self.assertEqual(
+                    frappe.db.get_value(CHAPTER_MEMBER, other_row, "parent"),
+                    self.other_chapter.name,
+                )
 
     def test_event_team_can_edit_event_without_a_chapter(self):
         event = FOSSChapterEventFactory.create(chapter=None)

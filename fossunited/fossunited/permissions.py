@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 
 from fossunited.api.chapter import check_if_chapter_member
 from fossunited.doctype_ids import EVENT, EVENT_VOLUNTEER, USER_PROFILE
@@ -104,6 +105,15 @@ def _rows_belong_to(doc) -> bool:
         if any((o.parent, o.parenttype) != (doc.name, doc.doctype) for o in owners):
             return False
     return True
+
+
+def validate_child_rows(doc, method=None):
+    """validate hook (see hooks.py). Runs on every save, so a share cannot get past it the way
+    it can get past a has_permission hook."""
+    if not doc.is_new() and not _rows_belong_to(doc):
+        frappe.throw(
+            _("This record contains rows that belong to another record."), frappe.PermissionError
+        )
 
 
 # has_permission hooks (see hooks.py). A falsy return removes the role permission (a document

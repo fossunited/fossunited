@@ -121,6 +121,10 @@ doc_events = {
     "Newsletter": {
         "autoname": "fossunited.overrides.newsletter_extend.autoname",
     },
+    "FOSS Chapter": {"validate": "fossunited.fossunited.permissions.validate_child_rows"},
+    "FOSS Chapter Event": {"validate": "fossunited.fossunited.permissions.validate_child_rows"},
+    "FOSS Event RSVP": {"validate": "fossunited.fossunited.permissions.validate_child_rows"},
+    "FOSS Event CFP": {"validate": "fossunited.fossunited.permissions.validate_child_rows"},
 }
 
 website_redirects = [
