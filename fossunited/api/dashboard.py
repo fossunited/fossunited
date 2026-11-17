@@ -51,9 +51,17 @@ def get_event(name: str, by_route: bool = False, by_permalink: bool = False) -> 
     # Drop anything above permlevel 0 (e.g. event_data) the caller has no role for.
     doc.apply_fieldlevel_read_permissions()
     data = doc.as_dict()
-    # Remove members table and internal-only fields never meant for this public endpoint.
-    for field in ("event_members", "_comments", "_assign", "_liked_by"):
+
+    internal_fields = ("_comments", "_assign", "_liked_by", "owner", "modified_by")
+    data.pop("event_members", None)
+    for field in internal_fields:
         data.pop(field, None)
+
+    # Every child table carries the same per-row metadata
+    for table_field in doc.meta.get_table_fields():
+        for row in data.get(table_field.fieldname) or []:
+            for field in internal_fields:
+                row.pop(field, None)
 
     if doc.chapter:
         data["chapter_email"] = frappe.db.get_value(CHAPTER, doc.chapter, "email")
@@ -66,7 +74,7 @@ def get_event(name: str, by_route: bool = False, by_permalink: bool = False) -> 
                 EVENT_TICKET,
                 filters={"event": event_id},
                 group_by="tier",
-                fields=["tier", "count(name) as count"],
+                fields=["tier", {"COUNT": "name", "as": "count"}],
             )
         }
         for tier in capped_tiers:
