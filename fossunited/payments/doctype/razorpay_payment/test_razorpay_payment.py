@@ -19,6 +19,7 @@ from fossunited.tests.factories import (
 from fossunited.tests.factories.razorpay_payment_factory import _make_attendee
 from fossunited.ticketing.doctype.foss_event_ticket.foss_event_ticket import (
     TicketTierMismatchError,
+    validate_attendee_tiers,
 )
 
 fake = Faker()
@@ -606,3 +607,119 @@ class TestCreateRazorpayOrderAmount(FrappeTestCase):
         attendee = _make_attendee(ticket_type=self.tier_standard.name, wants_tshirt=0)
         with self.assertRaises(frappe.ValidationError):
             self._create_order(1, {self.tier_standard.name: 1}, [attendee], "ord_005")
+
+
+class TestRazorpayPaymentAttendeeTiers(FrappeTestCase):
+    """Tickets are issued only for the tiers that were priced and paid for."""
+
+    def setUp(self):
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create(
+            "with_paid_tickets",
+            chapter=self.chapter.name,
+            tickets_status="Live",
+            tiers=[
+                {"enabled": 1, "title": "Cheap", "price": 100, "maximum_tickets": 10},
+                {"enabled": 1, "title": "Dear", "price": 1000, "maximum_tickets": 1},
+            ],
+        )
+        tiers = frappe.get_all(
+            TICKET_TIER, {"parent": self.event.name, "parenttype": EVENT}, ["name", "title"]
+        )
+        tier_names = {t.title: t.name for t in tiers}
+        self.cheap, self.dear = tier_names["Cheap"], tier_names["Dear"]
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        for payment in frappe.get_all(RAZORPAY_PAYMENT, {"document_name": self.event.name}):
+            frappe.delete_doc(RAZORPAY_PAYMENT, payment.name, force=True)
+        for ticket in frappe.get_all(EVENT_TICKET, {"event": self.event.name}):
+            frappe.delete_doc(EVENT_TICKET, ticket.name, force=True)
+        self.event.delete(force=True)
+        self.chapter.delete(force=True)
+
+    def create_payment(self, tier_counts, ticket_types):
+        return RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            email=fake.email(),
+            tier_counts=tier_counts,
+            attendees=[_make_attendee(ticket_type=t) for t in ticket_types],
+        )
+
+    def capture(self, payment, **meta_changes) -> list[str]:
+        """Capture the payment, optionally after changing its stored order details."""
+        if meta_changes:
+            meta = frappe.parse_json(payment.meta_data)
+            meta.update(meta_changes)
+            payment.db_set("meta_data", frappe.as_json(meta), update_modified=False)
+        order_id = f"order_{payment.name}"
+        payment.db_set("order_id", order_id, update_modified=False)
+        capture_payment(order_id, f"pay_{payment.name}")
+        payment.reload()
+        return frappe.get_all(EVENT_TICKET, {"razorpay_payment": payment.name}, pluck="tier")
+
+    def test_attendees_must_match_the_priced_tiers(self):
+        cases = {
+            "extra expensive attendee": ({self.cheap: 1}, [self.cheap, self.dear]),
+            "cheap tier swapped for expensive": ({self.cheap: 1}, [self.dear]),
+            "invented tier": ({self.cheap: 1}, [self.cheap, "vip-backstage"]),
+            "fewer attendees than paid for": ({self.cheap: 2}, [self.cheap]),
+        }
+        for label, (tier_counts, attendees) in cases.items():
+            with self.subTest(label), self.assertRaises(TicketTierMismatchError):
+                self.create_payment(tier_counts, attendees)
+
+        self.assertEqual(frappe.db.count(RAZORPAY_PAYMENT, {"document_name": self.event.name}), 0)
+
+    def test_every_attendee_needs_a_ticket_tier(self):
+        # Called directly: the payment factory fills in a missing ticket_type on its own.
+        cases = {
+            "missing": _make_attendee(ticket_type=None),
+            "empty": _make_attendee(ticket_type=""),
+            "dict": _make_attendee(ticket_type={"name": self.dear}),
+            "list": _make_attendee(ticket_type=[self.cheap]),
+            "attendee is not a dict": self.cheap,
+        }
+        for label, attendee in cases.items():
+            meta = {"tier_counts": {self.cheap: 1}, "attendees": [attendee]}
+            with (
+                self.subTest(label),
+                self.assertRaisesRegex(TicketTierMismatchError, "needs a ticket tier"),
+            ):
+                validate_attendee_tiers(meta)
+
+    def test_zero_count_tiers_are_ignored(self):
+        payment = self.create_payment({self.cheap: 1, self.dear: 0}, [self.cheap])
+        self.assertEqual(self.capture(payment), ["Cheap"])
+
+    def test_ticket_tier_title_comes_from_the_event(self):
+        payment = self.create_payment({self.cheap: 1}, [self.cheap])
+        tiers = self.capture(payment, tiers_snapshot={self.cheap: {"title": "VIP Backstage"}})
+        self.assertEqual(tiers, ["Cheap"])
+
+    def test_attendees_changed_after_checkout_get_no_tickets(self):
+        cases = {
+            "extra expensive attendee": {
+                "attendees": [_make_attendee(ticket_type=t) for t in (self.cheap, self.dear)],
+            },
+            "invented tier": {
+                "attendees": [_make_attendee(ticket_type=t) for t in (self.cheap, "vip")],
+                "tiers_snapshot": {"vip": {"title": "VIP Backstage"}},
+            },
+        }
+        for label, meta_changes in cases.items():
+            with self.subTest(label):
+                payment = self.create_payment({self.cheap: 1}, [self.cheap])
+                tiers = self.capture(payment, **meta_changes)
+                self.assertEqual(payment.status, "Captured")
+                self.assertEqual(tiers, [])
+
+        # The single-seat expensive tier was not sold out by the rejected tickets.
+        self.assertEqual(frappe.db.get_value(TICKET_TIER, self.dear, "enabled"), 1)
+
+    def test_payment_without_tier_counts_gets_no_tickets(self):
+        payment = self.create_payment({self.cheap: 1}, [self.cheap])
+        tiers = self.capture(payment, tier_counts={})
+        self.assertEqual(payment.status, "Captured")
+        self.assertEqual(tiers, [])
