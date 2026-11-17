@@ -292,10 +292,17 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         return pagetitle, description, image
 
-    def get_volunteers(self):
-        """Get volunteers with profile information. Batch fetch profiles for performance."""
+    def get_volunteers(self, exclude=None):
+        """Get volunteers with profile information. Batch fetch profiles for performance.
+
+        `exclude` is a set of FOSS User Profile docnames to leave out (e.g. staff
+        members counted elsewhere) -- matched on profile id, not full_name, since
+        two different people can share a name.
+        """
         if not self.event_members:
             return []
+
+        exclude = exclude or set()
 
         # Batch fetch all profiles
         member_ids = [member.member for member in self.event_members]
@@ -311,6 +318,8 @@ class FOSSChapterEvent(WebsiteGenerator):
         seen = set()
         members = []
         for member in self.event_members:
+            if member.member and member.member in exclude:
+                continue
             # Rows with no linked profile can't be identified as duplicates, so this
             # guard only ever skips a member we've already seen by profile id.
             if member.member and member.member in seen:
