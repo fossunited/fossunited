@@ -121,6 +121,31 @@ doc_events = {
     "Newsletter": {
         "autoname": "fossunited.overrides.newsletter_extend.autoname",
     },
+    "FOSS Chapter": {
+        "validate": "fossunited.fossunited.permissions.validate_child_rows",
+        "before_rename": "fossunited.fossunited.permissions.block_rename",
+    },
+    "FOSS Chapter Event": {
+        "validate": [
+            "fossunited.fossunited.permissions.validate_child_rows",
+            "fossunited.fossunited.permissions.validate_move",
+        ],
+        "before_rename": "fossunited.fossunited.permissions.block_rename",
+    },
+    "FOSS Event RSVP": {
+        "validate": [
+            "fossunited.fossunited.permissions.validate_child_rows",
+            "fossunited.fossunited.permissions.validate_move",
+        ],
+        "before_rename": "fossunited.fossunited.permissions.block_rename",
+    },
+    "FOSS Event CFP": {
+        "validate": [
+            "fossunited.fossunited.permissions.validate_child_rows",
+            "fossunited.fossunited.permissions.validate_move",
+        ],
+        "before_rename": "fossunited.fossunited.permissions.block_rename",
+    },
 }
 
 website_redirects = [
@@ -174,6 +199,13 @@ extend_doctype_class = {
 permission_query_conditions = {
     "FOSS Event CFP Submission": "fossunited.fossunited.permissions.cfp_submission_query",
     "FOSS Event RSVP Submission": "fossunited.fossunited.permissions.rsvp_submission_query",
+}
+
+has_permission = {
+    "FOSS Chapter": "fossunited.fossunited.permissions.chapter_has_permission",
+    "FOSS Chapter Event": "fossunited.fossunited.permissions.event_has_permission",
+    "FOSS Event RSVP": "fossunited.fossunited.permissions.event_form_has_permission",
+    "FOSS Event CFP": "fossunited.fossunited.permissions.event_form_has_permission",
 }
 
 before_tests = "fossunited.setup.before_tests"
