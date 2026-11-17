@@ -168,10 +168,10 @@
         return
       }
       frappe.call({
-        method: 'fossunited.fossunited.forms.check_if_submitter',
+        method:
+          'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.check_if_submitter',
         args: {
-          doctype: '{{ frappe.form_dict.doctype }}',
-          docname: '{{ frappe.form_dict.submission }}',
+          submission_name: '{{ frappe.form_dict.submission }}',
         },
         callback: (r) => {
           if (!r.message) {
@@ -219,10 +219,10 @@
       submission = { ...submission, ...override_fields }
 
       frappe.call({
-        method: 'fossunited.fossunited.forms.update_submission',
+        method:
+          'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.update_rsvp_submission',
         args: {
-          doctype: 'FOSS Event RSVP Submission',
-          submission: '{{ frappe.form_dict.submission }}',
+          submission_name: '{{ frappe.form_dict.submission }}',
           fields: JSON.stringify(submission),
           custom: custom_answers,
         },

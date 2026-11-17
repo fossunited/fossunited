@@ -1,3 +1,5 @@
+import json
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -28,6 +30,10 @@ RSVP_ALLOWED_FIELDS = {
     "confirm_attendance",
     "custom_answers",
 }
+
+# Same submitter-editable set, minus linked_rsvp (which form this even is, not
+# theirs to move after the fact) and custom_answers (upserted separately below).
+RSVP_UPDATE_ALLOWED_FIELDS = RSVP_ALLOWED_FIELDS - {"linked_rsvp", "custom_answers"}
 
 
 class FOSSEventRSVPSubmission(Document):
@@ -134,7 +140,8 @@ class FOSSEventRSVPSubmission(Document):
         event_status = frappe.db.get_value(EVENT, self.event, "status")
         if event_status == "Concluded":
             frappe.throw(
-                _("This event has concluded. Registrations are closed."), frappe.ValidationError
+                _("This event has concluded. Registrations are closed."),
+                frappe.ValidationError,
             )
 
     def close_rsvp_on_max_count(self):
@@ -265,3 +272,68 @@ def remove_checkin_for_today(submission_name: str):
     ):
         frappe.throw(_("Not permitted"), frappe.PermissionError)
     return doc.remove_today_check_in()
+
+
+@frappe.whitelist()
+def check_if_submitter(submission_name: str) -> bool:
+    """Whether the current user submitted, or created, this RSVP."""
+    user = frappe.session.user
+    if user == "Guest":
+        return False
+
+    submitted_by, owner = frappe.db.get_value(
+        RSVP_RESPONSE, submission_name, ["submitted_by", "owner"]
+    )
+    return (submitted_by and submitted_by == user) or (
+        owner and owner != "Guest" and owner == user
+    )
+
+
+@frappe.whitelist()
+def update_rsvp_submission(submission_name: str, fields: str, custom: str):
+    """Update the submitter's own fields and upsert custom answers (update existing, append new)."""
+    if not check_if_submitter(submission_name):
+        frappe.throw(
+            _("You are not authorized to update this submission"),
+            frappe.PermissionError,
+        )
+
+    fields = json.loads(fields or "{}")
+    custom = json.loads(custom or "[]")
+
+    doc = frappe.get_doc(RSVP_RESPONSE, submission_name)
+
+    for k, v in fields.items():
+        if k in RSVP_UPDATE_ALLOWED_FIELDS:
+            doc.set(k, v)
+        else:
+            logger.debug(f"Ignored non-editable field: {k}")
+
+    # Build map of existing custom answers (question -> row)
+    existing = {row.question: row for row in (doc.custom_answers or [])}
+
+    valid_questions = {
+        q.question: q.type for q in frappe.get_doc(EVENT_RSVP, doc.linked_rsvp).custom_questions
+    }
+
+    for item in custom:
+        q = item.get("question")
+        resp = item.get("response")
+
+        if not q:
+            continue
+        if q not in valid_questions:
+            logger.debug(f"Ignored answer to unknown question: {q}")
+            continue
+
+        if q in existing:
+            existing[q].response = resp
+            existing[q].type = valid_questions[q]
+        else:
+            doc.append(
+                "custom_answers",
+                {"question": q, "response": resp, "type": valid_questions[q]},
+            )
+
+    doc.save()  # runs validations/hooks
+    return {"status": "success"}
