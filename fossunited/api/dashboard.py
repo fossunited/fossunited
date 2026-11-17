@@ -21,41 +21,58 @@ from fossunited.utils.payments import (
 )
 
 
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
-def get_event(name: str, by_route: bool = False) -> dict:
+def _resolve_event_id(name: str, by_route: bool, by_permalink: bool) -> str | None:
     if by_route:
         if not name.startswith("c/"):
             name = f"c/{name}"
+        return frappe.db.get_value(EVENT, {"route": name}, "name")
+    if by_permalink:
+        return frappe.db.get_value(EVENT, {"event_permalink": name}, "name")
+    return name
 
-        event_id = frappe.db.get_value(EVENT, {"route": name}, "name")
-        if not event_id:
-            return {}
-    else:
-        event_id = name
+
+# nosemgrep: guest-whitelisted-method
+@frappe.whitelist(allow_guest=True)
+def get_event(name: str, by_route: bool = False, by_permalink: bool = False) -> dict:
+    event_id = _resolve_event_id(name, by_route, by_permalink)
+    if not event_id:
+        return {}
 
     doc = frappe.get_doc(EVENT, event_id)
+
+    user = frappe.session.user
+    is_privileged = "System Manager" in frappe.get_roles(user) or doc.chapter in _ctm_chapters(
+        user
+    )
+    if not doc.is_published and not is_privileged:
+        # Same message either way: don't reveal that an unpublished event exists.
+        frappe.throw(_("Event not found"), frappe.DoesNotExistError)
+
+    # Drop anything above permlevel 0 (e.g. event_data) the caller has no role for.
+    doc.apply_fieldlevel_read_permissions()
     data = doc.as_dict()
-    # Remove members table
-    data.pop("event_members", None)
+    # Remove members table and internal-only fields never meant for this public endpoint.
+    for field in ("event_members", "_comments", "_assign", "_liked_by"):
+        data.pop(field, None)
 
     if doc.chapter:
         data["chapter_email"] = frappe.db.get_value(CHAPTER, doc.chapter, "email")
 
-    for tier in data.get("tiers", []):
-        if tier.get("maximum_tickets"):
-            tier["sold_count"] = frappe.db.count(
+    capped_tiers = [tier for tier in data.get("tiers", []) if tier.get("maximum_tickets")]
+    if capped_tiers:
+        sold_counts = {
+            row.tier: row.count
+            for row in frappe.get_all(
                 EVENT_TICKET,
-                {"event": event_id, "tier": tier.get("title")},
+                filters={"event": event_id},
+                group_by="tier",
+                fields=["tier", "count(name) as count"],
             )
+        }
+        for tier in capped_tiers:
+            tier["sold_count"] = sold_counts.get(tier.get("title"), 0)
 
     return data
-
-
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
-def get_event_from_permalink(permalink: str, fields: list) -> dict:
-    return frappe.db.get_value(EVENT, {"event_permalink": permalink}, fields, as_dict=1)
 
 
 # nosemgrep: guest-whitelisted-method
