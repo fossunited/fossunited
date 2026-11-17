@@ -1,8 +1,8 @@
 import frappe
 from frappe import _
 
-from fossunited.api.chapter import check_if_chapter_member
-from fossunited.doctype_ids import EVENT, EVENT_VOLUNTEER, USER_PROFILE
+from fossunited.api.chapter import is_chapter_member, is_event_member
+from fossunited.doctype_ids import EVENT
 
 # Permission types that change a record. Read-type checks are left to the role permissions,
 # so public pages, lists and dashboard reads are unaffected.
@@ -63,32 +63,11 @@ def _is_new(doc, ptype: str | None) -> bool:
     return ptype == "create" or bool(doc.get("__islocal")) or not doc.get("name")
 
 
-def _is_chapter_member(chapter: str | None, user: str) -> bool:
-    return bool(chapter) and check_if_chapter_member(chapter, user)
-
-
-def _is_event_member(event: str | None, user: str) -> bool:
-    profile = frappe.db.get_value(USER_PROFILE, {"user": user}, "name")
-    if not (event and profile):
-        return False
-    return bool(
-        frappe.db.exists(
-            EVENT_VOLUNTEER,
-            {
-                "parent": event,
-                "parenttype": EVENT,
-                "parentfield": "event_members",
-                "member": profile,
-            },
-        )
-    )
-
-
 def _can_manage_event(event: str | None, user: str) -> bool:
     if not event:
         return False
     chapter = frappe.db.get_value(EVENT, event, "chapter")
-    return _is_chapter_member(chapter, user) or _is_event_member(event, user)
+    return is_chapter_member(chapter, user) or is_event_member(event, user)
 
 
 def _rows_belong_to(doc) -> bool:
@@ -126,7 +105,7 @@ def chapter_has_permission(doc, ptype=None, user=None, debug=False) -> bool:
     user = user or frappe.session.user
     if ptype not in MANAGE_PTYPES or _is_new(doc, ptype) or _is_privileged(user):
         return True
-    return _is_chapter_member(doc.name, user) and _rows_belong_to(doc)
+    return is_chapter_member(doc.name, user) and _rows_belong_to(doc)
 
 
 def event_has_permission(doc, ptype=None, user=None, debug=False) -> bool:
@@ -134,17 +113,17 @@ def event_has_permission(doc, ptype=None, user=None, debug=False) -> bool:
     if ptype not in MANAGE_PTYPES or _is_privileged(user):
         return True
     if _is_new(doc, ptype):
-        return _is_chapter_member(doc.get("chapter"), user)
+        return is_chapter_member(doc.get("chapter"), user)
 
     stored_chapter = frappe.db.get_value(EVENT, doc.name, "chapter") or None
-    if not (_is_chapter_member(stored_chapter, user) or _is_event_member(doc.name, user)):
+    if not (is_chapter_member(stored_chapter, user) or is_event_member(doc.name, user)):
         return False
 
     new_chapter = doc.get("chapter") or None
     # Moving an event to another chapter needs membership of both chapters.
     if new_chapter != stored_chapter and not (
-        _is_chapter_member(stored_chapter, user)
-        and (not new_chapter or _is_chapter_member(new_chapter, user))
+        is_chapter_member(stored_chapter, user)
+        and (not new_chapter or is_chapter_member(new_chapter, user))
     ):
         return False
     return _rows_belong_to(doc)

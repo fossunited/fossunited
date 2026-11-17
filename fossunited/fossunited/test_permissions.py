@@ -3,6 +3,7 @@ import frappe.client
 import frappe.share
 from frappe.tests.utils import FrappeTestCase
 
+from fossunited.api.chapter import check_if_chapter_or_event_core_member, check_if_event_member
 from fossunited.doctype_ids import (
     CHAPTER,
     CHAPTER_MEMBER,
@@ -10,6 +11,7 @@ from fossunited.doctype_ids import (
     EVENT_CFP,
     EVENT_RSVP,
     TICKET_TIER,
+    USER_PROFILE,
 )
 from fossunited.fossunited.permissions import cfp_submission_query, rsvp_submission_query
 from fossunited.tests.factories import (
@@ -363,3 +365,18 @@ class TestChapterScopedWrites(FrappeTestCase):
         self.assertEqual(
             frappe.db.get_value(EVENT, self.other_event.name, "event_name"), "Edited by admin"
         )
+
+    def test_event_team_check_ignores_rows_without_a_member(self):
+        # A team row with no member is stored with member NULL. A session without a profile
+        # must not match it.
+        event = frappe.get_doc(EVENT, self.event.name)
+        event.append("event_members", {"role": "Volunteer"})
+        event.save()
+        no_profile = UserFactory.create("with_foss_website_user_role")
+        frappe.db.delete(USER_PROFILE, {"user": no_profile.name})
+
+        for user in ("Guest", no_profile.name):
+            with self.subTest(user):
+                frappe.set_user(user)
+                self.assertFalse(check_if_event_member(self.event.name))
+                self.assertFalse(check_if_chapter_or_event_core_member(self.event.name))
