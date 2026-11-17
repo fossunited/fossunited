@@ -121,10 +121,31 @@ doc_events = {
     "Newsletter": {
         "autoname": "fossunited.overrides.newsletter_extend.autoname",
     },
-    "FOSS Chapter": {"validate": "fossunited.fossunited.permissions.validate_child_rows"},
-    "FOSS Chapter Event": {"validate": "fossunited.fossunited.permissions.validate_child_rows"},
-    "FOSS Event RSVP": {"validate": "fossunited.fossunited.permissions.validate_child_rows"},
-    "FOSS Event CFP": {"validate": "fossunited.fossunited.permissions.validate_child_rows"},
+    "FOSS Chapter": {
+        "validate": "fossunited.fossunited.permissions.validate_child_rows",
+        "before_rename": "fossunited.fossunited.permissions.block_rename",
+    },
+    "FOSS Chapter Event": {
+        "validate": [
+            "fossunited.fossunited.permissions.validate_child_rows",
+            "fossunited.fossunited.permissions.validate_move",
+        ],
+        "before_rename": "fossunited.fossunited.permissions.block_rename",
+    },
+    "FOSS Event RSVP": {
+        "validate": [
+            "fossunited.fossunited.permissions.validate_child_rows",
+            "fossunited.fossunited.permissions.validate_move",
+        ],
+        "before_rename": "fossunited.fossunited.permissions.block_rename",
+    },
+    "FOSS Event CFP": {
+        "validate": [
+            "fossunited.fossunited.permissions.validate_child_rows",
+            "fossunited.fossunited.permissions.validate_move",
+        ],
+        "before_rename": "fossunited.fossunited.permissions.block_rename",
+    },
 }
 
 website_redirects = [

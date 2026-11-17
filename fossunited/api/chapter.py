@@ -24,8 +24,9 @@ def _profile(user: str) -> str | None:
 
 
 # is_chapter_member and is_event_member are not whitelisted, because the caller chooses `user`.
-# Clients use the check_if_* wrappers below. Both return False for a user without a profile:
-# a None filter would otherwise match team rows that have no member (IS NULL).
+# Server code calls them directly and clients use the check_if_* wrappers below, of which only
+# check_if_event_member is bound to the session user. Both return False for a user without a
+# profile: a None filter would otherwise match team rows that have no member (IS NULL).
 
 
 def is_chapter_member(chapter: str | None, user: str) -> bool:

@@ -2,7 +2,7 @@ import frappe
 from frappe import _
 
 from fossunited.api.chapter import is_chapter_member, is_event_member
-from fossunited.doctype_ids import EVENT
+from fossunited.doctype_ids import EVENT, EVENT_CFP, EVENT_RSVP
 
 # Permission types that change a record. Read-type checks are left to the role permissions,
 # so public pages, lists and dashboard reads are unaffected.
@@ -70,6 +70,28 @@ def _can_manage_event(event: str | None, user: str) -> bool:
     return is_chapter_member(chapter, user) or is_event_member(event, user)
 
 
+def _may_move_event(stored: str | None, new: str | None, user: str) -> bool:
+    """Moving an event to another chapter needs membership of both chapters."""
+    stored, new = stored or None, new or None
+    return new == stored or (
+        is_chapter_member(stored, user) and (new is None or is_chapter_member(new, user))
+    )
+
+
+def _may_move_form(stored: str | None, new: str | None, user: str) -> bool:
+    """Moving an RSVP or CFP form to another event needs access to both events."""
+    stored, new = stored or None, new or None
+    return new == stored or (_can_manage_event(stored, user) and _can_manage_event(new, user))
+
+
+# The field that places each record in a chapter or event, and the rule for changing it.
+MOVE_RULES = {
+    EVENT: ("chapter", _may_move_event),
+    EVENT_RSVP: ("event", _may_move_form),
+    EVENT_CFP: ("event", _may_move_form),
+}
+
+
 def _rows_belong_to(doc) -> bool:
     """False if the document carries existing child rows that are stored under another record.
 
@@ -87,25 +109,51 @@ def _rows_belong_to(doc) -> bool:
 
 
 def validate_child_rows(doc, method=None):
-    """validate hook (see hooks.py). Runs on every save, so a share cannot get past it the way
-    it can get past a has_permission hook."""
+    """validate hook (see hooks.py). Runs on every save, including saves of a document shared
+    with the user, which pass the has_permission hooks."""
     if not doc.is_new() and not _rows_belong_to(doc):
         frappe.throw(
             _("This record contains rows that belong to another record."), frappe.PermissionError
         )
 
 
-# has_permission hooks (see hooks.py). A falsy return removes the role permission (a document
-# explicitly shared with the user is still allowed by Frappe). Existing records are checked
-# against the chapter or event stored in the database, because the document passed in may
-# already carry the incoming values (frappe.client.set_value updates it before the check).
+def validate_move(doc, method=None):
+    """validate hook (see hooks.py). Checks a change of chapter or event on every save,
+    including saves of a document shared with the user, which pass the has_permission hooks."""
+    user = frappe.session.user
+    if doc.is_new() or _is_privileged(user):
+        return
+    field, may_move = MOVE_RULES[doc.doctype]
+    before = doc.get_doc_before_save()
+    stored = before.get(field) if before else frappe.db.get_value(doc.doctype, doc.name, field)
+    if not may_move(stored, doc.get(field), user):
+        frappe.throw(
+            _("You can only move this record between chapters or events you manage."),
+            frappe.PermissionError,
+        )
+
+
+def block_rename(doc, method=None, *args, **kwargs):
+    """before_rename hook (see hooks.py). Renaming and merging rewrite links without a save, and
+    leave fetched copies of the old name (such as a submission's event) in place, so only
+    System Managers may rename these records."""
+    if not _is_privileged(frappe.session.user):
+        frappe.throw(_("Only a System Manager can rename this record."), frappe.PermissionError)
+
+
+# has_permission hooks (see hooks.py) decide who may change a record. A falsy return removes
+# the role permission, but Frappe still allows a document explicitly shared with the user, so
+# what a save may change (moving the record, rows of other records) is checked in the validate
+# hooks above, and renames in block_rename. Existing records are checked against the chapter
+# or event stored in the database, because the document passed in may already carry the
+# incoming values (frappe.client.set_value updates it before the check).
 
 
 def chapter_has_permission(doc, ptype=None, user=None, debug=False) -> bool:
     user = user or frappe.session.user
     if ptype not in MANAGE_PTYPES or _is_new(doc, ptype) or _is_privileged(user):
         return True
-    return is_chapter_member(doc.name, user) and _rows_belong_to(doc)
+    return is_chapter_member(doc.name, user)
 
 
 def event_has_permission(doc, ptype=None, user=None, debug=False) -> bool:
@@ -115,18 +163,8 @@ def event_has_permission(doc, ptype=None, user=None, debug=False) -> bool:
     if _is_new(doc, ptype):
         return is_chapter_member(doc.get("chapter"), user)
 
-    stored_chapter = frappe.db.get_value(EVENT, doc.name, "chapter") or None
-    if not (is_chapter_member(stored_chapter, user) or is_event_member(doc.name, user)):
-        return False
-
-    new_chapter = doc.get("chapter") or None
-    # Moving an event to another chapter needs membership of both chapters.
-    if new_chapter != stored_chapter and not (
-        is_chapter_member(stored_chapter, user)
-        and (not new_chapter or is_chapter_member(new_chapter, user))
-    ):
-        return False
-    return _rows_belong_to(doc)
+    stored_chapter = frappe.db.get_value(EVENT, doc.name, "chapter")
+    return is_chapter_member(stored_chapter, user) or is_event_member(doc.name, user)
 
 
 def event_form_has_permission(doc, ptype=None, user=None, debug=False) -> bool:
@@ -134,13 +172,6 @@ def event_form_has_permission(doc, ptype=None, user=None, debug=False) -> bool:
     user = user or frappe.session.user
     if ptype not in MANAGE_PTYPES or _is_privileged(user):
         return True
-    new_event = doc.get("event")
     if _is_new(doc, ptype):
-        return _can_manage_event(new_event, user)
-
-    stored_event = frappe.db.get_value(doc.doctype, doc.name, "event")
-    if not _can_manage_event(stored_event, user):
-        return False
-    if new_event != stored_event and not _can_manage_event(new_event, user):
-        return False
-    return _rows_belong_to(doc)
+        return _can_manage_event(doc.get("event"), user)
+    return _can_manage_event(frappe.db.get_value(doc.doctype, doc.name, "event"), user)

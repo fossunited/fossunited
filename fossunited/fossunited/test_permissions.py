@@ -358,13 +358,16 @@ class TestChapterScopedWrites(FrappeTestCase):
                 CHAPTER, self.other_chapter.name, "x", "https://example.com/sm"
             )
             frappe.client.set_value(EVENT, self.other_event.name, "event_name", "Edited by admin")
+            frappe.client.set_value(EVENT, self.other_event.name, "chapter", self.chapter.name)
         finally:
             frappe.set_user("Administrator")
             frappe.get_doc("User", manager.name).remove_roles("System Manager")
 
-        self.assertEqual(
-            frappe.db.get_value(EVENT, self.other_event.name, "event_name"), "Edited by admin"
+        event = frappe.db.get_value(
+            EVENT, self.other_event.name, ["event_name", "chapter"], as_dict=True
         )
+        self.assertEqual(event.event_name, "Edited by admin")
+        self.assertEqual(event.chapter, self.chapter.name)
 
     def test_event_team_check_ignores_rows_without_a_member(self):
         # A team row with no member is stored with member NULL. A session without a profile
@@ -380,3 +383,102 @@ class TestChapterScopedWrites(FrappeTestCase):
                 frappe.set_user(user)
                 self.assertFalse(check_if_event_member(self.event.name))
                 self.assertFalse(check_if_chapter_or_event_core_member(self.event.name))
+
+    def unshare(self, doctype: str, name: str):
+        frappe.db.delete("DocShare", {"share_doctype": doctype, "share_name": name})
+
+    def test_write_share_cannot_move_event(self):
+        # A write share passes the permission check after the hook refuses it, so a move must
+        # also be refused on save. Only System Managers can share events.
+        cases = (
+            ("shared with ctm, into own chapter", self.other_event, self.chapter, 0),
+            ("shared with everyone, into own chapter", self.other_event, self.chapter, 1),
+            ("own event shared with ctm, into other chapter", self.event, self.other_chapter, 0),
+        )
+        for label, event, target, everyone in cases:
+            with self.subTest(label):
+                frappe.set_user("Administrator")
+                stored = frappe.db.get_value(EVENT, event.name, "chapter")
+                sharee = None if everyone else self.ctm.name
+                frappe.share.add(EVENT, event.name, sharee, write=1, everyone=everyone)
+
+                frappe.set_user(self.ctm.name)
+                frappe.client.set_value(EVENT, event.name, "event_name", f"Edited ({label})")
+                with self.assertRaises(frappe.PermissionError):
+                    frappe.client.set_value(EVENT, event.name, "chapter", target.name)
+
+                frappe.set_user("Administrator")
+                self.assertEqual(frappe.db.get_value(EVENT, event.name, "chapter"), stored)
+                self.unshare(EVENT, event.name)
+
+    def test_write_share_cannot_move_rsvp_or_cfp(self):
+        other_rsvp = FOSSEventRSVPFactory.create(event=self.other_event.name)
+        self.created.append((EVENT_RSVP, other_rsvp.name))
+
+        forms = (
+            (EVENT_CFP, self.other_cfp, "cfp_form_description"),
+            (EVENT_RSVP, other_rsvp, "rsvp_description"),
+        )
+        for doctype, form, text_field in forms:
+            with self.subTest(doctype):
+                frappe.set_user("Administrator")
+                frappe.share.add(doctype, form.name, self.ctm.name, write=1)
+
+                frappe.set_user(self.ctm.name)
+                frappe.client.set_value(doctype, form.name, text_field, "Edited by sharee")
+                with self.assertRaises(frappe.PermissionError):
+                    frappe.client.set_value(doctype, form.name, "event", self.event.name)
+
+                frappe.set_user("Administrator")
+                self.assertEqual(
+                    frappe.db.get_value(doctype, form.name, "event"), self.other_event.name
+                )
+                self.assertEqual(
+                    frappe.db.get_value(doctype, form.name, text_field), "Edited by sharee"
+                )
+
+    def test_member_of_both_chapters_can_move_event(self):
+        other_chapter = frappe.get_doc(CHAPTER, self.other_chapter.name)
+        other_chapter.append(
+            "chapter_members", {"chapter_member": self.ctm_profile, "role": "Volunteer"}
+        )
+        other_chapter.save()
+
+        frappe.set_user(self.ctm.name)
+        frappe.client.set_value(EVENT, self.event.name, "chapter", self.other_chapter.name)
+
+        frappe.set_user("Administrator")
+        self.assertEqual(
+            frappe.db.get_value(EVENT, self.event.name, "chapter"), self.other_chapter.name
+        )
+
+    def test_only_system_managers_can_rename(self):
+        # Renaming and merging rewrite links without a save, so the validate hooks never run,
+        # and fetched copies of the old name are left behind.
+        frappe.share.add(EVENT, self.other_event.name, self.ctm.name, write=1)
+        attempts = {
+            "merge own event into a shared event": lambda: frappe.rename_doc(
+                EVENT, self.event.name, self.other_event.name, merge=True
+            ),
+            "rename a shared event": lambda: frappe.rename_doc(
+                EVENT, self.other_event.name, frappe.generate_hash(length=10)
+            ),
+            "rename own event": lambda: frappe.rename_doc(
+                EVENT, self.event.name, frappe.generate_hash(length=10)
+            ),
+        }
+
+        frappe.set_user(self.ctm.name)
+        for label, attempt in attempts.items():
+            with self.subTest(label), self.assertRaises(frappe.PermissionError):
+                attempt()
+
+        frappe.set_user("Administrator")
+        self.assertTrue(frappe.db.exists(EVENT, self.event.name))
+        self.assertTrue(frappe.db.exists(EVENT, self.other_event.name))
+        self.assertEqual(frappe.db.get_value(EVENT_CFP, self.cfp.name, "event"), self.event.name)
+
+        spare = FOSSChapterEventFactory.create(chapter=self.chapter.name)
+        renamed = frappe.rename_doc(EVENT, spare.name, frappe.generate_hash(length=10))
+        self.created.append((EVENT, renamed))
+        self.assertTrue(frappe.db.exists(EVENT, renamed))
