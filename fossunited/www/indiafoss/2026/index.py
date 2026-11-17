@@ -3,7 +3,7 @@ import json
 
 import frappe
 
-from fossunited.doctype_ids import EVENT, EVENT_CFP
+from fossunited.doctype_ids import EVENT, EVENT_CFP, FOSS_UNITED_TEAM
 from fossunited.fossunited.event_media import get_indiafoss_years
 from fossunited.fossunited.user_utils import fetch_user_profiles
 from fossunited.fossunited.utils import get_event_sponsors
@@ -78,6 +78,22 @@ def get_context(context):
         )
     context.devroom_managers = devroom_managers
 
+    # Staff hardcoded via json event_data.staff
+    staff_profile_ids = event_data.get("staff", [])
+    context.staff = fetch_user_profiles(staff_profile_ids, "FOSS United Staff")
+
+    # Bio text -> designation from FOSS United Team, where set, overriding the
+    # generic fallback above.
+    designations = frappe.get_all(
+        FOSS_UNITED_TEAM,
+        filters={"foss_user_profile": ("in", staff_profile_ids)},
+        fields=["foss_user_profile", "designation"],
+    )
+    designation_map = {d.foss_user_profile: d.designation for d in designations if d.designation}
+    for profile_id, staff in zip(staff_profile_ids, context.staff, strict=True):
+        if profile_id in designation_map:
+            staff["bio"] = designation_map[profile_id]
+
     context.volunteers = [
         {
             "full_name": v["full_name"],
@@ -85,7 +101,7 @@ def get_context(context):
             "bio": v["role"],
             "route": f"/{v['route']}" if v.get("route") else "#",
         }
-        for v in event.get_volunteers()
+        for v in event.get_volunteers(exclude=staff_profile_ids)
     ]
 
     # Timeline + progress bar - merge manual items with auto CFP items
@@ -168,6 +184,7 @@ def _empty_context(context):
                 "other_sponsors",
                 "partners",
                 "co_chairs",
+                "staff",
                 "reviewers",
                 "devroom_managers",
                 "volunteers",

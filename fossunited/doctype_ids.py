@@ -25,6 +25,7 @@ CONFERENCE = "Conference"
 VIRTUAL = "Virtual"
 CHAPTER_MEMBER = "FOSS Chapter Lead Team Member"
 CORE_TEAM = "Core Team Member"
+FOSS_UNITED_TEAM = "FOSS United Team"
 
 # Event-related identifiers
 EVENT_VOLUNTEER = "FOSS Chapter Event Member"
