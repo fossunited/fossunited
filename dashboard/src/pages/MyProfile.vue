@@ -438,7 +438,11 @@ const toggleProfilePrivacy = async (value) => {
     toast.info(value ? 'Profile is now private' : 'Profile is now public')
   } catch (err) {
     profileDoc.value.doc.is_private = previous
-    await profileDoc.value.get.submit()
+    try {
+      await profileDoc.value.get.submit()
+    } catch (refreshError) {
+      console.error('Failed to refresh profile after privacy update error', refreshError)
+    }
     toast.error('Failed to update privacy setting')
     console.error(err)
   } finally {
@@ -461,7 +465,11 @@ const toggleShowActivity = async (value) => {
     )
   } catch (err) {
     profileDoc.value.doc.show_activity = previous
-    await profileDoc.value.get.submit()
+    try {
+      await profileDoc.value.get.submit()
+    } catch (refreshError) {
+      console.error('Failed to refresh profile after activity update error', refreshError)
+    }
     toast.error('Failed to update activity setting')
     console.error(err)
   } finally {
