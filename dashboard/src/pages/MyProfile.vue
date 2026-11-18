@@ -192,6 +192,16 @@
             <FormControl v-model="profileDoc.doc.mastodon" type="url" label="Mastodon" @blur="profileDoc.doc.mastodon = ensureHttpsPrefix(profileDoc.doc.mastodon)" />
             <FormControl v-model="profileDoc.doc.bluesky" type="url" label="Bluesky" @blur="profileDoc.doc.bluesky = ensureHttpsPrefix(profileDoc.doc.bluesky)" />
             <ErrorMessage class="col-span-2" :message="updateErrors" />
+            <div v-if="toggleRefreshError" class="col-span-2 flex items-center justify-between gap-3 text-sm text-ink-amber-6">
+              <span>{{ toggleRefreshError }}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                label="Retry refresh"
+                :loading="toggleRefreshUpdating"
+                @click="retryToggleRefresh"
+              />
+            </div>
             <div class="hidden md:block"></div>
             <div class="flex justify-end">
               <Button
@@ -426,6 +436,45 @@ const setProfileImage = (_file) => {
 
 const privacyUpdating = ref(false)
 const activityUpdating = ref(false)
+const toggleRefreshError = ref('')
+const toggleRefreshUpdating = ref(false)
+const pendingToggleRefresh = ref(null)
+
+// Refresh the persisted value without losing other unsaved profile edits.
+// Keep the original document reference because frappe-ui may clear doc when GET fails.
+const reconcileToggleAfterFailure = async (field, previousValue) => {
+  const currentDoc = profileDoc.value?.doc
+  if (!currentDoc) return false
+
+  try {
+    await profileDoc.value.get.submit()
+    const persistedValue = profileDoc.value?.doc?.[field]
+    profileDoc.value.doc = currentDoc
+    currentDoc[field] = persistedValue
+    pendingToggleRefresh.value = null
+    toggleRefreshError.value = ''
+    return true
+  } catch (refreshError) {
+    profileDoc.value.doc = currentDoc
+    currentDoc[field] = previousValue
+    pendingToggleRefresh.value = { field, previousValue }
+    toggleRefreshError.value = 'Could not verify this setting. Your other profile edits are preserved. Retry to check the saved value.'
+    console.error('Failed to refresh profile after toggle update error', refreshError)
+    return false
+  }
+}
+
+const retryToggleRefresh = async () => {
+  const pending = pendingToggleRefresh.value
+  if (!pending || toggleRefreshUpdating.value) return
+
+  toggleRefreshUpdating.value = true
+  try {
+    await reconcileToggleAfterFailure(pending.field, pending.previousValue)
+  } finally {
+    toggleRefreshUpdating.value = false
+  }
+}
 
 const toggleProfilePrivacy = async (value) => {
   if (!profileDoc.value?.doc || privacyUpdating.value) return
@@ -438,11 +487,7 @@ const toggleProfilePrivacy = async (value) => {
     toast.info(value ? 'Profile is now private' : 'Profile is now public')
   } catch (err) {
     profileDoc.value.doc.is_private = previous
-    try {
-      await profileDoc.value.get.submit()
-    } catch (refreshError) {
-      console.error('Failed to refresh profile after privacy update error', refreshError)
-    }
+    await reconcileToggleAfterFailure('is_private', previous)
     toast.error('Failed to update privacy setting')
     console.error(err)
   } finally {
@@ -465,11 +510,7 @@ const toggleShowActivity = async (value) => {
     )
   } catch (err) {
     profileDoc.value.doc.show_activity = previous
-    try {
-      await profileDoc.value.get.submit()
-    } catch (refreshError) {
-      console.error('Failed to refresh profile after activity update error', refreshError)
-    }
+    await reconcileToggleAfterFailure('show_activity', previous)
     toast.error('Failed to update activity setting')
     console.error(err)
   } finally {
