@@ -78,7 +78,8 @@
           </div>
           <div class="flex flex-col md:grid md:grid-cols-2 gap-4 my-2 p-6">
             <Switch
-              v-model="profileDoc.doc.is_private"
+              :model-value="!!profileDoc.doc.is_private"
+              :disabled="privacyUpdating"
               size="sm"
               label="Make Profile Private"
               description="Enabling this will make your profile unavailable to others. You will still be able to do the tasks that require profile creation."
@@ -87,7 +88,8 @@
               @update:model-value="toggleProfilePrivacy"
             />
             <Switch
-              v-model="profileDoc.doc.show_activity"
+              :model-value="!!profileDoc.doc.show_activity"
+              :disabled="activityUpdating"
               size="sm"
               label="Show Community Activity"
               description="Enabling this will allow others to view which FOSS United events you have attended till date."
@@ -422,22 +424,36 @@ const setProfileImage = (_file) => {
   })
 }
 
+const privacyUpdating = ref(false)
+const activityUpdating = ref(false)
+
 const toggleProfilePrivacy = async (value) => {
-  const previous = !value
+  if (!profileDoc.value?.doc || privacyUpdating.value) return
+
+  const previous = profileDoc.value.doc.is_private
+  privacyUpdating.value = true
   try {
     await profileDoc.value.setValue.submit({ is_private: value })
+    profileDoc.value.doc.is_private = value
     toast.info(value ? 'Profile is now private' : 'Profile is now public')
   } catch (err) {
     profileDoc.value.doc.is_private = previous
+    await profileDoc.value.get.submit()
     toast.error('Failed to update privacy setting')
     console.error(err)
+  } finally {
+    privacyUpdating.value = false
   }
 }
 
 const toggleShowActivity = async (value) => {
-  const previous = !value
+  if (!profileDoc.value?.doc || activityUpdating.value) return
+
+  const previous = profileDoc.value.doc.show_activity
+  activityUpdating.value = true
   try {
     await profileDoc.value.setValue.submit({ show_activity: value })
+    profileDoc.value.doc.show_activity = value
     toast.info(
       value
         ? 'Community Activity will be shown on your profile page now'
@@ -445,8 +461,11 @@ const toggleShowActivity = async (value) => {
     )
   } catch (err) {
     profileDoc.value.doc.show_activity = previous
+    await profileDoc.value.get.submit()
     toast.error('Failed to update activity setting')
     console.error(err)
+  } finally {
+    activityUpdating.value = false
   }
 }
 
