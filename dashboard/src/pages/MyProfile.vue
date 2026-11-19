@@ -79,7 +79,7 @@
           <div class="flex flex-col md:grid md:grid-cols-2 gap-4 my-2 p-6">
             <Switch
               :model-value="!!profileDoc.doc.is_private"
-              :disabled="privacyUpdating"
+              :disabled="privacyUpdating || toggleRefreshUpdating"
               size="sm"
               label="Make Profile Private"
               description="Enabling this will make your profile unavailable to others. You will still be able to do the tasks that require profile creation."
@@ -89,7 +89,7 @@
             />
             <Switch
               :model-value="!!profileDoc.doc.show_activity"
-              :disabled="activityUpdating"
+              :disabled="activityUpdating || toggleRefreshUpdating"
               size="sm"
               label="Show Community Activity"
               description="Enabling this will allow others to view which FOSS United events you have attended till date."
@@ -438,46 +438,58 @@ const privacyUpdating = ref(false)
 const activityUpdating = ref(false)
 const toggleRefreshError = ref('')
 const toggleRefreshUpdating = ref(false)
-const pendingToggleRefresh = ref(null)
+const pendingToggleRefresh = ref({})
 
-// Refresh the persisted value without losing other unsaved profile edits.
-// Keep the original document reference because frappe-ui may clear doc when GET fails.
-const reconcileToggleAfterFailure = async (field, previousValue) => {
+// Refresh persisted values without replacing the shared edit buffer.
+// A successful GET verifies every pending toggle; a failed GET must preserve
+// both the user's edits and frappe-ui's save baseline.
+const reconcilePendingToggles = async () => {
   const currentDoc = profileDoc.value?.doc
   if (!currentDoc) return false
 
+  const baselineDoc = profileDoc.value.originalDoc
+
   try {
     await profileDoc.value.get.submit()
-    const persistedValue = profileDoc.value?.doc?.[field]
+    const persistedDoc = profileDoc.value?.doc
+    if (!persistedDoc) throw new Error('Profile refresh returned no document')
+
+    for (const field of Object.keys(pendingToggleRefresh.value)) {
+      currentDoc[field] = persistedDoc[field]
+    }
+
     profileDoc.value.doc = currentDoc
-    currentDoc[field] = persistedValue
-    pendingToggleRefresh.value = null
+    pendingToggleRefresh.value = {}
     toggleRefreshError.value = ''
     return true
   } catch (refreshError) {
     profileDoc.value.doc = currentDoc
-    currentDoc[field] = previousValue
-    pendingToggleRefresh.value = { field, previousValue }
-    toggleRefreshError.value = 'Could not verify this setting. Your other profile edits are preserved. Retry to check the saved value.'
+    profileDoc.value.originalDoc = baselineDoc
+    toggleRefreshError.value = 'Could not verify one or more settings. Your other profile edits are preserved. Retry to check the saved values.'
     console.error('Failed to refresh profile after toggle update error', refreshError)
     return false
   }
 }
 
+const reconcileToggleAfterFailure = async (field, previousValue) => {
+  pendingToggleRefresh.value[field] = previousValue
+  profileDoc.value.doc[field] = previousValue
+  return reconcilePendingToggles()
+}
+
 const retryToggleRefresh = async () => {
-  const pending = pendingToggleRefresh.value
-  if (!pending || toggleRefreshUpdating.value) return
+  if (!Object.keys(pendingToggleRefresh.value).length || toggleRefreshUpdating.value) return
 
   toggleRefreshUpdating.value = true
   try {
-    await reconcileToggleAfterFailure(pending.field, pending.previousValue)
+    await reconcilePendingToggles()
   } finally {
     toggleRefreshUpdating.value = false
   }
 }
 
 const toggleProfilePrivacy = async (value) => {
-  if (!profileDoc.value?.doc || privacyUpdating.value) return
+  if (!profileDoc.value?.doc || privacyUpdating.value || toggleRefreshUpdating.value) return
 
   const previous = profileDoc.value.doc.is_private
   privacyUpdating.value = true
@@ -496,7 +508,7 @@ const toggleProfilePrivacy = async (value) => {
 }
 
 const toggleShowActivity = async (value) => {
-  if (!profileDoc.value?.doc || activityUpdating.value) return
+  if (!profileDoc.value?.doc || activityUpdating.value || toggleRefreshUpdating.value) return
 
   const previous = profileDoc.value.doc.show_activity
   activityUpdating.value = true
