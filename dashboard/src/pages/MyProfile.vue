@@ -78,7 +78,8 @@
           </div>
           <div class="flex flex-col md:grid md:grid-cols-2 gap-4 my-2 p-6">
             <Switch
-              v-model="profileDoc.doc.is_private"
+              :model-value="!!profileDoc.doc.is_private"
+              :disabled="privacyUpdating || toggleRefreshUpdating"
               size="sm"
               label="Make Profile Private"
               description="Enabling this will make your profile unavailable to others. You will still be able to do the tasks that require profile creation."
@@ -87,7 +88,8 @@
               @update:model-value="toggleProfilePrivacy"
             />
             <Switch
-              v-model="profileDoc.doc.show_activity"
+              :model-value="!!profileDoc.doc.show_activity"
+              :disabled="activityUpdating || toggleRefreshUpdating"
               size="sm"
               label="Show Community Activity"
               description="Enabling this will allow others to view which FOSS United events you have attended till date."
@@ -190,6 +192,16 @@
             <FormControl v-model="profileDoc.doc.mastodon" type="url" label="Mastodon" @blur="profileDoc.doc.mastodon = ensureHttpsPrefix(profileDoc.doc.mastodon)" />
             <FormControl v-model="profileDoc.doc.bluesky" type="url" label="Bluesky" @blur="profileDoc.doc.bluesky = ensureHttpsPrefix(profileDoc.doc.bluesky)" />
             <ErrorMessage class="col-span-2" :message="updateErrors" />
+            <div v-if="toggleRefreshError" class="col-span-2 flex items-center justify-between gap-3 text-sm text-ink-amber-6">
+              <span>{{ toggleRefreshError }}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                label="Retry refresh"
+                :loading="toggleRefreshUpdating"
+                @click="retryToggleRefresh"
+              />
+            </div>
             <div class="hidden md:block"></div>
             <div class="flex justify-end">
               <Button
@@ -422,22 +434,87 @@ const setProfileImage = (_file) => {
   })
 }
 
+const privacyUpdating = ref(false)
+const activityUpdating = ref(false)
+const toggleRefreshError = ref('')
+const toggleRefreshUpdating = ref(false)
+const pendingToggleRefresh = ref({})
+
+// Refresh persisted values without replacing the shared edit buffer.
+// A successful GET verifies every pending toggle; a failed GET must preserve
+// both the user's edits and frappe-ui's save baseline.
+const reconcilePendingToggles = async () => {
+  const currentDoc = profileDoc.value?.doc
+  if (!currentDoc) return false
+
+  const baselineDoc = profileDoc.value.originalDoc
+
+  try {
+    await profileDoc.value.get.submit()
+    const persistedDoc = profileDoc.value?.doc
+    if (!persistedDoc) throw new Error('Profile refresh returned no document')
+
+    for (const field of Object.keys(pendingToggleRefresh.value)) {
+      currentDoc[field] = persistedDoc[field]
+    }
+
+    profileDoc.value.doc = currentDoc
+    pendingToggleRefresh.value = {}
+    toggleRefreshError.value = ''
+    return true
+  } catch (refreshError) {
+    profileDoc.value.doc = currentDoc
+    profileDoc.value.originalDoc = baselineDoc
+    toggleRefreshError.value = 'Could not verify one or more settings. Your other profile edits are preserved. Retry to check the saved values.'
+    console.error('Failed to refresh profile after toggle update error', refreshError)
+    return false
+  }
+}
+
+const reconcileToggleAfterFailure = async (field, previousValue) => {
+  pendingToggleRefresh.value[field] = previousValue
+  profileDoc.value.doc[field] = previousValue
+  return reconcilePendingToggles()
+}
+
+const retryToggleRefresh = async () => {
+  if (!Object.keys(pendingToggleRefresh.value).length || toggleRefreshUpdating.value) return
+
+  toggleRefreshUpdating.value = true
+  try {
+    await reconcilePendingToggles()
+  } finally {
+    toggleRefreshUpdating.value = false
+  }
+}
+
 const toggleProfilePrivacy = async (value) => {
-  const previous = !value
+  if (!profileDoc.value?.doc || privacyUpdating.value || toggleRefreshUpdating.value) return
+
+  const previous = profileDoc.value.doc.is_private
+  privacyUpdating.value = true
   try {
     await profileDoc.value.setValue.submit({ is_private: value })
+    profileDoc.value.doc.is_private = value
     toast.info(value ? 'Profile is now private' : 'Profile is now public')
   } catch (err) {
     profileDoc.value.doc.is_private = previous
+    await reconcileToggleAfterFailure('is_private', previous)
     toast.error('Failed to update privacy setting')
     console.error(err)
+  } finally {
+    privacyUpdating.value = false
   }
 }
 
 const toggleShowActivity = async (value) => {
-  const previous = !value
+  if (!profileDoc.value?.doc || activityUpdating.value || toggleRefreshUpdating.value) return
+
+  const previous = profileDoc.value.doc.show_activity
+  activityUpdating.value = true
   try {
     await profileDoc.value.setValue.submit({ show_activity: value })
+    profileDoc.value.doc.show_activity = value
     toast.info(
       value
         ? 'Community Activity will be shown on your profile page now'
@@ -445,8 +522,11 @@ const toggleShowActivity = async (value) => {
     )
   } catch (err) {
     profileDoc.value.doc.show_activity = previous
+    await reconcileToggleAfterFailure('show_activity', previous)
     toast.error('Failed to update activity setting')
     console.error(err)
+  } finally {
+    activityUpdating.value = false
   }
 }
 
