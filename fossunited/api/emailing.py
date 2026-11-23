@@ -276,6 +276,7 @@ def create_newsletter_campaign(
         }
 
     recipient_groups = get_formatted_email_group(data.get("email_group"))
+    _check_email_groups_belong(recipient_groups, _chapter, _reference_document, document_type)
     attachments = get_formatted_attachment_list(data.get("attachments"))
 
     newsletter_doc = frappe.get_doc(
@@ -436,6 +437,34 @@ def get_campaign_detail(id: str) -> dict:
     return campaign
 
 
+def _chapter_email_group_names(
+    chapter: str | None, reference_document: str | None, document_type: str
+) -> set[str]:
+    """The email groups that actually belong to this chapter/reference, per the DB."""
+    return set(
+        frappe.db.get_all(
+            EMAIL_GROUP,
+            {
+                "chapter": chapter,
+                "reference_document": reference_document,
+                "document_type": document_type,
+            },
+            pluck="name",
+        )
+    )
+
+
+def _check_email_groups_belong(
+    groups: list, chapter: str | None, reference_document: str | None, document_type: str
+):
+    """Deny if any requested group isn't one of this chapter/reference's own groups."""
+    requested = {g.get("email_group") for g in groups if g.get("email_group")}
+    if requested - _chapter_email_group_names(chapter, reference_document, document_type):
+        frappe.throw(
+            _("One or more email groups do not belong to this chapter"), frappe.PermissionError
+        )
+
+
 @frappe.whitelist()
 def get_email_groups(
     reference_document: str | None = None,
@@ -453,6 +482,10 @@ def get_email_groups(
     Returns:
         list : of all the emails groups
     """
+    if not chapter or not check_if_chapter_member(chapter, frappe.session.user):
+        frappe.throw(
+            _("You are not authorized to view this chapter's email groups"), frappe.PermissionError
+        )
 
     email_groups = frappe.db.get_all(
         EMAIL_GROUP,
@@ -478,14 +511,15 @@ def update_campaign(campaign_id: str, data: dict):
         data: updated data
     """
 
+    # sender_name/sender_email are intentionally not editable here: they are set once from
+    # the chapter's own verified identity in create_newsletter_campaign, and letting a caller
+    # overwrite them lets a campaign appear to come from any address, including FOSS United's own.
     ALLOWED_FIELDS = {
         "subject",
         "content_type",
         "message",
         "message_md",
         "message_html",
-        "sender_name",
-        "sender_email",
         "schedule_sending",
         "schedule_send",
         "attachments",
@@ -500,7 +534,14 @@ def update_campaign(campaign_id: str, data: dict):
         if key == "attachments":
             campaign.set(key, get_formatted_attachment_list(val))
         elif key == "email_group":
-            campaign.set(key, get_formatted_email_group(val))
+            recipient_groups = get_formatted_email_group(val)
+            _check_email_groups_belong(
+                recipient_groups,
+                campaign.chapter,
+                campaign.reference_document,
+                campaign.document_type,
+            )
+            campaign.set(key, recipient_groups)
         elif getattr(campaign, key) != val:
             campaign.set(key, val)
 

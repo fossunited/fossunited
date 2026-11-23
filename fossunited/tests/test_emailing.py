@@ -6,9 +6,11 @@ from fossunited.api.emailing import (
     add_to_email_group,
     create_email_group,
     create_newsletter_campaign,
+    get_email_groups,
     remove_from_email_group,
     send_campaign,
     send_test_email,
+    update_campaign,
 )
 from fossunited.doctype_ids import EMAIL_GROUP
 from fossunited.tests.factories.foss_chapter_event_factory import (
@@ -141,3 +143,100 @@ class TestEmailing(FrappeTestCase):
     def test_add_to_nonexistent_email_group_raises(self):
         with self.assertRaises(frappe.DoesNotExistError):
             add_to_email_group("non-existent-group", fake.email())
+
+    def _create_foreign_email_group(self):
+        """An email group belonging to a different chapter/event than self.chapter/self.event."""
+        other_user = UserFactory.create("with_foss_website_user_role")
+        other_chapter = FOSSChapterFactory.create("with_members", members=[other_user.name])
+        other_event = FOSSChapterEventFactory.create(chapter=other_chapter.name)
+        with self.set_user(other_user.name):
+            return create_email_group(
+                type="Event Participants",
+                reference_document=other_event.name,
+                document_type=other_event.doctype,
+            )
+
+    def test_get_email_groups_requires_chapter_membership(self):
+        outsider = UserFactory.create("with_foss_website_user_role")
+        with self.set_user(outsider.name):
+            with self.assertRaises(frappe.PermissionError):
+                get_email_groups(
+                    reference_document=self.event.name,
+                    document_type=self.event.doctype,
+                    chapter=self.chapter.name,
+                )
+
+    def test_get_email_groups_requires_chapter_param(self):
+        with self.set_user(self.core_team_user.name):
+            with self.assertRaises(frappe.PermissionError):
+                get_email_groups(
+                    reference_document=self.event.name, document_type=self.event.doctype
+                )
+
+    def test_get_email_groups_returns_for_chapter_member(self):
+        with self.set_user(self.core_team_user.name):
+            groups = get_email_groups(
+                reference_document=self.event.name,
+                document_type=self.event.doctype,
+                chapter=self.chapter.name,
+            )
+
+        self.assertTrue(any(g.name for g in groups))
+
+    def test_create_newsletter_campaign_rejects_foreign_email_group(self):
+        foreign_group = self._create_foreign_email_group()
+        newsletter_data = {
+            "subject": fake.sentence(),
+            "content_type": "Rich Text",
+            "message": fake.paragraph(),
+            "email_group": [
+                {"label": foreign_group.group_type, "value": foreign_group.name, "description": ""}
+            ],
+            "attachments": [],
+        }
+
+        with self.set_user(self.core_team_user.name):
+            with self.assertRaises(frappe.PermissionError):
+                create_newsletter_campaign(
+                    data=newsletter_data,
+                    reference_document=self.event.name,
+                    document_type=self.event.doctype,
+                    chapter=self.chapter.name,
+                )
+
+    def test_update_campaign_rejects_foreign_email_group(self):
+        foreign_group = self._create_foreign_email_group()
+
+        with self.set_user(self.core_team_user.name):
+            with self.assertRaises(frappe.PermissionError):
+                update_campaign(
+                    campaign_id=self.newsletter.name,
+                    data={
+                        "email_group": [
+                            {
+                                "label": foreign_group.group_type,
+                                "value": foreign_group.name,
+                                "description": "",
+                            }
+                        ]
+                    },
+                )
+
+    def test_update_campaign_ignores_sender_fields(self):
+        original_sender_name = self.newsletter.sender_name
+        original_sender_email = self.newsletter.sender_email
+
+        with self.set_user(self.core_team_user.name):
+            update_campaign(
+                campaign_id=self.newsletter.name,
+                data={
+                    "sender_name": "Spoofed Sender",
+                    "sender_email": "spoofed@example.com",
+                    "subject": "Updated subject",
+                },
+            )
+
+        self.newsletter.reload()
+        self.assertEqual(self.newsletter.sender_name, original_sender_name)
+        self.assertEqual(self.newsletter.sender_email, original_sender_email)
+        self.assertEqual(self.newsletter.subject, "Updated subject")
