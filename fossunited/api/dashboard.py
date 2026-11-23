@@ -21,20 +21,15 @@ from fossunited.utils.payments import (
 )
 
 
-def _resolve_event_id(name: str, by_route: bool, by_permalink: bool) -> str | None:
+# nosemgrep: guest-whitelisted-method
+@frappe.whitelist(allow_guest=True)
+def get_event(name: str, by_route: bool = False) -> dict:
     if by_route:
         if not name.startswith("c/"):
             name = f"c/{name}"
-        return frappe.db.get_value(EVENT, {"route": name}, "name")
-    if by_permalink:
-        return frappe.db.get_value(EVENT, {"event_permalink": name}, "name")
-    return name
-
-
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
-def get_event(name: str, by_route: bool = False, by_permalink: bool = False) -> dict:
-    event_id = _resolve_event_id(name, by_route, by_permalink)
+        event_id = frappe.db.get_value(EVENT, {"route": name}, "name")
+    else:
+        event_id = name
     if not event_id:
         return {}
 
@@ -72,8 +67,10 @@ def get_event(name: str, by_route: bool = False, by_permalink: bool = False) -> 
 
     capped_tiers = [tier for tier in data.get("tiers", []) if tier.get("maximum_tickets")]
     if capped_tiers:
+        # casefold the key: tickets sold under an old tier title that only differs in case
+        # (DB collation treated them as equal) must still count towards the renamed tier.
         sold_counts = {
-            row.tier: row.count
+            (row.tier or "").casefold(): row.count
             for row in frappe.get_all(
                 EVENT_TICKET,
                 filters={"event": event_id},
@@ -82,7 +79,7 @@ def get_event(name: str, by_route: bool = False, by_permalink: bool = False) -> 
             )
         }
         for tier in capped_tiers:
-            tier["sold_count"] = sold_counts.get(tier.get("title"), 0)
+            tier["sold_count"] = sold_counts.get((tier.get("title") or "").casefold(), 0)
 
     return data
 

@@ -12,7 +12,7 @@ from fossunited.api.emailing import (
     send_test_email,
     update_campaign,
 )
-from fossunited.doctype_ids import EMAIL_GROUP
+from fossunited.doctype_ids import CAMPAIGN, CHAPTER, EMAIL_GROUP
 from fossunited.tests.factories.foss_chapter_event_factory import (
     FOSSChapterEventFactory,
 )
@@ -221,6 +221,41 @@ class TestEmailing(FrappeTestCase):
                         ]
                     },
                 )
+
+    def test_create_newsletter_campaign_accepts_chapter_own_group(self):
+        """A chapter-only campaign (no reference_document) must still accept the
+        chapter's own email group, created with reference_document=chapter.name,
+        document_type=CHAPTER."""
+        chapter_group = frappe.get_doc(
+            EMAIL_GROUP,
+            {
+                "reference_document": self.chapter.name,
+                "document_type": CHAPTER,
+                "group_type": "Chapter Event Participants",
+            },
+        )
+        newsletter_data = {
+            "subject": fake.sentence(),
+            "content_type": "Rich Text",
+            "message": fake.paragraph(),
+            "email_group": [
+                {
+                    "label": chapter_group.group_type,
+                    "value": chapter_group.name,
+                    "description": "",
+                }
+            ],
+            "attachments": [],
+        }
+
+        with self.set_user(self.core_team_user.name):
+            newsletter = create_newsletter_campaign(
+                data=newsletter_data,
+                document_type=CHAPTER,
+                chapter=self.chapter.name,
+            )
+
+        self.assertTrue(frappe.db.exists(CAMPAIGN, newsletter.name))
 
     def test_update_campaign_ignores_sender_fields(self):
         original_sender_name = self.newsletter.sender_name
