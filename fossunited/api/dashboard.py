@@ -49,8 +49,12 @@ def get_event(name: str, by_route: bool = False, by_permalink: bool = False) -> 
         frappe.throw(_("Event not found"), frappe.DoesNotExistError)
 
     # Drop anything above permlevel 0 (e.g. event_data) the caller has no role for.
+    # as_dict() emits restricted fields as `key: None` even after delattr, so pop them too.
     doc.apply_fieldlevel_read_permissions()
     data = doc.as_dict()
+    for df in doc.meta.fields:
+        if df.permlevel and not hasattr(doc, df.fieldname):
+            data.pop(df.fieldname, None)
 
     internal_fields = ("_comments", "_assign", "_liked_by", "owner", "modified_by")
     data.pop("event_members", None)
