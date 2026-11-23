@@ -1201,10 +1201,10 @@ prettier-plugin-jinja-template@^2.2.0:
   resolved "https://registry.yarnpkg.com/prettier-plugin-jinja-template/-/prettier-plugin-jinja-template-2.2.0.tgz#66329b3fb93a34241b63673bc14d17ec1979b368"
   integrity sha512-FVZtWvSW8RKvHToWHgI9j1eau7t2mekYoVKg7GdDS16QVOYM8f08yzVptBUvSXKQR2xJAXCLi0rGGvJGFtCUrA==
 
-prettier@^3.9.3:
-  version "3.9.3"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.9.3.tgz#4caabe6fb955e8b8f13319f25872522ece519534"
-  integrity sha512-HWmu+K+zvHNpaMfSnYeqdqrDbR16cuIXaPx8WoHaviQkDJh1/0BNtOZmHVQI5jc3wXv0H1yXc9wjvFdXh+n3hQ==
+prettier@^3.10.1:
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.10.1.tgz#00b1c1872f9650ec22093d5bdafdca0fe6760f77"
+  integrity sha512-70vp3ZUYoPlFbF9uiTdXHUUCGEIp7d4+6p+8DYbkm2jP7x/3i/paXVF6dopSI3zd/CEitrZN1rc4i85xWmmXlg==
 
 punycode@^2.1.0:
   version "2.3.1"
