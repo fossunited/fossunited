@@ -19,25 +19,22 @@ from fossunited.doctype_ids import (
 )
 
 
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
-def check_if_chapter_member(chapter: str, user: str) -> bool:
-    """
-    Check if the user is a member of the chapter.
+def _profile(user: str) -> str | None:
+    return frappe.db.get_value(USER_PROFILE, {"user": user}, "name")
 
-    Args:
-        chapter (str): Chapter id
-        user (str): User email. Default is current user.
 
-    Returns:
-        bool: True if the user is a member of the chapter, False otherwise.
-    """
-    profile = frappe.db.get_value(USER_PROFILE, {"user": user}, ["name"])
+# is_chapter_member and is_event_member are not whitelisted, because the caller chooses `user`.
+# Server code calls them directly and clients use the check_if_* wrappers below, of which only
+# check_if_event_member is bound to the session user. Both return False for a user without a
+# profile: a None filter would otherwise match team rows that have no member (IS NULL).
 
+
+def is_chapter_member(chapter: str | None, user: str) -> bool:
+    """True if `user` is on the team list of `chapter`."""
+    profile = _profile(user) if chapter else None
     if not profile:
         return False
-
-    is_member = bool(
+    return bool(
         frappe.db.exists(
             CHAPTER_MEMBER,
             {
@@ -49,25 +46,13 @@ def check_if_chapter_member(chapter: str, user: str) -> bool:
         )
     )
 
-    return is_member
 
-
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
-def check_if_event_member(event: str) -> bool:
-    """
-    Check if the user is an event lead
-
-    Args:
-        event (str): Event id
-        user (str): User email. Default is current user.
-
-    Returns:
-        bool: True if the user is a member of the chapter, False otherwise.
-    """
-    profile = frappe.db.get_value(USER_PROFILE, {"user": frappe.session.user}, ["name"])
-
-    is_volunteer = bool(
+def is_event_member(event: str | None, user: str) -> bool:
+    """True if `user` is on the team of `event`."""
+    profile = _profile(user) if event else None
+    if not profile:
+        return False
+    return bool(
         frappe.db.exists(
             EVENT_VOLUNTEER,
             {
@@ -79,7 +64,36 @@ def check_if_event_member(event: str) -> bool:
         )
     )
 
-    return is_volunteer
+
+# nosemgrep: guest-whitelisted-method
+@frappe.whitelist(allow_guest=True)
+def check_if_chapter_member(chapter: str, user: str) -> bool:
+    """
+    Check if the user is a member of the chapter.
+
+    Args:
+        chapter (str): Chapter id
+        user (str): User email.
+
+    Returns:
+        bool: True if the user is a member of the chapter, False otherwise.
+    """
+    return is_chapter_member(chapter, user)
+
+
+# nosemgrep: guest-whitelisted-method
+@frappe.whitelist(allow_guest=True)
+def check_if_event_member(event: str) -> bool:
+    """
+    Check if the current user is on the event team.
+
+    Args:
+        event (str): Event id
+
+    Returns:
+        bool: True if the current user is an event team member, False otherwise.
+    """
+    return is_event_member(event, frappe.session.user)
 
 
 # nosemgrep: guest-whitelisted-method
