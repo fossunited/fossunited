@@ -1,45 +1,26 @@
+"""Atom feed of blog posts, served at rss.xml (template: templates/rss.xml)."""
+
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # Copyright (c) 2025, FOSS United Organization
 # License: MIT. See LICENSE
 
 import mimetypes
-from datetime import datetime, time
-from urllib.parse import urlencode, urljoin, urlparse
-from zoneinfo import ZoneInfo
+from urllib.parse import urlencode, urlparse
 
 import frappe
-from frappe.utils import (
-    get_datetime,
-    get_request_site_address,
-    get_system_timezone,
-    md_to_html,
-    now_datetime,
-    today,
-)
+from frappe.utils import md_to_html, today
+
+from fossunited.utils.rss import feed_context, public_url
 
 no_cache = 1
 base_template_path = "www/rss.xml"
 
 
-def _public_url(host, route):
-    return urljoin(host.rstrip("/") + "/", route) if route else None
-
-
-def _atom_date(value, zone):
-    value = get_datetime(value)
-    if value.tzinfo is None:
-        value = value.replace(tzinfo=zone)
-    return value.isoformat(timespec="seconds")
-
-
 def get_context(context):
-    """Generate the blog Atom feed. Other RSS feeds use their existing templates."""
-    host = get_request_site_address()
-    zone = ZoneInfo(get_system_timezone())
-    blog_list = frappe.get_all(
+    """Generate the blog Atom feed."""
+    posts = frappe.get_all(
         "Blog Post",
         fields=[
-            "name",
             "published_on",
             "modified",
             "title",
@@ -51,7 +32,6 @@ def get_context(context):
             "content_html",
             "content_type",
             "blogger",
-            "blog_category",
             "blogger.full_name as author",
             "blog_category.title as category_title",
             "blog_category.route as category_route",
@@ -62,38 +42,40 @@ def get_context(context):
         limit=20,
     )
     settings = frappe.get_single("Blog Settings")
-    title = settings.blog_title or "FOSS United Blog"
-    description = settings.blog_introduction or ""
 
-    for blog in blog_list:
+    entries = []
+    for post in posts:
         # id stays our own URL so it survives edits to external_url; readers open the real post
-        blog.guid = _public_url(host, blog.route)
-        blog.link = blog.external_url or blog.guid
-        blog.author = blog.author or title
-        blog.author_uri = _public_url(host, "/blog?" + urlencode({"blogger": blog.blogger}))
-        blog.category = _public_url(host, blog.category_route)
-        # published_on has Date precision; serialize it at midnight in the site timezone.
-        blog.published_date = datetime.combine(blog.published_on, time(), zone).isoformat()
-        blog.updated = _atom_date(blog.modified, zone)
-        attr = {"Markdown": "content_md", "HTML": "content_html"}.get(blog.content_type, "content")
-        value = blog.get(attr) or ""
-        blog.content = md_to_html(value) if blog.content_type == "Markdown" else value
-        blog.enclosure = _public_url(host, blog.meta_image)
-        blog.enclosure_type = mimetypes.guess_type(blog.enclosure or "")[0]
-        if blog.external_url:
-            origin = urlparse(blog.external_url)
-            blog.source_title = origin.netloc
-            blog.source_link = f"{origin.scheme}://{origin.netloc}/"
-            blog.content = ""
+        post_url = public_url(post.route)
+        attr = {"Markdown": "content_md", "HTML": "content_html"}.get(post.content_type, "content")
+        body = post.get(attr) or ""
+        image = public_url(post.meta_image)
+        entry = {
+            "id": post_url,
+            "title": post.title,
+            "link": post.external_url or post_url,
+            "published": post.published_on,
+            "updated": post.modified,
+            "author": post.author,
+            "author_uri": public_url("/blog?" + urlencode({"blogger": post.blogger})),
+            "category": public_url(post.category_route),
+            "category_label": post.category_title,
+            "summary": post.blog_intro,
+            "content": md_to_html(body) if post.content_type == "Markdown" else body,
+            "image": image,
+            "image_type": mimetypes.guess_type(image or "")[0],
+        }
+        if post.external_url:
+            origin = urlparse(post.external_url)
+            entry["content"] = ""
+            entry["source_title"] = origin.netloc
+            entry["source_link"] = f"{origin.scheme}://{origin.netloc}/"
+        entries.append(entry)
 
-    modified = max((get_datetime(blog.modified) for blog in blog_list), default=now_datetime())
-    # TemplatePage's XML MIME default is overridden only for this response.
-    frappe.local.response_headers.set("Content-Type", "application/atom+xml; charset=utf-8")
-    return {
-        "title": title,
-        "description": description,
-        "modified": _atom_date(modified, zone),
-        "items": blog_list,
-        "link": _public_url(host, "/blog"),
-        "feed_url": _public_url(host, "/rss.xml"),
-    }
+    return feed_context(
+        settings.blog_title or "FOSS United Blog",
+        settings.blog_introduction,
+        "/blog",
+        "/rss.xml",
+        entries,
+    )

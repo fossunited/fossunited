@@ -81,6 +81,7 @@ class TestJobBoard(FrappeTestCase):
 
     def test_rss_feed_includes_approved_job(self):
         """Test that an approved, published job appears in the RSS feed context"""
+        from fossunited.utils.rss import public_url
         from fossunited.www.jobs.rss import get_context
 
         job = frappe.get_doc(self.test_job_data)
@@ -90,11 +91,12 @@ class TestJobBoard(FrappeTestCase):
 
         context = get_context({})
 
-        job_names = [j.name for j in context["items"]]
-        self.assertIn(job.name, job_names)
+        entry_ids = [entry.id for entry in context["entries"]]
+        self.assertIn(public_url(job.route), entry_ids)
 
     def test_rss_feed_excludes_unapproved_job(self):
         """Test that a non-approved job does not appear in the RSS feed context"""
+        from fossunited.utils.rss import public_url
         from fossunited.www.jobs.rss import get_context
 
         job = frappe.get_doc(self.test_job_data)
@@ -104,5 +106,5 @@ class TestJobBoard(FrappeTestCase):
 
         context = get_context({})
 
-        job_names = [j.name for j in context["items"]]
-        self.assertNotIn(job.name, job_names)
+        entry_ids = [entry.id for entry in context["entries"]]
+        self.assertNotIn(public_url(job.route), entry_ids)

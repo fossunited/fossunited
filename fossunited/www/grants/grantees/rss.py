@@ -1,10 +1,10 @@
-from datetime import datetime
-from email.utils import format_datetime
-from urllib.parse import quote, urlparse
+"""Atom feed of grantees, served at rss.xml (template: templates/rss.xml)."""
 
-import frappe
-from frappe.utils import escape_html, fmt_money, get_request_site_address
+from urllib.parse import urlencode
 
+from frappe.utils import escape_html, fmt_money, get_datetime, sanitize_html
+
+from fossunited.utils.rss import facts, feed_context, public_url, safe_url
 from fossunited.www.grants.index import (
     fetch_event_grants,
     fetch_fellowship_grants,
@@ -15,100 +15,65 @@ no_cache = 1
 base_template_path = "www/grants/grantees/rss.xml"
 
 
-def _safe_href(url):
-    if not url:
-        return ""
-    parsed = urlparse(url)
-    if parsed.scheme not in ("http", "https"):
-        return ""
-    return quote(url, safe=":/?#[]@!$&'()*+,;=%")
+def grant_entry(grant, name, grant_type, website, about_html, published, organiser=None):
+    amount = "N/A"
+    if grant.grant_amount is not None:
+        amount = fmt_money(grant.grant_amount, precision=0, currency="INR")
 
+    page = public_url("/grants/grantees")
+    website = safe_url(website)
+    content = facts(
+        ("Grant Type", f"{grant_type} Grant"), ("Organiser", organiser), ("Amount", amount)
+    )
+    content += f"<p>{about_html}</p>"
+    if website:
+        content += f'<p><a href="{escape_html(website)}">Website →</a></p>'
 
-def _safe_cdata(text):
-    return (text or "").replace("]]>", "]]]]><![CDATA[>")
+    return {
+        "id": f"{page}?{urlencode({'s': name})}",
+        "title": f"{name} ({grant_type} Grant)",
+        "link": website or page,
+        "published": published,
+        "updated": grant.modified,
+        "author": organiser,
+        "category": grant_type,
+        "content": content,
+    }
 
 
 def get_context(context):
-    host = get_request_site_address()
-
-    project_grants = fetch_project_grants(limit=50) + fetch_fellowship_grants(limit=50)
-    event_grants = fetch_event_grants(limit=50)
-
-    items = []
-
-    for g in project_grants:
-        amount = (
-            fmt_money(g.grant_amount, precision=0, currency="INR")
-            if g.grant_amount is not None
-            else "N/A"
+    entries = []
+    for g in fetch_project_grants(limit=50) + fetch_fellowship_grants(limit=50):
+        published = g.date_of_provision or g.modified
+        entries.append(
+            grant_entry(
+                g,
+                g.project_name,
+                g.grant_type,
+                g.project_website,
+                escape_html(g.about_project or ""),
+                published,
+            )
         )
-        date = g.date_of_provision or g.modified
-        url = _safe_href(g.project_website)
-        description = _safe_cdata(g.about_project or "")
-        items.append(
-            {
-                "title": escape_html(f"{g.project_name} ({g.grant_type} Grant)"),
-                "link": escape_html(url) if url else host + "/grants/grantees",
-                "guid": f"{host}/grants/grantees?s={g.project_name}",
-                "author": "",
-                "published_date": format_datetime(frappe.utils.get_datetime(date)),
-                "modified": g.modified,
-                "category": escape_html(g.grant_type),
-                "content": (
-                    "<![CDATA["
-                    f"<p><strong>Grant Type:</strong> {escape_html(g.grant_type)}</p>"
-                    f"<p><strong>Amount:</strong> {escape_html(amount)}</p>"
-                    f"<p>{description}</p>"
-                    + (f'<p><a href="{url}">Project Website →</a></p>' if url else "")
-                    + "]]>"
-                ),
-            }
+    for g in fetch_event_grants(limit=50):
+        published = g.event_start_date or g.modified
+        entries.append(
+            grant_entry(
+                g,
+                g.event_name,
+                "Event",
+                g.event_website,
+                sanitize_html(g.event_description or ""),
+                published,
+                organiser=g.event_organiser,
+            )
         )
 
-    for g in event_grants:
-        amount = (
-            fmt_money(g.grant_amount, precision=0, currency="INR")
-            if g.grant_amount is not None
-            else "N/A"
-        )
-        date = g.event_start_date or g.modified
-        url = _safe_href(g.event_website)
-        description = _safe_cdata(g.event_description or "")
-        items.append(
-            {
-                "title": escape_html(f"{g.event_name} (Event Grant)"),
-                "link": escape_html(url) if url else host + "/grants/grantees",
-                "guid": f"{host}/grants/grantees?s={g.event_name}",
-                "author": escape_html(g.event_organiser or ""),
-                "published_date": format_datetime(frappe.utils.get_datetime(date)),
-                "modified": g.modified,
-                "category": "Event",
-                "content": (
-                    "<![CDATA["
-                    "<p><strong>Grant Type:</strong> Event Grant</p>"
-                    f"<p><strong>Organiser:</strong> {escape_html(g.event_organiser or '')}</p>"
-                    f"<p><strong>Amount:</strong> {escape_html(amount)}</p>"
-                    f"<p>{description}</p>"
-                    + (f'<p><a href="{url}">Event Website →</a></p>' if url else "")
-                    + "]]>"
-                ),
-            }
-        )
-
-    items.sort(key=lambda x: frappe.utils.get_datetime(x["modified"]), reverse=True)
-
-    if items:
-        modified = format_datetime(max(frappe.utils.get_datetime(i["modified"]) for i in items))
-    else:
-        modified = format_datetime(datetime.now())
-
-    return {
-        "title": "FOSS United Grantees",
-        "description": (
-            "New grantees funded by FOSS United across projects, events, and fellowships"
-        ),
-        "modified": modified,
-        "items": items,
-        "link": host + "/grants/grantees",
-        "feed_url": host + "/grants/grantees/rss.xml",
-    }
+    entries.sort(key=lambda entry: get_datetime(entry["updated"]), reverse=True)
+    return feed_context(
+        "FOSS United Grantees",
+        "New grantees funded by FOSS United across projects, events, and fellowships",
+        "/grants/grantees",
+        "/grants/grantees/rss.xml",
+        entries,
+    )

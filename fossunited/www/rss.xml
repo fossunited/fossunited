@@ -1,34 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en" xml:base="{{ link | e }}">
-  <id>{{ feed_url | e }}</id>
-  <title>{{ title | e }}</title>
-  <subtitle>{{ description | e }}</subtitle>
-  <updated>{{ modified | e }}</updated>
-  <generator uri="https://frappe.io">Frappe Framework</generator>
-  <link rel="self" href="{{ feed_url | e }}" type="application/atom+xml" />
-  <link rel="alternate" href="{{ link | e }}" type="text/html" />
-  {% for item in items %}
-  <entry>
-    <id>{{ item.guid | e }}</id>
-    <title>{{ item.title | e }}</title>
-    {% if item.link %}<link rel="alternate" href="{{ item.link | e }}" type="text/html" />{% endif %}
-    {% if item.source_title %}<link rel="related" href="{{ item.guid | e }}" type="text/html" title="Discuss on FOSS United" />{% endif %}
-    <published>{{ item.published_date | e }}</published>
-    <updated>{{ item.updated | e }}</updated>
-    <author>
-      <name>{{ item.author | e }}</name>
-      {% if item.author_uri %}<uri>{{ item.author_uri | e }}</uri>{% endif %}
-    </author>
-    {% if item.category %}<category term="{{ item.category | e }}" label="{{ item.category_title | e }}" />{% endif %}
-    {% if item.source_title %}<source>
+{% extends "templates/rss.xml" %}
+{# Atom feed of blog posts. Layout lives in templates/rss.xml. #}
+{% block entry_extra scoped %}
+{% if item.source_title %}
+    <link rel="related" href="{{ item.id | e }}" type="text/html" title="Discuss on FOSS United" />
+    <source>
       <id>{{ item.source_link | e }}</id>
       <title>{{ item.source_title | e }}</title>
       <link rel="alternate" href="{{ item.source_link | e }}" type="text/html" />
-    </source>{% endif %}
-    <summary type="text">{{ (item.blog_intro or "") | e }}</summary>
-    {% if item.content %}<content type="html">{{ item.content | e }}</content>{% endif %}
-    {% if item.enclosure %}<link rel="enclosure" href="{{ item.enclosure | e }}"{% if item.enclosure_type %} type="{{ item.enclosure_type | e }}"{% endif %} />
-    <media:thumbnail url="{{ item.enclosure | e }}" />{% endif %}
-  </entry>
-  {% endfor %}
-</feed>
+    </source>
+{% endif %}
+{% endblock %}

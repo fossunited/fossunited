@@ -27,7 +27,7 @@ class TestBlogAtomFeed(FrappeTestCase):
         frappe.db.rollback()
 
     def render(self):
-        with patch("fossunited.www.rss.get_request_site_address", return_value=HOST):
+        with patch("fossunited.utils.rss.get_request_site_address", return_value=HOST):
             context = get_context(frappe._dict())
             return ET.fromstring(frappe.render_template("fossunited/www/rss.xml", context))
 

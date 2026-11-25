@@ -1,2 +1,2 @@
 {% extends "templates/rss.xml" %}
-{% block ttl %}600{% endblock %}
+{# Atom feed of upcoming events. Layout lives in templates/rss.xml. #}
