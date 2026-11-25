@@ -9,7 +9,6 @@ from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_VOLUNTEER
 from fossunited.tests.factories import FOSSChapterFactory, UserFactory, get_foss_profile_id
 from fossunited.tests.factories.foss_chapter_event_factory import FOSSChapterEventFactory
 
-
 DASHBOARD_EVENT_FIELDS = {"name", "event_name", "chapter_name", "status", "event_start_date"}
 
 
