@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <channel>
-    <title>{{ title }}</title>
-    <description>{{ description }}</description>
-    <link>{{ link }}</link>
-    <language>en-us</language>
-    <lastBuildDate>{{ modified }}</lastBuildDate>
-    <pubDate>{{ modified }}</pubDate>
-    <ttl>{% block ttl %}60{% endblock %}</ttl>
-    <atom:link href="{{ feed_url }}" rel="self" type="application/rss+xml" />
-    {% block items %}
-    {% for item in items %}
-    <item>
-      <title>{{ item.title }}</title>
-      <description>{{ item.content }}</description>
-      <dc:creator>{{ item.author }}</dc:creator>
-      <link>{{ item.link }}</link>
-      <guid isPermaLink="false">{{ item.guid }}</guid>
-      <pubDate>{{ item.published_date }}</pubDate>
-      {% if item.category %}<category>{{ item.category }}</category>{% endif %}
-    </item>
-    {% endfor %}
-    {% endblock %}
-  </channel>
-</rss>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en" xml:base="{{ link | e }}">
+  <id>{{ feed_url | e }}</id>
+  <title>{{ title | e }}</title>
+  {% if subtitle %}<subtitle>{{ subtitle | e }}</subtitle>{% endif %}
+  <updated>{{ updated | e }}</updated>
+  <author><name>FOSS United</name></author>
+  <generator uri="https://frappe.io">Frappe Framework</generator>
+  <link rel="self" href="{{ feed_url | e }}" type="application/atom+xml" />
+  <link rel="alternate" href="{{ link | e }}" type="text/html" />
+  {% for item in entries %}
+  <entry>
+    <id>{{ item.id | e }}</id>
+    <title>{{ item.title | e }}</title>
+    {% if item.link %}<link rel="alternate" href="{{ item.link | e }}" type="text/html" />{% endif %}
+    <published>{{ item.published | e }}</published>
+    <updated>{{ item.updated | e }}</updated>
+    {% if item.author %}<author>
+      <name>{{ item.author | e }}</name>
+      {% if item.author_uri %}<uri>{{ item.author_uri | e }}</uri>{% endif %}
+    </author>{% endif %}
+    {% if item.category %}<category term="{{ item.category | e }}"{% if item.category_label %} label="{{ item.category_label | e }}"{% endif %} />{% endif %}
+    {% block entry_extra scoped %}{% endblock %}
+    {% if item.summary %}<summary type="text">{{ item.summary | e }}</summary>{% endif %}
+    {% if item.content %}<content type="html">{{ item.content | e }}</content>{% endif %}
+    {% if item.image %}<link rel="enclosure" href="{{ item.image | e }}"{% if item.image_type %} type="{{ item.image_type | e }}"{% endif %} />
+    <media:thumbnail url="{{ item.image | e }}" />{% endif %}
+  </entry>
+  {% endfor %}
+</feed>
