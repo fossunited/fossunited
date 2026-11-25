@@ -1,6 +1,7 @@
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 
 import frappe
+from frappe import _
 
 DEFAULT_COVER = "/files/blog-og.png"
 
@@ -14,7 +15,18 @@ class BlogPostExtend:
         page_title_field="title",
     )
 
+    def validate(self):
+        super().validate()
+        if self.external_url:
+            parsed = urlparse(self.external_url.strip())
+            if parsed.scheme != "https" or not parsed.netloc:
+                frappe.throw(_("External URL must be a full https:// link."))
+
     def get_context(self, context):
+        if self.external_url:
+            frappe.flags.redirect_location = self.external_url
+            raise frappe.Redirect(302)
+
         super().get_context(context)
 
         context.cover_image = self.meta_image
