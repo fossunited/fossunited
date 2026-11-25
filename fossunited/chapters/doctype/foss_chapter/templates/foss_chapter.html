@@ -1,16 +1,29 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/breadcrumb.html" import theme_toggle %}
 {% block head_include %}
-{{ super() }}
-<link rel="alternate" type="application/rss+xml" title="Upcoming Events \u2013 {{ doc.chapter_name }}" href="/c/{{ doc.slug }}/rss.xml" />
+  {{ super() }}
+  <link
+    rel="alternate"
+    type="application/atom+xml"
+    title="{{ doc.chapter_name }} | Upcoming Events"
+    href="/c/{{ doc.slug }}/rss.xml"
+  />
 {% endblock %}
 {% block page_content %}
   <div class="v3-page">
     <style>
-      .v3-page .header-section-parent { background: var(--v3-main-bg); }
-      .v3-page .header-section { background-color: var(--v3-main-bg); }
-      .v3-page .subtitle { color: var(--v3-text-color); }
-      .v3-page .description-block > * { color: var(--v3-text-color2); }
+      .v3-page .header-section-parent {
+        background: var(--v3-main-bg);
+      }
+      .v3-page .header-section {
+        background-color: var(--v3-main-bg);
+      }
+      .v3-page .subtitle {
+        color: var(--v3-text-color);
+      }
+      .v3-page .description-block > * {
+        color: var(--v3-text-color2);
+      }
     </style>
     <div class="container d-flex justify-content-end pt-3">{{ theme_toggle() }}</div>
     {{ header() }}
@@ -60,7 +73,9 @@
                   </span>
                   <div class="seperator-circle"></div>
                 {% endif %}
-                <span>Established in {{ frappe.utils.formatdate(doc.creation, "MMMM yyyy") }}</span>
+                <span
+                  >Established in {{ frappe.utils.formatdate(doc.creation, "MMMM yyyy") }}</span
+                >
               </div>
             </div>
           </div>
@@ -121,12 +136,14 @@
         >
           <i class="ti ti-rss" aria-hidden="true"></i> RSS Feed
         </a>
-        {{ ics_download(
-          event_ids=upcoming_events | map(attribute='name') | list,
-          filename=doc.slug + '-upcoming-events.ics',
-          chapter=doc.name,
-          btn_id='ics-download-btn',
-        ) }}
+        {{
+          ics_download(
+            event_ids=upcoming_events | map(attribute='name') | list,
+            filename=doc.slug + '-upcoming-events.ics',
+            chapter=doc.name,
+            btn_id='ics-download-btn',
+          )
+        }}
       </div>
     </div>
     <div class="events-grid-4">

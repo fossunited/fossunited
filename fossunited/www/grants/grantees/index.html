@@ -3,8 +3,13 @@
 {% set show_count = true %}
 
 {% block head_include %}
-{{ super() }}
-<link rel="alternate" type="application/rss+xml" title="FOSS United Grantees" href="/grants/grantees/rss.xml" />
+  {{ super() }}
+  <link
+    rel="alternate"
+    type="application/atom+xml"
+    title="FOSS United Grantees"
+    href="/grants/grantees/rss.xml"
+  />
 {% endblock %}
 
 {% block action_buttons %}
