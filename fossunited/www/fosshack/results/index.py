@@ -740,7 +740,9 @@ def get_all_hackathon_results():
     for year in ["2020", "2021", "2023"]:
         hackathons.append(ARCHIVE_HACKATHONS[year])
 
-    for hack in frappe.get_all(HACKATHON, ["name", "start_date"]):
+    for hack in frappe.get_all(
+        HACKATHON, {"is_published": 1, "is_unlisted": 0}, ["name", "start_date"]
+    ):
         event_year = str(hack.start_date.year)
         hackathon_data = get_hackathon_results(hack.name, event_year)
         if hackathon_data:
