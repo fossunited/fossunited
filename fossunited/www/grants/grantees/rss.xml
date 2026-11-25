@@ -1,1 +1,2 @@
 {% extends "templates/rss.xml" %}
+{# Atom feed of grantees. Layout lives in templates/rss.xml. #}
