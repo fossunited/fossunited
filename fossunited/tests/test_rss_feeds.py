@@ -60,7 +60,7 @@ class TestAtomFeeds(FrappeTestCase):
         self.assertEqual(entry.findtext("a:author/a:name", namespaces=NS), "Pune & Co")
         content = entry.findtext("a:content", namespaces=NS)
         self.assertIn("Pune &amp; Co", content)
-        self.assertIn("Bring ]]> laptops", content)
+        self.assertIn("Bring ]]&gt; laptops", content)
 
     def test_timeline_feed(self):
         item = frappe._dict(EVENT, _chapter_name="Pune")

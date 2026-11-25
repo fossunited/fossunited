@@ -28,7 +28,10 @@ def public_url(route):
 
 def safe_url(url):
     """The url if it is http(s). User-entered links must not become javascript: hrefs."""
-    return url if url and urlparse(url).scheme in ("http", "https") else None
+    try:
+        return url if url and urlparse(url).scheme in ("http", "https") else None
+    except ValueError:
+        return None
 
 
 def atom_date(value):
@@ -48,7 +51,7 @@ def facts(*rows):
 
 def event_entry(event, chapter_name, entry_id=None):
     """Entry for a Chapter Event or a timeline item (event, hackathon or event grant)."""
-    external = event.is_external_event and event.external_event_url
+    external = safe_url(event.external_event_url) if event.is_external_event else None
     link = public_url(external or event.route) or public_url("/events/timeline")
     event_type = event.event_type or "Event"
     location = event.event_location or ("Online" if event_type == "Online" else "TBA")
