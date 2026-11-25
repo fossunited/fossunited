@@ -10,6 +10,9 @@ from fossunited.tests.factories import FOSSChapterFactory, UserFactory, get_foss
 from fossunited.tests.factories.foss_chapter_event_factory import FOSSChapterEventFactory
 
 
+DASHBOARD_EVENT_FIELDS = {"name", "event_name", "chapter_name", "status", "event_start_date"}
+
+
 class TestChapterDashboard(FrappeTestCase):
     def setUp(self):
         self.user = UserFactory.create("with_foss_website_user_role")
@@ -71,6 +74,8 @@ class TestChapterDashboard(FrappeTestCase):
             result = get_my_chapter_dashboard()
         self.assertEqual({event.name for event in result["scheduled"]}, {live.name})
         self.assertEqual({event.name for event in result["recent_concluded"]}, {recent.name})
+        for event in result["scheduled"] + result["recent_concluded"]:
+            self.assertEqual(set(event), DASHBOARD_EVENT_FIELDS)
 
     def test_volunteer_events(self):
         draft = self.event(self.chapter(member=False), status="Draft", volunteer=True)
