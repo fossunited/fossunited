@@ -2,8 +2,9 @@
 # Copyright (c) 2025, FOSS United Organization
 # License: MIT. See LICENSE
 
+import mimetypes
 from datetime import datetime, time
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urlencode, urljoin, urlparse
 from zoneinfo import ZoneInfo
 
 import frappe
@@ -44,6 +45,7 @@ def get_context(context):
             "title",
             "blog_intro",
             "route",
+            "external_url",
             "content_md",
             "content",
             "content_html",
@@ -64,8 +66,9 @@ def get_context(context):
     description = settings.blog_introduction or ""
 
     for blog in blog_list:
-        blog.link = _public_url(host, blog.route)
-        blog.guid = blog.link
+        # id stays our own URL so it survives edits to external_url; readers open the real post
+        blog.guid = _public_url(host, blog.route)
+        blog.link = blog.external_url or blog.guid
         blog.author = blog.author or title
         blog.author_uri = _public_url(host, "/blog?" + urlencode({"blogger": blog.blogger}))
         blog.category = _public_url(host, blog.category_route)
@@ -76,6 +79,12 @@ def get_context(context):
         value = blog.get(attr) or ""
         blog.content = md_to_html(value) if blog.content_type == "Markdown" else value
         blog.enclosure = _public_url(host, blog.meta_image)
+        blog.enclosure_type = mimetypes.guess_type(blog.enclosure or "")[0]
+        if blog.external_url:
+            origin = urlparse(blog.external_url)
+            blog.source_title = origin.netloc
+            blog.source_link = f"{origin.scheme}://{origin.netloc}/"
+            blog.content = ""
 
     modified = max((get_datetime(blog.modified) for blog in blog_list), default=now_datetime())
     # TemplatePage's XML MIME default is overridden only for this response.

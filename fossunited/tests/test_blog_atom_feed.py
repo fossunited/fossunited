@@ -70,6 +70,16 @@ class TestBlogAtomFeed(FrappeTestCase):
         category_route = frappe.db.get_value("Blog Category", self.blog.blog_category, "route")
         self.assertEqual(category.attrib["term"], HOST + "/" + category_route.lstrip("/"))
 
+    def test_external_post_links_to_external_url_and_keeps_own_id(self):
+        url = "https://example.invalid/original-post"
+        frappe.db.set_value("Blog Post", self.blog.name, "external_url", url)
+        entry = self.entry(self.render())
+        self.assertEqual(entry.find("a:link", NS).attrib["href"], url)
+        related = entry.find("a:link[@rel='related']", NS)
+        self.assertEqual(related.attrib["href"], HOST + "/" + self.blog.route.lstrip("/"))
+        self.assertEqual(entry.findtext("a:source/a:title", namespaces=NS), "example.invalid")
+        self.assertIsNone(entry.find("a:content", NS))
+
     def test_publication_is_date_only_midnight_site_timezone(self):
         entry = self.entry(self.render())
         published = datetime.fromisoformat(entry.findtext("a:published", namespaces=NS))
