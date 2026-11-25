@@ -17,8 +17,9 @@ class BlogPostExtend:
 
     def validate(self):
         super().validate()
+        self.external_url = (self.external_url or "").strip()
         if self.external_url:
-            parsed = urlparse(self.external_url.strip())
+            parsed = urlparse(self.external_url)
             if parsed.scheme != "https" or not parsed.netloc:
                 frappe.throw(_("External URL must be a full https:// link."))
 
