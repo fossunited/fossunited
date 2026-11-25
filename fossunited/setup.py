@@ -102,6 +102,16 @@ def get_custom_fields():
     """
 
     return {
+        "Blog Post": [
+            {
+                "fieldname": "external_url",
+                "fieldtype": "Data",
+                "options": "URL",
+                "label": "External URL",
+                "description": "Set only if the post is hosted elsewhere. Readers are sent there.",
+                "insert_after": "route",
+            },
+        ],
         "Email Template": [
             {
                 "fieldname": "linked_chapter_section",
