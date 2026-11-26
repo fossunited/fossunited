@@ -43,7 +43,19 @@
     <div class="v3-section-title">
       <i class="ti ti-{{ 'empathize' if type == 'volunteers' else 'microphone' if type == 'speakers' else icon }}" aria-hidden="true"></i>
       <span>
-        {% if type == 'staff' %}<a href="/team">Staff <i class="ti ti-arrow-up-right" aria-hidden="true"></i></a>{% else %}{{ 'Volunteers' if type == 'volunteers' else type.capitalize() }}{% endif %}
+        {% if type == 'staff' %}
+          <a href="/team">Staff <i class="ti ti-arrow-up-right" aria-hidden="true"></i></a>
+          <a
+            href="https://docs.fossunited.org/people/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="help-icon pl-2"
+            title="Who counts as staff?"
+            aria-label="Learn more about who counts as staff"
+          >
+            <i class="ti ti-help" aria-hidden="true"></i>
+          </a>
+        {% else %}{{ 'Volunteers' if type == 'volunteers' else type.capitalize() }}{% endif %}
       </span>
     </div>
 
