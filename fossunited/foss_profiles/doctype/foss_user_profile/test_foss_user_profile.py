@@ -4,11 +4,11 @@ import frappe
 from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import FOSS_UNITED_TEAM, USER_PROFILE
 from fossunited.foss_profiles.doctype.foss_user_profile.foss_user_profile import (
     PrivateProfileError,
 )
-from fossunited.tests.factories import UserFactory
+from fossunited.tests.factories import FOSSUnitedTeamFactory, UserFactory, get_foss_profile_id
 
 fake = Faker()
 
@@ -86,3 +86,24 @@ class TestFOSSUserProfile(FrappeTestCase):
             )
 
         test_user.delete(force=True)
+
+    def test_is_staff_true_for_active_staff_profile(self):
+        user = UserFactory.create()
+        profile = get_foss_profile_id(user.name)
+        team_row = FOSSUnitedTeamFactory.create(foss_user_profile=profile, org_role="Full-Time")
+        try:
+            context = frappe._dict()
+            frappe.get_doc(USER_PROFILE, profile).get_context(context)
+            self.assertTrue(context.is_staff)
+            self.assertEqual(context.team_role, "Full-Time")
+        finally:
+            frappe.delete_doc(FOSS_UNITED_TEAM, team_row.name, force=True)
+            user.delete(force=True)
+
+    def test_is_staff_false_for_non_team_member(self):
+        user = UserFactory.create()
+        profile = get_foss_profile_id(user.name)
+        context = frappe._dict()
+        frappe.get_doc(USER_PROFILE, profile).get_context(context)
+        self.assertFalse(context.is_staff)
+        user.delete(force=True)
