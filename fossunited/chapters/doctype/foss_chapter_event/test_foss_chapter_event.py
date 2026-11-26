@@ -55,6 +55,10 @@ class TestFOSSChapterEvent(FrappeTestCase):
         """Staff split must use the event's own date, not today -- a member who
         only became staff after this (past) event ran should still show up as
         a plain volunteer for it, not get pulled into the Staff section."""
+        # reload: the factory's default event_start_date is a plain string
+        # until reloaded, and get_context() -> get_meta() calls .strftime()
+        # on it directly.
+        self.event.reload()
         staff_profile = self.event.event_members[0].member
         team_row = FOSSUnitedTeamFactory.create(
             foss_user_profile=staff_profile,
