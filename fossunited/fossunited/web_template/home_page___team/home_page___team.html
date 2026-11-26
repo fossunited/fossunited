@@ -99,14 +99,15 @@
     <div class="team-block">
       {%
         set team = frappe.get_all("FOSS United Team", fields=["full_name", "headshot",
-        "designation", "username"], filters={"is_active": 1, "org_role": ["in", ["Board",
+        "designation", "username", "foss_user_profile.profile_photo as profile_photo"],
+        filters={"status": "Active", "org_role": ["in", ["Board",
         "Full-Time", "Part-Time", "Intern"]]}, order_by ='full_name')
       %}
       {% for employee in team %}
         <div class="team-card">
           <div class="team-card-image">
             <img
-              src="{{ employee.headshot if employee.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}"
+              src="{{ employee.headshot or employee.profile_photo or 'assets/fossunited/images/defaults/user_profile_image.png' }}"
               alt="Team Member"
             />
           </div>

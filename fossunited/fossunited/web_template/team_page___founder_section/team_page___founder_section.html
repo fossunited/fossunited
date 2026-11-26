@@ -100,8 +100,9 @@
   <div class="founder-list-container">
     {%
       set founders = frappe.get_all("FOSS United Team", fields=["full_name", "username",
-      "headshot", "user_bio", "designation", "portfolio_url"], filters={"org_role": "Founder",
-      "is_active": 1}, order_by="full_name")
+      "headshot", "user_bio", "designation", "portfolio_url",
+      "foss_user_profile.profile_photo as profile_photo"], filters={"org_role": "Founder",
+      "status": "Active"}, order_by="full_name")
     %}
     {% if founders %}
       <div class="member-section">
@@ -111,12 +112,14 @@
             <div class="founder-member">
               <div class="founder-member-image">
                 <img
-                  src="{{ member.headshot if member.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}"
+                  src="{{ member.headshot or member.profile_photo or 'assets/fossunited/images/defaults/user_profile_image.png' }}"
                   alt="{{ member.full_name }}"
                 />
               </div>
               <div class="founder-member-details">
-                <a href="{{ '/u/' + member.username if member.username else member.portfolio_url }}">
+                <a
+                  href="{{ '/u/' + member.username if member.username else member.portfolio_url }}"
+                >
                   <h6>
                     {{ member.full_name }}
                     <i class="ti ti-arrow-up-right"></i>
