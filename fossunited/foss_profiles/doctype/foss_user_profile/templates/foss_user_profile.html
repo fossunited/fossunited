@@ -8,9 +8,8 @@
     <div class="container">
       <div class="profile-content-section">
         <div class="horizontal-navbar px-8 pt-2" role="tablist" aria-label="Profile sections">
-          {%- set _has_resume = (doc.experience | length > 0) or (doc.education | length > 0) -%}
           {%- set _has_projects = doc.projects | length > 0 -%}
-          {%- set nav_items = ['about'] + (['resume'] if _has_resume else []) + (['projects'] if (_has_projects or doc.user == frappe.session.user) else []) -%}
+          {%- set nav_items = ['about'] + (['projects'] if (_has_projects or doc.user == frappe.session.user) else []) -%}
           {% for item in nav_items %}
             <div
               class="horizontal-navbar--item"
@@ -37,17 +36,6 @@
             <div class="about v3-text-primary">{{ doc.about or "Nothing in about." }}</div>
           </div>
         </div>
-        {% if _has_resume %}
-          <div
-            class="content-div"
-            id="resume"
-            role="tabpanel"
-            tabindex="0"
-            aria-labelledby="resume-nav-item"
-          >
-            {{ render_experience() }} {{ render_education() }}
-          </div>
-        {% endif %}
         {% if _has_projects or doc.user == frappe.session.user %}
           <div
             class="content-div"
@@ -118,92 +106,6 @@
       </div>
     {% else %}
       <div>No projects to showcase.</div>
-    {% endif %}
-  </div>
-{% endmacro %}
-{% macro render_experience() %}
-  <div class="profile-content-div" id="experience">
-    {{ render_section_header("experience") }}
-    {% if experiences_dict %}
-      {%
-        for (key,
-        values) in experiences_dict.items()
-      %}
-        <div class="experience-card">
-          <!-- Company logos are provided by https://logo.dev -->
-          <img
-            src="https://img.logo.dev/{{ values[0].company_website.lstrip("https://") }}"
-            onerror="renderCompanyImage(this)"
-            alt="{{ key }}"
-            class="experience-card-logo"
-          />
-          <div class="experience-details">
-            {# if values | len > 1 #}
-            <!-- <div>
-                <h5>{{ key }}</h5>
-                <div class="mt-1">{{ values[0].city }}, {{ values[0].country }}</div>
-            </div> -->
-            {# endif #}
-            {% for value in values %}
-              <div class="d-flex justify-content-between align-items-baseline">
-                <div class="experience-item">
-                  <h5>{{ value.title }}</h5>
-                  <span
-                    >{{ value.start_date.strftime("%B %Y") }} -
-                    {% if value.end_date != None %}{{ value.end_date.strftime("%B %Y") }}{% else %}{{ _("Present") }}{% endif %}</span
-                  >
-                  <div class="experience-item--company-location">
-                    {# if values | len < 2 #}
-                    <span style="color: hsl(var(--clr-foss-mint-500))">
-                      <a
-                        rel="noopener noreferrer nofollow"
-                        href="{{ value.company_website }}"
-                        target="_blank"
-                        >{{ value.company }}</a
-                      >
-                    </span>
-                    <div class="seperator-circle"></div>
-                    {% if value.is_remote %}
-                      <span>{{ _("Remote") }}</span>
-                    {% else %}
-                      <span>{{ value.city }}, {{ value.country }}</span>
-                    {% endif %}
-                    {# endif #}
-                  </div>
-                  <div>{{ value.description or "" }}</div>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <div>No experience added.</div>
-    {% endif %}
-  </div>
-{% endmacro %}
-{% macro render_education() %}
-  <div class="profile-content-div" id="education">
-    {{ render_section_header("education") }}
-    {% if doc.education %}
-      {%
-        for education in
-        doc.education
-      %}
-        <div class="d-flex justify-content-between">
-          <div class="education-detail-item">
-            <div>{{ education.start_year }} - {{ education.end_year }}</div>
-            <h5>{{ education.institution }}</h5>
-            <div class="d-flex align-items-center">
-              <span style="color: hsl(var(--clr-foss-mint-500))">
-                {{ education.degree }}, {{ education.field_of_study }}
-              </span>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <div>No education added.</div>
     {% endif %}
   </div>
 {% endmacro %}
@@ -376,14 +278,6 @@
           <div class="header--content-section">
             <div class="d-flex align-items-center flex-wrap mb-1" style="gap:0.5rem;">
               <h4 class="mb-0 mr-1">{{ doc.full_name }}</h4>
-              {% for company in doc.experience %}{% if company.is_working_here %}
-                <!-- Company logos are provided by https://logo.dev -->
-                <img
-                  class="company-badge"
-                  src="https://img.logo.dev/{{ company.company_website.lstrip("https://") }}"
-                  alt="{{ company.company or company.company_website }} logo"
-                />
-              {% endif %}{% endfor %}
               {% for b in hackathon_badges %}
                 {{ profile_badge(b.type, href=b.href, title=b.title, size=52) }}
               {% endfor %}
@@ -393,6 +287,16 @@
             </div>
             <div class="header--username-location" style="font-size: var(--text-sm)">
               <span style="color: hsl(var(--clr-foss-mint-500))">{{ doc.username }}</span>
+              {% if is_staff %}
+                <div class="seperator-circle"></div>
+                <a
+                  href="/team"
+                  class="badge"
+                  aria-label="{{ team_role }}, view the FOSS United team page"
+                >
+                  <i class="ti ti-briefcase" aria-hidden="true"></i> {{ team_role }}
+                </a>
+              {% endif %}
               <div class="seperator-circle"></div>
               <span>Joined {{ doc.creation.strftime("%B %Y") }}</span>
               {% if doc.current_city %}
