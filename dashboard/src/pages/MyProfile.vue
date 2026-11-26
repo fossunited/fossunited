@@ -4,19 +4,19 @@
       <div v-if="profileDoc?.doc" class="w-full">
         <div class="prose p-4 pb-0">
           <h2 class="mb-1">My Profile</h2>
-          <p class="text-sm mb-4">Edit your profile details</p>
+          <p class="mb-4 text-sm">Edit your profile details</p>
         </div>
-        <div class="flex flex-col my-2">
+        <div class="my-2 flex flex-col">
           <div class="relative">
             <img
-              class="w-full aspect-[4.96/1]"
+              class="aspect-[4.96/1] w-full"
               :src="
                 profileDoc.doc.cover_image ||
                 '/assets/fossunited/images/defaults/user_profile_banner.png'
               "
               alt="Banner Image"
             />
-            <div class="top-3 right-3 absolute flex gap-1">
+            <div class="absolute right-3 top-3 flex gap-1">
               <FileUploader
                 :file-types="'image/*'"
                 :private="false"
@@ -47,9 +47,9 @@
               </Button>
             </div>
           </div>
-          <div class="z-10 w-fit relative -mt-12 mx-6">
+          <div class="relative z-10 mx-6 -mt-12 w-fit">
             <img
-              class="aspect-square border-4 border-white rounded-4 w-28"
+              class="aspect-square w-28 rounded-4 border-4 border-white"
               :src="
                 profileDoc.doc.profile_photo ||
                 '/assets/fossunited/images/defaults/user_profile_image.png'
@@ -57,7 +57,7 @@
               alt="Profile Photo"
             />
             <FileUploader
-              class="top-3 right-3 absolute"
+              class="absolute right-3 top-3"
               :file-types="'image/*'"
               :private="false"
               :validate-file="validateFile"
@@ -76,9 +76,10 @@
               </template>
             </FileUploader>
           </div>
-          <div class="flex flex-col md:grid md:grid-cols-2 gap-4 my-2 p-6">
+          <div class="my-2 flex flex-col gap-4 p-6 md:grid md:grid-cols-2">
             <Switch
-              v-model="profileDoc.doc.is_private"
+              :model-value="!!profileDoc.doc.is_private"
+              :disabled="profileDoc.setValue.loading"
               size="sm"
               label="Make Profile Private"
               description="Enabling this will make your profile unavailable to others. You will still be able to do the tasks that require profile creation."
@@ -87,7 +88,8 @@
               @update:model-value="toggleProfilePrivacy"
             />
             <Switch
-              v-model="profileDoc.doc.show_activity"
+              :model-value="!!profileDoc.doc.show_activity"
+              :disabled="profileDoc.setValue.loading"
               size="sm"
               label="Show Community Activity"
               description="Enabling this will allow others to view which FOSS United events you have attended till date."
@@ -95,7 +97,7 @@
               title="Show Community Activity"
               @update:model-value="toggleShowActivity"
             />
-            <div class="col-span-2 py-1 border-b">
+            <div class="col-span-2 border-b py-1">
               <h4 class="text-md-medium uppercase">Basic Details</h4>
             </div>
             <FormControl
@@ -111,15 +113,15 @@
             />
             <div>
               <FormControl
-              v-model="profileDoc.doc.username"
+                v-model="profileDoc.doc.username"
                 label="Username &ast;"
                 placeholder="Enter your username"
               />
               <div class="mt-2 flex items-center">
                 <div v-if="isValidUsername.loading">
-                  <span class="text-sm text-ink-gray-4 mr-2"> Checking availability... </span>
+                  <span class="mr-2 text-sm text-ink-gray-4"> Checking availability... </span>
                   <span
-                    class="animate-spin h-4 w-4 border-2 border-outline-gray-4 rounded-full border-t-transparent"
+                    class="h-4 w-4 animate-spin rounded-full border-2 border-outline-gray-4 border-t-transparent"
                   ></span>
                 </div>
                 <div
@@ -130,7 +132,7 @@
                   "
                   class="flex"
                 >
-                  <span class="text-sm-semibold text-ink-green-5 mr-1">
+                  <span class="text-sm-semibold mr-1 text-ink-green-5">
                     Username is available
                   </span>
                   <IconCheck class="h-4 w-4 text-ink-green-5" />
@@ -171,24 +173,79 @@
               :model-value="profileDoc.doc.about"
               @update:model-value="profileDoc.doc.about = $event"
             />
-            <div class="col-span-2 py-1 border-b">
+            <div class="col-span-2 border-b py-1">
               <h4 class="text-md-medium uppercase">SOCIAL Links</h4>
             </div>
             <div class="col-span-2 text-sm text-ink-gray-5">
               Enter the complete links to your social, including
               <code>http(s)://</code>
             </div>
-            <FormControl v-model="profileDoc.doc.website" type="url" label="Website" @blur="profileDoc.doc.website = ensureHttpsPrefix(profileDoc.doc.website)" />
-            <FormControl v-model="profileDoc.doc.x" type="url" label="Twitter / X" @blur="profileDoc.doc.x = ensureHttpsPrefix(profileDoc.doc.x)" />
-            <FormControl v-model="profileDoc.doc.linkedin" type="url" label="LinkedIn" @blur="profileDoc.doc.linkedin = ensureHttpsPrefix(profileDoc.doc.linkedin)" />
-            <FormControl v-model="profileDoc.doc.github" type="url" label="GitHub" @blur="profileDoc.doc.github = ensureHttpsPrefix(profileDoc.doc.github)" />
-            <FormControl v-model="profileDoc.doc.gitlab" type="url" label="GitLab" @blur="profileDoc.doc.gitlab = ensureHttpsPrefix(profileDoc.doc.gitlab)" />
-            <FormControl v-model="profileDoc.doc.instagram" type="url" label="Instagram" @blur="profileDoc.doc.instagram = ensureHttpsPrefix(profileDoc.doc.instagram)" />
-            <FormControl v-model="profileDoc.doc.youtube" type="url" label="YouTube" @blur="profileDoc.doc.youtube = ensureHttpsPrefix(profileDoc.doc.youtube)" />
-            <FormControl v-model="profileDoc.doc.devto" type="url" label="Dev.to" @blur="profileDoc.doc.devto = ensureHttpsPrefix(profileDoc.doc.devto)" />
-            <FormControl v-model="profileDoc.doc.medium" type="url" label="Medium" @blur="profileDoc.doc.medium = ensureHttpsPrefix(profileDoc.doc.medium)" />
-            <FormControl v-model="profileDoc.doc.mastodon" type="url" label="Mastodon" @blur="profileDoc.doc.mastodon = ensureHttpsPrefix(profileDoc.doc.mastodon)" />
-            <FormControl v-model="profileDoc.doc.bluesky" type="url" label="Bluesky" @blur="profileDoc.doc.bluesky = ensureHttpsPrefix(profileDoc.doc.bluesky)" />
+            <FormControl
+              v-model="profileDoc.doc.website"
+              type="url"
+              label="Website"
+              @blur="profileDoc.doc.website = ensureHttpsPrefix(profileDoc.doc.website)"
+            />
+            <FormControl
+              v-model="profileDoc.doc.x"
+              type="url"
+              label="Twitter / X"
+              @blur="profileDoc.doc.x = ensureHttpsPrefix(profileDoc.doc.x)"
+            />
+            <FormControl
+              v-model="profileDoc.doc.linkedin"
+              type="url"
+              label="LinkedIn"
+              @blur="profileDoc.doc.linkedin = ensureHttpsPrefix(profileDoc.doc.linkedin)"
+            />
+            <FormControl
+              v-model="profileDoc.doc.github"
+              type="url"
+              label="GitHub"
+              @blur="profileDoc.doc.github = ensureHttpsPrefix(profileDoc.doc.github)"
+            />
+            <FormControl
+              v-model="profileDoc.doc.gitlab"
+              type="url"
+              label="GitLab"
+              @blur="profileDoc.doc.gitlab = ensureHttpsPrefix(profileDoc.doc.gitlab)"
+            />
+            <FormControl
+              v-model="profileDoc.doc.instagram"
+              type="url"
+              label="Instagram"
+              @blur="profileDoc.doc.instagram = ensureHttpsPrefix(profileDoc.doc.instagram)"
+            />
+            <FormControl
+              v-model="profileDoc.doc.youtube"
+              type="url"
+              label="YouTube"
+              @blur="profileDoc.doc.youtube = ensureHttpsPrefix(profileDoc.doc.youtube)"
+            />
+            <FormControl
+              v-model="profileDoc.doc.devto"
+              type="url"
+              label="Dev.to"
+              @blur="profileDoc.doc.devto = ensureHttpsPrefix(profileDoc.doc.devto)"
+            />
+            <FormControl
+              v-model="profileDoc.doc.medium"
+              type="url"
+              label="Medium"
+              @blur="profileDoc.doc.medium = ensureHttpsPrefix(profileDoc.doc.medium)"
+            />
+            <FormControl
+              v-model="profileDoc.doc.mastodon"
+              type="url"
+              label="Mastodon"
+              @blur="profileDoc.doc.mastodon = ensureHttpsPrefix(profileDoc.doc.mastodon)"
+            />
+            <FormControl
+              v-model="profileDoc.doc.bluesky"
+              type="url"
+              label="Bluesky"
+              @blur="profileDoc.doc.bluesky = ensureHttpsPrefix(profileDoc.doc.bluesky)"
+            />
             <ErrorMessage class="col-span-2" :message="updateErrors" />
             <div class="hidden md:block"></div>
             <div class="flex justify-end">
@@ -203,7 +260,7 @@
             </div>
 
             <!-- Projects -->
-            <div class="col-span-2 py-1 border-b mt-2 flex items-center justify-between">
+            <div class="col-span-2 mt-2 flex items-center justify-between border-b py-1">
               <h4 class="text-md-medium uppercase">Projects</h4>
               <Button
                 v-if="!showAddProject"
@@ -220,22 +277,26 @@
 
             <!-- existing project cards -->
             <div
-              v-for="project in (profileDoc?.doc?.projects ?? [])"
+              v-for="project in profileDoc?.doc?.projects ?? []"
               :key="project.name"
-              class="col-span-2 border rounded-6 p-4 flex flex-col gap-3"
+              class="col-span-2 flex flex-col gap-3 rounded-6 border p-4"
             >
-              <div v-if="editingProject?.name !== project.name" class="flex justify-between items-start gap-2">
-                <div class="flex-1 min-w-0">
-                  <p class="font-medium truncate">{{ project.project_name }}</p>
-                  <p class="text-sm text-ink-gray-5 truncate">{{ project.tagline }}</p>
+              <div
+                v-if="editingProject?.name !== project.name"
+                class="flex items-start justify-between gap-2"
+              >
+                <div class="min-w-0 flex-1">
+                  <p class="truncate font-medium">{{ project.project_name }}</p>
+                  <p class="truncate text-sm text-ink-gray-5">{{ project.tagline }}</p>
                   <a
                     :href="project.project_link"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-sm text-ink-blue-6 hover:underline break-all"
-                  >{{ project.project_link }}</a>
+                    class="break-all text-sm text-ink-blue-6 hover:underline"
+                    >{{ project.project_link }}</a
+                  >
                 </div>
-                <div class="flex gap-1 shrink-0">
+                <div class="flex shrink-0 gap-1">
                   <Button
                     :icon="IconEdit"
                     variant="ghost"
@@ -256,7 +317,7 @@
 
               <!-- inline edit form -->
               <div v-else class="flex flex-col gap-3">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
                   <FormControl
                     v-model="editingProject.project_name"
                     label="Project Name *"
@@ -267,7 +328,9 @@
                     label="Project Link *"
                     type="url"
                     placeholder="https://github.com/..."
-                    @blur="editingProject.project_link = ensureHttpsPrefix(editingProject.project_link)"
+                    @blur="
+                      editingProject.project_link = ensureHttpsPrefix(editingProject.project_link)
+                    "
                   />
                   <FormControl
                     v-model="editingProject.tagline"
@@ -283,8 +346,13 @@
                   />
                 </div>
                 <ErrorMessage :message="projectErrors" />
-                <div class="flex gap-2 justify-end">
-                  <Button variant="outline" size="sm" label="Cancel" @click="cancelEditProject()" />
+                <div class="flex justify-end gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    label="Cancel"
+                    @click="cancelEditProject()"
+                  />
                   <Button
                     variant="solid"
                     size="sm"
@@ -298,8 +366,8 @@
             </div>
 
             <!-- add new project form -->
-            <div v-if="showAddProject" class="col-span-2 border rounded-6 p-4 flex flex-col gap-3">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div v-if="showAddProject" class="col-span-2 flex flex-col gap-3 rounded-6 border p-4">
+              <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <FormControl
                   v-model="newProject.project_name"
                   label="Project Name *"
@@ -326,8 +394,13 @@
                 />
               </div>
               <ErrorMessage :message="projectErrors" />
-              <div class="flex gap-2 justify-end">
-                <Button variant="outline" size="sm" label="Cancel" @click="showAddProject = false" />
+              <div class="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  label="Cancel"
+                  @click="showAddProject = false"
+                />
                 <Button
                   variant="solid"
                   size="sm"
@@ -347,14 +420,21 @@
   </div>
 </template>
 <script setup>
-import TextEditor from '@/components/ui/TextEditor.vue'
 import { IconCheck, IconEdit, IconTrash, IconPlus } from '@tabler/icons-vue'
-import { createResource, createDocumentResource, FileUploader, Switch, FormControl, ErrorMessage } from 'frappe-ui'
-import { isValidUrl, ensureHttpsPrefix } from '@/helpers/utils'
-import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
-
+import {
+  createResource,
+  createDocumentResource,
+  FileUploader,
+  Switch,
+  FormControl,
+  ErrorMessage,
+} from 'frappe-ui'
 import { reactive, ref, watch, computed } from 'vue'
 import { toast } from 'vue-sonner'
+
+import TextEditor from '@/components/ui/TextEditor.vue'
+import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
+import { isValidUrl, ensureHttpsPrefix, toggleDocField } from '@/helpers/utils'
 const profileDoc = ref(null)
 
 fetchSessionProfile()
@@ -371,7 +451,7 @@ watch(
       })
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const validateFile = (file) => {
@@ -422,33 +502,25 @@ const setProfileImage = (_file) => {
   })
 }
 
-const toggleProfilePrivacy = async (value) => {
-  const previous = !value
-  try {
-    await profileDoc.value.setValue.submit({ is_private: value })
-    toast.info(value ? 'Profile is now private' : 'Profile is now public')
-  } catch (err) {
-    profileDoc.value.doc.is_private = previous
-    toast.error('Failed to update privacy setting')
-    console.error(err)
-  }
-}
+const toggleProfilePrivacy = (value) =>
+  toggleDocField(
+    profileDoc.value,
+    'is_private',
+    value,
+    value ? 'Profile is now private' : 'Profile is now public',
+    'Failed to update privacy setting',
+  )
 
-const toggleShowActivity = async (value) => {
-  const previous = !value
-  try {
-    await profileDoc.value.setValue.submit({ show_activity: value })
-    toast.info(
-      value
-        ? 'Community Activity will be shown on your profile page now'
-        : "Community Activity won't be shown on your profile page now",
-    )
-  } catch (err) {
-    profileDoc.value.doc.show_activity = previous
-    toast.error('Failed to update activity setting')
-    console.error(err)
-  }
-}
+const toggleShowActivity = (value) =>
+  toggleDocField(
+    profileDoc.value,
+    'show_activity',
+    value,
+    value
+      ? 'Community Activity will be shown on your profile page now'
+      : "Community Activity won't be shown on your profile page now",
+    'Failed to update activity setting',
+  )
 
 const updateErrors = ref('')
 
@@ -460,7 +532,19 @@ const updateProfileErrors = () => {
   if (!doc.username?.trim()) errors.push('\nUsername is required')
   if (!doc.user?.trim()) errors.push('\nEmail is required')
 
-  const socials = ['website', 'x', 'linkedin', 'github', 'gitlab', 'instagram', 'youtube', 'devto', 'medium', 'mastodon', 'bluesky']
+  const socials = [
+    'website',
+    'x',
+    'linkedin',
+    'github',
+    'gitlab',
+    'instagram',
+    'youtube',
+    'devto',
+    'medium',
+    'mastodon',
+    'bluesky',
+  ]
   socials.forEach((key) => {
     const url = doc[key]
     if (url && !isValidUrl(url)) {
@@ -556,7 +640,6 @@ const handleUpdateProfile = () => {
     .catch((err) => toast.error('Error updating profile: ' + (err?.message || '')))
 }
 
-
 const showAddProject = ref(false)
 const projectErrors = ref('')
 
@@ -582,7 +665,10 @@ const openAddProject = () => {
 const handleAddProject = () => {
   if (!profileDoc.value?.doc) return
   const err = validateProject(newProject)
-  if (err) { projectErrors.value = err; return }
+  if (err) {
+    projectErrors.value = err
+    return
+  }
   projectErrors.value = ''
   profileDoc.value.doc.projects.push({ ...newProject })
   profileDoc.value.save
@@ -612,7 +698,10 @@ const cancelEditProject = () => {
 const saveEditProject = () => {
   if (!profileDoc.value?.doc) return
   const err = validateProject(editingProject.value)
-  if (err) { projectErrors.value = err; return }
+  if (err) {
+    projectErrors.value = err
+    return
+  }
   projectErrors.value = ''
   const idx = profileDoc.value.doc.projects.findIndex((p) => p.name === editingProject.value.name)
   if (idx !== -1) Object.assign(profileDoc.value.doc.projects[idx], editingProject.value)

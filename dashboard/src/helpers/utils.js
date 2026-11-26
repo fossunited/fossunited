@@ -1,9 +1,28 @@
+import DOMPurify from 'dompurify'
 import { computed } from 'vue'
 import { toast } from 'vue-sonner'
-import DOMPurify from 'dompurify'
 
 export const truncateStr = (title, len) => {
   return title.length > len ? title.substring(0, len) + '...' : title
+}
+
+/**
+ * Toggle/set one field on a frappe-ui document resource via setValue, with a
+ * success/error toast. setValue.submit() already does the optimistic write
+ * and reverts the field on failure, so no manual previous-value tracking is
+ * needed here.
+ */
+export function toggleDocField(docResource, field, value, successMessage, errorMessage) {
+  docResource.setValue.submit(
+    { [field]: value },
+    {
+      onSuccess: () => toast.info(successMessage),
+      onError: (err) => {
+        toast.error(errorMessage || `Failed to update ${field.replace('_', ' ')}`)
+        console.error(err)
+      },
+    },
+  )
 }
 
 export const redirectRoute = (route) => {
