@@ -1,6 +1,6 @@
 <template>
-  <div v-if="rsvp_form.data && rsvp.doc" class="px-4 py-8 md:p-8 flex flex-col gap-4">
-    <div class="flex flex-col md:flex-row-reverse justify-between gap-2">
+  <div v-if="rsvp_form.data && rsvp.doc" class="flex flex-col gap-4 px-4 py-8 md:p-8">
+    <div class="flex flex-col justify-between gap-2 md:flex-row-reverse">
       <div class="flex items-center gap-2">
         <Button
           class="w-fit"
@@ -8,13 +8,14 @@
           :theme="rsvp.doc.is_published ? 'red' : 'green'"
           :icon-left="rsvp.doc.is_published ? IconCancel : IconUpload"
           :label="rsvp.doc.is_published ? 'Unpublish Form' : 'Publish Form'"
+          :disabled="rsvp.setValue.loading"
           @click="togglePublishForm"
         />
         <Button size="md" variant="solid" label="Update Form" @click="updateRsvpForm" />
       </div>
     </div>
     <div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+      <div class="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
         <div class="flex flex-col gap-3">
           <div class="text-md-semibold">
             <span>RSVP Form is </span>
@@ -35,9 +36,9 @@
       </div>
     </div>
 
-    <div class="flex flex-col my-4 gap-6">
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Edit Details</div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="my-4 flex flex-col gap-6">
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Edit Details</div>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
         <div class="flex flex-col gap-1.5">
           <FormControl
             v-model="rsvp.doc.allow_edit"
@@ -59,7 +60,7 @@
             <Switch v-model="rsvp.doc.requires_host_approval" />
             <span class="text-sm-medium text-ink-gray-8">Requires organizer approval</span>
           </div>
-          <p class="text-xs text-ink-gray-5 leading-relaxed">
+          <p class="text-xs leading-relaxed text-ink-gray-5">
             When enabled, attendees must be accepted or denied via the
             <RouterLink :to="`/event/${route.params.id}/rsvp/insights`" class="underline">
               insights
@@ -77,8 +78,8 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Standard Fields</div>
-      <div class="py-4 grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Standard Fields</div>
+      <div class="grid gap-x-8 gap-y-6 py-4 sm:grid-cols-1 md:grid-cols-2">
         <FormControl
           v-for="(field, index) in standard_fields"
           :key="index"
@@ -91,7 +92,7 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Custom Fields</div>
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Custom Fields</div>
       <Button
         class="mt-3"
         size="md"
@@ -124,57 +125,57 @@
       />
     </div>
     <Dialog v-model:open="show_dialog" title="Add Custom Field" size="md">
-        <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+      <div class="grid gap-x-8 gap-y-6 sm:grid-cols-1 md:grid-cols-2">
+        <FormControl
+          v-model="custom_field.question"
+          class="col-span-2"
+          size="md"
+          type="text"
+          label="Question"
+          description="The question you want to ask the attendees."
+        />
+        <div>
           <FormControl
-            v-model="custom_field.question"
-            class="col-span-2"
+            v-model="custom_field.is_mandatory"
             size="md"
-            type="text"
-            label="Question"
-            description="The question you want to ask the attendees."
+            type="checkbox"
+            label="Is Mandatory"
+            description="Whether the question is mandatory or not."
           />
-          <div>
-            <FormControl
-              v-model="custom_field.is_mandatory"
-              size="md"
-              type="checkbox"
-              label="Is Mandatory"
-              description="Whether the question is mandatory or not."
-            />
-            <div class="text-sm text-ink-gray-5">Whether the question is mandatory or not.</div>
-          </div>
-          <FormControl
-            v-model="custom_field.type"
-            size="md"
-            type="select"
-            label="Type"
-            :options="[
-              { label: 'Text', value: 'Data' },
-              { label: 'Select', value: 'Select' },
-              { label: 'Long Text', value: 'Long Text' },
-              { label: 'Text Editor', value: 'Text Editor' },
-              { label: 'Checkbox', value: 'Check' },
-            ]"
-            description="The type of question you want to ask."
-          />
-          <FormControl
-            v-if="custom_field.type === 'Select'"
-            v-model="custom_field.options"
-            class="col-span-2"
-            size="md"
-            type="textarea"
-            label="Options"
-            description="Options for the select field. Enter each option on a new line."
-          />
-          <FormControl
-            v-model="custom_field.description"
-            class="col-span-2"
-            size="md"
-            type="textarea"
-            label="Description"
-            description="Description for the question."
-          />
+          <div class="text-sm text-ink-gray-5">Whether the question is mandatory or not.</div>
         </div>
+        <FormControl
+          v-model="custom_field.type"
+          size="md"
+          type="select"
+          label="Type"
+          :options="[
+            { label: 'Text', value: 'Data' },
+            { label: 'Select', value: 'Select' },
+            { label: 'Long Text', value: 'Long Text' },
+            { label: 'Text Editor', value: 'Text Editor' },
+            { label: 'Checkbox', value: 'Check' },
+          ]"
+          description="The type of question you want to ask."
+        />
+        <FormControl
+          v-if="custom_field.type === 'Select'"
+          v-model="custom_field.options"
+          class="col-span-2"
+          size="md"
+          type="textarea"
+          label="Options"
+          description="Options for the select field. Enter each option on a new line."
+        />
+        <FormControl
+          v-model="custom_field.description"
+          class="col-span-2"
+          size="md"
+          type="textarea"
+          label="Description"
+          description="Description for the question."
+        />
+      </div>
       <template #actions>
         <div
           class="grid grid-cols-1 gap-4"
@@ -198,21 +199,18 @@
   </div>
 </template>
 <script setup>
-import {
-  createDocumentResource,
-  createResource,
-  FormControl,
-  Dialog,
-  Switch,
-} from 'frappe-ui'
+import { IconPlus, IconCancel, IconUpload } from '@tabler/icons-vue'
+import { createDocumentResource, createResource, FormControl, Dialog, Switch } from 'frappe-ui'
 import { ListView } from 'frappe-ui/experimental'
 import { reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
-import { IconPlus, IconCancel, IconUpload } from '@tabler/icons-vue'
-import CopyToClipboardComponent from '../components/CopyToClipboardComponent.vue'
-import TextEditor from '@/components/ui/TextEditor.vue'
+
 import FormActionBar from '@/components/FormActionBar.vue'
+import TextEditor from '@/components/ui/TextEditor.vue'
+import { toggleDocField } from '@/helpers/utils'
+
+import CopyToClipboardComponent from '../components/CopyToClipboardComponent.vue'
 
 const route = useRoute()
 
@@ -265,14 +263,14 @@ watch(rsvp_form, (newForm) => {
 })
 
 const togglePublishForm = () => {
-  rsvp.setValue.submit({
-    is_published: !rsvp.doc.is_published,
-  })
-  if (rsvp.doc.is_published) {
-    toast.success('RSVP Form Published Successfully')
-  } else {
-    toast.warning('RSVP Form Unpublished')
-  }
+  const value = !rsvp.doc.is_published
+  toggleDocField(
+    rsvp,
+    'is_published',
+    value,
+    value ? 'RSVP Form Published Successfully' : 'RSVP Form Unpublished',
+    'Failed to update publish status',
+  )
 }
 
 let show_dialog = ref(false)
