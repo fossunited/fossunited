@@ -3,8 +3,12 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils.caching import redis_cache
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import FOSS_UNITED_TEAM
+
+# org_roles that are paid staff. Founder/Governing Board/Volunteer are not
+STAFF_ROLES = ["Board", "Full-Time", "Part-Time", "Intern", "Fellow"]
 
 
 class FOSSUnitedTeam(Document):
@@ -17,10 +21,11 @@ class FOSSUnitedTeam(Document):
         from frappe.types import DF
 
         designation: DF.Data | None
+        exited_on: DF.Date | None
         foss_user_profile: DF.Link | None
-        full_name: DF.Data
+        full_name: DF.Data | None
         headshot: DF.AttachImage | None
-        is_active: DF.Check
+        joined_on: DF.Date | None
         org_role: DF.Literal[
             "",
             "Founder",
@@ -32,25 +37,80 @@ class FOSSUnitedTeam(Document):
             "Fellow",
             "Volunteer",
         ]
+        other_profile: DF.Link | None
         portfolio_url: DF.Data | None
+        status: DF.Literal["Active", "Inactive"]
         user_bio: DF.SmallText | None
         username: DF.Data | None
     # end: auto-generated types
 
-    def before_save(self):
-        self.sync_from_user_profile()
+    def validate(self):
+        self.status = "Inactive" if self.exited_on else "Active"
 
-    def sync_from_user_profile(self):
-        if not self.foss_user_profile:
-            return
 
-        profile = frappe.get_cached_doc(USER_PROFILE, self.foss_user_profile)
+@redis_cache(ttl=2592000)
+def get_staff(profile=None):
+    """profile_id -> (joined_on, exited_on) for every paid staff member
+    (primary + other_profile alias). Pass `profile` to fetch just one person
+    (profile page); omit it to prefetch everyone once for a list page
+    (chapter, event). Cached -- the team roster barely changes; invalidated
+    by clear_staff_cache on any FOSS United Team save/delete."""
+    or_filters = {"foss_user_profile": profile, "other_profile": profile} if profile else None
+    rows = frappe.get_all(
+        FOSS_UNITED_TEAM,
+        filters={"org_role": ["in", STAFF_ROLES]},
+        or_filters=or_filters,
+        fields=["foss_user_profile", "other_profile", "joined_on", "exited_on"],
+    )
+    staff = {}
+    for row in rows:
+        dates = (row.joined_on, row.exited_on)
+        if row.foss_user_profile:
+            staff[row.foss_user_profile] = dates
+        if row.other_profile:
+            staff[row.other_profile] = dates
+    return staff
 
-        if not self.full_name and profile.full_name:
-            self.full_name = profile.full_name
-        if self.username != profile.username:
-            self.username = profile.username
-        if not self.headshot and profile.profile_photo:
-            self.headshot = profile.profile_photo
-        if not self.user_bio and profile.bio:
-            self.user_bio = profile.bio
+
+def is_staff(staff, profile_id, date):
+    """Was profile_id staff on this date, per get_staff()'s result?"""
+    if profile_id not in staff:
+        return False
+    joined_on, exited_on = staff[profile_id]
+    return is_active(joined_on, exited_on, date)
+
+
+@redis_cache(ttl=2592000)
+def get_role(profile_id, date):
+    """This profile's paid org_role (e.g. "Full-Time") on this date, or None
+    if they weren't paid staff then. One row lookup -- for a single profile
+    page, not a list (use get_staff()/is_staff() for that). Cached, same as
+    get_staff()."""
+    rows = frappe.get_all(
+        FOSS_UNITED_TEAM,
+        filters={"org_role": ["in", STAFF_ROLES]},
+        or_filters={"foss_user_profile": profile_id, "other_profile": profile_id},
+        fields=["org_role", "joined_on", "exited_on"],
+    )
+    if not rows:
+        return None
+    row = rows[0]
+    if not is_active(row.joined_on, row.exited_on, date):
+        return None
+    return row.org_role
+
+
+def is_active(joined_on, exited_on, date):
+    """Does a joined_on/exited_on tenure window cover this date? Blank
+    joined_on/exited_on means no lower/upper bound."""
+    date = frappe.utils.getdate(date)
+    if joined_on and frappe.utils.getdate(joined_on) > date:
+        return False
+    if exited_on and frappe.utils.getdate(exited_on) < date:
+        return False
+    return True
+
+
+def clear_staff_cache(doc=None, method=None):
+    get_staff.clear_cache()
+    get_role.clear_cache()
