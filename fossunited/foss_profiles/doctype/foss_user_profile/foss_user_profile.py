@@ -34,6 +34,7 @@ from fossunited.doctype_ids import (
     SPEAKER,
     USER_PROFILE,
 )
+from fossunited.fossunited.doctype.foss_united_team.foss_united_team import get_role
 from fossunited.fossunited.utils import (
     get_forklore_maintainer,
     get_ograph_url,
@@ -411,12 +412,8 @@ class FOSSUserProfile(WebsiteGenerator):
         ):
             frappe.throw(_("Profile is Private"), PrivateProfileError)
 
-        experiences_dict = {}
-        for experience in self.experience:
-            if experience.company not in experiences_dict:
-                experiences_dict[experience.company] = []
-            experiences_dict[experience.company].append(experience.as_dict())
-        context.experiences_dict = experiences_dict
+        context.team_role = get_role(self.name, frappe.utils.today())
+        context.is_staff = context.team_role is not None
 
         # Fetch participants once; reused by both activity and badges
         participants = frappe.get_all(
