@@ -90,6 +90,18 @@ class TestFOSSUnitedTeam(FrappeTestCase):
         self.team_row.save()
         self.assertEqual(self.team_row.status, "Inactive")
 
+    def test_is_staff_false_when_manually_inactive_without_exited_on(self):
+        """is_staff()/get_role() must not fall back to "active" just because
+        there's no exited_on to compare against -- status rules when dates
+        can't."""
+        self.team_row.joined_on = None
+        self.team_row.status = "Inactive"
+        self.team_row.save()
+
+        staff = get_staff()
+        self.assertFalse(is_staff(staff, self.staff_profile, nowdate()))
+        self.assertIsNone(get_role(self.staff_profile, nowdate()))
+
     def test_get_staff_with_profile_arg_fetches_single_person(self):
         staff = get_staff(profile=self.staff_profile)
         self.assertIn(self.staff_profile, staff)

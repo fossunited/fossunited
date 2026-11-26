@@ -45,9 +45,6 @@ class FOSSUnitedTeam(Document):
     # end: auto-generated types
 
     def validate(self):
-        # Only force Inactive when exited_on says so. Never force Active back
-        # -- a row with no joined_on/exited_on at all (e.g. a Volunteer whose
-        # dates were never tracked) can still be marked Inactive by hand.
         if self.exited_on:
             self.status = "Inactive"
 
@@ -64,15 +61,21 @@ def get_staff(profile=None):
         FOSS_UNITED_TEAM,
         filters={"org_role": ["in", STAFF_ROLES]},
         or_filters=or_filters,
-        fields=["foss_user_profile", "other_profile", "joined_on", "exited_on"],
+        fields=[
+            "foss_user_profile",
+            "other_profile",
+            "joined_on",
+            "exited_on",
+            "status",
+        ],
     )
     staff = {}
     for row in rows:
-        dates = (row.joined_on, row.exited_on)
+        entry = (row.joined_on, row.exited_on, row.status)
         if row.foss_user_profile:
-            staff[row.foss_user_profile] = dates
+            staff[row.foss_user_profile] = entry
         if row.other_profile:
-            staff[row.other_profile] = dates
+            staff[row.other_profile] = entry
     return staff
 
 
@@ -80,7 +83,11 @@ def is_staff(staff, profile_id, date):
     """Was profile_id staff on this date, per get_staff()'s result?"""
     if profile_id not in staff:
         return False
-    joined_on, exited_on = staff[profile_id]
+    joined_on, exited_on, status = staff[profile_id]
+    # Manually marked Inactive with no exited_on (e.g. dates never tracked)
+    # -- no date to resolve against, so trust status outright.
+    if status == "Inactive" and not exited_on:
+        return False
     return is_active(joined_on, exited_on, date)
 
 
@@ -94,11 +101,13 @@ def get_role(profile_id, date):
         FOSS_UNITED_TEAM,
         filters={"org_role": ["in", STAFF_ROLES]},
         or_filters={"foss_user_profile": profile_id, "other_profile": profile_id},
-        fields=["org_role", "joined_on", "exited_on"],
+        fields=["org_role", "joined_on", "exited_on", "status"],
     )
     if not rows:
         return None
     row = rows[0]
+    if row.status == "Inactive" and not row.exited_on:
+        return None
     if not is_active(row.joined_on, row.exited_on, date):
         return None
     return row.org_role
