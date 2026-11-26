@@ -30,6 +30,7 @@ from fossunited.tests.factories.foss_hackathon_project_factory import (
 )
 from fossunited.tests.factories.foss_hackathon_team_factory import FOSSHackathonTeamFactory
 from fossunited.tests.factories.foss_project_grant_factory import FOSSProjectGrantFactory
+from fossunited.tests.factories.foss_united_team_factory import FOSSUnitedTeamFactory
 from fossunited.tests.factories.free_ticket_application_factory import (
     FreeTicketApplicationFactory,
 )
@@ -54,6 +55,7 @@ __all__ = [
     "FOSSHackathonProjectFactory",
     "FOSSHackathonTeamFactory",
     "FOSSProjectGrantFactory",
+    "FOSSUnitedTeamFactory",
     "FreeTicketApplicationFactory",
     "FreeTicketCodeFactory",
     "RazorpayPaymentFactory",
