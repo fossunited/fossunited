@@ -1,16 +1,17 @@
 <script setup>
 import { IconArrowUpRight, IconPlus } from '@tabler/icons-vue'
+import dayjs from 'dayjs'
 import { Breadcrumbs, createResource, FormControl, Switch } from 'frappe-ui'
 import { inject, onMounted, ref, computed, provide } from 'vue'
 import { toast } from 'vue-sonner'
-import { redirectRoute, isSmallScreen } from '@/helpers/utils'
+
+import DocsInfo from '@/components/DocsInfo.vue'
 import ManageDates from '@/components/event/schedule/ManageDates.vue'
-import RenderScheduleItems from '@/components/event/schedule/RenderScheduleItems.vue'
-import ModifyScheduleItem from '@/components/event/schedule/ModifyScheduleItem.vue'
 import ManageHallOptions from '@/components/event/schedule/ManageHallOptions.vue'
 import ModifyScheduleDrawer from '@/components/event/schedule/ModifyScheduleDrawer.vue'
-import dayjs from 'dayjs'
-import DocsInfo from '@/components/DocsInfo.vue'
+import ModifyScheduleItem from '@/components/event/schedule/ModifyScheduleItem.vue'
+import RenderScheduleItems from '@/components/event/schedule/RenderScheduleItems.vue'
+import { redirectRoute, isSmallScreen, toggleDocField } from '@/helpers/utils'
 
 // Constants for default schedule times
 const DEFAULT_START_TIME = '10:00'
@@ -147,11 +148,14 @@ const breadcrumb_items = computed(() => {
   ]
 })
 
-const toggleShowSchedule = () => {
-  event.setValue.submit({ show_schedule: event.doc.show_schedule }).then(() => {
-    toast.info('Schedule visibility updated')
-  })
-}
+const toggleShowSchedule = (value) =>
+  toggleDocField(
+    event,
+    'show_schedule',
+    value,
+    'Schedule visibility updated',
+    'Failed to update schedule visibility',
+  )
 
 const showModifyScheduleItemDrawer = ref(false)
 
@@ -167,12 +171,12 @@ const saveScheduleDescription = () => {
 <template>
   <div class="flex h-screen overflow-hidden">
     <div
-      class="md:basis-1/2 min-h-full overflow-y-auto border-r p-6"
+      class="min-h-full overflow-y-auto border-r p-6 md:basis-1/2"
       :class="{ 'basis-full': isSmallScreen }"
     >
       <Breadcrumbs class="mb-6" :items="breadcrumb_items" />
       <div class="prose">
-        <h2 class="font-bold mb-4">Event Schedule</h2>
+        <h2 class="mb-4 font-bold">Event Schedule</h2>
       </div>
 
       <DocsInfo
@@ -180,11 +184,11 @@ const saveScheduleDescription = () => {
         docs-url="https://docs.fossunited.org/event-schedule"
       />
 
-      <div class="flex flex-col gap-4 my-4">
+      <div class="my-4 flex flex-col gap-4">
         <Switch
-          v-model="event.doc.show_schedule"
-          class="!px-0 max-w-md"
-          :disabled="false"
+          :model-value="!!event.doc.show_schedule"
+          class="max-w-md !px-0"
+          :disabled="event.setValue.loading"
           label="Show Schedule"
           description="Show the schedule on the event page"
           @update:model-value="toggleShowSchedule"
@@ -198,7 +202,7 @@ const saveScheduleDescription = () => {
           @click="redirectRoute(`${event.doc?.route}/schedule`)"
         />
       </div>
-      <div class="flex flex-col gap-2 my-4">
+      <div class="my-4 flex flex-col gap-2">
         <FormControl
           v-model="event.doc.schedule_page_description"
           type="textarea"
@@ -223,7 +227,7 @@ const saveScheduleDescription = () => {
         @update:schedule="handleUpdateSchedule"
         @reset:selected-schedule="selectedScheduleItemIndex = null"
       />
-      <div v-if="!selectedDate" class="flex flex-col gap-2 text-base items-center mt-12">
+      <div v-if="!selectedDate" class="mt-12 flex flex-col items-center gap-2 text-base">
         <p class="text-ink-gray-5">Select a date to add a schedule</p>
       </div>
       <div v-if="selectedDate" class="flex flex-col gap-2">
@@ -234,11 +238,15 @@ const saveScheduleDescription = () => {
           v-model:schedule="schedule[selectedDate]"
           @modify-item="handleModify($event)"
         />
-        <Button label="Add Schedule" :icon-left="IconPlus" @click="addScheduleItem(selectedDate)" />
+        <Button
+          label="Add Schedule"
+          :icon-left="IconPlus"
+          @click="addScheduleItem(selectedDate)"
+        />
       </div>
     </div>
     <Suspense>
-      <div v-if="!isSmallScreen" class="basis-1/2 p-6 min-h-full overflow-y-auto">
+      <div v-if="!isSmallScreen" class="min-h-full basis-1/2 overflow-y-auto p-6">
         <ModifyScheduleItem
           v-if="selectedScheduleItemIndex"
           v-model="event.doc.event_schedule[selectedScheduleItemIndex - 1]"

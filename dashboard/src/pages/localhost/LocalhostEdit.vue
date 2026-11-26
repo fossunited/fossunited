@@ -1,7 +1,7 @@
 <template>
   <div v-if="localhost.doc">
     <!-- Page Header -->
-    <div class="flex flex-col md:flex-row justify-between gap-2 mt-4">
+    <div class="mt-4 flex flex-col justify-between gap-2 md:flex-row">
       <div>
         <div class="text-base-medium">Edit Localhost</div>
         <div class="text-sm text-ink-gray-5">Update venue details and visibility</div>
@@ -16,6 +16,7 @@
           :theme="localhost.doc.is_published ? 'red' : 'green'"
           :icon-left="localhost.doc.is_published ? IconCancel : IconUpload"
           :label="localhost.doc.is_published ? 'Unpublish' : 'Publish'"
+          :disabled="localhost.setValue.loading"
           @click="togglePublish"
         />
         <Button variant="solid" label="Update Localhost" @click="updateLocalhost" />
@@ -25,15 +26,15 @@
     <!-- Localhost Header -->
     <LocalhostHeader :localhost="localhost.doc" />
 
-    <div class="rounded-1 border p-4 my-6">
-      <div class="text-sm-medium uppercase mb-3">Localhost Overview</div>
+    <div class="my-6 rounded-1 border p-4">
+      <div class="text-sm-medium mb-3 uppercase">Localhost Overview</div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <!-- Left: Image -->
         <div>
-          <img :src="getImage()" class="w-[200px] aspect-square object-cover border rounded-6" />
+          <img :src="getImage()" class="aspect-square w-[200px] rounded-6 border object-cover" />
 
-          <div class="flex gap-2 mt-3">
+          <div class="mt-3 flex gap-2">
             <FileUploader
               file-types="image/*"
               :private="false"
@@ -59,14 +60,14 @@
             />
           </div>
 
-          <div class="text-sm text-ink-gray-5 mt-2">Recommended size: 1:1 square image</div>
+          <div class="mt-2 text-sm text-ink-gray-5">Recommended size: 1:1 square image</div>
         </div>
 
         <!-- Right: Meta -->
         <div class="flex flex-col gap-4">
           <!-- Accepting Attendees -->
           <div class="md:col-span-2">
-            <div class="flex items-center justify-between p-3 border rounded-5">
+            <div class="flex items-center justify-between rounded-5 border p-3">
               <div class="flex flex-col">
                 <span class="font-medium text-ink-gray-8"> Accepting Attendees </span>
                 <span class="text-sm text-ink-gray-5">
@@ -79,21 +80,21 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-1">
               <label class="text-sm-medium text-ink-gray-6">State</label>
-              <div class="px-3 py-2 border rounded-5 bg-surface-gray-1">
+              <div class="rounded-5 border bg-surface-gray-1 px-3 py-2">
                 {{ localhost.doc.state || '—' }}
               </div>
             </div>
 
             <div class="flex flex-col gap-1">
               <label class="text-sm-medium text-ink-gray-6">City</label>
-              <div class="px-3 py-2 border rounded-5 bg-surface-gray-1">
+              <div class="rounded-5 border bg-surface-gray-1 px-3 py-2">
                 {{ localhost.doc.city || '—' }}
               </div>
             </div>
           </div>
 
           <div>
-            <label class="text-sm-medium text-ink-gray-6 mb-1 block"> Public Route </label>
+            <label class="text-sm-medium mb-1 block text-ink-gray-6"> Public Route </label>
             <CopyToClipboardComponent :route="wholeRoute" />
           </div>
         </div>
@@ -101,10 +102,10 @@
     </div>
 
     <!-- Details -->
-    <div class="rounded-1 border p-4 my-6">
-      <div class="text-sm-medium uppercase mb-3">Localhost Details</div>
+    <div class="my-6 rounded-1 border p-4">
+      <div class="text-sm-medium mb-3 uppercase">Localhost Details</div>
 
-      <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
         <FormControl
           v-model="localhost.doc.localhost_name"
           type="text"
@@ -125,12 +126,12 @@
       </div>
     </div>
     <!-- Description -->
-    <div class="rounded-1 border p-4 my-6">
+    <div class="my-6 rounded-1 border p-4">
       <TextEditor
         label="Localhost Description"
         :model-value="localhost.doc.description"
-        @update:model-value="($event) => (localhost.doc.description = $event)"
         placeholder="Write about this Localhost… schedule, venue details, what to expect…"
+        @update:model-value="($event) => (localhost.doc.description = $event)"
       />
     </div>
 
@@ -145,15 +146,17 @@
 </template>
 
 <script setup>
+import { IconArrowLeft, IconCancel, IconUpload } from '@tabler/icons-vue'
 import { createDocumentResource, FileUploader, FormControl, Button, Switch } from 'frappe-ui'
 import { computed, provide } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
-import { IconArrowLeft, IconCancel, IconUpload } from '@tabler/icons-vue'
-import TextEditor from '@/components/ui/TextEditor.vue'
+
+import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue'
 import FormActionBar from '@/components/FormActionBar.vue'
 import LocalhostHeader from '@/components/localhost/LocalhostHeader.vue'
-import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue'
+import TextEditor from '@/components/ui/TextEditor.vue'
+import { toggleDocField } from '@/helpers/utils'
 import ManageSponsorView from '@/layout/event/ManageSponsorView.vue'
 
 const route = useRoute()
@@ -196,9 +199,12 @@ const setImage = (file) => {
 
 const togglePublish = () => {
   const newValue = !localhost.doc.is_published
-  localhost.setValue.submit({ is_published: newValue })
-  toast[newValue ? 'success' : 'warning'](
+  toggleDocField(
+    localhost,
+    'is_published',
+    newValue,
     newValue ? 'Localhost published' : 'Localhost unpublished',
+    'Failed to update publish status',
   )
 }
 

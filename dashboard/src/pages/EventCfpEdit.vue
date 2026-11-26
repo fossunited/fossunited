@@ -1,5 +1,5 @@
 <template>
-  <div v-if="cfp_form.data && cfp.doc" class="px-4 py-8 md:p-8 flex flex-col gap-8">
+  <div v-if="cfp_form.data && cfp.doc" class="flex flex-col gap-8 px-4 py-8 md:p-8">
     <div class="flex flex-row justify-end gap-2">
       <Button
         class="w-fit"
@@ -7,21 +7,22 @@
         :theme="cfp.doc.status == 'Live' ? 'red' : 'green'"
         :icon-left="cfp.doc.status == 'Live' ? IconCancel : IconUpload"
         :label="cfp.doc.status == 'Live' ? 'Unpublish Form' : 'Publish Form'"
+        :disabled="cfp.setValue.loading"
         @click="togglePublishForm"
       />
       <Button size="md" variant="solid" label="Save Changes" @click="updateCfpForm" />
     </div>
     <div>
-      <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+      <div class="grid gap-x-8 gap-y-6 sm:grid-cols-1 md:grid-cols-2">
         <div class="flex flex-col gap-2 text-base">
           <span>Route of the CFP form</span>
           <CopyToClipboardComponent :route="getCfpRoute" />
         </div>
       </div>
     </div>
-    <div class="flex flex-col my-4 gap-6">
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Edit Details</div>
-      <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+    <div class="my-4 flex flex-col gap-6">
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Edit Details</div>
+      <div class="grid gap-x-8 gap-y-8 sm:grid-cols-1 md:grid-cols-2">
         <div class="flex flex-col gap-2">
           <FormControl
             v-model="cfp.doc.allow_cfp_edit"
@@ -90,7 +91,7 @@
             close the form manually with Publish/Unpublish.</span
           >
         </div>
-        <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+        <div class="col-span-1 flex flex-col gap-2 md:col-span-2">
           <TextEditor
             large
             label="Form Description"
@@ -104,7 +105,7 @@
             everything applicants need, not just an addition to it.</span
           >
         </div>
-        <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+        <div class="col-span-1 flex flex-col gap-2 md:col-span-2">
           <span class="text-base text-ink-gray-5">Allowed Session Types</span>
           <div class="grid grid-cols-2 gap-2">
             <FormControl
@@ -133,8 +134,8 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Standard Fields</div>
-      <div class="py-4 grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Standard Fields</div>
+      <div class="grid gap-x-8 gap-y-6 py-4 sm:grid-cols-1 md:grid-cols-2">
         <FormControl
           v-for="(field, index) in standard_fields"
           :key="index"
@@ -147,8 +148,8 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Custom Fields</div>
-      <div class="flex flex-col gap-3 mt-4">
+      <div class="border-b-2 pb-2 font-semibold text-ink-gray-8">Custom Fields</div>
+      <div class="mt-4 flex flex-col gap-3">
         <FormControl
           v-model="cfp.doc.has_public_custom_responses"
           type="checkbox"
@@ -198,58 +199,58 @@
       />
     </div>
     <Dialog v-model:open="show_dialog" title="Add Custom Field" size="md">
-        <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+      <div class="grid gap-x-8 gap-y-6 sm:grid-cols-1 md:grid-cols-2">
+        <FormControl
+          v-model="custom_field.question"
+          class="col-span-2"
+          size="md"
+          type="text"
+          label="Question"
+          description="The question you want to ask the attendees."
+        />
+        <div>
           <FormControl
-            v-model="custom_field.question"
-            class="col-span-2"
+            v-model="custom_field.is_mandatory"
             size="md"
-            type="text"
-            label="Question"
-            description="The question you want to ask the attendees."
+            type="checkbox"
+            label="Is Mandatory"
+            description="Whether the question is mandatory or not."
           />
-          <div>
-            <FormControl
-              v-model="custom_field.is_mandatory"
-              size="md"
-              type="checkbox"
-              label="Is Mandatory"
-              description="Whether the question is mandatory or not."
-            />
-            <div class="text-sm text-ink-gray-5">Whether the question is mandatory or not.</div>
-          </div>
-          <FormControl
-            v-model="custom_field.type"
-            size="md"
-            type="select"
-            label="Type"
-            :options="[
-              { label: 'Data', value: 'Data' },
-              { label: 'Select', value: 'Select' },
-              { label: 'Long Text', value: 'Long Text' },
-              { label: 'Text Editor', value: 'Text Editor' },
-              { label: 'Check', value: 'Check' },
-              { label: 'Radio Group', value: 'Radio Group' },
-            ]"
-            description="The type of question you want to ask."
-          />
-          <FormControl
-            v-if="custom_field.type === 'Select'"
-            v-model="custom_field.options"
-            class="col-span-2"
-            size="md"
-            type="textarea"
-            label="Options"
-            description="Options for the select field. Enter each option on a new line."
-          />
-          <FormControl
-            v-model="custom_field.description"
-            class="col-span-2"
-            size="md"
-            type="textarea"
-            label="Description"
-            description="Description for the question."
-          />
+          <div class="text-sm text-ink-gray-5">Whether the question is mandatory or not.</div>
         </div>
+        <FormControl
+          v-model="custom_field.type"
+          size="md"
+          type="select"
+          label="Type"
+          :options="[
+            { label: 'Data', value: 'Data' },
+            { label: 'Select', value: 'Select' },
+            { label: 'Long Text', value: 'Long Text' },
+            { label: 'Text Editor', value: 'Text Editor' },
+            { label: 'Check', value: 'Check' },
+            { label: 'Radio Group', value: 'Radio Group' },
+          ]"
+          description="The type of question you want to ask."
+        />
+        <FormControl
+          v-if="custom_field.type === 'Select'"
+          v-model="custom_field.options"
+          class="col-span-2"
+          size="md"
+          type="textarea"
+          label="Options"
+          description="Options for the select field. Enter each option on a new line."
+        />
+        <FormControl
+          v-model="custom_field.description"
+          class="col-span-2"
+          size="md"
+          type="textarea"
+          label="Description"
+          description="Description for the question."
+        />
+      </div>
       <template #actions>
         <div
           class="grid grid-cols-1 gap-4"
@@ -269,15 +270,16 @@
   </div>
 </template>
 <script setup>
+import { IconPlus, IconCancel, IconUpload } from '@tabler/icons-vue'
 import { createDocumentResource, createResource, FormControl, Dialog } from 'frappe-ui'
 import { ListView } from 'frappe-ui/experimental'
 import { reactive, ref, watch, defineEmits, computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
-import { IconPlus, IconCancel, IconUpload } from '@tabler/icons-vue'
+
 import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue'
-import TextEditor from '@/components/ui/TextEditor.vue'
 import FormActionBar from '@/components/FormActionBar.vue'
+import TextEditor from '@/components/ui/TextEditor.vue'
 import { SESSION_TYPES, isSessionTypeAllowed, getUpdatedAllowedSessionTypes } from '@/helpers/cfp'
 
 const route = useRoute()
@@ -393,15 +395,23 @@ const emit = defineEmits(['reloadDoc'])
 const togglePublishForm = () => {
   const to_set_status = cfp.doc.status == 'Live' ? 'Closed' : 'Live'
 
-  cfp.setValue.submit({
-    status: to_set_status,
-  })
-  if (cfp.doc.status == 'Live') {
-    toast.success('CFP Form Published Successfully')
-    emit('reloadDoc')
-  } else {
-    toast.warning('CFP Form Unpublished')
-  }
+  cfp.setValue.submit(
+    { status: to_set_status },
+    {
+      onSuccess: () => {
+        if (to_set_status == 'Live') {
+          toast.success('CFP Form Published Successfully')
+          emit('reloadDoc')
+        } else {
+          toast.warning('CFP Form Unpublished')
+        }
+      },
+      onError: (err) => {
+        toast.error('Failed to update CFP status')
+        console.error(err)
+      },
+    },
+  )
 }
 
 let show_dialog = ref(false)
