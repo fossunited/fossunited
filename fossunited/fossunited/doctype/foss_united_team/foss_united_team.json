@@ -1,5 +1,6 @@
 {
   "actions": [],
+  "allow_bulk_edit": 1,
   "allow_rename": 1,
   "creation": "2024-01-28 13:24:54.693639",
   "doctype": "DocType",
@@ -7,14 +8,16 @@
   "field_order": [
     "user_details_section",
     "foss_user_profile",
+    "other_profile",
     "org_role",
-    "is_active",
+    "joined_on",
+    "exited_on",
+    "status",
     "user_individual_details_section",
     "full_name",
+    "username",
     "headshot",
     "designation",
-    "column_break_yaoh",
-    "username",
     "user_bio",
     "portfolio_url"
   ],
@@ -22,17 +25,19 @@
     {
       "fieldname": "user_details_section",
       "fieldtype": "Section Break",
-      "label": "User Meta Details"
+      "label": "Identity"
     },
     {
       "fieldname": "foss_user_profile",
       "fieldtype": "Link",
       "label": "FOSS User Profile",
-      "options": "FOSS User Profile"
+      "options": "FOSS User Profile",
+      "unique": 1
     },
     {
       "fieldname": "org_role",
       "fieldtype": "Select",
+      "in_list_view": 1,
       "in_standard_filter": 1,
       "label": "Org Role",
       "options": "\nFounder\nBoard\nGoverning Board\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer"
@@ -40,10 +45,11 @@
     {
       "fieldname": "user_individual_details_section",
       "fieldtype": "Section Break",
-      "label": "User Individual Details"
+      "label": "Team page Override"
     },
     {
-      "fetch_from": ".profile_photo",
+      "fetch_from": "foss_user_profile.profile_photo",
+      "fetch_if_empty": 1,
       "fieldname": "headshot",
       "fieldtype": "Attach Image",
       "label": "Headshot"
@@ -55,32 +61,6 @@
       "label": "Designation"
     },
     {
-      "fetch_from": "foss_user_profile.username",
-      "fieldname": "username",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "Username"
-    },
-    {
-      "fieldname": "column_break_yaoh",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fetch_from": ".full_name",
-      "fieldname": "full_name",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "in_standard_filter": 1,
-      "label": "Name ",
-      "reqd": 1
-    },
-    {
-      "default": "0",
-      "fieldname": "is_active",
-      "fieldtype": "Check",
-      "label": "Active"
-    },
-    {
       "fieldname": "user_bio",
       "fieldtype": "Small Text",
       "label": "User Bio"
@@ -90,10 +70,50 @@
       "fieldtype": "Data",
       "label": "Portfolio URL",
       "options": "URL"
+    },
+    {
+      "description": "In case staff has personal/prof account so we cover them all for \"Staff\" role",
+      "fieldname": "other_profile",
+      "fieldtype": "Link",
+      "label": "Other Profile",
+      "options": "FOSS User Profile"
+    },
+    {
+      "fetch_from": "foss_user_profile.full_name",
+      "fieldname": "full_name",
+      "fieldtype": "Data",
+      "label": "Full Name"
+    },
+    {
+      "fetch_from": "foss_user_profile.username",
+      "fieldname": "username",
+      "fieldtype": "Data",
+      "label": "Username"
+    },
+    {
+      "default": "Active",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Active",
+      "options": "Active\nInactive"
+    },
+    {
+      "fieldname": "joined_on",
+      "fieldtype": "Date",
+      "label": "Joined on"
+    },
+    {
+      "fieldname": "exited_on",
+      "fieldtype": "Date",
+      "label": "Exited on"
     }
   ],
+  "image_field": "headshot",
+  "link_display_mode": "Search",
   "links": [],
-  "modified": "2026-03-07 16:37:00.861167",
+  "modified": "2026-11-26 14:18:55.977335",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS United Team",
@@ -123,7 +143,18 @@
     }
   ],
   "row_format": "Dynamic",
+  "search_fields": "full_name, username, designation",
   "sort_field": "modified",
   "sort_order": "DESC",
-  "states": []
+  "states": [
+    {
+      "color": "Gray",
+      "title": "Inactive"
+    },
+    {
+      "color": "Green",
+      "title": "Active"
+    }
+  ],
+  "title_field": "full_name"
 }
