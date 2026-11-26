@@ -118,6 +118,10 @@ doc_events = {
         "on_update": "fossunited.fossunited.event_media.clear_speakers_cache",
         "on_trash": "fossunited.fossunited.event_media.clear_speakers_cache",
     },
+    "FOSS United Team": {
+        "on_update": "fossunited.fossunited.doctype.foss_united_team.foss_united_team.clear_staff_cache",
+        "on_trash": "fossunited.fossunited.doctype.foss_united_team.foss_united_team.clear_staff_cache",
+    },
     "Newsletter": {
         "autoname": "fossunited.overrides.newsletter_extend.autoname",
     },
