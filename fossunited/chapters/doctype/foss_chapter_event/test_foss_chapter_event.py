@@ -11,6 +11,7 @@ from fossunited.doctype_ids import (
     EVENT,
     EVENT_CFP,
     EVENT_VOLUNTEER,
+    FOSS_UNITED_TEAM,
     PROPOSAL,
     USER_PROFILE,
 )
@@ -19,6 +20,7 @@ from fossunited.tests.factories import (
     FOSSChapterFactory,
     FOSSEventCFPFactory,
     FOSSEventCFPSubmissionFactory,
+    FOSSUnitedTeamFactory,
     UserFactory,
     get_foss_profile_id,
 )
@@ -48,6 +50,29 @@ class TestFOSSChapterEvent(FrappeTestCase):
                     },
                 )
             )
+
+    def test_staff_resolved_against_event_date_not_today(self):
+        """Staff split must use the event's own date, not today -- a member who
+        only became staff after this (past) event ran should still show up as
+        a plain volunteer for it, not get pulled into the Staff section."""
+        staff_profile = self.event.event_members[0].member
+        team_row = FOSSUnitedTeamFactory.create(
+            foss_user_profile=staff_profile,
+            org_role="Full-Time",
+            joined_on=frappe.utils.add_days(self.event.event_start_date, 1),
+        )
+        try:
+            context = frappe._dict()
+            self.event.get_context(context)
+
+            staff_profiles = {m["route"] for m in context.staff}
+            volunteer_profiles = {m["route"] for m in context.volunteers}
+            member_route = frappe.db.get_value(USER_PROFILE, staff_profile, "route")
+
+            self.assertNotIn(member_route, staff_profiles)
+            self.assertIn(member_route, volunteer_profiles)
+        finally:
+            frappe.delete_doc(FOSS_UNITED_TEAM, team_row.name, force=True)
 
     def test_unique_event_slug(self):
         """Slugs must be unique within a chapter but reusable across chapters."""
