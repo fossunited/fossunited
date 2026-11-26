@@ -81,6 +81,15 @@ class TestFOSSUnitedTeam(FrappeTestCase):
         self.team_row.save()
         self.assertEqual(self.team_row.status, "Inactive")
 
+    def test_status_manually_set_inactive_without_dates_stays_inactive(self):
+        """A row with no joined_on/exited_on at all (e.g. a Volunteer whose
+        dates were never tracked) can still be marked Inactive by hand --
+        blank exited_on must never force it back to Active."""
+        self.team_row.joined_on = None
+        self.team_row.status = "Inactive"
+        self.team_row.save()
+        self.assertEqual(self.team_row.status, "Inactive")
+
     def test_get_staff_with_profile_arg_fetches_single_person(self):
         staff = get_staff(profile=self.staff_profile)
         self.assertIn(self.staff_profile, staff)

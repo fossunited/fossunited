@@ -45,7 +45,11 @@ class FOSSUnitedTeam(Document):
     # end: auto-generated types
 
     def validate(self):
-        self.status = "Inactive" if self.exited_on else "Active"
+        # Only force Inactive when exited_on says so. Never force Active back
+        # -- a row with no joined_on/exited_on at all (e.g. a Volunteer whose
+        # dates were never tracked) can still be marked Inactive by hand.
+        if self.exited_on:
+            self.status = "Inactive"
 
 
 @redis_cache(ttl=2592000)
