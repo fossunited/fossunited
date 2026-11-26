@@ -16,6 +16,7 @@ from fossunited.doctype_ids import (
     STUDENT_CLUB,
     USER_PROFILE,
 )
+from fossunited.fossunited.doctype.foss_united_team.foss_united_team import get_staff, is_staff
 
 PAST_ORGANISER_EVENT_THRESHOLD = 3
 
@@ -236,7 +237,17 @@ class FOSSChapter(WebsiteGenerator):
 
         context.upcoming_events = self.get_upcoming_events() + self.get_upcoming_hackathons()
         context.past_events = self.get_past_events() + self.get_past_hackathons()
-        context.members = self.get_members()
+
+        staff = get_staff()
+        today = frappe.utils.getdate(frappe.utils.today())
+        context.staff = []
+        context.members = []
+        for member in self.get_members():
+            if is_staff(staff, member["profile"], today):
+                context.staff.append(member)
+            else:
+                context.members.append(member)
+
         context.past_members = self.get_past_members()
         context.social_links = self.get_social_links()
 
@@ -288,17 +299,29 @@ class FOSSChapter(WebsiteGenerator):
         )
 
     def get_members(self):
+        if not self.chapter_members:
+            return []
+
+        member_ids = [m.chapter_member for m in self.chapter_members]
+        profiles = {
+            p.name: p
+            for p in frappe.get_all(
+                USER_PROFILE,
+                filters={"name": ("in", member_ids)},
+                fields=["name", "profile_photo", "route"],
+            )
+        }
+
         members = []
         for member in self.chapter_members:
-            profile = frappe.get_doc(USER_PROFILE, member.chapter_member).as_dict()
+            profile = profiles.get(member.chapter_member, {})
             members.append(
                 {
+                    "profile": member.chapter_member,
                     "full_name": member.full_name,
                     "role": member.role,
-                    "profile_picture": (
-                        profile.profile_photo if profile.profile_photo else DEFAULT_USER_PHOTO
-                    ),
-                    "route": profile.route,
+                    "profile_picture": profile.get("profile_photo") or DEFAULT_USER_PHOTO,
+                    "route": profile.get("route", ""),
                 }
             )
         return members
