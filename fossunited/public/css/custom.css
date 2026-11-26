@@ -499,6 +499,12 @@ h6 {
   letter-spacing: 0.28px;
 }
 
+/* a:hover { color: inherit } outranks a bare .badge on specificity (:hover
+   counts as a class), so an <a class="badge"> needs its own :hover rule. */
+a.badge:hover {
+  color: white;
+}
+
 .badge .badge-sm {
   font-size: 12px;
 }
