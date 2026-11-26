@@ -10,7 +10,10 @@ bench set-config -g server_script_enabled true
 ```
 
 ## Introduction
+
 FOSS United Platform is built by the community, for the community. We're glad you want to contribute — whether it's fixing a bug, improving docs, or building something new, all contributions are welcome.
+
+See [AGENTS.md](./AGENTS.md) for our engineering taste, code/comment style, commit and PR conventions, security and permissions rules, and accessibility standards. This file covers the practical steps of contributing; AGENTS.md covers how we expect the code and the process to look.
 
 You can browse the [issue tracker](https://github.com/fossunited/fossunited/issues) to find something to work on, or open a new issue if you've spotted a problem or have a feature idea.
 
@@ -29,8 +32,11 @@ You can browse the [issue tracker](https://github.com/fossunited/fossunited/issu
 ### Pull Request Guidelines
 
 - Please try keeping the code understandable and clean as much as possible.
+- Keep PRs atomic: one logical change per PR. Avoid large sweeping PRs that bundle unrelated fixes, refactors, and features together, split them so each PR (and each commit in it) stands as its own record of what changed and why.
 - Checkout [conventionalcommits.org](https://www.conventionalcommits.org/en/v1.0.0/) for writing a decent and informative yet short commit message.
 - We expect the code to be properly formatted for better readability for the reviewers and developers. Extensions like [Prettier](https://prettier.io/) is helpful and is available on mostly all editor marketplaces.
+- UI changes: include before/after screenshots in the PR description.
+- New or changed API endpoints: follow the principle of least privilege (don't default to `allow_guest=True`), check role/permission inside the method itself, and rate-limit anything public-facing. See AGENTS.md's security section.
 - Documentation: Currently the project is at its initial stage. For Documentation related contributions you can contact us at developers@fossunited.org for the same.
 - Tests: PRs that change behaviour should include tests (see below).
 
