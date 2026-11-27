@@ -31,6 +31,7 @@
     {% if upcoming_events %}{{ render_upcoming_events() }}{% endif %}
     {% if past_events %}{{ render_past_events() }}{% endif %}
     {{ render_members() }}
+    {% if staff %}{{ render_staff() }}{% endif %}
     {% if past_members %}{{ render_past_members() }}{% endif %}
     <div class="my-5 py-5"></div>
   </div>
@@ -172,6 +173,20 @@
     <h3 class="subtitle">Organisers</h3>
     <div class="members-grid-6">
       {% for member in members %}{{ member_card(member) }}{% endfor %}
+    </div>
+  </div>
+{% endmacro %}
+{% macro render_staff() %}
+  {%
+    from 'fossunited/templates/macros/member_card.html'
+    import member_card
+  %}
+  <div class="container my-5">
+    <h3 class="subtitle">
+      <a href="/team">Staff <i class="ti ti-arrow-up-right" aria-hidden="true"></i></a>
+    </h3>
+    <div class="members-grid-6">
+      {% for member in staff %}{{ member_card(member) }}{% endfor %}
     </div>
   </div>
 {% endmacro %}

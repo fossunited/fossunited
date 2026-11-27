@@ -1,9 +1,14 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import CHAPTER, EMAIL_GROUP
+from fossunited.doctype_ids import CHAPTER, EMAIL_GROUP, FOSS_UNITED_TEAM, USER_PROFILE
 from fossunited.id.roles import CHAPTER_MEMBER
-from fossunited.tests.factories import FOSSChapterFactory, UserFactory, get_foss_profile_id
+from fossunited.tests.factories import (
+    FOSSChapterFactory,
+    FOSSUnitedTeamFactory,
+    UserFactory,
+    get_foss_profile_id,
+)
 
 
 class TestFOSSChapter(FrappeTestCase):
@@ -88,3 +93,61 @@ class TestFOSSChapter(FrappeTestCase):
             EMAIL_GROUP,
             {"reference_document": self.chapter.name, "document_type": CHAPTER},
         )
+
+    def test_staff_member_split_from_organisers(self):
+        """A chapter member who is also FOSS United staff shows up on the Staff
+        section instead of Organisers."""
+        staff_user = UserFactory.create(first_name="Sanji", last_name="Staffcook")
+        staff_profile = get_foss_profile_id(staff_user.name)
+        team_row = FOSSUnitedTeamFactory.create(
+            foss_user_profile=staff_profile, org_role="Full-Time"
+        )
+        self.chapter.append(
+            "chapter_members", {"chapter_member": staff_profile, "role": "Core Team Member"}
+        )
+        self.chapter.save()
+
+        context = frappe._dict()
+        self.chapter.get_context(context)
+
+        staff_profiles = {m["profile"] for m in context.staff}
+        member_profiles = {m["profile"] for m in context.members}
+
+        self.assertIn(staff_profile, staff_profiles)
+        self.assertNotIn(staff_profile, member_profiles)
+
+        # the original setUp member stays a plain organiser, not staff
+        original_profile = get_foss_profile_id(self.team_member_user.name)
+        self.assertIn(original_profile, member_profiles)
+
+        frappe.delete_doc(FOSS_UNITED_TEAM, team_row.name, force=True)
+        frappe.delete_doc(USER_PROFILE, staff_profile, force=True)
+        frappe.delete_doc("User", staff_user.name, force=True)
+
+    def test_member_rejoins_organisers_after_staff_exit(self):
+        """A staff member whose tenure already ended shows up back under
+        Organisers, not Staff."""
+        staff_user = UserFactory.create(first_name="Sanji", last_name="Staffcook")
+        staff_profile = get_foss_profile_id(staff_user.name)
+        team_row = FOSSUnitedTeamFactory.create(
+            foss_user_profile=staff_profile,
+            org_role="Full-Time",
+            exited_on=frappe.utils.add_days(frappe.utils.nowdate(), -1),
+        )
+        self.chapter.append(
+            "chapter_members", {"chapter_member": staff_profile, "role": "Core Team Member"}
+        )
+        self.chapter.save()
+
+        context = frappe._dict()
+        self.chapter.get_context(context)
+
+        staff_profiles = {m["profile"] for m in context.staff}
+        member_profiles = {m["profile"] for m in context.members}
+
+        self.assertIn(staff_profile, member_profiles)
+        self.assertNotIn(staff_profile, staff_profiles)
+
+        frappe.delete_doc(FOSS_UNITED_TEAM, team_row.name, force=True)
+        frappe.delete_doc(USER_PROFILE, staff_profile, force=True)
+        frappe.delete_doc("User", staff_user.name, force=True)
