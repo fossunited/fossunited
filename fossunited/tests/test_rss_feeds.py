@@ -48,7 +48,7 @@ class TestAtomFeeds(FrappeTestCase):
             chapter_name="Pune & Co",
             slug="pune",
             route="c/pune",
-            get_upcoming_events=lambda: [EVENT],
+            get_upcoming_events=lambda *args, **kwargs: [EVENT],
         )
         with (
             patch.dict(frappe.form_dict, {"chapter": "pune"}),
