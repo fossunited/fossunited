@@ -28,6 +28,21 @@ from fossunited.doctype_ids import (
 from fossunited.fossunited.doctype.foss_united_team.foss_united_team import get_staff, is_staff
 from fossunited.fossunited.utils import get_event_sponsors, get_ograph_url, get_youtube_id
 
+# Matches what templates/macros/event_card.html reads, plus "name" for the ICS download link.
+EVENT_CARD_FIELDS = [
+    "name",
+    "event_name",
+    "event_start_date",
+    "event_end_date",
+    "event_location",
+    "banner_image",
+    "chapter",
+    "must_attend",
+    "external_event_url",
+    "route",
+    "is_external_event",
+]
+
 
 class FOSSChapterEvent(WebsiteGenerator):
     # begin: auto-generated types

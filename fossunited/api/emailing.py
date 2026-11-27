@@ -441,6 +441,10 @@ def _chapter_email_group_names(
     chapter: str | None, reference_document: str | None, document_type: str
 ) -> set[str]:
     """The email groups that actually belong to this chapter/reference, per the DB."""
+    if not reference_document:
+        # A chapter-only request (no reference_document) means the chapter's own group,
+        # created with reference_document=chapter.name, document_type=CHAPTER.
+        reference_document, document_type = chapter, CHAPTER
     return set(
         frappe.db.get_all(
             EMAIL_GROUP,
@@ -482,18 +486,26 @@ def get_email_groups(
     Returns:
         list : of all the emails groups
     """
-    if not chapter or not check_if_chapter_member(chapter, frappe.session.user):
+    if document_type == HACKATHON_LOCALHOST and reference_document:
+        if not is_localhost_organizer(reference_document, frappe.session.user):
+            frappe.throw(
+                _("You are not authorized to view this campaign's email groups"),
+                frappe.PermissionError,
+            )
+    elif not chapter or not check_if_chapter_member(chapter, frappe.session.user):
         frappe.throw(
             _("You are not authorized to view this chapter's email groups"), frappe.PermissionError
         )
 
+    filters = {"reference_document": reference_document, "document_type": document_type}
+    if chapter:
+        # Omitted for a localhost request: filtering on chapter=None would match only
+        # groups with no chapter set, not the localhost's own chapter-tagged groups.
+        filters["chapter"] = chapter
+
     email_groups = frappe.db.get_all(
         EMAIL_GROUP,
-        {
-            "chapter": chapter,
-            "reference_document": reference_document,
-            "document_type": document_type,
-        },
+        filters,
         ["total_subscribers", "group_type", "name"],
     )
 

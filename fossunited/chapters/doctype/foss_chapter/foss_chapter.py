@@ -6,6 +6,7 @@ from frappe import _
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.emailing import create_email_group
+from fossunited.chapters.doctype.foss_chapter_event.foss_chapter_event import EVENT_CARD_FIELDS
 from fossunited.doctype_ids import (
     CHAPTER,
     CITY_COMMUNITY,
@@ -16,6 +17,7 @@ from fossunited.doctype_ids import (
     STUDENT_CLUB,
     USER_PROFILE,
 )
+from fossunited.foss_hackathon.doctype.foss_hackathon.foss_hackathon import HACKATHON_CARD_FIELDS
 from fossunited.fossunited.doctype.foss_united_team.foss_united_team import get_staff, is_staff
 
 PAST_ORGANISER_EVENT_THRESHOLD = 3
@@ -235,8 +237,12 @@ class FOSSChapter(WebsiteGenerator):
             self.chapter_type
         )
 
-        context.upcoming_events = self.get_upcoming_events() + self.get_upcoming_hackathons()
-        context.past_events = self.get_past_events() + self.get_past_hackathons()
+        context.upcoming_events = self.get_upcoming_events(
+            [self.name], fields=EVENT_CARD_FIELDS
+        ) + self.get_upcoming_hackathons([self.name], fields=HACKATHON_CARD_FIELDS)
+        context.past_events = self.get_past_events(
+            [self.name], fields=EVENT_CARD_FIELDS
+        ) + self.get_past_hackathons([self.name], fields=HACKATHON_CARD_FIELDS)
 
         staff = get_staff()
         today = frappe.utils.getdate(frappe.utils.today())
@@ -251,51 +257,57 @@ class FOSSChapter(WebsiteGenerator):
         context.past_members = self.get_past_members()
         context.social_links = self.get_social_links()
 
-    def get_upcoming_events(self):
+    @staticmethod
+    def get_upcoming_events(chapter_names, fields):
         return frappe.get_all(
             EVENT,
             filters={
-                "chapter": self.name,
+                "chapter": ["in", chapter_names],
                 "event_end_date": (">=", frappe.utils.now()),
                 "status": "Live",
                 "is_unlisted": 0,
             },
-            fields=["*"],
+            fields=fields,
             order_by="event_start_date asc",
-            # page_length=6,
         )
 
-    def get_upcoming_hackathons(self):
+    @staticmethod
+    def get_upcoming_hackathons(chapter_names, fields):
         return frappe.get_all(
             HACKATHON,
             filters={
-                "chapter": self.name,
+                "chapter": ["in", chapter_names],
                 "end_date": (">=", frappe.utils.now()),
                 "is_unlisted": 0,
             },
-            fields=["*"],
+            fields=fields,
         )
 
-    def get_past_events(self):
+    @staticmethod
+    def get_past_events(chapter_names, fields, since=None):
+        conditions = [
+            ["chapter", "in", chapter_names],
+            ["event_end_date", "<", frappe.utils.now()],
+            ["status", "=", "Concluded"],
+        ]
+        if since:
+            conditions.append(["event_end_date", ">=", since])
         return frappe.get_all(
             EVENT,
-            filters={
-                "chapter": self.name,
-                "event_end_date": ("<", frappe.utils.now()),
-                "status": "Concluded",
-            },
-            fields=["*"],
+            filters=conditions,
+            fields=fields,
             order_by="event_end_date desc",
         )
 
-    def get_past_hackathons(self):
+    @staticmethod
+    def get_past_hackathons(chapter_names, fields):
         return frappe.get_all(
             HACKATHON,
             filters={
-                "chapter": self.name,
+                "chapter": ["in", chapter_names],
                 "end_date": ("<", frappe.utils.now()),
             },
-            fields=["*"],
+            fields=fields,
         )
 
     def get_members(self):

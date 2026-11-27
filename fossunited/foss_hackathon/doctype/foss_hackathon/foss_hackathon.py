@@ -65,6 +65,17 @@ HACKATHON_LIST_FIELDS = [
     "chapter.city as chapter_city",
 ]
 
+# Matches what templates/macros/event_card.html reads for a hackathon row.
+HACKATHON_CARD_FIELDS = [
+    "name",
+    "hackathon_name",
+    "hackathon_type",
+    "start_date",
+    "end_date",
+    "chapter",
+    "route",
+]
+
 
 def get_list_context(context=None):
     hackathons = frappe.get_all(

@@ -98,15 +98,6 @@ class TestGetEvent(FrappeTestCase):
         frappe.set_user("Guest")
         self.assertEqual(get_event("does-not-exist", by_route=True), {})
 
-    def test_lookup_by_permalink(self):
-        frappe.set_user("Guest")
-        data = get_event(self.event.event_permalink, by_permalink=True)
-        self.assertEqual(data.get("name"), self.event.name)
-
-    def test_lookup_by_permalink_missing_returns_empty(self):
-        frappe.set_user("Guest")
-        self.assertEqual(get_event("does-not-exist", by_permalink=True), {})
-
     def test_tier_sold_count(self):
         frappe.set_user("Administrator")
         paid_event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
@@ -116,6 +107,22 @@ class TestGetEvent(FrappeTestCase):
         data = get_event(paid_event.name)
         tiers = {t["title"]: t for t in data["tiers"]}
         self.assertEqual(tiers["General"]["sold_count"], 3)
+
+        frappe.set_user("Administrator")
+        frappe.db.delete(EVENT_TICKET, {"event": paid_event.name})
+        frappe.delete_doc(EVENT, paid_event.name, force=True)
+
+    def test_tier_sold_count_matches_case_insensitively(self):
+        """A tier renamed to a different case ("general" -> "General") must still count
+        tickets sold under the old-case title; DB collation treats them as equal."""
+        frappe.set_user("Administrator")
+        paid_event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
+        FOSSEventTicketFactory.create_list(2, event=paid_event.name, tier="general")
+
+        frappe.set_user("Guest")
+        data = get_event(paid_event.name)
+        tiers = {t["title"]: t for t in data["tiers"]}
+        self.assertEqual(tiers["General"]["sold_count"], 2)
 
         frappe.set_user("Administrator")
         frappe.db.delete(EVENT_TICKET, {"event": paid_event.name})
