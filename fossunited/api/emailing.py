@@ -497,13 +497,15 @@ def get_email_groups(
             _("You are not authorized to view this chapter's email groups"), frappe.PermissionError
         )
 
+    filters = {"reference_document": reference_document, "document_type": document_type}
+    if chapter:
+        # Omitted for a localhost request: filtering on chapter=None would match only
+        # groups with no chapter set, not the localhost's own chapter-tagged groups.
+        filters["chapter"] = chapter
+
     email_groups = frappe.db.get_all(
         EMAIL_GROUP,
-        {
-            "chapter": chapter,
-            "reference_document": reference_document,
-            "document_type": document_type,
-        },
+        filters,
         ["total_subscribers", "group_type", "name"],
     )
 
