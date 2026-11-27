@@ -18,6 +18,8 @@ from fossunited.doctype_ids import (
     USER_PROFILE,
 )
 
+DASHBOARD_EVENT_FIELDS = ["name", "event_name", "chapter_name", "status", "event_start_date"]
+
 
 def _profile(user: str) -> str | None:
     return frappe.db.get_value(USER_PROFILE, {"user": user}, "name")
@@ -306,6 +308,10 @@ def get_my_chapter_dashboard():
     """
     '/dashboard/chapter' to show events+chapters belonging to the user.
     """
+    # Deferred: foss_chapter.py imports fossunited.api.emailing, which imports this
+    # module, so a module-level import here would be circular.
+    from fossunited.chapters.doctype.foss_chapter.foss_chapter import FOSSChapter
+
     user = frappe.session.user
     since_3w = add_days(now_datetime(), -21)
 
@@ -321,15 +327,10 @@ def get_my_chapter_dashboard():
             fields=["*"],
         )
 
-        for chapter in chapters:
-            doc = frappe.get_doc(CHAPTER, chapter.name)
-            scheduled.extend(doc.get_upcoming_events())
-            recent = [
-                e
-                for e in doc.get_past_events()
-                if e.event_end_date and (e.event_end_date >= since_3w)
-            ]
-            recent_concluded.extend(recent)
+        scheduled = FOSSChapter.get_upcoming_events(chapter_names, fields=DASHBOARD_EVENT_FIELDS)
+        recent_concluded = FOSSChapter.get_past_events(
+            chapter_names, since=since_3w, fields=DASHBOARD_EVENT_FIELDS
+        )
 
     # Also include events where user is an event volunteer (but not a chapter member)
     chapter_event_names = {e.name for e in scheduled + recent_concluded}
