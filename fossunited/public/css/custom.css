@@ -503,14 +503,6 @@ h6 {
   font-size: 12px;
 }
 
-/* A help-icon's own icon scales with whatever text it sits next to (a
-   heading, a badge, a span), instead of a fixed size that looks oversized
-   or undersized depending on where it's used. */
-.help-icon i {
-  font-size: 0.7em;
-  vertical-align: middle;
-}
-
 .like-button svg {
   fill: none;
 }
