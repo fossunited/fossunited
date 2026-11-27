@@ -10,6 +10,7 @@ from fossunited.tests.factories import FOSSChapterFactory, UserFactory, get_foss
 from fossunited.tests.factories.foss_chapter_event_factory import FOSSChapterEventFactory
 
 DASHBOARD_EVENT_FIELDS = {"name", "event_name", "chapter_name", "status", "event_start_date"}
+DASHBOARD_CHAPTER_FIELDS = {"name", "chapter_name", "chapter_type"}
 
 
 class TestChapterDashboard(FrappeTestCase):
@@ -75,6 +76,8 @@ class TestChapterDashboard(FrappeTestCase):
         self.assertEqual({event.name for event in result["recent_concluded"]}, {recent.name})
         for event in result["scheduled"] + result["recent_concluded"]:
             self.assertEqual(set(event), DASHBOARD_EVENT_FIELDS)
+        for row in result["chapters"]:
+            self.assertEqual(set(row), DASHBOARD_CHAPTER_FIELDS)
 
     def test_volunteer_events(self):
         draft = self.event(self.chapter(member=False), status="Draft", volunteer=True)
@@ -85,3 +88,5 @@ class TestChapterDashboard(FrappeTestCase):
             [event.name for event in result["scheduled"]], [draft.name, overlap.name]
         )
         self.assertEqual(result["recent_concluded"], [])
+        for event in result["scheduled"]:
+            self.assertEqual(set(event), DASHBOARD_EVENT_FIELDS)

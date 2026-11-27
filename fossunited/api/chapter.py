@@ -324,7 +324,7 @@ def get_my_chapter_dashboard():
         chapters = frappe.get_all(
             CHAPTER,
             filters={"name": ["in", chapter_names]},
-            fields=["*"],
+            fields=["name", "chapter_name", "chapter_type"],
         )
 
         scheduled = FOSSChapter.get_upcoming_events(chapter_names, fields=DASHBOARD_EVENT_FIELDS)
@@ -348,7 +348,7 @@ def get_my_chapter_dashboard():
                     "name": ["in", only_volunteer_event_names],
                     "status": ["in", ["Live", "Draft"]],
                 },
-                fields=["*"],
+                fields=DASHBOARD_EVENT_FIELDS,
             )
         )
         recent_concluded.extend(
@@ -359,7 +359,7 @@ def get_my_chapter_dashboard():
                     "status": ["not in", ["Live", "Draft"]],
                     "event_end_date": [">=", since_3w],
                 },
-                fields=["*"],
+                fields=DASHBOARD_EVENT_FIELDS,
             )
         )
 
