@@ -564,6 +564,14 @@
               </section>
             {% endif %}
 
+            <!-- Staff -->
+            {% if staff %}
+              <section class="ev-volunteers-section" aria-labelledby="staff-heading">
+                <h2 id="staff-heading" class="sr-only">FOSS United Staff</h2>
+                {{ people_card(staff, 'staff', icon='briefcase') }}
+              </section>
+            {% endif %}
+
             <!-- Contact -->
             <section class="v3-card ev-contact" aria-labelledby="contact-heading">
               <h2 id="contact-heading" class="sr-only">Contact Information</h2>

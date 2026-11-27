@@ -11,6 +11,7 @@ from fossunited.doctype_ids import (
     EVENT,
     EVENT_CFP,
     EVENT_VOLUNTEER,
+    FOSS_UNITED_TEAM,
     PROPOSAL,
     USER_PROFILE,
 )
@@ -19,6 +20,7 @@ from fossunited.tests.factories import (
     FOSSChapterFactory,
     FOSSEventCFPFactory,
     FOSSEventCFPSubmissionFactory,
+    FOSSUnitedTeamFactory,
     UserFactory,
     get_foss_profile_id,
 )
@@ -48,6 +50,41 @@ class TestFOSSChapterEvent(FrappeTestCase):
                     },
                 )
             )
+
+    def test_staff_resolved_against_event_date_not_today(self):
+        """Staff split must use the event's own date, not today. A member who
+        only became staff after this past event ran should show as a plain
+        volunteer for it, even though they ARE staff as of today.
+
+        joined_on is placed between the event date and today on purpose: a
+        buggy "resolve against today" implementation would wrongly say
+        is_staff=True here (joined_on is before today), while the correct
+        "resolve against the event's date" implementation says False
+        (joined_on is after the event). If both dates were in the future (as
+        the factory's own default event is), the two implementations can't
+        be told apart -- this needs a genuinely past event.
+        """
+        past_event = FOSSChapterEventFactory.create("with_past_dates", chapter=self.chapter.name)
+        past_event.reload()
+        staff_profile = past_event.event_members[0].member
+        team_row = FOSSUnitedTeamFactory.create(
+            foss_user_profile=staff_profile,
+            org_role="Full-Time",
+            joined_on=frappe.utils.add_days(frappe.utils.today(), -3),
+        )
+        try:
+            context = frappe._dict()
+            past_event.get_context(context)
+
+            staff_profiles = {m["route"] for m in context.staff}
+            volunteer_profiles = {m["route"] for m in context.volunteers}
+            member_route = frappe.db.get_value(USER_PROFILE, staff_profile, "route")
+
+            self.assertNotIn(member_route, staff_profiles)
+            self.assertIn(member_route, volunteer_profiles)
+        finally:
+            frappe.delete_doc(FOSS_UNITED_TEAM, team_row.name, force=True)
+            frappe.delete_doc(EVENT, past_event.name, force=True)
 
     def test_unique_event_slug(self):
         """Slugs must be unique within a chapter but reusable across chapters."""

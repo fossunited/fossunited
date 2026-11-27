@@ -25,6 +25,7 @@ from fossunited.doctype_ids import (
     SPEAKER,
     USER_PROFILE,
 )
+from fossunited.fossunited.doctype.foss_united_team.foss_united_team import get_staff, is_staff
 from fossunited.fossunited.utils import get_event_sponsors, get_ograph_url, get_youtube_id
 
 
@@ -292,12 +293,13 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         return pagetitle, description, image
 
-    def get_volunteers(self, exclude=None):
+    def get_volunteers(self, exclude=None, only=None):
         """Get volunteers with profile information. Batch fetch profiles for performance.
 
         `exclude` is a set of FOSS User Profile docnames to leave out (e.g. staff
-        members counted elsewhere) -- matched on profile id, not full_name, since
-        two different people can share a name.
+        members counted elsewhere); `only` restricts to just that set (e.g. the
+        staff members themselves, for their own section) -- matched on profile
+        id, not full_name, since two different people can share a name.
         """
         if not self.event_members:
             return []
@@ -319,6 +321,8 @@ class FOSSChapterEvent(WebsiteGenerator):
         members = []
         for member in self.event_members:
             if member.member and member.member in exclude:
+                continue
+            if only is not None and member.member not in only:
                 continue
             # Rows with no linked profile can't be identified as duplicates, so this
             # guard only ever skips a member we've already seen by profile id.
@@ -519,7 +523,16 @@ class FOSSChapterEvent(WebsiteGenerator):
     def get_context(self, context):
         context.chapter = frappe.get_doc(CHAPTER, self.chapter)
         context.sponsors_dict = get_event_sponsors(self.sponsor_list)
-        context.volunteers = self.get_volunteers()
+
+        # Staff resolved as of the EVENT's own date, not today -- a staff member
+        # who has since left still counts as staff for a past event, and someone
+        # not yet staff at the time doesn't get excluded from that event's list.
+        staff = get_staff()
+        event_date = self.event_start_date or frappe.utils.today()
+        staff_ids = {p for p in staff if is_staff(staff, p, event_date)}
+        context.staff = self.get_volunteers(only=staff_ids)
+        context.volunteers = self.get_volunteers(exclude=staff_ids)
+
         context.speakers = self.get_speakers()
         context.rsvp_status_block = self.get_rsvp_status_block()
         context.cfp_status_block = self.get_cfp_status_block()
